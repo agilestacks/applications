@@ -1,0 +1,42 @@
+---
+version: 1
+kind: application
+meta:
+  name: java-application:1
+  brief: Java Application
+
+requires:
+  - kubernetes
+
+components:
+- name: ecr
+  source:
+    dir: ../components/ecr
+
+lifecycle:
+  verbs: [deploy, undeploy, backup]
+  order:
+    - ecr
+  mandatory:
+    - ecr
+
+parameters:
+  - name: component.ingress.fqdn
+  - name: dns.domain
+    env: DOMAIN_NAME
+  - name: dns.name
+    env: NAME
+  - name: component.ecr
+    component: ecr
+    parameters:
+      - name: name
+        value: ${dns.domain}/${dns.name}
+
+outputs:
+  - name: component.java-application.ui
+    brief: Web UI address
+    value: http://${dns.name}.${component.ingress.fqdn}
+
+templates:
+  files:
+    - "*.template"
