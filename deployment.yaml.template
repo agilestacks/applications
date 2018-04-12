@@ -3,12 +3,18 @@ kind: Deployment
 metadata:
   name: ${component.java-application.name}
   namespace: ${component.java-application.namespace}
+  labels:
+    provider: agilestacks.com
+    qualifier: application
 spec:
   replicas: 1
   template:
     metadata:
       name: ${component.java-application.name}
       namespace: ${component.java-application.namespace}
+      labels:
+        provider: agilestacks.com
+        qualifier: application
     spec:
       serviceAccountName: ${component.java-application.name}
       containers:

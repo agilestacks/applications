@@ -1,0 +1,10 @@
+FROM java:jre
+
+ENV APP_NAME ${component.java-application.name}
+ENV APP_VERSION 0.1.0
+
+COPY build/libs/$APP_NAME-$APP_VERSION.jar /app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "/app.jar"]

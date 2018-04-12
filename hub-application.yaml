@@ -4,38 +4,56 @@ kind: application
 meta:
   name: java-application:1
   brief: Java Application
+  source:
+    dir: ./
 
 requires:
   - kubernetes
 
 components:
-- name: ecr
+- name: application-ecr
   source:
     dir: ../components/ecr
 
 lifecycle:
-  verbs: [deploy, undeploy, backup]
+  verbs: [deploy, undeploy]
   order:
-    - ecr
+    - application-ecr
   mandatory:
-    - ecr
+    - application-ecr
 
 parameters:
+  - name: component.java-application
+    parameters:
+      - name: name
+        value: java-application
+        env: NAME
+      - name: namespace
+        value: application
+        env: NAMESPACE
+      - name: uri
+        value: java-application
+      - name: image
+        value: agilestacks/${dns.domain}/${component.java-application.name}
+        env: IMAGE_NAME
+        #fromTfVar: repository_url
+  - name: terraform.bucket.name
+    env: STATE_BUCKET
+  - name: terraform.bucket.region
+    env: STATE_REGION
   - name: component.ingress.fqdn
   - name: dns.domain
     env: DOMAIN_NAME
-  - name: dns.name
-    env: NAME
   - name: component.ecr
-    component: ecr
+    component: application-ecr
     parameters:
       - name: name
-        value: ${dns.domain}/${dns.name}
+        value: agilestacks/${dns.domain}/${component.java-application.name}
 
 outputs:
   - name: component.java-application.ui
     brief: Web UI address
-    value: http://${dns.name}.${component.ingress.fqdn}
+    value: http://${component.java-application.uri}.${component.ingress.fqdn}
 
 templates:
   files:

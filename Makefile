@@ -6,12 +6,24 @@ export AWS_PROFILE        ?= default
 NAME		  ?= java-application
 DOMAIN_NAME   ?= dev.stack.delivery
 REGISTRY      ?= $(subst https://,,$(lastword $(shell aws ecr get-login --region $(AWS_DEFAULT_REGION))))
-IMAGE         ?= $(REGISTRY)/agilestacks/$(DOMAIN_NAME)/$(NAME)
+IMAGE_NAME    ?= agilestacks/$(DOMAIN_NAME)/$(NAME)
+IMAGE         ?= $(REGISTRY)/$(IMAGE_NAME)
 IMAGE_VERSION ?= $(shell git rev-parse HEAD | colrm 7)
-NAMESPACE     ?= applications
+NAMESPACE     ?= application
 kubectl       ?= kubectl --context="$(DOMAIN_NAME)" --namespace="$(NAMESPACE)"
 
+compile:
+	@docker run \
+		-e USER_NAME=$(id -un) \
+		-e GRADLE_USER_HOME=/tmp \
+	 	-v $(shell pwd):/usr/src/app \
+	 	--user $(shell id -u):$(shell id -g) \
+	 	java:8-alpine \
+		/usr/src/app/gradlew build -p /usr/src/app/
+.PHONE: compile
+
 build:
+	@echo $(shell pwd)
 	@docker build -t $(IMAGE):$(IMAGE_VERSION) .
 .PHONY: build
 
@@ -26,13 +38,13 @@ push:
 .PHONY: push
 
 deploy: build ecr-login push
-	$(kubectl) create namespace $(NAMESPACE)
-	$(kubectl) apply -f deployment.yaml --namespace $(NAMESPACE)
+	$(kubectl) create namespace $(NAMESPACE) || true
+	$(kubectl) apply -f deployment.yaml
 	$(MAKE) output
 .PHONY: deploy
 
 undeploy:
-	$(kubectl) delete -f deployment.yaml --namespace $(NAMESPACE) || true
+	$(kubectl) delete -f deployment.yaml || true
 .PHONY: undeploy
 
 output:
