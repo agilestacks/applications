@@ -28,6 +28,8 @@ parameters:
       - name: name
         value: java-application
         env: NAME
+      - name: port
+        value: 8080
       - name: namespace
         value: application
         env: NAMESPACE

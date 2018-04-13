@@ -22,15 +22,15 @@ spec:
         imagePullPolicy: Always
         ports:
         - name: http
-          containerPort: 8080
+          containerPort: ${component.java-application.port}
         readinessProbe:
           httpGet:
-            path: /
-            port: 8080
+            path: /status
+            port: ${component.java-application.port}
         livenessProbe:
           httpGet:
-            path: /
-            port: 8080
+            path: /status
+            port: ${component.java-application.port}
           initialDelaySeconds: 60
           timeoutSeconds: 3
 
