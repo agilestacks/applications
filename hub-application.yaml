@@ -33,10 +33,6 @@ parameters:
         env: NAMESPACE
       - name: uri
         value: java-application
-      - name: image
-        value: agilestacks/${dns.domain}/${component.java-application.name}
-        env: IMAGE_NAME
-        #fromTfVar: repository_url
   - name: terraform.bucket.name
     env: STATE_BUCKET
   - name: terraform.bucket.region
@@ -49,11 +45,17 @@ parameters:
     parameters:
       - name: name
         value: agilestacks/${dns.domain}/${component.java-application.name}
+  - name: component.ecr.image
+    env: IMAGE
 
 outputs:
   - name: component.java-application.ui
     brief: Web UI address
     value: http://${component.java-application.uri}.${component.ingress.fqdn}
+  - name: component.java-application.ecr
+    component: application-ecr
+    brief: Docker image
+    fromTfVar: image_name
 
 templates:
   files:

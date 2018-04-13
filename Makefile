@@ -6,8 +6,7 @@ export AWS_PROFILE        ?= default
 NAME		  ?= java-application
 DOMAIN_NAME   ?= dev.stack.delivery
 REGISTRY      ?= $(subst https://,,$(lastword $(shell aws ecr get-login --region $(AWS_DEFAULT_REGION))))
-IMAGE_NAME    ?= agilestacks/$(DOMAIN_NAME)/$(NAME)
-IMAGE         ?= $(REGISTRY)/$(IMAGE_NAME)
+IMAGE         ?= $(REGISTRY)/agilestacks/$(DOMAIN_NAME)/$(NAME)
 IMAGE_VERSION ?= $(shell git rev-parse HEAD | colrm 7)
 NAMESPACE     ?= application
 kubectl       ?= kubectl --context="$(DOMAIN_NAME)" --namespace="$(NAMESPACE)"

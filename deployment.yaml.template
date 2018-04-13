@@ -16,22 +16,21 @@ spec:
         provider: agilestacks.com
         qualifier: application
     spec:
-      serviceAccountName: ${component.java-application.name}
       containers:
       - name: api
-        image: ${component.java-application.image}
+        image: ${component.ecr.image}
         imagePullPolicy: Always
         ports:
         - name: http
-          containerPort: 80
+          containerPort: 8080
         readinessProbe:
           httpGet:
             path: /
-            port: 80
+            port: 8080
         livenessProbe:
           httpGet:
             path: /
-            port: 3001
+            port: 8080
           initialDelaySeconds: 60
           timeoutSeconds: 3
 
