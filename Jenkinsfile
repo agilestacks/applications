@@ -5,7 +5,7 @@
 properties([
         parameters([
                 string(name: 'APP_NAME', defaultValue: 'chuck', description: 'Name of the app to be used inside kubernetes'),
-                string(name: 'APP_URL', defaultValue: "chuck.${env.INGRESS_FQDN}", description: 'External URL where current app shall be accessible'),
+                string(name: 'APP_URL', defaultValue: "chuck.${env.INGRESS_FQDN}", description: 'External URL where current app will be accessible'),
                 string(name: 'NAMESPACE', defaultValue: 'default', description: 'Namespace where container will be deployed'),
                 string(name: 'REPLICAS', defaultValue:  '3', description: 'Number of pod replicas'),
                 string(name: 'DOCKER_IMAGE', defaultValue: env.DOCKER_REGISTRY, description: 'Docker registry for applicaiton')
@@ -38,10 +38,9 @@ podTemplate(
 ) {
     node('kubernetes') {
         container('java') {
-            stage("Compile") {
-                sh script: './gradlew clean build'
+            stage("Test") {
+                sh script: './gradlew clean test'
                 sh script: './gradlew allureReport'
-                archiveArtifacts 'build/libs/chnorr-*.jar'
                 junit 'build/test-results/*.xml'
                 publishHTML([
                         reportDir: 'build/allure-report',
@@ -52,58 +51,21 @@ podTemplate(
             }
         }
         container('toolbox') {
-            def dockerImage = params.DOCKER_IMAGE
-            def commit = commitHash.shortHash()
-            def images = [ "$dockerImage:$commit",
-                           "$dockerImage:latest"
-            ]
-            stage('Build') {
-                sh script: "docker build --pull --rm ${images.collect{"--tag ${it}"}.join(' ')} ."
+            stage('Compile') {
+                sh script: "make compile"
             }
-            stage('Push') {
-                ecr.login()
-                def pushImages = images.collectEntries{ [it: { sh script: "docker push ${it}" }]}
-
-                parallel pushImages
-            }
-
-            def template = readFile 'deployment.yaml'
-            def deployment = render.template template, [
-                    app:            params.APP_NAME,
-                    namespace:      params.NAMESPACE,
-                    replicas:       params.REPLICAS,
-                    host:           params.APP_URL,
-                    dockerRegistry: params.DOCKER_IMAGE,
-                    tag:            commit,
-                    version:        '1.0.0'
-            ]
             stage('Deploy') {
-                writeFile file: "deployment-build-${currentBuild.number}.yaml", text: deployment
-                def exists = sh returnStatus: true, script: "kubectl -n ${params.NAMESPACE} get -f deployment-build-${currentBuild.number}.yaml"
-                try {
-                    if (exists == 0) {
-                        sh script: "kubectl -n ${params.NAMESPACE} set image --record deployment/${params.APP_NAME} '${params.APP_NAME}=${params.DOCKER_IMAGE}:$commit'"
-                    } else {
-                        sh script: "kubectl -n ${params.NAMESPACE} apply --force --record -f deployment-build-${currentBuild.number}.yaml"
-                    }
-                    sh script: "kubectl -n ${params.NAMESPACE} rollout status -w 'deployment/${params.APP_NAME}'"
-                } catch(err) {
-                    sh script: """
-            kubectl -n ${params.NAMESPACE} rollout undo 'deployment/${params.APP_NAME}'
-            kubectl -n ${params.NAMESPACE} rollout status -w 'deployment/${params.APP_NAME}'
-          """
-
-                    error message: """
-            Failed to deploy ${params.APP_NAME} with container ${params.DOCKER_IMAGE}:$commit \n
-            We rolled back unsuccessful deployment
-          """
-                }
+                sh script: """
+                    hub --aws_region ${env.STATE_REGION} elaborate ./hub-application.yaml \
+                        -s s3://${env.STATE_BUCKET}/hub/${env.BASE_DOMAIN}.hub
+                    hub deploy ./hub.yaml.elaborate
+                """
             }
         }
         stage('Validate') {
             retry(20) {
                 sleep 1
-                def resp = httpRequest url: "http://${params.APP_NAME}.${params.NAMESPACE}.svc.cluster.local"
+                def resp = httpRequest url: "http://${params.APP_URL}.apps.${env.BASE_DOMAIN}"
                 echo resp.content
                 assert resp.status == 200
             }
