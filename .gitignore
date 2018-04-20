@@ -1,5 +1,4 @@
 .gradle
-gradle
 Dockerfile
 hub.yaml.state
 hub.yaml.elaborate
