@@ -54,10 +54,8 @@ outputs:
   - name: component.java-application.ui
     brief: Web UI address
     value: http://${component.java-application.uri}.${component.ingress.fqdn}
-  - name: component.java-application.ecr
-    component: application-ecr
-    brief: Docker image
-    fromTfVar: image_name
+  - name: component.ecr.image
+    value: ${component.ecr.image}
 
 templates:
   files:

@@ -1,7 +1,5 @@
 .gradle
-Dockerfile
 hub.yaml.state
 hub.yaml.elaborate
-deployment.yaml
 out
 build

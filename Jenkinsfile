@@ -8,7 +8,6 @@ properties([
                 string(name: 'APP_URL', defaultValue: "chuck.${env.INGRESS_FQDN}", description: 'External URL where current app will be accessible'),
                 string(name: 'NAMESPACE', defaultValue: 'default', description: 'Namespace where container will be deployed'),
                 string(name: 'REPLICAS', defaultValue:  '3', description: 'Number of pod replicas'),
-                string(name: 'DOCKER_IMAGE', defaultValue: env.DOCKER_REGISTRY, description: 'Docker registry for applicaiton')
         ]),
         pipelineTriggers([
                 [$class: 'GitHubPushTrigger'],
@@ -37,10 +36,16 @@ podTemplate(
         ]
 ) {
     node('kubernetes') {
+        def gradleProps
         container('java') {
-            stage("Test") {
-                sh script: './gradlew clean test'
+            stage("Compile") {
+                gradleProps = sh(script: './gradlew properties -q', returnStdout: true)
+                    .collect { it.split(':') }
+                    .collectEntries { [(it[0].trim()):it[1].trim()] }
+
+                sh script: './gradlew clean build'
                 sh script: './gradlew allureReport'
+                archiveArtifacts "build/libs/*.jar"
                 junit 'build/test-results/*.xml'
                 publishHTML([
                         reportDir: 'build/allure-report',
@@ -51,15 +56,69 @@ podTemplate(
             }
         }
         container('toolbox') {
-            stage('Compile') {
-                sh script: "make compile"
-            }
-            stage('Deploy') {
-                sh script: """
+            def outputs
+            stage('Prepare dependencies') {
+                def log = sh(script: """
                     hub --aws_region ${env.STATE_REGION} elaborate ./hub-application.yaml \
                         -s s3://${env.STATE_BUCKET}/hub/${env.BASE_DOMAIN}.hub
                     hub deploy ./hub.yaml.elaborate
+                """, returnStdout: true)
+
+                outputs = parseHubOutputs(log)
+            }
+
+            def dockerImage = outputs['java-application:component.ecr.image']
+            def commit = commitHash.shortHash()
+            def images = [ "$dockerImage:$commit", "$dockerImage:latest" ]
+
+            stage('Build') {
+                sh script: """
+                    docker build --pull \
+                         --rm \
+                         --build-arg APP_NAME=${gradleProps['archivesBaseName']} \
+                         --build-arg APP_VERSION=${gradleProps['version']} \
+                         ${images.collect{"--tag ${it}"}.join(' ')} .
                 """
+            }
+            stage('Push') {
+                ecr.login()
+                def pushImages = images.collectEntries{ [it: { sh script: "docker push ${it}" }]}
+
+                parallel pushImages
+            }
+
+            def template = readFile 'deployment.yaml'
+            def deployment = render.template template, [
+                    app:            params.APP_NAME,
+                    namespace:      params.NAMESPACE,
+                    replicas:       params.REPLICAS,
+                    host:           params.APP_URL,
+                    image:          "$dockerImage:$commit",
+                    version:        gradleProps['version']
+            ]
+            stage('Deploy') {
+                sh script: "hub --aws_region ${env.STATE_REGION} kubeconfig s3://${env.STATE_BUCKET}/hub/${env.BASE_DOMAIN}.hub"
+
+                writeFile file: "deployment-build-${currentBuild.number}.yaml", text: deployment
+                def exists = sh returnStatus: true, script: "kubectl -n ${params.NAMESPACE} get -f deployment-build-${currentBuild.number}.yaml"
+                try {
+                    if (exists == 0) {
+                        sh script: "kubectl -n ${params.NAMESPACE} set image --record deployment/${params.APP_NAME} '${params.APP_NAME}=${dockerImage}:$commit'"
+                    } else {
+                        sh script: "kubectl -n ${params.NAMESPACE} apply --force --record -f deployment-build-${currentBuild.number}.yaml"
+                    }
+                    sh script: "kubectl -n ${params.NAMESPACE} rollout status -w 'deployment/${params.APP_NAME}'"
+                } catch(err) {
+                    sh script: """
+            kubectl -n ${params.NAMESPACE} rollout undo 'deployment/${params.APP_NAME}'
+            kubectl -n ${params.NAMESPACE} rollout status -w 'deployment/${params.APP_NAME}'
+          """
+
+                    error message: """
+            Failed to deploy ${params.APP_NAME} with container $dockerImage:$commit \n
+            We rolled back unsuccessful deployment
+          """
+                }
             }
         }
         stage('Validate') {
