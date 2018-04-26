@@ -1,0 +1,37 @@
+---
+version: 1
+kind: application
+meta:
+  name: java-application:1
+  brief: Java Application
+  source:
+    dir: ./
+
+requires:
+  - kubernetes
+
+components:
+- name: application-ecr
+  source:
+    dir: ../components/ecr
+
+lifecycle:
+  verbs: [deploy, undeploy]
+  order:
+    - application-ecr
+  mandatory:
+    - application-ecr
+
+parameters:
+  - name: component.ingress.fqdn
+  - name: dns.domain
+    env: DOMAIN_NAME
+  - name: component.ecr
+    component: application-ecr
+    parameters:
+      - name: name
+        value: agilestacks/$${dns.domain}/${name}
+
+outputs:
+  - name: component.ecr.image
+    value: $${component.ecr.image}
