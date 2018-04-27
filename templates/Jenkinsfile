@@ -40,6 +40,7 @@ podTemplate(
         container('java') {
             stage("Compile") {
                 gradleProps = sh(script: './gradlew properties -q', returnStdout: true)
+                    .split('\n')
                     .collect { it.split(':') }
                     .collectEntries { [(it[0].trim()):it[1].trim()] }
 
