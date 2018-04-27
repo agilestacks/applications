@@ -41,7 +41,8 @@ podTemplate(
             stage("Compile") {
                 gradleProps = sh(script: './gradlew properties -q', returnStdout: true)
                     .split('\n')
-                    .collect { it.split(':') }
+                    .collect { it.tokenize(':') }
+                    .findAll { it.size() > 1 }
                     .collectEntries { [(it[0].trim()):it[1].trim()] }
 
                 sh script: './gradlew clean build'
