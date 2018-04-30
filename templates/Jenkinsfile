@@ -45,12 +45,11 @@ podTemplate(
                     .findAll { it.size() > 1 }
                     .collectEntries { [(it[0].trim()):it[1].trim()] }
 
-                sh script: './gradlew clean build'
-                sh script: './gradlew allureReport'
+                sh script: './gradlew clean build allureReport'
                 archiveArtifacts "build/libs/*.jar"
-                junit 'build/test-results/*.xml'
+                junit 'build/test-results/test/*.xml'
                 publishHTML([
-                        reportDir: 'build/allure-report',
+                        reportDir: 'build/reports/allure-report',
                         reportFiles: 'index.html',
                         reportName: 'Allure Report',
                         keepAll: true
