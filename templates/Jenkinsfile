@@ -60,6 +60,7 @@ podTemplate(
             def outputs
             stage('Prepare dependencies') {
                 def log = sh(script: """
+                    hub pull ./hub-application.yaml
                     hub --aws_region $${env.STATE_REGION} elaborate ./hub-application.yaml \
                         -s s3://$${env.STATE_BUCKET}/$${env.DOMAIN_NAME}/hub/happy-meal/hub.state
                     hub deploy ./hub.yaml.elaborate
