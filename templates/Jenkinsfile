@@ -61,7 +61,7 @@ podTemplate(
             stage('Prepare dependencies') {
                 def log = sh(script: """
                     hub --aws_region $${env.STATE_REGION} elaborate ./hub-application.yaml \
-                        -s s3://$${env.STATE_BUCKET}/hub/$${env.BASE_DOMAIN}.hub
+                        -s s3://$${env.STATE_BUCKET}/hub/$${env.DOMAIN_NAME}.hub
                     hub deploy ./hub.yaml.elaborate
                 """, returnStdout: true)
 
@@ -98,7 +98,7 @@ podTemplate(
                     version:        gradleProps['version']
             ]
             stage('Deploy') {
-                sh script: "hub --aws_region $${env.STATE_REGION} kubeconfig s3://$${env.STATE_BUCKET}/hub/$${env.BASE_DOMAIN}.hub"
+                sh script: "hub --aws_region $${env.STATE_REGION} kubeconfig s3://$${env.STATE_BUCKET}/hub/$${env.DOMAIN_NAME}.hub"
 
                 writeFile file: "deployment-build-$${currentBuild.number}.yaml", text: deployment
                 def exists = sh returnStatus: true, script: "kubectl -n $${params.NAMESPACE} get -f deployment-build-$${currentBuild.number}.yaml"
