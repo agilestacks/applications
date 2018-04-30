@@ -13,7 +13,10 @@ requires:
 components:
 - name: application-ecr
   source:
-    dir: ../components/ecr
+    git:
+      remote: git@github.com:agilestacks/components.git
+      ref: refs/heads/master
+      subDir: ecr
 
 lifecycle:
   verbs: [deploy, undeploy]
