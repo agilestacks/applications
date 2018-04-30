@@ -1,3 +1,12 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "io.qameta.allure:allure-gradle:2.5"
+    }
+}
+
 plugins {
     id "org.springframework.boot" version "2.0.0.RELEASE"
 }
@@ -10,7 +19,7 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-
+apply plugin: 'io.qameta.allure'
 
 repositories {
     mavenCentral()
@@ -18,6 +27,12 @@ repositories {
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+allure {
+    version = '2.4.1'
+    aspectjweaver = true
+    autoconfigure = true
+}
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
