@@ -23,6 +23,10 @@ lifecycle:
     - application-ecr
 
 parameters:
+  - name: terraform.bucket.name
+    env: STATE_BUCKET
+  - name: terraform.bucket.region
+    env: STATE_REGION
   - name: component.ingress.fqdn
   - name: dns.domain
     env: DOMAIN_NAME
