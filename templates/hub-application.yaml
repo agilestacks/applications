@@ -34,7 +34,7 @@ parameters:
     component: application-ecr
     parameters:
       - name: name
-        value: agilestacks/$${dns.domain}/${name}
+        value: $${dns.domain}/application-${name}
 
 outputs:
   - name: component.ecr.image
