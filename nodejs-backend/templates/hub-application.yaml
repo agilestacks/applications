@@ -1,0 +1,41 @@
+---
+version: 1
+kind: application
+meta:
+  name: nodejs-application:1
+  brief: Nodejs Application
+  source:
+    dir: ./
+
+requires:
+  - kubernetes
+
+components:
+- name: application-ecr
+  source:
+    dir: ./ecr
+
+lifecycle:
+  verbs: [deploy, undeploy]
+  order:
+    - application-ecr
+  mandatory:
+    - application-ecr
+
+parameters:
+  - name: terraform.bucket.name
+    env: STATE_BUCKET
+  - name: terraform.bucket.region
+    env: STATE_REGION
+  - name: component.ingress.fqdn
+  - name: dns.domain
+    env: DOMAIN_NAME
+  - name: component.ecr
+    component: application-ecr
+    parameters:
+      - name: name
+        value: $${dns.domain}/application-${name}
+
+outputs:
+  - name: component.ecr.image
+    value: $${component.ecr.image}

@@ -1,4 +1,4 @@
-const pkg = require('../../package');
+const pkg = require('../../templates/package');
 
 module.exports = {
   getStatus(req, res) {

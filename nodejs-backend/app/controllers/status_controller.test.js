@@ -1,5 +1,5 @@
 const request = require('supertest');
-const pkg = require('../../package');
+const pkg = require('../../templates/package');
 
 const app = require('../server');
 
