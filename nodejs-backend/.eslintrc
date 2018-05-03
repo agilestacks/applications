@@ -1,0 +1,20 @@
+{
+  "extends": "airbnb/base",
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6
+  },
+  "globals": {
+    "jest": false,
+    "expect": false,
+    "describe": false,
+    "test": false,
+    "beforeAll": false,
+    "beforeEach": false,
+    "afterAll": false,
+    "afterEach": false
+  }
+}
