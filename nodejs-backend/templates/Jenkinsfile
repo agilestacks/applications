@@ -42,7 +42,13 @@ podTemplate(
         container('toolbox') {
             def outputs
             stage('Prepare dependencies') {
+                def creds = assumeDeployerRole(env.DEPLOY_ROLE_ARN)
+
                 def log = sh(script: """
+                    export AWS_ACCESS_KEY_ID=$${creds.accessKey}
+                    export AWS_SECRET_ACCESS_KEY=$${creds.secretKey}
+                    export AWS_SESSION_TOKEN=$${creds.sessionToken}
+
                     hub pull ./hub-application.yaml
                     hub --aws_region $${env.STATE_REGION} elaborate ./hub-application.yaml \
                         -s s3://$${env.STATE_BUCKET}/$${env.DOMAIN_NAME}/hub/happy-meal/hub.state
@@ -52,7 +58,7 @@ podTemplate(
                 outputs = parseHubOutputs(log)
             }
 
-            def dockerImage = outputs['java-application:component.ecr.image']
+            def dockerImage = outputs['nodejs-application:component.ecr.image']
             def commit = commitHash.shortHash()
             def images = [ "$dockerImage:$commit", "$dockerImage:latest" ]
 
