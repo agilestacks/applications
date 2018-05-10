@@ -11,16 +11,16 @@ requires:
   - kubernetes
 
 components:
-- name: application-ecr
+- name: ecr
   source:
     dir: ./ecr
 
 lifecycle:
   verbs: [deploy, undeploy]
   order:
-    - application-ecr
+    - ecr
   mandatory:
-    - application-ecr
+    - ecr
 
 parameters:
   - name: terraform.bucket.name
@@ -31,8 +31,8 @@ parameters:
   - name: dns.domain
     env: DOMAIN_NAME
   - name: component.ecr
-    component: application-ecr
     parameters:
+      - name: image
       - name: name
         value: $${dns.domain}/application-${name}
 
