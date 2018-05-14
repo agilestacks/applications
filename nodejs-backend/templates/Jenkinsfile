@@ -44,7 +44,7 @@ podTemplate(
             stage('Prepare dependencies') {
                 def creds = assumeDeployerRole(env.DEPLOY_ROLE_ARN)
 
-                def log = sh(script: """
+                sh(script: """
                     export AWS_ACCESS_KEY_ID=$${creds.accessKey}
                     export AWS_SECRET_ACCESS_KEY=$${creds.secretKey}
                     export AWS_SESSION_TOKEN=$${creds.sessionToken}
@@ -52,9 +52,11 @@ podTemplate(
                     hub pull ./hub-application.yaml
                     hub --aws_region $${env.STATE_REGION} elaborate ./hub-application.yaml \
                         -s s3://$${env.STATE_BUCKET}/$${env.DOMAIN_NAME}/hub/happy-meal/hub.state
-                    hub deploy ./hub.yaml.elaborate
-                """, returnStdout: true)
 
+                    hub deploy ./hub.yaml.elaborate &> hub.log
+                """)
+
+                def log = readFile 'hub.log'
                 outputs = parseHubOutputs(log)
             }
 
