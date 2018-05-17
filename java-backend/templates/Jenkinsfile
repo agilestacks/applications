@@ -70,7 +70,7 @@ podTemplate(
                     hub --aws_region $${env.STATE_REGION} elaborate ./hub-application.yaml \
                         -s s3://$${env.STATE_BUCKET}/$${env.DOMAIN_NAME}/hub/happy-meal/hub.state
 
-                    hub deploy ./hub.yaml.elaborate &> hub.log
+                    hub deploy ./hub.yaml.elaborate &> >(tee hub.log)
                 """)
 
                 def log = readFile 'hub.log'
