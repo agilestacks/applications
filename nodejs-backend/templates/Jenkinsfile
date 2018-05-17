@@ -11,7 +11,7 @@ properties([
         ]),
         pipelineTriggers([
                 [$class: 'GitHubPushTrigger'],
-                pollSCM('H/15 * * * *')
+                pollSCM('H/1 * * * *')
         ])
 ])
 
@@ -27,7 +27,7 @@ podTemplate(
         containers: [
                 containerTemplate(
                         name: 'nodejs',
-                        image: 'nodejs:8.11.1',
+                        image: 'node:8',
                         ttyEnabled: true,
                         command: 'cat'
                 )
