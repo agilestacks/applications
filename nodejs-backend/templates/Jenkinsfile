@@ -21,9 +21,12 @@ node('master') {
     }
 }
 
+
+def uuid = UUID.randomUUID().toString()
+
 podTemplate(
         inheritFrom: 'toolbox',
-        label: 'kubernetes',
+        label: uuid,
         containers: [
                 containerTemplate(
                         name: 'nodejs',
