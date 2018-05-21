@@ -37,7 +37,7 @@ podTemplate(
                 emptyDirVolume(memory: false, mountPath: '/root/.gradle')
         ]
 ) {
-    node('kubernetes') {
+    node(uuid) {
         def gradleProps
         container('java') {
             stage("Compile") {

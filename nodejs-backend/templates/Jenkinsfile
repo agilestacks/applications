@@ -36,7 +36,7 @@ podTemplate(
                 )
         ]
 ) {
-    node('kubernetes') {
+    node(uuid) {
         container('nodejs') {
             stage("Test") {
                 sh script: 'npm install test'
