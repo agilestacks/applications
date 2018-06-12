@@ -8,7 +8,7 @@ properties([
                 string(name: 'APP_URL', defaultValue: "${url}.$${env.INGRESS_FQDN}", description: 'External URL where current app will be accessible'),
                 string(name: 'NAMESPACE', defaultValue: '${namespace}', description: 'Namespace where container will be deployed'),
                 string(name: 'REPLICAS', defaultValue:  '${replicas}', description: 'Number of pod replicas'),
-                string(name: 'STATE_FILE', defaultValue: '$${env.${stateFileVarName}}', description: 'Name of the global ariable with the target stack state'),
+                string(name: 'STATE_FILE', defaultValue: '$${env.${state_file_var_name}}', description: 'Name of the global ariable with the target stack state'),
         ]),
         pipelineTriggers([
                 [$class: 'GitHubPushTrigger'],
