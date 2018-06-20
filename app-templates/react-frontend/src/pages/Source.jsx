@@ -1,8 +1,9 @@
 import {Code} from '../components';
+
 const {
-    APPLICATION_REPOSITORY,
-    APPLICATION_BRANCH = 'master'
+    APPLICATION_REPOSITORY
 } = process.env;
+
 export function Source() {
     return (
         <div>
@@ -15,5 +16,7 @@ export function Source() {
                 which was generated from Agilestacks React Web Application Template.
             </p>
         </div>
-    )
+    );
 }
+
+export default Source;

@@ -5,7 +5,7 @@ export function Development() {
         <div>
             <h1>Application Development</h1>
 
-            <h3>Prepare</h3>
+            <h2>Prepare</h2>
             <p>
                 To init application development just run
                 <Code>
@@ -14,7 +14,7 @@ export function Development() {
                 This will install all application dependencies.
             </p>
 
-            <h3>Development Environment</h3>
+            <h2>Development Environment</h2>
             <p>
                 To begin the development run
                 <Code>
@@ -27,9 +27,10 @@ export function Development() {
                 So you can open it on browser.
             </p>
             <p>
-                Server will watch for changes are made to the code and refresh the client each time it occurred.
+                Server will watch for changes are made to the code and refresh the client
+                each time it occurred.
             </p>
-            <h3>Production Environment</h3>
+            <h2>Production Environment</h2>
             <p>
                 To create a build run
                 <Code>
@@ -41,5 +42,7 @@ export function Development() {
                 </Code>
             </p>
         </div>
-    )
+    );
 }
+
+export default Development;

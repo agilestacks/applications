@@ -1,6 +1,8 @@
+$feature-version-color: #bbb;
+
 .feature {
     & > *:not(:last-child) {
-        margin-right: 3px;
+        margin-right: 7px;
     }
 }
 
@@ -13,5 +15,5 @@
 }
 
 .feature-versoin {
-    color: #bbb;
+    color: $feature-version-color;
 }

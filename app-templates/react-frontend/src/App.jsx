@@ -1,4 +1,5 @@
-import {Navbar, NavbarGroup} from '@blueprintjs/core';
+import {PropTypes} from 'prop-types';
+import {Navbar} from '@blueprintjs/core';
 import {Link} from 'react-router-dom';
 
 import './App.scss';
@@ -8,25 +9,23 @@ import logo from './assets/img/logo.svg';
 import {RepoActions, Navigation} from './components';
 
 const {
-    APPLICATION_REPOSITORY,
-    APPLICATION_BRANCH = 'master'
+    APPLICATION_REPOSITORY: repo,
+    APPLICATION_BRANCH: branch
 } = process.env;
 
-const repoUrl = `git@github.com:${APPLICATION_REPOSITORY}.git`;
-const editUrl = `https://github.com/${APPLICATION_REPOSITORY}/blob/${APPLICATION_BRANCH}/src/App.jsx`;
 
 export function App({children}) {
     return (
         <div className="app">
             <header className="app-header">
                 <div className="app-title">
-                    <Link to="/"><img className="app-title-logo" src={logo} /></Link>
+                    <Link to="/"><img className="app-title-logo" src={logo} alt="Application logo" /></Link>
                     <h2><Link className="app-title-name" to="/">Welcome to React Application</Link></h2>
                 </div>
                 <Navbar className="app-navbar">
                     <div className="container flex">
                         <Navigation />
-                        <RepoActions {...{repoUrl, editUrl}}/>
+                        <RepoActions {...{repo, branch}} />
                     </div>
                 </Navbar>
             </header>
@@ -35,8 +34,15 @@ export function App({children}) {
                     {children}
                 </div>
             </section>
-            <footer className="app-footer">
-            </footer>
+            <footer className="app-footer" />
         </div>
     );
 }
+App.propTypes = {
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.node),
+        PropTypes.node
+    ]).isRequired
+};
+
+export default App;

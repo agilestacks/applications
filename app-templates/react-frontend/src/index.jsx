@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {HashRouter} from 'react-router-dom';
 
-import  '@blueprintjs/core/src/blueprint.scss';
-import  './index.scss';
+import '@blueprintjs/core/src/blueprint.scss';
+import './index.scss';
 
 import {App} from './App';
 import {Routes} from './pages/Routs';
-import {HashRouter} from 'react-router-dom';
 
 
 ReactDOM.render(
@@ -14,5 +14,6 @@ ReactDOM.render(
         <App>
             <Routes />
         </App>
-    </HashRouter>
-    , document.getElementById('react-root'));
+    </HashRouter>,
+    window.document.getElementById('react-root')
+);

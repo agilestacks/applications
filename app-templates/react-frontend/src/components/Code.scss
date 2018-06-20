@@ -1,6 +1,8 @@
+$code-background: #fafafa;
+
 .code {
     display: block;
     padding: 20px;
     margin: 10px 80px;
-    background: #fafafa;
+    background: $code-background;
 }

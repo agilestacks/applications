@@ -1,3 +1,7 @@
+$layout-background: #75519c;
+$navigation-background: #6d4c92;
+$title-color: #fff;
+
 .app {
     display: flex;
     flex-direction: column;
@@ -8,20 +12,21 @@
     left: 0;
     overflow: auto;
 }
+
 .app-header {
-    background: #75519c;
+    background: $layout-background;
 }
+
 .app-title {
     text-align: center;
-    h2 {
-    }
 }
+
 .app-title-name {
     &,
     &:active,
     &:hover,
     a:focus {
-        color: #fff;
+        color: $title-color;
         text-decoration: none;
     }
 }
@@ -32,7 +37,7 @@
 }
 
 .app-navbar {
-    background: #6d4c92;
+    background: $navigation-background;
 
     .container {
         display: flex;
@@ -52,7 +57,7 @@
 
     h1 {
         margin: 25px 0;
-      }
+    }
 
     h2,
     h3,
@@ -63,10 +68,16 @@
 
 .app-footer {
     flex: 0 0 150px;
-    background: #75519c;
+    background: $layout-background;
 }
 
 @keyframes App-logo-spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+

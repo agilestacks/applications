@@ -1,5 +1,6 @@
+import PropTypes from 'prop-types';
 import {Component} from 'react';
-import {NavbarGroup, Alignment, Button, Intent, NavbarDivider, AnchorButton, Icon} from '@blueprintjs/core';
+import {NavbarGroup, Button, Intent, NavbarDivider, AnchorButton} from '@blueprintjs/core';
 import {IconNames} from '@blueprintjs/icons';
 
 import './RepoActions.scss';
@@ -13,8 +14,12 @@ export class RepoActions extends Component {
     }
     mountSourceInput = sourceInput => Object.assign(this, {sourceInput})
     render() {
-        const {editUrl, repoUrl} = this.props;
         const {copy, mountSourceInput} = this;
+        const {repo, branch} = this.props;
+
+        const repoUrl = `git@github.com:${repo}.git`;
+        const editUrl = `https://github.com/${repo}/blob/${branch}/src/App.jsx`;
+
         return (
             <NavbarGroup className="repo-actions">
                 <span className="repo-actions-source">
@@ -25,10 +30,23 @@ export class RepoActions extends Component {
                         value={repoUrl}
                     />
                 </span>
-                <Button pintent={Intent.PRIMARY} icon={IconNames.CLIPBOARD} onClick={copy}>Copy</Button>
+                <Button pintent={Intent.PRIMARY} icon={IconNames.CLIPBOARD} onClick={copy}>
+                    Copy
+                </Button>
                 <NavbarDivider />
                 <AnchorButton href={editUrl} text="Edit application" taget="__blank" icon={IconNames.EDIT} />
             </NavbarGroup>
         );
     }
 }
+
+RepoActions.propTypes = {
+    repo: PropTypes.string.isRequired,
+    branch: PropTypes.string
+};
+
+RepoActions.defaultProps = {
+    branch: 'master'
+};
+
+export default RepoActions;

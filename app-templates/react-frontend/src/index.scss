@@ -1,17 +1,24 @@
+$text-color: #42186f;
+
 html,
 body {
-  font-family: 'Palanquin-Regular', 'sans serif'
+  font-family: 'Palanquin-Regular', 'sans serif';
 }
+
 * {
-  color: #42186f;
+  color: $text-color;
+}
+
+li {
+  margin-bottom: 12px;
 }
 
 .flex {
-  display: flex
+  display: flex;
 }
 
 @font-face {
   font-family: 'Palanquin-Regular';
-  src: url('assets/fonts/palanquin-regular.ttf') /* TTF file for CSS3 browsers */
+  src: url('assets/fonts/palanquin-regular.ttf');
 }
 

@@ -1,11 +1,19 @@
-import {NavbarGroup, Menu} from '@blueprintjs/core';
+import {NavbarGroup} from '@blueprintjs/core';
 import {NavLink} from 'react-router-dom';
 
 import './Navigation.scss';
 
-function NavigationItem({to, children}) {
-    return <NavLink className="navigation-item" exact to={to} activeClassName="navigation-item-active">{children}</NavLink>
+function NavigationItem(props) {
+    return (
+        <NavLink
+            {...props}
+            className="navigation-item"
+            activeClassName="navigation-item-active"
+            exact
+        />
+    );
 }
+
 export function Navigation() {
     return (
         <NavbarGroup className="navigation">
@@ -15,3 +23,5 @@ export function Navigation() {
         </NavbarGroup>
     );
 }
+
+export default Navigation;

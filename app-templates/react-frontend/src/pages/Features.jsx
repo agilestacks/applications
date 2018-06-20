@@ -1,8 +1,4 @@
 import {Feature} from '../components';
-const {
-    APPLICATION_REPOSITORY,
-    APPLICATION_BRANCH = 'master'
-} = process.env;
 
 const features = [
     {
@@ -30,7 +26,18 @@ const features = [
         version: '2.3',
         link: 'http://blueprintjs.com/docs/v2/'
     },
+    {
+        name: 'ESLint',
+        version: '4.19',
+        link: 'https://eslint.org/'
+    },
+    {
+        name: 'Sass Lint',
+        version: '1.12',
+        link: 'https://github.com/sasstools/sass-lint/'
+    }
 ];
+
 export function Features() {
     return (
         <div>
@@ -44,5 +51,7 @@ export function Features() {
                 }
             </ul>
         </div>
-    )
+    );
 }
+
+export default Features;

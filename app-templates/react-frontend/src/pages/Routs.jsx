@@ -1,4 +1,4 @@
-import {Switch, Route}  from 'react-router-dom';
+import {Switch, Route} from 'react-router-dom';
 
 import {Source} from './Source';
 import {Features} from './Features';
@@ -13,7 +13,9 @@ export function Routes() {
             <Route exact path="/features" component={Features} />
             <Route exact path="/development" component={Development} />
 
-            <Route exact path='*' component={Page404} />
+            <Route exact path="*" component={Page404} />
         </Switch>
     );
 }
+
+export default Routes;

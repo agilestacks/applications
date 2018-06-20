@@ -1,16 +1,23 @@
+$navigation-color: #fff;
+$navigation-background: rgba($navigation-color, .2);
+$active-navigation-background: rgba($navigation-color, .4);
+
 .navigation {
     font-weight: bold;
+
     .navigation-item {
-        &:hover {
-            text-decoration: none;
-            background: #fff3;
-        }
-        color: white;
+        color: $navigation-color;
         padding: 6px;
         border-radius: 3px;
         margin-right: 5px;
+
+        &:hover {
+            text-decoration: none;
+            background: $navigation-background;
+        }
     }
+
     .navigation-item-active {
-        background: #fff6;
+        background: $active-navigation-background;
     }
 }

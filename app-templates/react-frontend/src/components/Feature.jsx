@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import './Feature.scss';
 
 export function Feature({name, version, link}) {
@@ -11,5 +12,18 @@ export function Feature({name, version, link}) {
             }
             {version && <span className="feature-versoin">v{version}</span>}
         </span>
-    )
+    );
 }
+
+Feature.propTypes = {
+    name: PropTypes.string.isRequired,
+    version: PropTypes.string,
+    link: PropTypes.string
+};
+
+Feature.defaultProps = {
+    version: undefined,
+    link: undefined
+};
+
+export default Feature;
