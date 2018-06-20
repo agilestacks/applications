@@ -1,5 +1,5 @@
 {
-  "name": "agilestacks-react-application-template",
+  "name": "basic-react-boilerplate",
   "version": "1.0.0",
   "description": "Basic boilerplate with React, ReactBootstrap, Babel and Webpack",
   "scripts": {
@@ -8,7 +8,7 @@
     "build": "NODE_ENV=production webpack --config webpack.prod.js"
   },
   "keywords": [],
-  "author": "Artem Kudla <artem@agilestacks.com>",
+  "author": "hydrocarbons",
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.26.0",
