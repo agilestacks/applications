@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const {ProvidePlugin} = webpack;
+const {ProvidePlugin, DefinePlugin} = webpack;
 
 module.exports = {
   entry: './src',
@@ -20,10 +20,7 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loader: "babel-loader",
-        query: {
-          presets: ['es2015', 'react']
-        }
+        loader: "babel-loader"
       },
       {
         test: /\.html$/,
@@ -66,6 +63,13 @@ module.exports = {
     }),
     new ProvidePlugin({
       'React': 'react'
+    }),
+    new DefinePlugin({
+      'process.env': {
+        'APPLICATION_REPOSITORY': JSON.stringify(process.env.APPLICATION_REPOSITORY),
+        'APPLICATION_BRANCH': JSON.stringify(process.env.APPLICATION_BRANCH),
+        'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+      }
     })
   ],
   devServer: {
