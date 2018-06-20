@@ -60,10 +60,9 @@ module.exports = {
         new CleanWebpackPlugin(['dist']),
         new HtmlWebPackPlugin({
             title: 'React Web Application',
-            template: './src/index.html',
+            template: './src/index.hbs',
             filename: './index.html',
-            favicon: './src/assets/img/favicon.ico',
-            faviconFilename: './assets/img/favicon.ico'
+            favicon: './src/assets/img/favicon.ico'
         }),
         new ProvidePlugin({
             React: 'react',
