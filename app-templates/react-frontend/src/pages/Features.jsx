@@ -35,6 +35,11 @@ const features = [
         name: 'Sass Lint',
         version: '1.12',
         link: 'https://github.com/sasstools/sass-lint/'
+    },
+    {
+        name: 'Jest',
+        version: '23.1',
+        link: 'https://facebook.github.io/jest/'
     }
 ];
 

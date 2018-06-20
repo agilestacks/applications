@@ -6,7 +6,10 @@
     "start": "NODE_ENV=dev webpack-dev-server --open --config webpack.dev.js",
     "watch": "webpack --watch",
     "build": "NODE_ENV=production webpack --config webpack.prod.js",
-    "lint": "eslint --ext .jsx,.js . && sass-lint -v"
+    "lint": "eslint --ext .jsx,.js . && sass-lint -v",
+    "test": "jest",
+    "junit:lint": "eslint -o eslint-junit.xml -f junit --ext .jsx,.js . && sass-lint -o sass-lint-junit.xml -f junit -v",
+    "junit:test": "jest --ci --reporters=jest-junit"
   },
   "keywords": [],
   "author": "hydrocarbons",
@@ -14,6 +17,7 @@
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.3",
+    "babel-jest": "^23.0.1",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
@@ -28,7 +32,10 @@
     "eslint-plugin-react": "^7.8.2",
     "file-loader": "^1.1.6",
     "html-loader": "^0.5.5",
+    "jest": "^23.1.0",
+    "jest-junit": "^5.1.0",
     "node-sass": "^4.9.0",
+    "react-test-renderer": "^16.4.1",
     "sass-lint": "^1.12.1",
     "sass-loader": "^7.0.3",
     "style-loader": "^0.20.2",
@@ -48,5 +55,34 @@
     "uglifyjs-webpack-plugin": "^1.2.6",
     "webpack": "^3.12.0",
     "webpack-merge": "^4.1.1"
+  },
+  "jest": {
+    "globals": {
+      "NODE_ENV": "test"
+    },
+    "moduleFileExtensions": [
+      "js",
+      "jsx"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "src"
+    ],
+    "testRegex": "\\.test\\.jsx?$",
+    "moduleNameMapper": {
+      "\\.(eot|woff2?|otf|ttf|svg|png|jpe?g|gif)(\\?\\S*)?$": "<rootDir>/mocks/fileMock.js",
+      "\\.s?css$": "<rootDir>/mocks/styleMock.js"
+    },
+    "setupFiles": [
+      "<rootDir>/.jest-provide-react.js"
+    ]
+  },
+  "jest-junit": {
+    "suiteName": "jest tests",
+    "output": "./tests-junit.xml",
+    "classNameTemplate": "{classname}-{title}",
+    "titleTemplate": "{classname}-{title}",
+    "ancestorSeparator": " › ",
+    "usePathForSuiteName": "true"
   }
 }
