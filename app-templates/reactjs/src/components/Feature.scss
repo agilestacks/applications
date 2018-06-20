@@ -1,0 +1,17 @@
+.feature {
+    & > *:not(:last-child) {
+        margin-right: 3px;
+    }
+}
+
+.feature-link {
+    &,
+    &:hover,
+    &:active {
+        color: inherit;
+    }
+}
+
+.feature-versoin {
+    color: #bbb;
+}

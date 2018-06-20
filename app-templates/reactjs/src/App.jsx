@@ -1,9 +1,11 @@
 import {Navbar, NavbarGroup} from '@blueprintjs/core';
+import {Link} from 'react-router-dom';
 
 import './App.scss';
 
-import {RepoActions} from './components/RepoActions';
 import logo from './assets/img/logo.svg';
+
+import {RepoActions, Navigation} from './components';
 
 const {
     APPLICATION_REPOSITORY,
@@ -13,24 +15,24 @@ const {
 const repoUrl = `git@github.com:${APPLICATION_REPOSITORY}.git`;
 const editUrl = `https://github.com/${APPLICATION_REPOSITORY}/blob/${APPLICATION_BRANCH}/src/App.jsx`;
 
-export function App() {
+export function App({children}) {
     return (
         <div className="app">
             <header className="app-header">
                 <div className="app-title">
-                    <img className="logo" src={logo} />
-                    <h2>Welcome to React Application</h2>
+                    <Link to="/"><img className="app-title-logo" src={logo} /></Link>
+                    <h2><Link className="app-title-name" to="/">Welcome to React Application</Link></h2>
                 </div>
                 <Navbar className="app-navbar">
                     <div className="container flex">
-                        <NavbarGroup>
-                        </NavbarGroup>
+                        <Navigation />
                         <RepoActions {...{repoUrl, editUrl}}/>
                     </div>
                 </Navbar>
             </header>
             <section className="app-content">
                 <div className="container">
+                    {children}
                 </div>
             </section>
             <footer className="app-footer">

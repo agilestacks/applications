@@ -1,10 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import  "@blueprintjs/core/src/blueprint.scss";
+import  '@blueprintjs/core/src/blueprint.scss';
+import  './index.scss';
 
 import {App} from './App';
+import {Routes} from './pages/Routs';
+import {HashRouter} from 'react-router-dom';
 
-import styles from "./assets/css/style.css";
 
-ReactDOM.render(<App />, document.getElementById('react-root'));
+ReactDOM.render(
+    <HashRouter>
+        <App>
+            <Routes />
+        </App>
+    </HashRouter>
+    , document.getElementById('react-root'));

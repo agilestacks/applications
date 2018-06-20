@@ -1,0 +1,16 @@
+.navigation {
+    font-weight: bold;
+    .navigation-item {
+        &:hover {
+            text-decoration: none;
+            background: #fff3;
+        }
+        color: white;
+        padding: 6px;
+        border-radius: 3px;
+        margin-right: 5px;
+    }
+    .navigation-item-active {
+        background: #fff6;
+    }
+}

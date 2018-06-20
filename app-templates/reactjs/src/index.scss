@@ -1,0 +1,17 @@
+html,
+body {
+  font-family: 'Palanquin-Regular', 'sans serif'
+}
+* {
+  color: #42186f;
+}
+
+.flex {
+  display: flex
+}
+
+@font-face {
+  font-family: 'Palanquin-Regular';
+  src: url('assets/fonts/palanquin-regular.ttf') /* TTF file for CSS3 browsers */
+}
+

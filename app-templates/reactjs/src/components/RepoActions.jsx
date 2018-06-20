@@ -17,12 +17,14 @@ export class RepoActions extends Component {
         const {copy, mountSourceInput} = this;
         return (
             <NavbarGroup className="repo-actions">
-                <input
-                    className="pt-input repo-actions-source"
-                    ref={mountSourceInput}
-                    readOnly
-                    value={repoUrl}
-                />
+                <span className="repo-actions-source">
+                    <input
+                        className="pt-input repo-actions-source-value"
+                        ref={mountSourceInput}
+                        readOnly
+                        value={repoUrl}
+                    />
+                </span>
                 <Button pintent={Intent.PRIMARY} icon={IconNames.CLIPBOARD} onClick={copy}>Copy</Button>
                 <NavbarDivider />
                 <AnchorButton href={editUrl} text="Edit application" taget="__blank" icon={IconNames.EDIT} />

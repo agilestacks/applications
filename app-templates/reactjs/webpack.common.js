@@ -58,8 +58,11 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(['dist']),
     new HtmlWebPackPlugin({
+      title: 'React Web Application',
       template: "./src/index.html",
-      filename: "./index.html"
+      filename: "./index.html",
+      favicon: './src/assets/img/favicon.ico',
+      faviconFilename: './assets/img/favicon.ico'
     }),
     new ProvidePlugin({
       'React': 'react'
