@@ -43,7 +43,7 @@ npm test        # runs tests over the application
 ```
 When the server started it watches for changes are made to the code and refreshes the client each time it occurred.
 
-### Application deployment
+## Application deployment
 The application is to be distributed with a built source. There's a command to create a build
 ```bash
 npm run build
