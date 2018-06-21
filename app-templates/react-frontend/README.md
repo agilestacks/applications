@@ -49,6 +49,7 @@ The application is to be distributed with a built source. There's a command to c
 npm run build
 ```
 It creates distribution set in `./dist/` folder.
+
 There're another CI useful commands
 ```bash
 npm run junit:lint      # makes code quality check and creates a junit report
