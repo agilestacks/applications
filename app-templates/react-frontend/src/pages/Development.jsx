@@ -4,7 +4,6 @@ export function Development() {
     return (
         <div>
             <h1>Application Development</h1>
-
             <h2>Prepare</h2>
             <p>
                 To init application development just run
@@ -13,33 +12,23 @@ export function Development() {
                 </Code>
                 This will install all application dependencies.
             </p>
-
             <h2>Development Environment</h2>
             <p>
-                To begin the development run
-                <Code>
-                    npm start
-                </Code>
-                This will locally start your application serving on port
-                <Code>
-                    http://localhost:8081
-                </Code>
-                So you can open it on browser.
+                By default in development environment application is served on <Code inline>http://localhost:8081</Code>.
+                Port can be changed in configuration file for
+                development environment <Code inline>webpack.dev.js</Code>.
             </p>
             <p>
-                Server will watch for changes are made to the code and refresh the client
-                each time it occurred.
-            </p>
-            <h2>Production Environment</h2>
-            <p>
-                To create a build run
-                <Code>
-                    npm run build
-                </Code>
-                Production deploy ready application content will output to folder
-                <Code>
-                    ./dist/
-                </Code>
+                Application has several commands that are useful for development cycle
+                {
+                    Code(
+                        'npm start       # starts the development server',
+                        'npm run lint    # makes code quality check',
+                        'npm test        # runs tests over the application'
+                    )
+                }
+                When the server started it watches for changes are made to the code
+                and refreshes the client each time it occurred.
             </p>
         </div>
     );

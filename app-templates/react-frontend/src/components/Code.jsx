@@ -3,21 +3,30 @@ import classNames from 'classnames';
 
 import './Code.scss';
 
-export function Code({className, ...props}) {
+export function Code(props, ...args) {
+    if (typeof props === 'string') {
+        return <Code>{[props, ...args].join('\n')}</Code>;
+    }
+    const {className, inline, ...rest} = props;
     const componentClassName = classNames(
         'code',
-        className
+        className,
+        {
+            'code-inline': inline
+        }
     );
 
-    return <code className={componentClassName} {...props} />;
+    return <code className={componentClassName} {...rest} />;
 }
 
 Code.propTypes = {
-    className: PropTypes.string
+    className: PropTypes.string,
+    inline: PropTypes.bool
 };
 
 Code.defaultProps = {
-    className: undefined
+    className: undefined,
+    inline: false
 };
 
 export default Code;

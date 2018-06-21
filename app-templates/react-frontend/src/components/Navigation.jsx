@@ -19,7 +19,9 @@ export function Navigation() {
         <NavbarGroup className="navigation">
             <NavigationItem to="/">Source</NavigationItem>
             <NavigationItem to="/features">Features</NavigationItem>
+            <NavigationItem to="/environment">Environment</NavigationItem>
             <NavigationItem to="/development">Development</NavigationItem>
+            <NavigationItem to="/deployment">Deployment</NavigationItem>
         </NavbarGroup>
     );
 }

@@ -14,6 +14,16 @@ From the scratch the application supports the following features
 * [Sass Lint](https://github.com/sasstools/sass-lint/) v1.12
 * [Jest](https://facebook.github.io/jest/) v23.1
 
+## Environment
+
+From the environment application supposes to obtain such a variable parameters
+```bash
+APPLICATION_REPOSITORY=github-organization-or-user/repository
+APPLICATION_BRANCH=branch-name # default is `master`
+```
+These are in help for application to represent and manipulate own code source.
+
+
 ## Application Development
 ### Prepare
 To init application development just run
@@ -23,18 +33,37 @@ npm install
 This will install all application dependencies.
 
 ### Development Environment
-To begin the development run
+By default in development environment application is served on `http://localhost:8081`. Port can be changed in configuration file for development environment `webpack.dev.js`.
+
+Application has several commands that are useful for development cycle
 ```bash
-npm start
+npm start       # starts the development server
+npm run lint    # makes code quality check
+npm test        # runs tests over the application
 ```
-This will locally start your application serving on port `http://localhost:8081`. So you can open it on browser.
+When the server started it watches for changes are made to the code and refreshes the client each time it occurred.
 
-Server will watch for changes are made to the code and refresh the client each time it occurred.
-
-### Production Environment
-To create a build run
+### Application deployment
+The application is to be distributed with a built source. There's a command to create a build
 ```bash
 npm run build
 ```
-Production deploy ready application content will output to `./dist/` folder
+It creates distribution set in `./dist/` folder.
+There're another CI useful commands
+```bash
+npm run junit:lint      # makes code quality check and creates a junit report
+npm run junit:test      # runs tests over the application and create a junit report
+```
+
+Here's an example of deployment cycle
+```bash
+export APPLICATION_REPOSITORY=github-organization-or-user/repository
+# export APPLICATION_BRANCH=custom-branch
+
+npm install
+npm run junit:lint && \
+npm run junit:test && \
+npm run build && \
+aws s3 sync .dist s3://$DEPLOYMENT_BUCKET/
+```
 
