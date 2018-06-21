@@ -1,0 +1,16 @@
+---
+version: 1
+kind: component
+meta:
+  name: push-application-template
+  brief: Push application template
+
+parameters:
+- name: component.push-application-template
+  parameters:
+  - name: apps_repo
+    env: APPLICATIONS_REPO
+  - name: repo
+    env: APPLICATION_REPO
+  - name: template
+    env: TEMPLATE

@@ -1,0 +1,20 @@
+---
+version: 1
+kind: component
+meta:
+  name: notify-jenkins
+  brief: Create crd for jenkins operator
+
+parameters:
+- name: component.notify-jenkins
+  parameters:
+  - name: application
+  - name: stateFile
+  - name: stateFileS3
+  - name: credentialsName
+  - name: deployKey
+  - name: repositoryUrl
+
+
+templates:
+  files: ["*.template"]
