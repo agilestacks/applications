@@ -34,7 +34,7 @@ export class RepoActions extends Component {
                     Copy
                 </Button>
                 <NavbarDivider />
-                <AnchorButton href={editUrl} text="Edit application" taget="__blank" icon={IconNames.EDIT} />
+                <AnchorButton href={editUrl} text="Edit application" icon={IconNames.EDIT} />
             </NavbarGroup>
         );
     }

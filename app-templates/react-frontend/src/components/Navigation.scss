@@ -1,6 +1,6 @@
 $navigation-color: #fff;
-$navigation-background: rgba($navigation-color, .2);
-$active-navigation-background: rgba($navigation-color, .4);
+$navigation-background-hover: #9f82be;
+$active-navigation-background: rgba($navigation-background-hover, .5);
 
 .navigation {
     font-weight: bold;
@@ -13,7 +13,7 @@ $active-navigation-background: rgba($navigation-color, .4);
 
         &:hover {
             text-decoration: none;
-            background: $navigation-background;
+            background: $navigation-background-hover;
         }
     }
 
