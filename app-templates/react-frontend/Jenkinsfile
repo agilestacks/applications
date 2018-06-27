@@ -1,0 +1,80 @@
+pipeline {
+  triggers {
+    githubPush()
+    pollSCM('H/15 * * * *')
+  }
+  parameters {
+    string(
+      name: 'BUCKET',
+      defaultValue: 'tbd',
+      description: 'S3 bucket where application distribution must be published',
+    )
+    string(
+      name: 'CONTEXT_PATH',
+      defaultValue: '',
+      description: 'Application context path',
+    )
+  }
+
+  agent {
+    kubernetes {
+      label 'pod'
+      containerTemplate(
+        name: 'buildbox',
+        image: 'node:8.11',
+        ttyEnabled: true,
+        command: 'cat'
+      )
+    }
+  }
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+        // git credentialsId: 'asibot-user', url: 'https://github.com/agilestacks/applications.git'
+      }
+    }
+    stage('Build') {
+      steps {
+        container('buildbox') {
+          dir('app-templates/react-frontend') {
+            sh script: 'npm install'
+            sh script: 'npm run junit:test'
+            sh script: 'npm run build'
+          }
+        }
+      }
+    }
+    stage('Lint') {
+      steps {
+        container('buildbox') {
+          dir('app-templates/react-frontend') {
+            script {
+              try {
+                sh script: 'npm run junit:lint'
+              } catch (err) {
+                currentBuild.result = 'UNSTABLE'
+                currentBuild.description = 'Found lint violations'
+              }
+            }
+          }
+        }
+      }
+    }
+    stage('Deploy') {
+      steps {
+        container('toolbox') {
+          sh script: "aws s3 sync --delete dist/ s3://${params.BUCKET}/${params.CONTEXT_PATH}"
+        }
+      }
+    }
+  }
+  post {
+    always {
+      junit testResults: './tests-junit.xml'
+    }
+    changed {
+      slackSend color: slack.buildColor, message: slack.buildReport
+    }
+  }
+}
