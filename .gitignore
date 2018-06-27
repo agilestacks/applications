@@ -5,3 +5,4 @@ hub-application.elaborate
 hub.yaml.state
 terraform.tfstate
 components/s3-website/.terraform
+**/.terraform

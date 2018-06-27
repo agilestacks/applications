@@ -1,0 +1,21 @@
+---
+version: 1
+kind: component
+meta:
+  name: application-code
+  brief: Push application template
+
+parameters:
+- name: component.application-code
+  parameters:
+  - name: repo
+    env: APPLICATION_REPO
+  - name: template
+    env: TEMPLATE
+  - name: name
+  - name: url
+  - name: namespace
+    default: jenkins
+  - name: replicas
+    default: 1
+  - name: stateFileVar

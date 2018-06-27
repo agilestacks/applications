@@ -13,7 +13,7 @@ export TF_INPUT           := 0
 export TF_OPTS            :=
 export TF_UPDATE          ?= -update
 
-COMPONENT_NAME    ?= application-job
+COMPONENT_NAME    ?= github-repository
 REGISTRY          ?= $(subst https://,,$(lastword $(shell aws ecr get-login --no-include-email --region $(AWS_DEFAULT_REGION))))
 IMAGE             ?= $(REGISTRY)/agilestacks/$(TF_VAR_name)/application-job
 IMAGE_VERSION     ?= $(shell git rev-parse HEAD | colrm 7)

@@ -2,19 +2,19 @@
 version: 1
 kind: component
 meta:
-  name: notify-jenkins
-  brief: Create crd for jenkins operator
+  name: jenkins-pipeline
+  brief: Create resources for jenkins operator
 
 parameters:
-- name: component.notify-jenkins
+- name: component.jenkins-pipeline
   parameters:
   - name: application
   - name: stateFile
   - name: stateFileS3
-  - name: credentialsName
   - name: deployKey
   - name: repositoryUrl
-
+  - name: credentialsName
+    value: ${component.jenkins-pipeline.application}_CREDENTIALS
 
 templates:
   files: ["*.template"]

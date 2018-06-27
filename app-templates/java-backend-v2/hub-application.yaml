@@ -1,0 +1,83 @@
+---
+version: 1
+kind: application
+meta:
+  name: java-application:1
+  brief: Java Application
+  source:
+    dir: ./
+
+components:
+  - name: github-repository
+    source:
+      dir: ../../components/github-repository
+  - name: application-code
+    source:
+      dir: ../../components/application-code
+  - name: jenkins-pipeline
+    source:
+      dir: ../../components/notify-jenkins
+  - name: ecr
+    source:
+      dir: ../../components/ecr
+
+lifecycle:
+  verbs: [deploy, undeploy]
+  order:
+    - github-repository
+    - application-code
+    - ecr
+    - jenkins-pipeline
+  mandatory:
+    - github-repository
+    - application-code
+    - ecr
+    - jenkins-pipeline
+
+parameters:
+  - name: terraform.bucket.name
+    env: STATE_BUCKET
+  - name: terraform.bucket.region
+    env: STATE_REGION
+  - name: component.github-repository
+    parameters:
+    - name: name
+      fromEnv: REPOSITORY_NAME
+    - name: description
+      fromEnv: DESCRIPTION
+    - name: organization
+      fromEnv: ORGANIZATION
+    - name: token
+      fromEnv: TOKEN
+  - name: component.application-code
+    parameters:
+      - name: repo
+        value: https://${component.github-repository.token}@github.com/${component.github-repository.organization}/${component.github-repository.name}.git
+      - name: template
+        fromEnv: TEMPLATE
+      - name: name
+        fromEnv: APPLICATION_NAME
+      - name: url
+        fromEnv: APPLICATION_URL
+      - name: namespace
+        fromEnv: APPLICATION_NAMESPACE
+      - name: replicas
+        fromEnv: APPLICATION_REPLICAS
+      - name: stateFileVar
+        fromEnv: APPLICATION_STATEFILE_VAR
+  - name: component.jenkins-pipeline
+    parameters:
+      - name: application
+        fromEnv: APPLICATION_NAME
+      - name: stateFile
+        fromEnv: APPLICATION_STATEFILE_VAR
+      - name: stateFileS3
+        fromEnv: APPLICATION_STATEFILE_PATH
+      - name: deployKey
+        value: ${component.github-repository.token}
+      - name: repositoryUrl
+        value: ssh://github.com/${component.github-repository.organization}/${component.github-repository.name}.git
+
+outputs:
+  - name: component.ecr.image
+    value: ${component.ecr.image}
