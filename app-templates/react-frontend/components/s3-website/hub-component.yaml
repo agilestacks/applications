@@ -1,0 +1,24 @@
+---
+version: 1
+kind: component
+meta:
+  name: s3-website
+  source:
+    dir: .
+
+parameters:
+- name: terraform.bucket.name
+  env: STATE_BUCKET
+- name: terraform.bucket.region
+  env: STATE_REGION
+- name: component.s3webiste
+  parameters:
+  - name: name
+    env: TF_VAR_name
+  - name: base.domain
+    env: TF_VAR_base_domain
+- name: cloud.region
+  kind: user
+  env: AWS_DEFAULT_REGION
+
+outputs: []

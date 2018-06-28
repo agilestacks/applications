@@ -1,0 +1,43 @@
+---
+version: 1
+kind: application
+meta:
+  name: myreactjs:1
+  brief: >
+    HTML5/JavaScript application that has been deployed
+    to AWS S3 hosted website with Jenkins CI server
+  source:
+    dir: ./
+
+requires:
+- aws
+
+components:
+- name: s3
+  source:
+    dir: ./components/s3-website
+
+lifecycle:
+  verbs: [deploy, undeploy]
+  order:
+  - s3
+  mandatory:
+  - s3
+
+parameters:
+- name: terraform.bucket.name
+  fromEnv: STATE_BUCKET
+- name: terraform.bucket.region
+  fromEnv: STATE_REGION
+- name: cloud.region
+  fromEnv: AWS_DEFAULT_REGION
+- name: terraform.bucket.name
+  fromEnv: STATE_BUCKET
+- name: component.s3webiste
+  parameters:
+  - name: name
+    fromEnv: APPLICATION_NAME
+  - name: baseDomain
+    value: "${dns.baseDomain}"
+
+outputs: []
