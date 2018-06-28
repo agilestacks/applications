@@ -14,8 +14,8 @@ module "r53" {
   name          = "${var.name}"
   r53_zone_id   = "${data.aws_route53_zone.main.zone_id}"
   r53_domain    = "${data.aws_route53_zone.main.name}"
-  alias_zone_id = "${module.repo_s3.hosted_zone_id}"
-  alias_name    = "${module.repo_s3.website_domain}"
+  alias_zone_id = "${module.s3.hosted_zone_id}"
+  alias_name    = "${module.s3.website_domain}"
 }
 
 module "s3" {

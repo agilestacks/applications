@@ -15,7 +15,7 @@ parameters:
   parameters:
   - name: name
     env: TF_VAR_name
-  - name: base.domain
+  - name: baseDomain
     env: TF_VAR_base_domain
 - name: cloud.region
   kind: user

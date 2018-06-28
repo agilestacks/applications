@@ -1,2 +1,3 @@
 app-templates/react-frontend/components/s3-website/.terraform
 hub.yaml.elaborate
+hub-application.elaborate
