@@ -18,6 +18,7 @@ components:
     dir: ./components/s3-website
 
 lifecycle:
+  bare: allow
   verbs: [deploy, undeploy]
   order:
   - s3
