@@ -4,20 +4,23 @@ pipeline {
     pollSCM('H/15 * * * *')
   }
   parameters {
-    string(
-      name: 'BUCKET',
-      defaultValue: 'tbd',
-      description: 'S3 bucket where application distribution must be published',
-    )
-    string(
-      name: 'CONTEXT_PATH',
-      defaultValue: '',
-      description: 'Application context path',
-    )
-  }
+    string( name: 'APPLICATION_NAME',
+            defaultValue: "${env.JOB_BASE_NAME}",
+            description: 'S3 bucket where application distribution must be published'
+          )
 
+    string( name: 'DOMAIN_NAME',
+            defaultValue: "${env.DOMAIN_NAME}",
+            description: 'S3 bucket where application distribution must be published'
+          )
+    string( name: 'STATE_FILE',
+            defaultValue: 's3://terraform.agilestacks.com/antondo2.kubernetes.delivery/hub/prod/hub.state',
+            description: 'Current stack state file location'
+          )
+  }
   agent {
     kubernetes {
+      inheritFrom 'toolbox'
       label 'pod'
       containerTemplate(
         name: 'buildbox',
@@ -31,7 +34,21 @@ pipeline {
     stage('Checkout') {
       steps {
         checkout scm
-        // git credentialsId: 'asibot-user', url: 'https://github.com/agilestacks/applications.git'
+        // git credentialsId: 'asibot', url: 'https://github.com/agilestacks/applications.git'
+      }
+    }
+    stage('Elaborate') {
+      environment {
+        DOMAIN_NAME      = "${params.DOMAIN_NAME}"
+        APPLICATION_NAME = "${params.APPLICATION_NAME}"
+      }
+      steps {
+        container('toolbox') {
+          dir('app-templates/react-frontend') {
+            sh script: "hub elaborate ./hub-application.yaml -s ${STATE_FILE} -o hub-application.elaborate"
+            sh script: 'hub deploy ./hub-application.elaborate'
+          }
+        }
       }
     }
     stage('Build') {
