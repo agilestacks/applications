@@ -3,7 +3,9 @@ terraform {
   backend "s3" {}
 }
 
-provider "aws" {}
+provider "aws" {
+  version = "~> 1.25"
+}
 
 data "aws_route53_zone" "main" {
   name  = "${var.base_domain}"
@@ -20,7 +22,7 @@ module "r53" {
 
 module "s3" {
   source      = "github.com/agilestacks/terraform-modules//s3_www"
-  name        = "controlplane.${var.name}.${var.base_domain}"
+  name        = "${var.name}.${var.base_domain}"
   environment = "${var.name}.${var.base_domain}"
   init_script = <<END
 
