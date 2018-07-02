@@ -71,7 +71,7 @@ podTemplate(
                     export AWS_SESSION_TOKEN=$${creds.sessionToken}
 
                     hub pull ./hub-application.yaml
-                    hub elaborate ./hub-application.yaml -s \$$${params.STATE_FILE}"
+                    hub elaborate ./hub-application.yaml -s \$$$${params.STATE_FILE}"
 
                     hub deploy ./hub.yaml.elaborate &> hub.log
                 """)
