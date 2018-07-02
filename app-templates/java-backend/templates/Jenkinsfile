@@ -8,7 +8,7 @@ properties([
                 string(name: 'APP_URL', defaultValue: "${url}.$${env.INGRESS_FQDN}", description: 'External URL where current app will be accessible'),
                 string(name: 'NAMESPACE', defaultValue: '${namespace}', description: 'Namespace where container will be deployed'),
                 string(name: 'REPLICAS', defaultValue:  '${replicas}', description: 'Number of pod replicas'),
-                string(name: 'STATE_FILE', defaultValue: '$${env.${state_file_var_name}}', description: 'Name of the global ariable with the target stack state'),
+                string(name: 'STATE_FILE', defaultValue: '${state_file_var_name}', description: 'Name of the global ariable with the target stack state'),
         ]),
         pipelineTriggers([
                 [$class: 'GitHubPushTrigger'],
@@ -65,12 +65,13 @@ podTemplate(
                 def creds = assumeDeployerRole(env.DEPLOY_ROLE_ARN)
 
                 sh(script: """
+
                     export AWS_ACCESS_KEY_ID=$${creds.accessKey}
                     export AWS_SECRET_ACCESS_KEY=$${creds.secretKey}
                     export AWS_SESSION_TOKEN=$${creds.sessionToken}
 
                     hub pull ./hub-application.yaml
-                    hub elaborate ./hub-application.yaml -s $${params.STATE_FILE}
+                    hub elaborate ./hub-application.yaml -s \$${params.STATE_FILE}"
 
                     hub deploy ./hub.yaml.elaborate &> hub.log
                 """)
