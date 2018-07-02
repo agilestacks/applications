@@ -21,4 +21,12 @@ parameters:
   kind: user
   env: AWS_DEFAULT_REGION
 
-outputs: []
+outputs:
+- name: component.s3webiste.domain
+  fromTfVar: domain
+- name: component.s3webiste.endpoint
+  fromTfVar: endpoint
+- name: component.s3webiste.bucket
+  fromTfVar: s3_bucket
+- name: component.s3webiste.originDomain
+  fromTfVar: s3_origin_domain
