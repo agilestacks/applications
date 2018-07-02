@@ -9,7 +9,7 @@ DOMAIN_NAME  ?= $(TF_VAR_name).$(TF_VAR_base_domain)
 
 export TF_LOG             ?= debug
 export TF_LOG_PATH        ?= .terraform/$(TF_VAR_name).$(TF_VAR_base_domain).log
-export TF_CLI_ARGS        ?=
+export TF_CLI_ARGS        ?= -no-color -input=false
 export TF_DATA_DIR        ?= .terraform
 
 COMPONENT_NAME     ?= slack-notifier-cloud
@@ -27,8 +27,8 @@ $(TF_DATA_DIR):
 	@ mkdir -p $@
 
 init: $(TF_DATA_DIR)
-	$(terraform) init -get=true $(TF_CMD_OPTS) -force-copy \
-        -backend=true -input=false -reconfigure \
+	$(terraform) init -get=true -force-copy \
+        -backend=true -reconfigure \
         -backend-config="bucket=$(STATE_BUCKET)" \
         -backend-config="region=$(STATE_REGION)" \
         -backend-config="key=$(DOMAIN_NAME)/app/$(TF_VAR_name)/s3-website/terraform.tfstate" \
@@ -56,7 +56,7 @@ clean:
 .PHONY: clean
 
 undeploy: init
-	$(MAKE) plan TF_CLI_ARGS="-destroy"
+	$(MAKE) plan TF_CLI_ARGS="-destroy $(TF_CLI_ARGS)"
 	$(MAKE) apply
 .PHONY: undeploy
 
