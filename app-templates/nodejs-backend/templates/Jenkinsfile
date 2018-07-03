@@ -56,7 +56,7 @@ podTemplate(
                     hub pull ./hub-application.yaml
                     hub elaborate ./hub-application.yaml -s \$$$${params.STATE_FILE}
 
-                    hub deploy ./hub.yaml.elaborate &> hub.log
+                    hub deploy ./hub.yaml.elaborate 2>&1 | tee hub.log
                 """)
 
                 def log = readFile 'hub.log'
