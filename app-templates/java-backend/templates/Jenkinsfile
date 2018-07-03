@@ -110,7 +110,7 @@ podTemplate(
                     version:        gradleProps['version']
             ]
             stage('Deploy') {
-                sh script: "hub --aws_region $${env.STATE_REGION} kubeconfig s3://$${env.STATE_BUCKET}/$${env.DOMAIN_NAME}/hub/happy-meal/hub.state"
+                sh script: "hub --aws_region $${env.STATE_REGION} kubeconfig \$$$${params.STATE_FILE}"
 
                 writeFile file: "deployment-build-$${currentBuild.number}.yaml", text: deployment
                 def exists = sh returnStatus: true, script: "kubectl -n $${params.NAMESPACE} get -f deployment-build-$${currentBuild.number}.yaml"
