@@ -41,10 +41,11 @@ parameters:
     fromEnv: APPLICATION_NAME
   - name: baseDomain
     value: ${dns.domain}
-    # fromEnv: DOMAIN_NAME
+  - name: bucket
+  - name: endpoint
 
 outputs:
-- name: component.s3webiste.bucket
-  brief: S3 bucket name to deploy the application
-- name: component.s3webiste.domain
-- name: component.s3webiste.endpoint
+- name: application.bucket
+  value: ${component.s3webiste.bucket}
+- name: application.endpoint
+  value: ${component.s3webiste.endpoint}
