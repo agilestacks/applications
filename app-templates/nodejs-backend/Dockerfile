@@ -1,4 +1,4 @@
-FROM nodejs:8.11.1
+FROM node:8.11.3
 
 RUN npm install
 
