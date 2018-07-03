@@ -38,9 +38,13 @@ podTemplate(
         ]
 ) {
     node(uuid) {
+        def version
         container('nodejs') {
             stage("Test") {
                 sh script: 'npm install test'
+
+                version = sh(script: 'node -p "require(\'./package.json\').version"', returnStdout: true)
+                        .split('\n')[0]
             }
         }
         container('toolbox') {
@@ -88,7 +92,7 @@ podTemplate(
                     replicas:       params.REPLICAS,
                     host:           params.APP_URL,
                     image:          "$dockerImage:$commit",
-                    version:        gradleProps['version']
+                    version:        version
             ]
             stage('Deploy') {
                 sh script: "hub kubeconfig \$$$${params.STATE_FILE}"
