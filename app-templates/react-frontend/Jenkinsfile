@@ -8,15 +8,28 @@ pipeline {
             defaultValue: "${env.JOB_BASE_NAME}",
             description: 'S3 bucket where application distribution must be published'
           )
-
     string( name: 'DOMAIN_NAME',
             defaultValue: "${env.DOMAIN_NAME}",
             description: 'S3 bucket where application distribution must be published'
           )
-    string( name: 'STATE_FILE',
-            defaultValue: 's3://terraform.agilestacks.com/antondo2.kubernetes.delivery/hub/prod/hub.state',
+    string( name: 'CONTEXT_PATH',
+            defaultValue: '',
             description: 'Current stack state file location'
           )
+    string( name: 'STATE_FILE',
+            defaultValue: 's3://terraform.agilestacks.com/antondo2.kubernetes.delivery/hub/prod/hub.state',
+            description: 'Somain name'
+          )
+    string(
+          name: 'AWS_TRUST_ROLE',
+          defaultValue: env.DEPLOY_ROLE_ARN,
+          description: "Role to assume for to deploy application"
+      )
+    booleanParam(
+          name: 'CLEAN_WORKSPACE',
+          defaultValue: false,
+          description: 'Start with empty workspace'
+      )
   }
   agent {
     kubernetes {
@@ -31,22 +44,33 @@ pipeline {
     }
   }
   stages {
+    stage('Init') {
+      steps {
+        script {
+          if (params.CLEAN_WORKSPACE) {
+            echo "Wiping out workspace"
+            deleteDir()
+          } else {
+            echo 'Skipping cleanup due to user setting'
+          }
+        }
+      }
+    }
     stage('Checkout') {
       steps {
         checkout scm
         // git credentialsId: 'asibot', url: 'https://github.com/agilestacks/applications.git'
       }
     }
-    stage('Elaborate') {
+    stage('Deploy Components') {
       environment {
-        DOMAIN_NAME      = "${params.DOMAIN_NAME}"
-        APPLICATION_NAME = "${params.APPLICATION_NAME}"
+        HUB_DEBUG = '1'
       }
       steps {
         container('toolbox') {
-          dir('app-templates/react-frontend') {
-            sh script: "hub elaborate ./hub-application.yaml -s ${STATE_FILE} -o hub-application.elaborate"
-            sh script: 'hub deploy ./hub-application.elaborate'
+          script {
+            hub.elaborate(state: params.STATE_FILE)
+            hub.deploy()
           }
         }
       }
@@ -54,41 +78,41 @@ pipeline {
     stage('Build') {
       steps {
         container('buildbox') {
-          dir('app-templates/react-frontend') {
-            sh script: 'npm install'
-            sh script: 'npm run junit:test'
-            sh script: 'npm run build'
-          }
+          sh script: 'npm install -s'
+          sh script: 'npm run junit:test'
+          sh script: 'npm run build'
         }
       }
     }
     stage('Lint') {
       steps {
         container('buildbox') {
-          dir('app-templates/react-frontend') {
-            script {
-              try {
-                sh script: 'npm run junit:lint'
-              } catch (err) {
-                currentBuild.result = 'UNSTABLE'
-                currentBuild.description = 'Found lint violations'
-              }
+          script {
+            try {
+              sh script: 'npm run junit:lint'
+            } catch (err) {
+              currentBuild.result = 'UNSTABLE'
+              currentBuild.description = 'Found lint violations'
             }
           }
         }
       }
     }
-    stage('Deploy') {
+    stage('Deploy Application') {
       steps {
         container('toolbox') {
-          sh script: "aws s3 sync --delete dist/ s3://${params.BUCKET}/${params.CONTEXT_PATH}"
+          script {
+            final bucket = hub.explain().stackOutputs['application.bucket'] as String
+            sh script: 'find dist'
+            sh script: "aws s3 sync --delete dist/ s3://${bucket}/${params.CONTEXT_PATH}"
+          }
         }
       }
     }
   }
   post {
     always {
-      junit testResults: './tests-junit.xml'
+      junit testResults: './tests-*.xml', allowEmptyResults: true
     }
     changed {
       slackSend color: slack.buildColor, message: slack.buildReport
