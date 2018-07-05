@@ -77,7 +77,7 @@ pipeline {
     }
     stage('Build') {
       environment {
-        CONTEXT_PATH = params.CONTEXT_PATH
+        CONTEXT_PATH = "${params.CONTEXT_PATH}"
       }
       steps {
         container('buildbox') {
