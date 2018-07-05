@@ -78,6 +78,8 @@ pipeline {
     stage('Build') {
       environment {
         CONTEXT_PATH = "${params.CONTEXT_PATH}"
+        APPLICATION_REPOSITORY = "${env.CHANGE_URL}"
+        APPLICATION_BRANCH = "${env.BRANCH_NAME}"
       }
       steps {
         container('buildbox') {
