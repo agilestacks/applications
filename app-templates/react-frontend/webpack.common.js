@@ -5,14 +5,14 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const {ProvidePlugin, DefinePlugin} = webpack;
 
-const CONTEXT_PATH = process.env.CONTEXT_PATH || '/';
+const CONTEXT_PATH = process.env.CONTEXT_PATH || '';
 
 module.exports = {
     entry: './src',
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist'),
-        publicPath: CONTEXT_PATH
+        publicPath: `/${CONTEXT_PATH}`
     },
     resolve: {
         modules: ['node_modules', './src'],
@@ -53,7 +53,7 @@ module.exports = {
                 loader: 'file-loader',
                 options: {
                     name: 'assets/[hash].[ext]',
-                    publicPath: '/'
+                    publicPath: `/${CONTEXT_PATH}`
                 }
             }
         ]
