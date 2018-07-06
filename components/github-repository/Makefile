@@ -14,23 +14,8 @@ export TF_OPTS            :=
 export TF_UPDATE          ?= -update
 
 COMPONENT_NAME    ?= github-repository
-REGISTRY          ?= $(subst https://,,$(lastword $(shell aws ecr get-login --no-include-email --region $(AWS_DEFAULT_REGION))))
-IMAGE             ?= $(REGISTRY)/agilestacks/$(TF_VAR_name)/application-job
-IMAGE_VERSION     ?= $(shell git rev-parse HEAD | colrm 7)
-DOCKER_BUILD_OTPS ?= --no-cache  --force-rm
 terraform         ?= terraform
 
-
-build:
-	@docker build $(DOCKER_BUILD_OTPS) -t $(IMAGE):$(IMAGE_VERSION) .
-.PHONY: build
-
-push:
-	aws ecr get-login --no-include-email --region $(AWS_DEFAULT_REGION) | sh -
-	docker tag  $(IMAGE):$(IMAGE_VERSION) $(IMAGE):latest
-	docker push $(IMAGE):$(IMAGE_VERSION)
-	docker push $(IMAGE):latest
-.PHONY: push
 
 deploy: init plan apply output
 
