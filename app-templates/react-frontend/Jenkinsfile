@@ -16,10 +16,6 @@ pipeline {
             defaultValue: '',
             description: 'Current stack state file location'
           )
-    string( name: 'STATE_FILE',
-            defaultValue: 's3://terraform.agilestacks.com/antondo2.kubernetes.delivery/hub/prod/hub.state',
-            description: 'Somain name'
-          )
     string(
           name: 'AWS_TRUST_ROLE',
           defaultValue: env.DEPLOY_ROLE_ARN,
