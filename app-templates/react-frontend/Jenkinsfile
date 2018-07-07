@@ -69,8 +69,10 @@ pipeline {
       steps {
         container('toolbox') {
           withAWS(role:params.AWS_TRUST_ROLE) {
-            hub.elaborate(state: params.STATE_FILE)
-            hub.deploy()
+            script {
+              hub.elaborate(state: params.STATE_FILE)
+              hub.deploy()
+            }
           }
         }
       }
