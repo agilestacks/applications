@@ -68,7 +68,7 @@ pipeline {
       }
       steps {
         container('toolbox') {
-          script {
+          withAWS(role:params.AWS_TRUST_ROLE) {
             hub.elaborate(state: params.STATE_FILE)
             hub.deploy()
           }
@@ -78,8 +78,8 @@ pipeline {
     stage('Build') {
       environment {
         CONTEXT_PATH = "${params.CONTEXT_PATH}"
-        APPLICATION_REPOSITORY = "${env.CHANGE_URL}"
-        APPLICATION_BRANCH = "${env.BRANCH_NAME}"
+        APPLICATION_REPOSITORY = "${git.remote}"
+        APPLICATION_BRANCH = "${git.branch}"
       }
       steps {
         container('buildbox') {
@@ -108,8 +108,9 @@ pipeline {
         container('toolbox') {
           script {
             final bucket = hub.explain().stackOutputs['application.bucket'] as String
-            sh script: 'find dist'
-            sh script: "aws s3 sync --delete dist/ s3://${bucket}/${params.CONTEXT_PATH}"
+            withAWS(role:params.AWS_TRUST_ROLE) {
+              sh script: "aws s3 sync --delete dist/ s3://${bucket}/${params.CONTEXT_PATH}"
+            }
           }
         }
       }
@@ -120,7 +121,9 @@ pipeline {
       junit testResults: './tests-*.xml', allowEmptyResults: true
     }
     changed {
-      slackSend color: slack.buildColor, message: slack.buildReport
+      catchError {
+        slackSend color: slack.buildColor, message: slack.buildReport
+      }
     }
   }
 }
