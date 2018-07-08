@@ -79,7 +79,7 @@ pipeline {
       }
       steps {
         container('buildbox') {
-          sh script: 'npm install -s'
+          sh script: 'npm install'
           sh script: 'npm run junit:test'
           sh script: 'npm run build'
         }
