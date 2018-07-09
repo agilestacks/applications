@@ -117,9 +117,7 @@ pipeline {
       junit testResults: './tests-*.xml', allowEmptyResults: true
     }
     changed {
-      catchError {
-        slackSend color: slack.buildColor, message: slack.buildReport
-      }
+      slackSend color: slack.buildColor, message: slack.buildReport
     }
   }
 }
