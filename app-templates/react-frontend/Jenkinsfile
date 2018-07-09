@@ -33,7 +33,7 @@ pipeline {
       label 'pod'
       containerTemplate(
         name: 'buildbox',
-        image: 'node:10.5',
+        image: 'node:10.6',
         ttyEnabled: true,
         command: 'cat'
       )
