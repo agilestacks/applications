@@ -17,8 +17,8 @@ export class RepoActions extends Component {
         const {copy, mountSourceInput} = this;
         const {repo, branch} = this.props;
 
-        const repoUrl = `git@github.com:${repo}.git`;
-        const editUrl = `https://github.com/${repo}/blob/${branch}/src/App.jsx`;
+        const repoUrl = repo;
+        const editUrl = `${repo}/blob/${branch}/src/App.jsx`;
 
         return (
             <NavbarGroup className="repo-actions">
@@ -34,7 +34,7 @@ export class RepoActions extends Component {
                     Copy
                 </Button>
                 <NavbarDivider />
-                <AnchorButton href={editUrl} text="Edit application" icon={IconNames.EDIT} />
+                <AnchorButton target="_blank" href={editUrl} text="Edit application" icon={IconNames.EDIT} />
             </NavbarGroup>
         );
     }

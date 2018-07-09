@@ -11,7 +11,7 @@ export function Source() {
             <p>
                 This application was built from repository
                 <Code>
-                    {`git@github.com:${APPLICATION_REPOSITORY}.git`}
+                    {APPLICATION_REPOSITORY}
                 </Code>
                 which was generated from Agilestacks React Web Application Template.
             </p>
