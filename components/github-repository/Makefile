@@ -1,50 +1,42 @@
 .DEFAULT_GOAL := deploy
 
 export TF_VAR_name        ?= dev
-export STATE_BUCKET       ?= terraform.agilestacks.com
-export STATE_REGION       ?= us-east-1
 
 export AWS_PROFILE        ?= default
 export AWS_DEFAULT_REGION ?= us-east-2
 
 export TF_LOG             ?= debug
-export TF_LOG_PATH        := .terraform/$(TF_VAR_name).log
-export TF_INPUT           := 0
-export TF_OPTS            :=
-export TF_UPDATE          ?= -update
+export TF_LOG_PATH        ?= .terraform/$(TF_VAR_name).log
+export TF_CLI_ARGS        ?=
+export TF_DATA_DIR        ?= .terraform
+
+STATE_BUCKET   ?= terraform.agilestacks.com
+STATE_REGION   ?= us-east-1
 
 COMPONENT_NAME    ?= github-repository
-terraform         ?= terraform
+terraform         ?= terraform-v0.11
 
 
 deploy: init plan apply output
 
-init: init_tf
+$(TF_DATA_DIR):
+	@ mkdir -p $@
 
-init_tf:
-	@mkdir -p .terraform/$(TF_VAR_name)/.terraform
-	@rm -rf .terraform/$(TF_VAR_name)/*
-	$(terraform) init -get=true -force-copy  \
-		-backend=true -input=false \
-		-backend-config="bucket=$(STATE_BUCKET)" \
-		-backend-config="region=$(STATE_REGION)" \
-		-backend-config="key=$(COMPONENT_NAME)/$(TF_VAR_name)/terraform.tfstate" \
-		-backend-config="profile=$(AWS_PROFILE)" \
-		. .terraform/$(TF_VAR_name)
-.PHONY: init_tf
-get:
-	cd .terraform/$(TF_VAR_name) && \
-		$(terraform) get $(TF_UPDATE)
-.PHONY: get
+init: $(TF_DATA_DIR)
+	$(terraform) init -get=true $(TF_CMD_OPTS) -force-copy \
+        -backend=true -input=false -reconfigure \
+        -backend-config="bucket=$(STATE_BUCKET)" \
+        -backend-config="region=$(STATE_REGION)" \
+        -backend-config="key=$(COMPONENT_NAME)/$(TF_VAR_name)/terraform.tfstate" \
+        -backend-config="profile=$(AWS_PROFILE)"\
 
 plan:
-	cd .terraform/$(TF_VAR_name) && \
-		$(terraform) plan $(TF_OPTS) -refresh=true -module-depth=-1 -out=terraform.tfplan
+	$(terraform) plan -refresh=true -module-depth=-1 -out=.terraform/terraform.tfplan
+
 .PHONY: plan
 
 apply:
-	cd .terraform/$(TF_VAR_name) && \
-		$(terraform) apply $(TF_OPTS) -Xshadow=false terraform.tfplan
+	$(terraform) apply -auto-approve .terraform/terraform.tfplan
 .PHONY: apply
 
 undeploy:
@@ -53,11 +45,5 @@ undeploy:
 .PHONY: undeploy
 
 output:
-	@cd .terraform/$(TF_VAR_name) && \
-		$(terraform) output -json
+	$(terraform) output -json
 .PHONY: output
-
-clean:
-	@rm -rf .terraform/$(TF_VAR_name)
-.PHONY: clean
-
