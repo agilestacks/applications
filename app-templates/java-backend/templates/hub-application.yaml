@@ -23,6 +23,7 @@ lifecycle:
     - ecr
 
 parameters:
+  - name: cloud.region
   - name: terraform.bucket.name
     env: STATE_BUCKET
   - name: terraform.bucket.region
