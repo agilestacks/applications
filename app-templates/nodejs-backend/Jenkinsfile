@@ -1,0 +1,92 @@
+pipeline {
+  triggers {
+    githubPush()
+    pollSCM('H/15 * * * *')
+  }
+  parameters {
+    string( name: 'AWS_TRUST_ROLE',
+            defaultValue: env.DEPLOY_ROLE_ARN,
+            description: "Role to assume for to deploy application" )
+    booleanParam( name: 'CLEAN_WORKSPACE',
+                  defaultValue: false,
+                  description: 'Start with empty workspace' )
+  }
+  agent {
+    kubernetes {
+      inheritFrom 'toolbox'
+      label 'pod'
+      containerTemplate(
+        name: 'buildbox',
+        image: 'node:8',
+        ttyEnabled: true,
+        command: 'cat'
+      )
+    }
+  }
+  stages {
+    stage('Init') {
+      steps {
+        script {
+          if (params.CLEAN_WORKSPACE) {
+            echo "Wiping out workspace"
+            deleteDir()
+          } else {
+            echo 'Skipping cleanup due to user setting'
+          }
+        }
+      }
+    }
+    stage('Checkout') {
+      steps {
+        checkout scm
+        // git credentialsId: 'dev-asibot-96hkh', url: 'https://github.com/agilestacks/antonnodejs.git'
+      }
+    }
+    stage('Deploy Components') {
+      environment {
+        HUB_DEBUG = '1'
+      }
+      steps {
+        container('toolbox') {
+          script {
+            hub.elaborate(state: params.STATE_FILE)
+            hub.deploy()
+            hub.render(template: 'deployment.yaml.template')
+          }
+        }
+      }
+    }
+    stage('Compile') {
+      steps {
+        container('buildbox') {
+          sh script: 'npm install'
+        }
+      }
+    }
+    stage('Build and Push') {
+      steps {
+        container('toolbox') {
+          script {
+            final image = hub.explain().stackOutputs['application.image'] as String
+            echo "${hub.explain()}"
+            sh script: "docker build --pull --rm -t ${image}:latest -t ${image}:${gitscm.shortCommit} ."
+            withAWS(role:params.AWS_TRUST_ROLE) {
+              sh script: ecrLogin()
+              sh script: "docker push ${image}:${gitscm.shortCommit} ."
+              sh script: "docker push ${image}:latest"
+            }
+          }
+        }
+      }
+    }
+
+  }
+  post {
+    always {
+      junit testResults: './tests-*.xml', allowEmptyResults: true
+    }
+    changed {
+      slackSend color: slack.buildColor, message: slack.buildReport
+    }
+  }
+}
