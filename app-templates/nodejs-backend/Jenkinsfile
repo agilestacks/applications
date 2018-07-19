@@ -93,7 +93,6 @@ pipeline {
             final version = "${gitscm.shortCommit}"
             final kubectl = "kubectl -n ${env.NAMESPACE}"
 
-            hub.render template: 'package.json.template'
             hub.render template: 'kubernetes.yaml.template',
                        additional: [
                         'application.image': image,
