@@ -22,7 +22,7 @@ spec:
         version: ${application.version}
     spec:
       containers:
-      - name: ${application.name}
+      - name: application
         image: ${application.image}
         ports:
         - name: http
