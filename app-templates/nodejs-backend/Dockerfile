@@ -1,6 +1,8 @@
 FROM node:8.11.3
 
-RUN npm install
+WORKDIR /application
+
+COPY . /application
 
 EXPOSE 3000
 
