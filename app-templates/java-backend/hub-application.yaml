@@ -23,6 +23,8 @@ lifecycle:
     - ecr
 
 parameters:
+  - name: component.java-application.name
+    fromEnv: NAME
   - name: cloud.region
   - name: terraform.bucket.name
     env: STATE_BUCKET
@@ -31,12 +33,13 @@ parameters:
   - name: component.ingress.fqdn
   - name: dns.domain
     env: DOMAIN_NAME
+
   - name: component.ecr
     parameters:
       - name: image
       - name: name
-        value: $${dns.domain}/application-${name}
+        value: ${dns.domain}/application-${component.java-application.name}
 
 outputs:
-  - name: component.ecr.image
-    value: $${component.ecr.image}
+  - name: application.image
+    value: ${component.ecr.image}

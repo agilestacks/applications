@@ -3,11 +3,6 @@
 @Library('agilestacks') _
 
 properties([
-        parameters([
-                string(name: 'APP_URL', defaultValue: "${url}.$${env.INGRESS_FQDN}", description: 'External URL where current app will be accessible'),
-                string(name: 'NAMESPACE', defaultValue: '${namespace}', description: 'Namespace where container will be deployed'),
-                string(name: 'REPLICAS', defaultValue:  '${replicas}', description: 'Number of pod replicas'),
-        ]),
         pipelineTriggers([
                 [$class: 'GitHubPushTrigger'],
                 pollSCM('H/1 * * * *')
@@ -57,13 +52,18 @@ podTemplate(
                 ])
             }
         }
+
         container('toolbox') {
             def dockerImage
+
+            environment {
+                NAME: params.NAME
+            }
             stage('Prepare dependencies') {
                 withAWS(role:env.DEPLOY_ROLE_ARN) {
                     hub.elaborate(state: params.STATE_FILE)
                     hub.deploy()
-                    ecrImage = hub.explain().stackOutputs['java-application:component.ecr.image'] as String
+                    dockerImage = hub.explain().stackOutputs['application.image'] as String
                 }
             }
 
@@ -74,9 +74,9 @@ podTemplate(
                 sh script: """
                     docker build --pull \
                          --rm \
-                         --build-arg APP_NAME=$${gradleProps['archivesBaseName']} \
-                         --build-arg APP_VERSION=$${gradleProps['version']} \
-                         $${images.collect{"--tag $it"}.join(' ')} .
+                         --build-arg APP_NAME=${gradleProps['archivesBaseName']} \
+                         --build-arg APP_VERSION=${gradleProps['version']} \
+                         ${images.collect{"--tag $it"}.join(' ')} .
                 """
             }
             stage('Push') {
@@ -88,33 +88,31 @@ podTemplate(
 
             def template = readFile 'deployment.yaml'
             def deployment = render.template template, [
-                    app:            params.APP_NAME,
+                    app:            params.NAME,
                     namespace:      params.NAMESPACE,
                     replicas:       params.REPLICAS,
-                    host:           params.APP_URL,
+                    host:           params.INGRESS_HOST,
                     image:          "$dockerImage:$commit",
                     version:        gradleProps['version']
             ]
             stage('Deploy') {
-                sh script: "hub --aws_region $${env.STATE_REGION} kubeconfig \$$$${params.STATE_FILE}"
-
-                writeFile file: "deployment-build-$${currentBuild.number}.yaml", text: deployment
-                def exists = sh returnStatus: true, script: "kubectl -n $${params.NAMESPACE} get -f deployment-build-$${currentBuild.number}.yaml"
+                writeFile file: "deployment-build-${currentBuild.number}.yaml", text: deployment
+                def exists = sh returnStatus: true, script: "kubectl -n ${params.NAMESPACE} get -f deployment-build-${currentBuild.number}.yaml"
                 try {
                     if (exists == 0) {
-                        sh script: "kubectl -n $${params.NAMESPACE} set image --record deployment/$${params.APP_NAME} '$${params.APP_NAME}=$${dockerImage}:$commit'"
+                        sh script: "kubectl -n ${params.NAMESPACE} set image --record deployment/${params.NAME} '${params.NAME}=${dockerImage}:$commit'"
                     } else {
-                        sh script: "kubectl -n $${params.NAMESPACE} apply --force --record -f deployment-build-$${currentBuild.number}.yaml"
+                        sh script: "kubectl -n ${params.NAMESPACE} apply --force --record -f deployment-build-${currentBuild.number}.yaml"
                     }
-                    sh script: "kubectl -n $${params.NAMESPACE} rollout status -w 'deployment/$${params.APP_NAME}'"
+                    sh script: "kubectl -n ${params.NAMESPACE} rollout status -w 'deployment/${params.NAME}'"
                 } catch(err) {
                     sh script: """
-            kubectl -n $${params.NAMESPACE} rollout undo 'deployment/$${params.APP_NAME}'
-            kubectl -n $${params.NAMESPACE} rollout status -w 'deployment/$${params.APP_NAME}'
+            kubectl -n ${params.NAMESPACE} rollout undo 'deployment/${params.NAME}'
+            kubectl -n ${params.NAMESPACE} rollout status -w 'deployment/${params.NAME}'
           """
 
                     error message: """
-            Failed to deploy $${params.APP_NAME} with container $dockerImage:$commit \n
+            Failed to deploy ${params.NAME} with container $dockerImage:$commit \n
             We rolled back unsuccessful deployment
           """
                 }
@@ -123,7 +121,7 @@ podTemplate(
         stage('Validate') {
             retry(20) {
                 sleep 1
-                def resp = httpRequest url: "http://$${params.APP_URL}/status"
+                def resp = httpRequest url: "http://${params.INGRESS_HOST}/status"
                 echo resp.content
                 assert resp.status == 200
             }
