@@ -82,8 +82,8 @@ pipeline {
         NAME          = "${params.NAME}"
         NAMESPACE     = "${params.NAMESPACE ?: 'default'}"
         REPLICAS      = "${params.REPLICAS ?: 1}"
-        INGRESS_HOST  = "${params.FQDN}"
-        INGRESS_PATH  = "${params.CONTEXT_PATH}"
+        INGRESS_HOST  = "${params.INGRESS_HOST}"
+        INGRESS_PATH  = "${params.INGRESS_PATH}"
         HUB_COMPONENT = 'nodejs-application'
       }
       steps {
