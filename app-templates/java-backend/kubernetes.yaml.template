@@ -1,28 +1,28 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: $namespace
+  name: ${application.namespace}
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: $app
-  namespace: $namespace
+  name: ${application.name}
+  namespace: ${application.namespace}
   labels:
-    app: $app
+    app: ${application.name}
 spec:
-  replicas: $replicas
+  replicas: ${application.replicas}
   template:
     metadata:
-      name: $app
-      namespace: $namespace
+      name: ${application.name}
+      namespace: ${application.namespace}
       labels:
-        app: $app
-        version: $version
+        app: ${application.name}
+        version: ${application.version}
     spec:
       containers:
-      - name: $app
-        image: $image
+      - name: application
+        image: ${application.image}
         ports:
         - name: http
           containerPort: 8080
@@ -41,24 +41,24 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: $app
-  namespace: $namespace
+  name: ${application.name}
+  namespace: ${application.namespace}
   labels:
-    app: $app
+    app: ${application.name}
 spec:
   ports:
   - port: 80
     targetPort: http
   selector:
-    app: $app
+    app: ${application.name}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: $app
-  namespace: $namespace
+  name: ${application.name}
+  namespace: ${application.namespace}
   labels:
-    app: $app
+    app: ${application.name}
 spec:
   rules:
   - host: $host
@@ -66,5 +66,5 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: $app
+          serviceName: ${application.name}
           servicePort: 80

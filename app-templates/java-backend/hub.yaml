@@ -1,0 +1,63 @@
+---
+version: 1
+kind: application
+meta:
+  name: java-application:1
+  brief: Java Application
+  source:
+    dir: ./
+
+requires:
+  - kubernetes
+
+components:
+- name: ecr
+  source:
+    dir: ./ecr
+
+lifecycle:
+  bare: true
+  verbs: [deploy, undeploy]
+  order:
+    - ecr
+  mandatory:
+    - ecr
+
+parameters:
+- name: application
+  parameters:
+  - name: name
+    fromEnv: NAME
+  - name: namespace
+    fromEnv: NAMESPACE
+  - name: replicas
+    fromEnv: REPLICAS
+  - name: version
+    fromEnv: VERSION
+  - name: ingress.host
+    fromEnv: INGRESS_HOST
+  - name: ingress.path
+    fromEnv: INGRESS_PATH
+    empty: allow
+  - name: version
+    fromEnv: VERSION
+- name: cloud.region
+- name: terraform.bucket
+  parameters:
+  - name: name
+    fromEnv: STATE_BUCKET
+  - name: region
+    fromEnv: STATE_REGION
+- name: component.ingress.fqdn
+- name: dns.domain
+  env: DOMAIN_NAME
+
+- name: component.ecr
+  parameters:
+  - name: image
+  - name: name
+    value: ${dns.domain}/${application.name}
+
+outputs:
+  - name: application.image
+    value: ${component.ecr.image}

@@ -1,130 +1,163 @@
-#!/usr/bin/env groovy
-
-@Library('agilestacks') _
-
-properties([
-        pipelineTriggers([
-                [$class: 'GitHubPushTrigger'],
-                pollSCM('H/1 * * * *')
-        ])
-])
-
-node('master') {
+pipeline {
+  triggers {
+    githubPush()
+    pollSCM('H/15 * * * *')
+  }
+  parameters {
+    string(
+          name: 'AWS_TRUST_ROLE',
+          defaultValue: env.DEPLOY_ROLE_ARN,
+          description: "Role to assume for to deploy application"
+      )
+    booleanParam(
+          name: 'CLEAN_WORKSPACE',
+          defaultValue: false,
+          description: 'Start with empty workspace'
+      )
+  }
+  agent {
+    kubernetes {
+      inheritFrom 'toolbox'
+      label 'pod'
+      containerTemplate(
+        name: 'buildbox',
+        image: 'openjdk:jdk',
+        ttyEnabled: true,
+        command: 'cat'
+      )
+    }
+  }
+  stages {
+    stage('Init') {
+      steps {
+        script {
+          if (params.CLEAN_WORKSPACE) {
+            echo "Wiping out workspace"
+            deleteDir()
+          } else {
+            echo 'Skipping cleanup due to user setting'
+          }
+        }
+      }
+    }
     stage('Checkout') {
-        checkout scm
+      steps {
+        // checkout scm
+        git credentialsId: 'anton1-env1-akranga-ufq3d', url: 'https://github.com/akranga/anton5.git'
+      }
     }
-}
-
-def uuid = UUID.randomUUID().toString()
-
-podTemplate(
-        inheritFrom: 'toolbox',
-        label: uuid,
-        containers: [
-                containerTemplate(
-                        name: 'java',
-                        image: 'openjdk:jdk',
-                        ttyEnabled: true,
-                        command: 'cat'
-                )],
-        volumes: [
-                emptyDirVolume(memory: false, mountPath: '/root/.gradle')
-        ]
-) {
-    node(uuid) {
-        def gradleProps
-        container('java') {
-            stage("Compile") {
-                gradleProps = sh(script: './gradlew properties -q', returnStdout: true)
-                    .split('\n')
-                    .collect { it.tokenize(':') }
-                    .findAll { it.size() > 1 }
-                    .collectEntries { [(it[0].trim()):it[1].trim()] }
-
-                sh script: './gradlew clean build allureReport'
-                archiveArtifacts "build/libs/*.jar"
-                junit 'build/test-results/test/*.xml'
-                publishHTML([
-                        reportDir: 'build/reports/allure-report',
-                        reportFiles: 'index.html',
-                        reportName: 'Allure Report',
-                        keepAll: true
-                ])
-            }
-        }
-
+    stage('Deploy Components') {
+      environment {
+        HUB_DEBUG = '1'
+      }
+      steps {
         container('toolbox') {
-            def dockerImage
-
-            environment {
-                NAME: params.NAME
+          script {
+            withAWS(role:params.AWS_TRUST_ROLE) {
+              hub.elaborate(state: params.STATE_FILE)
+              hub.deploy()
             }
-            stage('Prepare dependencies') {
-                withAWS(role:env.DEPLOY_ROLE_ARN) {
-                    hub.elaborate(state: params.STATE_FILE)
-                    hub.deploy()
-                    dockerImage = hub.explain().stackOutputs['application.image'] as String
-                }
-            }
-
-            def commit = commitHash.shortHash()
-            def images = [ "$dockerImage:$commit", "$dockerImage:latest" ]
-
-            stage('Build') {
-                sh script: """
-                    docker build --pull \
-                         --rm \
-                         --build-arg APP_NAME=${gradleProps['archivesBaseName']} \
-                         --build-arg APP_VERSION=${gradleProps['version']} \
-                         ${images.collect{"--tag $it"}.join(' ')} .
-                """
-            }
-            stage('Push') {
-                ecr.login()
-                def pushImages = images.collectEntries{ [it: { sh script: "docker push $it" }]}
-
-                parallel pushImages
-            }
-
-            def template = readFile 'deployment.yaml'
-            def deployment = render.template template, [
-                    app:            params.NAME,
-                    namespace:      params.NAMESPACE,
-                    replicas:       params.REPLICAS,
-                    host:           params.INGRESS_HOST,
-                    image:          "$dockerImage:$commit",
-                    version:        gradleProps['version']
-            ]
-            stage('Deploy') {
-                writeFile file: "deployment-build-${currentBuild.number}.yaml", text: deployment
-                def exists = sh returnStatus: true, script: "kubectl -n ${params.NAMESPACE} get -f deployment-build-${currentBuild.number}.yaml"
-                try {
-                    if (exists == 0) {
-                        sh script: "kubectl -n ${params.NAMESPACE} set image --record deployment/${params.NAME} '${params.NAME}=${dockerImage}:$commit'"
-                    } else {
-                        sh script: "kubectl -n ${params.NAMESPACE} apply --force --record -f deployment-build-${currentBuild.number}.yaml"
-                    }
-                    sh script: "kubectl -n ${params.NAMESPACE} rollout status -w 'deployment/${params.NAME}'"
-                } catch(err) {
-                    sh script: """
-            kubectl -n ${params.NAMESPACE} rollout undo 'deployment/${params.NAME}'
-            kubectl -n ${params.NAMESPACE} rollout status -w 'deployment/${params.NAME}'
-          """
-
-                    error message: """
-            Failed to deploy ${params.NAME} with container $dockerImage:$commit \n
-            We rolled back unsuccessful deployment
-          """
-                }
-            }
+          }
         }
-        stage('Validate') {
-            retry(20) {
-                sleep 1
-                def resp = httpRequest url: "http://${params.INGRESS_HOST}/status"
-                echo resp.content
-                assert resp.status == 200
-            }
-        }
+      }
     }
+    stage('Compile') {
+      steps {
+        container('buildbox') {
+          sh script: './gradlew clean build allureReport'
+        }
+      }
+    }
+    stage('Build and Push') {
+      steps {
+        container('toolbox') {
+          script {
+            final image = hub.explain().stackOutputs['application.image'] as String
+            sh script: "docker build --pull --rm -t ${image}:latest -t ${image}:${gitscm.shortCommit} ."
+            withAWS(role:params.AWS_TRUST_ROLE) {
+              sh script: ecrLogin()
+              sh script: "docker push ${image}:${gitscm.shortCommit}"
+              sh script: "docker push ${image}:latest"
+            }
+          }
+        }
+      }
+    }
+    stage('Deploy') {
+      environment {
+        NAME          = "${params.NAME}"
+        NAMESPACE     = "${params.NAMESPACE ?: 'default'}"
+        REPLICAS      = "${params.REPLICAS ?: 1}"
+        INGRESS_HOST  = "${params.INGRESS_HOST}"
+        INGRESS_PATH  = "${params.INGRESS_PATH}"
+        HUB_COMPONENT = 'nodejs-application'
+      }
+      steps {
+        container('toolbox') {
+          script {
+            final image = hub.explain().stackOutputs['application.image']
+            final version = "${gitscm.shortCommit}"
+            final kubectl = "kubectl -n ${env.NAMESPACE}"
+
+            hub.render template: 'kubernetes.yaml.template',
+                       additional: [
+                        'application.image': image,
+                        'application.version': version,
+                      ]
+
+            echo readFile('kubernetes.yaml')
+
+            final exists = sh script: "${kubectl} get -f kubernetes.yaml", returnStatus: true
+            try {
+              if (exists == 0) {
+                sh script: "${kubectl} set image --record 'deployment/${params.NAME}' 'application=${image}:${version}'"
+              } else {
+                sh script: "${kubectl} apply --force --record -f kubernetes.yaml"
+              }
+            } catch (err) {
+              echo "Rolling back"
+              sh script: "${kubectl} rollout undo 'deployment/${params.NAME}'"
+              sh script: "${kubectl} rollout status -w 'deployment/${params.NAME}'"
+              echo "Done"
+              error "Failed to deploy ${params.NAME}@${version}. Rolled back"
+            }
+          }
+        }
+      }
+    }
+    stage('Validate') {
+      steps {
+        script {
+          retry(30) {
+            sleep time: 3, unit: 'SECONDS'
+            final resp = httpRequest url: "http://${params.INGRESS_HOST}/status"
+            echo resp.content
+            assert resp.status == 200
+          }
+        }
+      }
+    }
+  }
+  post {
+    always {
+      junit(
+        testResults: './tests-*.xml',
+        allowEmptyResults: true
+      )
+      archiveArtifacts(
+        artifacts: 'build/libs/*.jar',
+        allowEmptyArchive: true,
+        fingerprint: true
+      )
+      publishHTML(target: [
+              reportDir: 'build/reports/allure-report',
+              reportFiles: 'index.html',
+              reportName: 'Allure',
+              keepAll: true
+      ])
+    }
+    changed {
+      slackSend color: slack.buildColor, message: slack.buildReport(htmlReports: ['Allure'])
+    }
+  }
 }
