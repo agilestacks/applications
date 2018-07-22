@@ -4,10 +4,6 @@ pipeline {
     pollSCM('H/15 * * * *')
   }
   parameters {
-    string( name: 'APPLICATION_NAME',
-            defaultValue: "${env.JOB_BASE_NAME}",
-            description: 'S3 bucket where application distribution must be published'
-          )
     string( name: 'DOMAIN_NAME',
             defaultValue: "${env.DOMAIN_NAME}",
             description: 'S3 bucket where application distribution must be published'

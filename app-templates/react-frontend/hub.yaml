@@ -38,7 +38,7 @@ parameters:
 - name: component.s3webiste
   parameters:
   - name: name
-    fromEnv: APPLICATION_NAME
+    fromEnv: NAME
   - name: baseDomain
     value: ${dns.domain}
   - name: bucket
