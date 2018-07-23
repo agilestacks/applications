@@ -34,13 +34,13 @@ parameters:
     fromEnv: REPLICAS
   - name: version
     fromEnv: VERSION
+    value: latest
+    empty: allow
   - name: ingress.host
     fromEnv: INGRESS_HOST
   - name: ingress.path
     fromEnv: INGRESS_PATH
     empty: allow
-  - name: version
-    fromEnv: VERSION
 - name: cloud.region
 - name: terraform.bucket
   parameters:

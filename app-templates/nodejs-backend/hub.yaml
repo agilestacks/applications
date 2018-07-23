@@ -42,6 +42,8 @@ parameters:
     empty: allow
   - name: version
     fromEnv: VERSION
+    value: latest
+    empty: allow
 - name: dns.domain
 - name: component.ingress.fqdn
 - name: cloud.region
