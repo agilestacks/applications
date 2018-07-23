@@ -42,8 +42,7 @@ pipeline {
     }
     stage('Checkout') {
       steps {
-        // checkout scm
-        git credentialsId: 'anton-dev-asibot', url: 'https://github.com/asibot/anton19.git'
+        checkout scm
       }
     }
     stage('Deploy Components') {
