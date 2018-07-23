@@ -51,12 +51,12 @@ pipeline {
     stage('Checkout') {
       steps {
         checkout scm
-        // git credentialsId: 'asibot', url: 'https://github.com/agilestacks/applications.git'
       }
     }
     stage('Deploy Components') {
       environment {
         HUB_DEBUG = '1'
+        NAME= "${params.NAME}"
       }
       steps {
         container('toolbox') {
