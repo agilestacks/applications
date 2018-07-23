@@ -4,14 +4,6 @@ pipeline {
     pollSCM('H/15 * * * *')
   }
   parameters {
-    string( name: 'DOMAIN_NAME',
-            defaultValue: "${env.DOMAIN_NAME}",
-            description: 'S3 bucket where application distribution must be published'
-          )
-    string( name: 'CONTEXT_PATH',
-            defaultValue: '',
-            description: 'Current stack state file location'
-          )
     string(
           name: 'AWS_TRUST_ROLE',
           defaultValue: env.DEPLOY_ROLE_ARN,
@@ -50,7 +42,8 @@ pipeline {
     }
     stage('Checkout') {
       steps {
-        checkout scm
+        // checkout scm
+        git credentialsId: 'anton-dev-asibot', url: 'https://github.com/asibot/anton19.git'
       }
     }
     stage('Deploy Components') {
@@ -61,6 +54,7 @@ pipeline {
       steps {
         container('toolbox') {
           script {
+            sh 'env | sort'
             hub.elaborate(state: params.STATE_FILE)
             hub.deploy()
           }
@@ -69,7 +63,7 @@ pipeline {
     }
     stage('Build') {
       environment {
-        CONTEXT_PATH = "${params.CONTEXT_PATH}"
+        CONTEXT_PATH = "${params.INGRESS_PATH}"
         APPLICATION_REPOSITORY = "${gitscm.remote}"
         APPLICATION_BRANCH = "${gitscm.branch}"
       }
@@ -101,7 +95,7 @@ pipeline {
           script {
             final bucket = hub.explain().stackOutputs['application.bucket'] as String
             withAWS(role:params.AWS_TRUST_ROLE) {
-              sh script: "aws s3 sync --delete dist/ s3://${bucket}/${params.CONTEXT_PATH}"
+              sh script: "aws s3 sync --delete dist/ s3://${bucket}/${params.INGRESS_PATH}"
             }
           }
         }

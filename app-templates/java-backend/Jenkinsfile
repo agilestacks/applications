@@ -49,6 +49,7 @@ pipeline {
     stage('Deploy Components') {
       environment {
         HUB_DEBUG = '1'
+        NAME = "${params.NAME}"
       }
       steps {
         container('toolbox') {
