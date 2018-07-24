@@ -1,4 +1,4 @@
-$feature-version-color: #bbb;
+@import 'vars.scss';
 
 .feature {
     & > *:not(:last-child) {
@@ -15,5 +15,5 @@ $feature-version-color: #bbb;
 }
 
 .feature-versoin {
-    color: $feature-version-color;
+    color: $theme-feature-version-color;
 }

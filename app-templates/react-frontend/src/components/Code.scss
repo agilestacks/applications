@@ -1,10 +1,10 @@
-$code-background: #fafafa;
+@import 'vars.scss';
 
 .code {
     display: block;
     padding: 20px;
     margin: 10px 80px;
-    background: $code-background;
+    background: $theme-code-background;
     white-space: pre;
 }
 

@@ -1,23 +1,21 @@
-$navigation-color: #fff;
-$navigation-background-hover: #9f82be;
-$active-navigation-background: rgba($navigation-background-hover, .5);
+@import 'vars.scss';
 
 .navigation {
     font-weight: bold;
 
     .navigation-item {
-        color: $navigation-color;
+        color: $theme-navigation-color;
         padding: 6px;
         border-radius: 3px;
         margin-right: 5px;
 
         &:hover {
             text-decoration: none;
-            background: $navigation-background-hover;
+            background: $theme-navigation-background-hover;
         }
     }
 
     .navigation-item-active {
-        background: $active-navigation-background;
+        background: $theme-active-navigation-background;
     }
 }

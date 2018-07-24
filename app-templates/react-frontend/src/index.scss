@@ -1,4 +1,4 @@
-$text-color: #42186f;
+@import 'vars.scss';
 
 html,
 body {
@@ -6,7 +6,7 @@ body {
 }
 
 * {
-  color: $text-color;
+  color: $theme-text-color;
 }
 
 li {

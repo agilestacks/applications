@@ -18,7 +18,7 @@ export class RepoActions extends Component {
         const {repo, branch} = this.props;
 
         const repoUrl = repo;
-        const editUrl = `${repo.replace(/\.git$/, '')}/blob/${branch}/src/App.jsx`;
+        const editUrl = repo && `${repo.replace(/\.git$/, '')}/blob/${branch}/src/App.jsx`;
 
         return (
             <NavbarGroup className="repo-actions">

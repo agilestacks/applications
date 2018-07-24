@@ -1,5 +1,5 @@
-$layout-background: #75519c;
-$navigation-background: #6d4c92;
+@import 'vars.scss';
+
 $title-color: #fff;
 
 .app {
@@ -14,7 +14,7 @@ $title-color: #fff;
 }
 
 .app-header {
-    background: $layout-background;
+    background: $theme-background;
 }
 
 .app-title {
@@ -37,7 +37,7 @@ $title-color: #fff;
 }
 
 .app-navbar {
-    background: $navigation-background;
+    background: $theme-navigation-background;
 
     .container {
         display: flex;
@@ -68,7 +68,7 @@ $title-color: #fff;
 
 .app-footer {
     flex: 0 0 150px;
-    background: $layout-background;
+    background: $theme-background;
 }
 
 @keyframes App-logo-spin {
