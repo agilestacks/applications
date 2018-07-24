@@ -11,7 +11,9 @@
     "start": "node app/server.js",
     "test": "npm run lint && npm run jest",
     "jest": "jest",
-    "lint": "eslint app/**"
+    "lint": "eslint app/**",
+    "junit:lint": "eslint -o eslint-junit.xml -f junit app/**",
+    "junit:test": "jest --ci --reporters=jest-junit"
   },
   "dependencies": {
     "express": "^4.16.3",
@@ -22,6 +24,7 @@
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.11.0",
     "jest": "^22.4.3",
+    "jest-junit": "^5.1.0",
     "supertest": "~3.0.0"
   },
   "jest": {
