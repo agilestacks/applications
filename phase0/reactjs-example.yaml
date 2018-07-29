@@ -1,0 +1,28 @@
+---
+version: 1
+kind: template
+meta:
+  name: reactjs:1
+  brief: >
+    Reactjs application with S3 backend
+  source:
+    github:
+      remote: https://github.com/agilestacks/applications.git
+      protocol: http
+      refSpec: master
+      subDir: app-templates/java-backend
+      token:
+        fromEnv: GITHUB_TOKEN
+components:
+- name: s3-website
+  source:
+    github:
+      remote: https://github.com/agilestacks/applications.git
+      protocol: http
+      refSpec: master
+      subDir: components/s3-website
+      token:
+        fromEnv: GITHUB_TOKEN
+    # git:
+    #   remote: http://github.com/agilestacks/applications.git
+    #   subDir: components/s3-website
