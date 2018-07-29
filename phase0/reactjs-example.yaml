@@ -8,7 +8,6 @@ meta:
   source:
     github:
       remote: https://github.com/agilestacks/applications.git
-      protocol: http
       refSpec: master
       subDir: app-templates/java-backend
       token:
@@ -18,7 +17,6 @@ components:
   source:
     github:
       remote: https://github.com/agilestacks/applications.git
-      protocol: http
       refSpec: master
       subDir: components/s3-website
       token:
