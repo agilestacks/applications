@@ -37,7 +37,6 @@ pipeline {
     stage('Checkout') {
       steps {
         checkout scm
-        // git credentialsId: 'anton1-env1-akranga-ufq3d', url: 'https://github.com/akranga/anton4.git'
       }
     }
     stage('Deploy Components') {
