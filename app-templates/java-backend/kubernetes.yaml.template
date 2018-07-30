@@ -61,7 +61,7 @@ metadata:
     app: ${application.name}
 spec:
   rules:
-  - host: $host
+  - host: ${application.ingress.host}
     http:
       paths:
       - path: /
