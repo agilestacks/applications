@@ -2,7 +2,7 @@
 version: 1
 kind: application
 meta:
-  name: nodejs-application:1
+  name: application:1
   brief: Nodejs Application
   source:
     dir: ./

@@ -2,8 +2,8 @@
 version: 1
 kind: application
 meta:
-  name: java-application:1
-  brief: Java Application
+  name: application:1
+  brief: Java microservice with Spring Boot
   source:
     dir: ./
 

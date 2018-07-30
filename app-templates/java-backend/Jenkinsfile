@@ -90,7 +90,7 @@ pipeline {
         REPLICAS      = "${params.REPLICAS ?: 1}"
         INGRESS_HOST  = "${params.INGRESS_HOST}"
         INGRESS_PATH  = "${params.INGRESS_PATH}"
-        HUB_COMPONENT = 'nodejs-application'
+        HUB_COMPONENT = 'application'
       }
       steps {
         container('toolbox') {
