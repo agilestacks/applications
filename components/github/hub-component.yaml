@@ -1,0 +1,41 @@
+---
+version: 1
+kind: component
+meta:
+  name: github
+  brief: Encapsulates operations with Github
+# requires: [ghub]
+parameters:
+- name: component.github
+  parameters:
+  - name: token
+    value:
+    env: GITHUB_TOKEN
+    empty: allow
+  - name: api
+    value: api.github.com
+    env: API_SERVER
+- name: component.github.repository
+  parameters:
+  - name: organization
+    env: ORGANIZATION
+  - name: name
+    env: REPOSITORY
+  - name: protocol
+    value: https
+    env: HUB_PROTOCOL
+  - name: private
+    value: 'false'
+    env: PRIVATE
+  - name: description
+    value:
+    env: DESCRIPTION
+    empty: allow
+  - name: homepage
+    value:
+    env: HOMEPAGE
+    empty: allow
+
+outputs:
+- name: component.github.repository.url
+  fromTfVar: repository
