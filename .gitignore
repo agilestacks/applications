@@ -6,3 +6,4 @@ hub.yaml.state
 terraform.tfstate
 components/s3-website/.terraform
 phase0/.dist
+.hubconfig
