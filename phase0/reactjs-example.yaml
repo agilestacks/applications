@@ -9,7 +9,7 @@ meta:
     github:
       remote: https://github.com/agilestacks/applications.git
       refSpec: master
-      subDir: app-templates/java-backend
+      subDir: app-templates/react-frontend
       token:
         fromEnv: GITHUB_TOKEN
 components:
@@ -24,3 +24,14 @@ components:
     # git:
     #   remote: http://github.com/agilestacks/applications.git
     #   subDir: components/s3-website
+parameters:
+- name: application.name
+  value: iloveract
+- name: application.version
+  value: "0.0.1"
+- name: application.user
+  fromEnv: USER
+- name: application.description
+  value: <
+    Crash on Baba Yaga platforming section
+    [taken from https://imgur.com/a/LMdOv#hkXYufe]

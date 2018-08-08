@@ -1,5 +1,5 @@
-#!/bin/bash
-# shellcheck disable=SC2155,SC2086,SC2030
+#!/bin/bash -xe
+# shellcheck disable=SC2155,SC2086
 
 json=$(cat - | yq r - --tojson)
 
@@ -7,13 +7,13 @@ pwd="$( dirname "$0" )"
 touch "$pwd/.cpignore"
 
 # MANIFEST=${MANIFEST:-$pwd/hub.yaml}
+SHELL=${SHELL:-/bin/sh}
 TEMP="${TEMP:-$pwd/.temp}"
 DIST="${DIST:-$pwd/.dist}"
-# shellcheck disable=SC2002,SC2006
-rsync="rsync -htrzai --progress `cat "$pwd/.cpignore" | xargs -I{} echo -n ' --exclude {} '`"
+# shellcheck disable=SC2034,SC2006
+rsync="rsync -htrzai --progress `xargs -I{} echo -n ' --exclude {} ' < "$pwd/.cpignore"`"
 jq="jq -crM"
 
-rm -rf "$TEMP"; mkdir -p "$TEMP"
 rm -rf "$DIST"; mkdir -p "$DIST"
 
 fetchComponent() {
@@ -66,15 +66,30 @@ fetchComponent() {
     $git fetch --tags --progress --depth=1 origin "$refSpec"
     $git checkout master
 
+    if test -d "$temp/$subDir/.phase0"; then
+        for script in $temp/$subDir/.phase0/*.sh; do
+            echo "Running hook: $script"
+            eval "$SHELL $script ${PARAMETERS[*]}"
+        done
+    fi
+
     mkdir -p "$DIST/$localDir"
     $rsync "$temp/$subDir/" "$DIST/$localDir"
 }
 
-template="$(echo $json | $jq .meta )"
-fetchComponent "$template"
+PARAMETERS=()
+for name in $(echo $json | $jq '.parameters[]?.name'); do
+    value=$(echo $json | $jq '.parameters[]? | select(.name == "'$name'") | .value')
+    param=$(echo "$name=$value" | sed -e "s/'/'\\\\''/g; 1s/^/'/; \$s/\$/'/")
+    # shellcheck disable=SC2206
+    PARAMETERS+=( $param )
+done
+
+base="$(echo $json | $jq .meta )"
+fetchComponent "$base"
 
 components=$(echo $json | $jq '.components[]?.name')
-for c in $components; do
-    _json=$(echo $json | $jq '.components[]? | select(.name == "'$c'")')
-    fetchComponent "$_json" "components/$c"
+for name in $components; do
+    j=$(echo $json | $jq '.components[]? | select(.name == "'$name'")')
+    fetchComponent "$j" "components/$name"
 done
