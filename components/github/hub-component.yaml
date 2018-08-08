@@ -37,5 +37,13 @@ parameters:
     empty: allow
 
 outputs:
-- name: component.github.repository.url
-  fromTfVar: repository
+- name: component.github.repository.cloneUrl
+  fromTfVar: clone_url
+- name: component.github.repository.gitUrl
+  fromTfVar: git_url
+- name: component.github.repository.htlmUrl
+  fromTfVar: html_url
+- name: component.github.repository.sshUrl
+  fromTfVar: ssh_url
+- name: component.github.repository.private
+  fromTfVar: private
