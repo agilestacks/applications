@@ -1,0 +1,4 @@
+.phase0/
+hub.elaborate
+.terraform
+*.tfplan

@@ -1,0 +1,50 @@
+---
+version: 1
+kind: application
+meta:
+  name: argo:1
+  brief: >
+    Argo worfklow application with s3 trigger
+  source:
+    dir: .
+
+components:
+- name: ecr
+  source:
+    dir: ../../../components/ecr
+- name: github
+  source:
+    dir: ../../components/github
+
+lifecycle:
+  bare: allow
+  verbs: [deploy, undeploy]
+  order:
+    - ecr
+    - github
+  mandatory:
+    - ecr
+    - github
+
+parameters:
+- name: dns.domain
+- name: cloud.region
+- name: terraform.bucket.name
+  # fromEnv: STATE_BUCKET
+- name: terraform.bucket.region
+  # fromEnv: STATE_REGION
+
+- name: component.github
+  parameters:
+  - name: token
+    fromEnv: GITHUB_TOKEN
+  - name: repository.organization
+    value: asibot
+  - name: repository.name
+    value: antonargo1
+  - name: repository.description
+    value: >
+      Worfklow application template backed with Argo.
+      Optimized to carry simulation and data science tasks
+- name: component.ecr.name
+  value: myargoapp.${dns.domain}

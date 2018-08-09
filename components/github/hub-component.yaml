@@ -15,12 +15,15 @@ parameters:
   - name: api
     value: api.github.com
     env: API_SERVER
+  - name: directory
+    value: ../../app-templates/argo
+    env: SRC_DIR
 - name: component.github.repository
   parameters:
   - name: organization
-    env: ORGANIZATION
+    env: ORG
   - name: name
-    env: REPOSITORY
+    env: REPO
   - name: protocol
     value: https
     env: HUB_PROTOCOL
