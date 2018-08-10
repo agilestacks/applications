@@ -56,11 +56,11 @@ ifneq ($(GITHUB_TOKEN),)
 endif
 
 	$(git) init
-	$(git) config user.name "SuperHub"
-	$(git) config user.email "support@agilestacks.com"
 	@ ( $(git) remote add origin "$(REMOTE)" || $(git) remote set-url origin "$(REMOTE)" ) >/dev/null 2>&1
 	$(git) fetch --tags --progress origin
 	$(git) add -A
+	$(git) config user.name "SuperHub"
+	$(git) config user.email "support@agilestacks.com"
 	$(git) commit -am "Initial commit"
 	$(git) ls-files
 	$(git) push --set-upstream origin master
@@ -69,9 +69,9 @@ endif
 output:
 	@ $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.' > $(ORG).$(REPO).tmp
 	@ echo Outputs:
-	@ echo clone_url = $(shell jq '.clone_url' < $(ORG).$(REPO).tmp)
-	@ echo git_url = $(shell jq '.git_url' < $(ORG).$(REPO).tmp)
-	@ echo html_url = $(shell jq '.html_url' < $(ORG).$(REPO).tmp)
-	@ echo ssh_url = $(shell jq '.ssh_url' < $(ORG).$(REPO).tmp)
-	@ echo private = $(shell jq '.private' < $(ORG).$(REPO).tmp)
+	@ echo clone_url = $(shell $(jq) '.clone_url' < $(ORG).$(REPO).tmp)
+	@ echo git_url = $(shell $(jq) '.git_url' < $(ORG).$(REPO).tmp)
+	@ echo html_url = $(shell $(jq) '.html_url' < $(ORG).$(REPO).tmp)
+	@ echo ssh_url = $(shell $(jq) '.ssh_url' < $(ORG).$(REPO).tmp)
+	@ echo private = $(shell $(jq) '.private' < $(ORG).$(REPO).tmp)
 .PHONY: output
