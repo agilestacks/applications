@@ -1,0 +1,55 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: ${dns.domain}-bucket-trigger
+  labels:
+    sensors.argoproj.io/controller-instanceid: axis
+spec:
+  signals:
+    - name: minioS3
+      artifact:
+        s3:
+          bucket: ${component.s3.bucket}
+          event: s3:ObjectCreated:Put
+          endpoint: ${component.s3.endpoint}
+  triggers:
+    - name: argo-workflow
+      resource:
+        namespace: default
+        group: argoproj.io
+        version: v1alpha1
+        kind: Workflow
+        # The artifact key from the workflow are overridden by the s3 notification key
+        parameters:
+          - src:
+              signal: minioS3
+              path: s3.object.key
+            dest: spec.templates.0.inputs.artifacts.0.key
+        source:
+          inline: |
+            apiVersion: argoproj.io/v1alpha1
+            kind: Workflow
+            metadata:
+              generateName: input-artifact-s3-
+            spec:
+              entrypoint: input-artifact-s3-example
+              templates:
+              - name: input-artifact-s3-example
+                inputs:
+                  artifacts:
+                  - name: my-art
+                    path: /my-artifact
+                    s3:
+                    endpoint: ${component.s3.endpoint}
+                    bucket: ${component.s3.bucket}
+                    key: path/in/bucket
+                    accessKey:
+                      key: accesskey
+                      name: artifacts-minio
+                    secretKey:
+                      key: secretkey
+                      name: artifacts-minio
+                  container:
+                  image: debian:latest
+                  command: [sh, -c]
+                  args: ["ls -l /my-artifact"]
