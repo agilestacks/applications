@@ -45,6 +45,7 @@ create:
 
 undeploy: $(HUB_CONFIG)
 	- echo yes | $(hub) delete $(ORG)/$(REPO)
+	rm -rf .git
 .PHONY: undeploy
 
 push:
@@ -61,8 +62,8 @@ endif
 	$(git) add -A
 	$(git) config user.name "SuperHub"
 	$(git) config user.email "support@agilestacks.com"
-	- $(git) commit -am "Initial commit" && \
-		$(git) push --set-upstream origin master
+	- $(git) commit -am "Initial commit"
+	$(git) push --set-upstream origin master
 .PHONY: clone
 
 output:
