@@ -61,9 +61,8 @@ endif
 	$(git) add -A
 	$(git) config user.name "SuperHub"
 	$(git) config user.email "support@agilestacks.com"
-	$(git) commit -am "Initial commit"
-	$(git) ls-files
-	$(git) push --set-upstream origin master
+	- $(git) commit -am "Initial commit" && \
+		$(git) push --set-upstream origin master
 .PHONY: clone
 
 output:
