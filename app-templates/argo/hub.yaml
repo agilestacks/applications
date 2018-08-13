@@ -48,3 +48,7 @@ parameters:
       Optimized to carry simulation and data science tasks
 - name: component.ecr.name
   value: myargoapp.${dns.domain}
+
+templates:
+  files:
+    - "*.template"
