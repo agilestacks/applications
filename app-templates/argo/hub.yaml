@@ -32,6 +32,9 @@ parameters:
 - name: terraform.bucket.name
   # fromEnv: STATE_BUCKET
 - name: terraform.bucket.region
+- name: component.s3.bucket
+- name: component.s3.endpoint
+
   # fromEnv: STATE_REGION
 
 - name: component.github
