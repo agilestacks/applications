@@ -2,7 +2,7 @@
 version: 1
 kind: application
 meta:
-  name: argo:1
+  name: argo-app:1
   brief: >
     Argo worfklow application with s3 trigger
   source:
