@@ -11,7 +11,7 @@ parameters:
   env: STATE_BUCKET
 - name: terraform.bucket.region
   env: STATE_REGION
-- name: component.s3webiste
+- name: component.s3website
   parameters:
   - name: name
     env: TF_VAR_name
@@ -22,11 +22,11 @@ parameters:
   env: AWS_DEFAULT_REGION
 
 outputs:
-- name: component.s3webiste.domain
+- name: component.s3website.domain
   fromTfVar: domain
-- name: component.s3webiste.endpoint
+- name: component.s3website.endpoint
   fromTfVar: endpoint
-- name: component.s3webiste.bucket
+- name: component.s3website.bucket
   fromTfVar: s3_bucket
-- name: component.s3webiste.originDomain
+- name: component.s3website.originDomain
   fromTfVar: s3_origin_domain
