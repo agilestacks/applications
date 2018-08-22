@@ -58,12 +58,14 @@ endif
 
 	$(git) init
 	@ ( $(git) remote add origin "$(REMOTE)" || $(git) remote set-url origin "$(REMOTE)" ) >/dev/null 2>&1
+	$(git) branch --set-upstream-to=origin/master master
 	$(git) fetch --tags --progress origin
 	$(git) add -A
 	$(git) config user.name "SuperHub"
 	$(git) config user.email "support@agilestacks.com"
 	- $(git) commit -am "Initial commit"
-	$(git) push --set-upstream origin master
+	$(git) checkout --ours .
+	$(git) push origin master
 .PHONY: clone
 
 output:
