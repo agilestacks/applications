@@ -35,7 +35,7 @@ parameters:
   fromEnv: AWS_DEFAULT_REGION
 - name: terraform.bucket.name
   fromEnv: STATE_BUCKET
-- name: component.s3webiste
+- name: component.s3website
   parameters:
   - name: name
     fromEnv: NAME
@@ -46,6 +46,6 @@ parameters:
 
 outputs:
 - name: application.bucket
-  value: ${component.s3webiste.bucket}
+  value: ${component.s3website.bucket}
 - name: application.endpoint
-  value: ${component.s3webiste.endpoint}
+  value: ${component.s3website.endpoint}
