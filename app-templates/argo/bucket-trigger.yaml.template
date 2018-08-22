@@ -6,12 +6,18 @@ metadata:
     sensors.argoproj.io/controller-instanceid: axis
 spec:
   signals:
-    - name: minioS3
-      artifact:
-        s3:
-          bucket: ${component.s3.bucket}
-          event: s3:ObjectCreated:Put
-          endpoint: ${component.s3.endpoint}
+  - name: minioS3
+    artifact:
+      s3:
+        bucket: ${component.argo.repo.bucket.neme}
+        event: s3:ObjectCreated:Put
+        endpoint: ${component.argo.repo.bucket.endpoint}
+        accessKey:
+          key: ${component.argo.repo.secret.accessKeyRef}
+          name: ${component.argo.repo.secret.name}
+        secretKey:
+          key: ${component.argo.repo.secret.secretKeyRef}
+          name: ${component.argo.repo.secret.name}
   triggers:
     - name: argo-workflow
       resource:
@@ -21,10 +27,10 @@ spec:
         kind: Workflow
         # The artifact key from the workflow are overridden by the s3 notification key
         parameters:
-          - src:
-              signal: minioS3
-              path: s3.object.key
-            dest: spec.templates.0.inputs.artifacts.0.key
+        - src:
+            signal: minioS3
+            path: s3.object.key
+          dest: spec.templates.0.inputs.artifacts.0.key
         source:
           inline: |
             apiVersion: argoproj.io/v1alpha1
@@ -40,15 +46,15 @@ spec:
                   - name: my-art
                     path: /my-artifact
                     s3:
-                    endpoint: ${component.s3.endpoint}
-                    bucket: ${component.s3.bucket}
-                    key: path/in/bucket
-                    accessKey:
-                      key: accesskey
-                      name: artifacts-minio
-                    secretKey:
-                      key: secretkey
-                      name: artifacts-minio
+                      bucket: ${component.argo.repo.bucket.neme}
+                      event: s3:ObjectCreated:Put
+                      endpoint: ${component.argo.repo.bucket.endpoint}
+                      accessKey:
+                        key: ${component.argo.repo.secret.accessKeyRef}
+                        name: ${component.argo.repo.secret.name}
+                      secretKey:
+                        key: ${component.argo.repo.secret.secretKeyRef}
+                        name: ${component.argo.repo.secret.name}
                   container:
                   image: debian:latest
                   command: [sh, -c]

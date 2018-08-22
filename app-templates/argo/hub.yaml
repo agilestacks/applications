@@ -35,6 +35,15 @@ parameters:
 - name: component.s3.bucket
 - name: component.s3.endpoint
 
+- name: component.argo.repo
+  parameters:
+  - name: secret.name
+  - name: secret.accessKeyRef
+  - name: secret.secretKeyRef
+  - name: bucket.name
+  - name: bucket.region
+  - name: bucket.endpoint
+  - name: iam.username
   # fromEnv: STATE_REGION
 
 - name: component.github

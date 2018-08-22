@@ -4,4 +4,3 @@ hub.elaborate
 *.tfplan
 *.state
 *.elaborate
-
