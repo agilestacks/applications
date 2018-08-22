@@ -9,7 +9,7 @@ spec:
   - name: minioS3
     artifact:
       s3:
-        bucket: ${component.argo.repo.bucket.neme}
+        bucket: ${component.argo.repo.bucket.name}
         event: s3:ObjectCreated:Put
         endpoint: ${component.argo.repo.bucket.endpoint}
         accessKey:
@@ -46,7 +46,7 @@ spec:
                   - name: my-art
                     path: /my-artifact
                     s3:
-                      bucket: ${component.argo.repo.bucket.neme}
+                      bucket: ${component.argo.repo.bucket.name}
                       event: s3:ObjectCreated:Put
                       endpoint: ${component.argo.repo.bucket.endpoint}
                       accessKey:
