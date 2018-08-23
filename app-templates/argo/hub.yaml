@@ -32,8 +32,6 @@ parameters:
 - name: terraform.bucket.name
   # fromEnv: STATE_BUCKET
 - name: terraform.bucket.region
-- name: component.s3.bucket
-- name: component.s3.endpoint
 
 - name: component.argo.repo
   parameters:
