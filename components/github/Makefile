@@ -57,8 +57,7 @@ ifneq ($(GITHUB_TOKEN),)
 endif
 
 	$(git) init
-	@ ( $(git) remote add origin "$(REMOTE)" || $(git) remote set-url origin "$(REMOTE)" ) >/dev/null 2>&1
-	$(git) branch --set-upstream-to=origin/master master
+	@ $(git) remote add origin "$(REMOTE)" || $(git) remote set-url origin "$(REMOTE)"
 	$(git) fetch --tags --progress origin
 	$(git) add -A
 	$(git) config user.name "SuperHub"
