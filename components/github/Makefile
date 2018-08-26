@@ -45,7 +45,7 @@ create:
 
 undeploy: $(HUB_CONFIG)
 	- echo yes | $(hub) delete $(ORG)/$(REPO)
-	rm -rf .git
+	rm -rf $(realpath $(SRC_DIR))/.git
 .PHONY: undeploy
 
 push:
