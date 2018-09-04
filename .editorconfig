@@ -10,7 +10,7 @@ end_of_line = lf
 max_line_length = 100
 rulers = 100
 
-[{*.json,.*rc,*.tf}]
+[{*.json,.*rc,*.tf,*.yaml,*.yml}]
 indent_size = 2
 
 [{Makefile,**.mk}]

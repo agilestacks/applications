@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mb-${component.bucket.name}
+  namespace: ${component.minio.namespace}
+spec:
+  backoffLimit: 1
+  activeDeadlineSeconds: 600
+  completions: 1
+  parallelism: 1
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: mb
+        image: minio/mc
+        env:
+        - name: BUCKET
+          value: ${component.bucket.name}
+        - name: ENDPOINT
+          value: ${component.bucket.endpoint}
+        - name: ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ${component.minio.secret.name}
+              key: ${component.minio.secret.accessKeyRef}
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ${component.minio.secret.name}
+              key: ${component.minio.secret.secretKeyRef}
+        command:
+        - MC_HOSTS_minio=https://$(ACCESS_KEY):$(SECRET_KEY)@$(ENDPOINT)
+        - mc
+        args: [mb, minio/$(BUCKET)]

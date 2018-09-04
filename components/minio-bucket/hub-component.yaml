@@ -1,0 +1,62 @@
+version: 1
+kind: component
+meta:
+  name: argo
+  brief: The workflow engine for Kubernetes
+  source:
+    dir: ../../components/argo
+
+requires:
+  - kubernetes
+  - ingress
+provides:
+  - bucket
+
+parameters:
+- name: component.ingress.protocol
+  env: INGRESS_PORTOCOL
+- name: dns.domain
+  brief: DNS domain
+  env: DOMAIN_NAME
+
+- name: component.bucket
+  parameters:
+  - name: endpoint
+    env: ENDPOINT_INGRESS
+  - name: name
+    kind: user
+    value: default
+    env: BUCKET
+- name: component.minio
+  parameters:
+  - name: endpoint
+    env: ENDPOINT
+  - name: namespace
+    value: minio
+    env: NAMESPACE
+  - name: secret.name
+    value: minio
+    env: SECRET_NAME
+  - name: secret.accessKeyRef
+    value: accesskey
+    env: ACCESS_KEY_REF
+  - name: secret.secretKeyRef
+    value: secretkey
+    env: SECRET_KEY_REF
+- name: component.minio.event
+  parameters:
+  - name: prefix
+    empty: allow
+    env: PREFIX
+  - name: suffix
+    empty: allow
+    env: SUFFIX
+  - name: name
+    value: s3:ObjectCreated:*,s3:ObjectRemoved:*
+    env: EVENT_NAME
+    empty: allow
+
+# outputs: []
+templates:
+  files:
+  - "*.template"
