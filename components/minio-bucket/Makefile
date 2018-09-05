@@ -15,6 +15,7 @@ EVENT_PREFIX 	 ?=
 EVENT_SUFFIX 	 ?=
 SUBJECT      	 ?= $(BUCKET)-event
 
+
 ARCH ?= $(shell uname -s | tr '[:upper:]' '[:lower:]')
 ifeq ($(ARCH),darwin)
 	base64_decode = base64 --decode
@@ -33,11 +34,15 @@ ACCESS_KEY := $(shell $(kubectl) get secret '$(SECRET_NAME)' -o json | jq -r '.d
 SECRET_KEY := $(shell $(kubectl) get secret '$(SECRET_NAME)' -o json | jq -r '.data?.$(SECRET_KEY_REF)' | $(base64_decode))
 export MC_HOSTS_$(PROFILE) := $(INGRESS_PORTOCOL)://$(ACCESS_KEY):$(SECRET_KEY)@$(ENDPOINT)
 
-deploy: mb
-
-mb:
+deploy:
 	- $(mc) mb $(PROFILE)/$(BUCKET)
-.PHONY: mb
+.PHONY: deploy
+
+undeploy:
+	- $(mc) rm -r --force $(PROFILE)/$(BUCKET)
+	- $(kubectl) delete -f job-mb.yaml
+.PHONY: undeploy
+
 
 notif-nats:
 ifneq ($(EVENT_PREFIX),)
@@ -49,7 +54,3 @@ endif
 	- $(mc) events add $(PROFILE)/$(BUCKET) arn:minio:sqs::1:nats $(MC_ARGS)
 	$(mc) events list $(PROFILE)/$(BUCKET)
 .PHONY: notif-nats
-
-undeploy:
-	- $(kubectl) delete -f job-mb.yaml
-.PHONY: undeploy
