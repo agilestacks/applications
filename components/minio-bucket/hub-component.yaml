@@ -27,11 +27,11 @@ parameters:
     kind: user
     value: default
     env: BUCKET
-- name: component.minio
+- name: component.bucket
   parameters:
   - name: endpoint
     env: ENDPOINT
-  - name: namespace
+  - name: secret.namespace
     value: minio
     env: NAMESPACE
   - name: secret.name
@@ -56,7 +56,8 @@ parameters:
     env: EVENT_NAME
     empty: allow
 
-# outputs: []
 templates:
   files:
   - "*.template"
+
+outputs: []

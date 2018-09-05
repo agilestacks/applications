@@ -53,8 +53,14 @@ parameters:
   parameters:
   - name: endpoint
     value: ${component.minio.endpoint.ingress}
-  - name: component.bucket.name
+  - name: name
     value: myapplication
+  - name: namespace
+  - name: secret.name
+  - name: secret.namespace
+  - name: secret.accessKeyRef
+  - name: secret.secretKeyRef
+
 
 - name: component.argo.repo
   parameters:

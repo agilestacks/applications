@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: mb-${component.bucket.name}
-  namespace: ${component.minio.namespace}
+  namespace: ${component.bucket.secret.namespace}
 spec:
   backoffLimit: 1
   activeDeadlineSeconds: 600
@@ -22,13 +22,13 @@ spec:
         - name: ACCESS_KEY
           valueFrom:
             secretKeyRef:
-              name: ${component.minio.secret.name}
-              key: ${component.minio.secret.accessKeyRef}
+              name: ${component.bucket.secret.name}
+              key: ${component.bucket.secret.accessKeyRef}
         - name: SECRET_KEY
           valueFrom:
             secretKeyRef:
-              name: ${component.minio.secret.name}
-              key: ${component.minio.secret.secretKeyRef}
+              name: ${component.bucket.secret.name}
+              key: ${component.bucket.secret.secretKeyRef}
         command:
         - MC_HOSTS_minio=https://$(ACCESS_KEY):$(SECRET_KEY)@$(ENDPOINT)
         - mc
