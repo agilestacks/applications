@@ -21,14 +21,10 @@ parameters:
 
 - name: component.bucket
   parameters:
-  - name: endpoint
-    env: ENDPOINT_INGRESS
   - name: name
     kind: user
     value: default
     env: BUCKET
-- name: component.bucket
-  parameters:
   - name: endpoint
     env: ENDPOINT
   - name: secret.namespace

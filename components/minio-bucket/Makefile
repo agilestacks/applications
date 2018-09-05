@@ -7,7 +7,7 @@ BUCKET           ?= default
 SECRET_NAME      ?= minio
 ACCESS_KEY_REF   ?= accesskey
 SECRET_KEY_REF   ?= secretkey
-ENDPOINT_INGRESS ?= localhost:9000
+ENDPOINT         ?= localhost:9000
 kubectl 	     ?= kubectl --context="$(DOMAIN_NAME)" --namespace="$(NAMESPACE)"
 jq				 ?= jq -Ms
 INGRESS_PORTOCOL ?= https
@@ -31,7 +31,7 @@ endif
 PROFILE    := current
 ACCESS_KEY := $(shell $(kubectl) get secret '$(SECRET_NAME)' -o json | jq -r '.data?.$(ACCESS_KEY_REF)' | $(base64_decode))
 SECRET_KEY := $(shell $(kubectl) get secret '$(SECRET_NAME)' -o json | jq -r '.data?.$(SECRET_KEY_REF)' | $(base64_decode))
-export MC_HOSTS_$(PROFILE) := $(INGRESS_PORTOCOL)://$(ACCESS_KEY):$(SECRET_KEY)@$(ENDPOINT_INGRESS)
+export MC_HOSTS_$(PROFILE) := $(INGRESS_PORTOCOL)://$(ACCESS_KEY):$(SECRET_KEY)@$(ENDPOINT)
 
 deploy: mb
 
