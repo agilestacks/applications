@@ -18,6 +18,9 @@ components:
 - name: bucket
   source:
     dir: ../../components/minio-bucket
+- name: bucket-sensor
+  source:
+    dir: ../../components/argo-sensor-artifact
 
 lifecycle:
   bare: allow
@@ -26,10 +29,12 @@ lifecycle:
     - ecr
     - github
     - bucket
+    - bucket-sensor
   mandatory:
     - ecr
     - github
     - bucket
+    - bucket-sensor
 
 parameters:
 - name: dns.domain
@@ -39,20 +44,21 @@ parameters:
 - name: terraform.bucket.region
 - name: component.ingress.protocol
 
-- name: component.minio
-  parameters:
-  - name: endpoint
-  - name: endpoint.ingress
-  - name: namespace
-  - name: secret.name
-  - name: secret.accessKeyRef
-  - name: secret.secretKeyRef
+
+- name: component.minio.service.host
+- name: component.minio.service.port
+# - name: component.minio
+#   parameters:
+#   - name: endpoint
+#   - name: endpoint.ingress
+#   - name: namespace
+#   - name: secret.name
+#   - name: secret.accessKeyRef
+#   - name: secret.secretKeyRef
 
 - name: component.bucket
-  component: bucket
   parameters:
   - name: endpoint
-    value: ${component.minio.endpoint.ingress}
   - name: name
     value: myapplication
   - name: namespace
@@ -61,18 +67,14 @@ parameters:
   - name: secret.accessKeyRef
   - name: secret.secretKeyRef
 
+- name: component.bucket.endpoint
+  component: bucket-sensor
+  value: ${component.minio.service.host}:${component.minio.service.port}
 
-- name: component.argo.repo
-  parameters:
-  - name: secret.name
-  - name: secret.accessKeyRef
-  - name: secret.secretKeyRef
-  - name: bucket.name
-  - name: bucket.region
-  - name: bucket.endpoint
-  - name: iam.username
-  - name: minio.bucket.name
-  # fromEnv: STATE_REGION
+- name: component.argo.namespace
+- name: component.argo.sensor.subject
+  value: ${component.bucket.name}-events
+- name: component.nats.fqdn
 
 - name: component.github
   parameters:
