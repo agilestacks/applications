@@ -1,0 +1,5 @@
+Dockerfile
+Makefile
+hub-component.yaml
+*-example.yaml
+*.md

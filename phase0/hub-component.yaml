@@ -1,0 +1,28 @@
+---
+version: 1
+kind: component
+meta:
+  name: applications-phase0
+  brief: Linkerd service mesh from Bayonet
+  source:
+      dir: ../../applications/phase0
+
+requires:
+  - aws
+
+lifecycle:
+  verbs: [ deploy ]
+  bare: allow
+
+parameters:
+  - name: applications-phase0-cloud:component.ecr.image
+    env: IMAGE
+  - name: dns.domain
+    env: DOMAIN_NAME
+  - name: cloud.region
+    kind: user
+    env: AWS_DEFAULT_REGION
+
+templates:
+  files:
+    - "*.template"
