@@ -69,42 +69,32 @@ async function prepareWorkspace(manifest) {
     } = manifest;
     logger.info('Checking out GIT repositories');
     shell(`mkdir -p ${workspaceDir}`);
-    const repos = components
-        .map((element) => {
-            const {
-                name,
-                source
-            } = element;
-            const {
-                repository,
-                repoDir,
-                dir,
-                branch
-            } = source;
-            return {
-                url: repository,
-                name,
-                repoDir,
-                dir,
-                branch
-            };
-        });
     const clonedRepos = [];
-    await forEach(repos, async (repo) => {
-        if (!clonedRepos.includes(repo.url)) {
-            clonedRepos.push(repo.url);
+    await forEach(components, async (component) => {
+        const {
+            name,
+            source
+        } = component;
+        const {
+            repository: url,
+            repoDir,
+            dir,
+            branch
+        } = source;
+        if (!clonedRepos.includes(url)) {
+            clonedRepos.push(url);
             shell(`git -c http.extraHeader="X-API-Secret: 
-                ${gitApiSecret}" clone --single-branch -b ${repo.branch} --depth=1 ${repo.url}`);
+                ${gitApiSecret}" clone --single-branch -b ${branch} --depth=1 ${url}`);
         }
         const srcPath = path
-            .dirname((repo.repoDir === undefined) ? repo.name : [repo.repoDir, repo.name].join('/'));
-        const destPath = [workspaceDir, repo.dir].join('/');
+            .dirname((repoDir === undefined) ? name : [repoDir, name].join('/'));
+        const destPath = [workspaceDir, dir].join('/');
         shell(`mkdir -p ${destPath}`);
-        shell(`cp -r ${[srcPath, repo.name].join('/')}/* ${destPath}`);
+        shell(`cp -r ${[srcPath, name].join('/')}/* ${destPath}`);
     });
     logger.info(`Components [${components
         .map(element => element.name)}] placed to ${workspaceDir}`);
-    await clean(uniq(repos.map(repo => repo.repoDir.split('/')[0])));
+    await clean(uniq(components.map(component => component.source.repoDir.split('/')[0])));
 }
 
 function createAndPlaceManifest(manifest) {
