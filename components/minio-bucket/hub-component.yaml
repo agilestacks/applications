@@ -1,10 +1,10 @@
 version: 1
 kind: component
 meta:
-  name: argo
-  brief: The workflow engine for Kubernetes
+  name: minio-bucket
+  brief: S3 bucket backed by minio
   source:
-    dir: ../../components/argo
+    dir: ../../components/minio-bucket
 
 requires:
   - kubernetes
@@ -12,13 +12,16 @@ requires:
 provides:
   - bucket
 
+lifecycle:
+  verbs: [deploy, undeploy]
+  # bare: allow
+
 parameters:
 - name: component.ingress.protocol
   env: INGRESS_PORTOCOL
 - name: dns.domain
   brief: DNS domain
   env: DOMAIN_NAME
-
 - name: component.bucket
   parameters:
   - name: name
@@ -39,17 +42,22 @@ parameters:
   - name: secret.secretKeyRef
     value: secretkey
     env: SECRET_KEY_REF
-- name: component.minio.event
-  parameters:
-  - name: prefix
+  - name: event.arn
+    value:
     empty: allow
-    env: PREFIX
-  - name: suffix
+    env: EVENT_ARNS
+  - name: event.prefix
     empty: allow
-    env: SUFFIX
-  - name: name
-    value: s3:ObjectCreated:*,s3:ObjectRemoved:*
+    env: EVENT_PREFIX
+  - name: event.suffix
+    empty: allow
+    env: EVENT_SUFFIX
+  - name: event.name
+    value: put
     env: EVENT_NAME
+    empty: allow
+  - name: event.subject
+    env: EVENT_SUBJECT
     empty: allow
 
 templates:
