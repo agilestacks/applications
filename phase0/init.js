@@ -90,6 +90,7 @@ async function checkoutApplication(meta) {
     const srcPath = path
         .dirname((repoDir === undefined) ? appName : [repoDir, appName].join('/'));
     shell(`cp ${[srcPath, appName].join('/')}/Makefile ${workspaceDir}`);
+    return url;
 }
 
 async function prepareWorkspace(manifest) {
