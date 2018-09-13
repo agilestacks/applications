@@ -16,9 +16,9 @@ const path = require('path');
 const shell = require('child_process').execSync;
 
 const manifestURL = process.env.APPLICATION_MANIFEST;
-const gitApiSecret = process.env.GIT_API_SECRET;
 const workspaceDir = process.env.WORKSPACE_DIR === undefined ? '/Users/oginskis/workspace' :
     process.env.WORKSPACE_DIR;
+const token = process.env.GITHUB_TOKEN;
 const logger = winston.createLogger({
     transports: [
         new winston.transports.Console()
@@ -30,15 +30,18 @@ function fail() {
     process.exit(1);
 }
 
-function downloadManifest() {
+function checkEnv() {
     if (manifestURL === undefined) {
         logger.error('APPLICATION_MANIFEST env variable is not set');
         fail();
     }
-    if (gitApiSecret === undefined) {
-        logger.error('GIT_API_SECRET env variable is not set');
+    if (token === undefined) {
+        logger.error('GITHUB_TOKEN env variable is not set');
         fail();
     }
+}
+
+function downloadManifest() {
     logger.info(`Downloading manifest from ${manifestURL}`);
     let res;
     try {
@@ -63,6 +66,14 @@ async function clean(directories) {
     });
 }
 
+function securedGithubUrl(url) {
+    if (!url.startsWith('https://github.com')) {
+        logger.error('Only repositories from Github are supported right now');
+        fail();
+    }
+    return url.replace('github.com', `${token}@github.com`);
+}
+
 async function prepareWorkspace(manifest) {
     const {
         components
@@ -78,13 +89,13 @@ async function prepareWorkspace(manifest) {
         const {
             repository: url,
             repoDir,
-            dir,
-            branch
+            branch,
+            dir
         } = source;
         if (!clonedRepos.includes(url)) {
             clonedRepos.push(url);
-            shell(`git -c http.extraHeader="X-API-Secret: 
-                ${gitApiSecret}" clone --single-branch -b ${branch} --depth=1 ${url}`);
+            const securedGithub = securedGithubUrl(url);
+            shell(`git clone --single-branch -b ${branch} ${securedGithub}`);
         }
         const srcPath = path
             .dirname((repoDir === undefined) ? name : [repoDir, name].join('/'));
@@ -125,7 +136,7 @@ function createAndPlaceMakefile() {
 }
 
 async function perform() {
-    shell(`rm -rf ${workspaceDir}`);
+    checkEnv();
     const manifest = downloadManifest();
     await prepareWorkspace(manifest);
     createAndPlaceManifest(manifest);

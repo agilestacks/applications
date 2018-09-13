@@ -4,6 +4,9 @@ hub := hub
 
 deploy:
 	@echo "Deploy has been called"
+	@echo "Workspace has been initialized: "
+	@sleep 10
+	@ls /workspace/repo	
 .PHONY: deploy
 
 undeploy:
