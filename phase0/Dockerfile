@@ -8,7 +8,7 @@ ENV APPLICATION_MANIFEST http://localhost:3002/manifest
 ENV GITHUB_TOKEN supersecret
 ENV WORKSPACE_DIR /workspace/repo
 
-COPY ["package.json", "package-lock.json", "init.js", "tmp/Makefile", "/script/"]
+COPY ["package.json", "package-lock.json", "init.js", "/script/"]
 RUN npm -q install --only=prod && npm -q cache clean --force
 
 ENTRYPOINT [ "node", "init.js" ]

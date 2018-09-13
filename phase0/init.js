@@ -74,13 +74,34 @@ function securedGithubUrl(url) {
     return url.replace('github.com', `${token}@github.com`);
 }
 
+async function checkoutApplication(meta) {
+    const {
+        name,
+        source
+    } = meta;
+    const {
+        repository: url,
+        repoDir,
+        branch
+    } = source;
+    const appName = name.split(':')[0];
+    const securedGithub = securedGithubUrl(url);
+    shell(`git clone --single-branch -b ${branch} ${securedGithub}`);
+    const srcPath = path
+        .dirname((repoDir === undefined) ? appName : [repoDir, appName].join('/'));
+    shell(`cp ${[srcPath, appName].join('/')}/Makefile ${workspaceDir}`);
+}
+
 async function prepareWorkspace(manifest) {
     const {
-        components
+        components,
+        meta
     } = manifest;
     logger.info('Checking out GIT repositories');
     shell(`mkdir -p ${workspaceDir}`);
     const clonedRepos = [];
+    const appRepo = await checkoutApplication(meta);
+    clonedRepos.push(appRepo);
     await forEach(components, async (component) => {
         const {
             name,
@@ -130,17 +151,11 @@ function createAndPlaceManifest(manifest) {
     });
 }
 
-function createAndPlaceMakefile() {
-    shell(`cp Makefile ${workspaceDir}`);
-    logger.info(`Makefile has been created and placed to ${workspaceDir}`);
-}
-
 async function perform() {
     checkEnv();
     const manifest = downloadManifest();
     await prepareWorkspace(manifest);
     createAndPlaceManifest(manifest);
-    createAndPlaceMakefile();
 }
 
 perform();
