@@ -53,11 +53,8 @@ parameters:
     empty: allow
     env: EVENT_SUFFIX
   - name: event.name
-    value: put
+    value: put,delete,get
     env: EVENT_NAME
-    empty: allow
-  - name: event.subject
-    env: EVENT_SUBJECT
     empty: allow
 
 templates:

@@ -44,7 +44,7 @@ parameters:
 - name: terraform.bucket.region
 - name: component.ingress.protocol
 
-
+- name: component.nats.fqdn
 - name: component.minio.service.host
 - name: component.minio.service.port
 # - name: component.minio
@@ -73,8 +73,7 @@ parameters:
 
 - name: component.argo.namespace
 - name: component.argo.sensor.subject
-  value: ${component.bucket.name}-events
-- name: component.nats.fqdn
+  value: bucketevents
 
 - name: component.github
   parameters:
