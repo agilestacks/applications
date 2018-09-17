@@ -16,7 +16,7 @@ export GITHUB_TOKEN ?=
 hub := ghub
 curl := curl -fs -H "Authorization: token $(GITHUB_TOKEN)"
 jq := jq -cM
-git := $(hub) -C $(realpath $(SRC_DIR))
+git := $(hub) -C $(SRC_DIR)
 
 ifeq ($(GITHUB_TOKEN),)
 	unexport GITHUB_TOKEN
