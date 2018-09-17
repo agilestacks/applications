@@ -1,0 +1,20 @@
+---
+version: 1
+kind: application
+meta:
+  name: argo-workflows:1
+  brief: >
+    Argo worfklow application with minio bucket trigger and a GitHub
+  source:
+    dir: .
+
+components: []
+
+lifecycle:
+  bare: allow
+  verbs: [deploy, undeploy]
+
+parameters: []
+templates:
+  files:
+    - "*.template"

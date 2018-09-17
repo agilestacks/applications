@@ -1,0 +1,35 @@
+---
+components:
+- name: minio-bucket
+  source:
+    dir: ../../components/minio-bucket
+
+lifecycle:
+  bare: allow
+  verbs: [deploy, undeploy]
+  order:
+    - minio-bucket
+  mandatory:
+    - minio-bucket
+
+parameters:
+- name: dns.domain
+- name: cloud.region
+- name: terraform.bucket
+  parameters:
+  - name: name
+  - name: region
+- name: component.ingress
+  parameters:
+  - name: protocol
+
+- name: component.bucket
+  parameters:
+  - name: endpoint
+  - name: name
+    value: myapplication
+  - name: namespace
+  - name: secret.name
+  - name: secret.namespace
+  - name: secret.accessKeyRef
+  - name: secret.secretKeyRef

@@ -1,0 +1,52 @@
+---
+version: 1
+kind: application
+meta:
+  name: argo-workflows:1
+  brief: >
+    Argo worfklow application with minio bucket trigger and a GitHub
+  source:
+    dir: .
+
+components:
+- name: argo-sensor-artifact
+  source:
+    dir: ../../components/argo-sensor-artifact
+
+lifecycle:
+  order:
+    - argo-sensor-artifact
+  mandatory:
+    - argo-sensor-artifact
+
+parameters:
+- name: component.nats.fqdn
+- name: component.bucket
+  parameters:
+  - name: name
+    value: myapplication
+  - name: namespace
+  - name: secret.name
+  - name: secret.namespace
+  - name: secret.accessKeyRef
+  - name: secret.secretKeyRef
+
+- name: component.minio
+  parameters:
+  - name: service.host
+  - name: service.port
+- name: component.bucket
+  component: argo-sensor-artifact
+  parameters:
+  - name: endpoint
+    value: ${component.minio.service.host}:${component.minio.service.port}
+
+- name: component.argo
+  parameters:
+  - name: namespace
+  - name: sensor.subject
+    value: bucketevents
+  - name: sensor.name
+    value: bucketsensor
+  - name: sensor.event
+    value: s3:ObjectCreated:Put

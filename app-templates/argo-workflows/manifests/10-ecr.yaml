@@ -1,0 +1,21 @@
+---
+components:
+- name: ecr
+  source:
+    dir: ../../../components/ecr
+
+lifecycle:
+  order:
+    - ecr
+  mandatory:
+    - ecr
+
+parameters:
+- name: dns.domain
+- name: cloud.region
+- name: terraform.bucket
+  parameters:
+  - name: name
+  - name: region
+- name: component.ecr.name
+  value: myargoapp.${dns.domain}

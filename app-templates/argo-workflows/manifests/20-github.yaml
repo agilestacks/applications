@@ -1,0 +1,34 @@
+---
+components:
+- name: github-repository
+  source:
+    dir: ../../components/github-repository
+- name: github-webhook
+  source:
+    dir: ../../components/github-webhook
+
+lifecycle:
+  order:
+    - github-repository
+    - github-webhook
+  mandatory:
+    - github-repository
+    - github-webhook
+
+parameters:
+- name: component.github
+  parameters:
+  - name: token
+    fromEnv: GITHUB_TOKEN
+  - name: repository.organization
+    value: asibot
+  - name: repository.name
+    value: antonargo1
+  - name: webhook.name
+    value: github
+  - name: webhook.events.json
+    value: '["push"]'
+  - name: repository.description
+    value: >
+      Worfklow application template backed with Argo.
+      Optimized to carry simulation and data science tasks
