@@ -13,5 +13,6 @@ components/minio-bucket/.mc
 components/minio-bucket/job-mb.yaml
 .envrc
 components/argo-sensor-artifact/sensor.yaml
-components/github-webhook/payload.yaml
+components/github-webhook/payload.json
 components/github-webhook/ingress.yaml
+
