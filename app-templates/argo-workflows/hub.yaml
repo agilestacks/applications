@@ -2,9 +2,9 @@
 version: 1
 kind: application
 meta:
-  name: argo-app:1
+  name: argo-workflows:1
   brief: >
-    Argo worfklow application with s3 trigger
+    Argo worfklow application with minio bucket trigger and a GitHub
   source:
     dir: .
 
@@ -18,13 +18,13 @@ components:
 - name: github-webhook
   source:
     dir: ../../components/github-webhook
-- name: bucket
+- name: minio-bucket
   source:
     dir: ../../components/minio-bucket
-# - name: webhook-sensor
+# - name: argo-sensor-webhook
 #   source:
 #     dir: ../../components/argo-sensor-webhook
-- name: bucket-sensor
+- name: argo-sensor-artifact
   source:
     dir: ../../components/argo-sensor-artifact
 
@@ -35,28 +35,33 @@ lifecycle:
     - ecr
     - github-repository
     - github-webhook
-    - bucket
-    - bucket-sensor
+    - minio-bucket
+    - argo-sensor-artifact
   mandatory:
     - ecr
     - github-repository
     - github-webhook
-    - bucket
-    - bucket-sensor
+    - minio-bucket
+    - argo-sensor-artifact
 
 parameters:
 - name: dns.domain
 - name: cloud.region
-- name: terraform.bucket.name
-  # fromEnv: STATE_BUCKET
-- name: terraform.bucket.region
-- name: component.ingress.protocol
-- name: component.ingress.urlPrefix
-- name: component.ingress.fqdn
+- name: terraform.bucket
+  parameters:
+  - name: name
+  - name: region
+- name: component.ingress
+  parameters:
+  - name: protocol
+  - name: urlPrefix
+  - name: fqdn
 
 - name: component.nats.fqdn
-- name: component.minio.service.host
-- name: component.minio.service.port
+- name: component.minio
+  parameters:
+  - name: service.host
+  - name: service.port
 # - name: component.minio
 #   parameters:
 #   - name: endpoint
@@ -76,14 +81,14 @@ parameters:
   - name: secret.namespace
   - name: secret.accessKeyRef
   - name: secret.secretKeyRef
+  - name: endpoint
+    value: ${component.minio.service.host}:${component.minio.service.port}
 
-- name: component.bucket.endpoint
-  component: bucket-sensor
-  value: ${component.minio.service.host}:${component.minio.service.port}
-
-- name: component.argo.namespace
-- name: component.argo.sensor.subject
-  value: bucketevents
+- name: component.argo
+  parameters:
+  - name: namespace
+  - name: sensor.subject
+    value: bucketevents
 
 - name: component.github
   parameters:
