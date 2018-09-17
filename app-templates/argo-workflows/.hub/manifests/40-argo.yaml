@@ -1,17 +1,11 @@
 ---
-version: 1
-kind: application
-meta:
-  name: argo-workflows:1
-  brief: >
-    Argo worfklow application with minio bucket trigger and a GitHub
-  source:
-    dir: .
-
 components:
 - name: argo-sensor-artifact
   source:
-    dir: ../../components/argo-sensor-artifact
+    repository: https://github.com/agilestacks/applications.git
+    repoDir: components/argo-sensor-artifact
+    branch: master
+    fromEnv: GITHUB_TOKEN
 
 lifecycle:
   order:

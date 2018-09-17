@@ -6,7 +6,10 @@ meta:
   brief: >
     Argo worfklow application with minio bucket trigger and a GitHub
   source:
-    dir: .
+    repository: https://github.com/agilestacks/applications.git
+    repoDir: app-templates/argo-workflows
+    branch: master
+    fromEnv: GITHUB_TOKEN
 
 components: []
 

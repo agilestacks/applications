@@ -2,7 +2,10 @@
 components:
 - name: minio-bucket
   source:
-    dir: ../../components/minio-bucket
+    repository: https://github.com/agilestacks/applications.git
+    repoDir: components/minio-bucket
+    branch: master
+    fromEnv: GITHUB_TOKEN
 
 lifecycle:
   bare: allow
