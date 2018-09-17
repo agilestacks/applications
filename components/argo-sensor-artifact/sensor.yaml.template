@@ -1,0 +1,50 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: ${component.argo.sensor.name}
+  namespace: ${component.argo.namespace}
+  labels:
+    sensors.argoproj.io/controller-instanceid: axis
+spec:
+  signals:
+  - name: ${component.argo.sensor.name}0
+    artifact:
+      s3:
+        bucket: ${component.bucket.name}
+        event: ${component.argo.sensor.event}
+        endpoint: ${component.bucket.endpoint}
+        insecure: true
+        accessKey:
+          key: ${component.bucket.secret.accessKeyRef}
+          name: ${component.bucket.secret.name}
+        secretKey:
+          key: ${component.bucket.secret.secretKeyRef}
+          name: ${component.bucket.secret.name}
+      target:
+        type: nats
+        url: nats://${component.nats.fqdn}
+        attributes:
+          subject: ${component.argo.sensor.subject}
+  triggers:
+  - name: ns-workflow
+    resource:
+      namespace: ${component.argo.namespace}
+      group: argoproj.io
+      version: v1alpha1
+      kind: Workflow
+      source:
+        inline: |
+            apiVersion: argoproj.io/v1alpha1
+            kind: Workflow
+            metadata:
+              generateName: hello-world-
+            spec:
+              entrypoint: whalesay
+              templates:
+              - container:
+                  args:
+                  - "hello world"
+                  command:
+                  - cowsay
+                  image: "docker/whalesay:latest"
+                name: whalesay

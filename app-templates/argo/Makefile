@@ -18,11 +18,11 @@ hub.elaborate:
 	$(hub) elaborate hub.yaml -s $(PLATFORM_STATE_FILE) -o $@
 
 
-deploy: $(APP_ELABORATE_FILE)
-	$(hub) deploy $< -s $(APP_STATE_FILE)
-.PHONY: deploy
+# deploy: $(APP_ELABORATE_FILE)
+# 	$(hub) deploy $< -s $(APP_STATE_FILE)
+# .PHONY: deploy
 
 
-undeploy: $(APP_ELABORATE_FILE)
-	$(hub) undeploy $<
-.PHONY: undeploy
+# undeploy: $(APP_ELABORATE_FILE)
+# 	$(hub) undeploy $<
+# .PHONY: undeploy

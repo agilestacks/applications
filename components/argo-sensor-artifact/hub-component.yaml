@@ -1,0 +1,47 @@
+---
+version: 1
+kind: component
+meta:
+  name: argo-sensor-artifact
+  brief: Senses on artifact change signal for argo events
+  source:
+    dir: ../../components/argo
+
+requires:
+  - kubernetes
+provides:
+  - argo-event-sensor
+
+parameters:
+- name: dns.domain
+  brief: DNS domain
+  env: DOMAIN_NAME
+- name: component.bucket
+  parameters:
+  - name: name
+  - name: endpoint
+  - name: secret.name
+  - name: secret.namespace
+  - name: secret.accessKeyRef
+  - name: secret.secretKeyRef
+
+- name: component.nats.fqdn
+
+- name: component.argo
+  parameters:
+  - name: namespace
+    env: NAMESPACE
+    value: argoproj
+  - name: sensor.name
+    value: artifact-sensor
+    env: COMPONENT
+  - name: sensor.subject
+    value: bucketevents
+  - name: sensor.event
+    value: s3:ObjectCreated:Put
+
+outputs: []
+
+templates:
+  files:
+  - "*.template"
