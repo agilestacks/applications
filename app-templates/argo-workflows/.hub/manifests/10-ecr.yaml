@@ -2,8 +2,9 @@
 components:
 - name: ecr
   source:
-    repository: https://github.com/agilestacks/components.git
-    repoDir: components/ecr
+    repoUrl: https://github.com/agilestacks/components.git
+    repoPath: components/ecr
+    dir: components/ecr
     branch: master
     fromEnv: GITHUB_TOKEN
 
@@ -21,4 +22,6 @@ parameters:
   - name: name
   - name: region
 - name: component.ecr.name
-  value: myargoapp.${dns.domain}
+  parameters:
+  - name: name
+    value: myargoapp.${dns.domain}

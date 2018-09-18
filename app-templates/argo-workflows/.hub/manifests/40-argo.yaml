@@ -2,8 +2,9 @@
 components:
 - name: argo-sensor-artifact
   source:
-    repository: https://github.com/agilestacks/applications.git
-    repoDir: components/argo-sensor-artifact
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/argo-sensor-artifact
+    dir: components/argo-sensor-artifact
     branch: master
     fromEnv: GITHUB_TOKEN
 
@@ -24,7 +25,6 @@ parameters:
   - name: secret.namespace
   - name: secret.accessKeyRef
   - name: secret.secretKeyRef
-
 - name: component.minio
   parameters:
   - name: service.host
@@ -34,7 +34,6 @@ parameters:
   parameters:
   - name: endpoint
     value: ${component.minio.service.host}:${component.minio.service.port}
-
 - name: component.argo
   parameters:
   - name: namespace

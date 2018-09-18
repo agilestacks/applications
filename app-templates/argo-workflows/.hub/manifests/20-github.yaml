@@ -2,14 +2,16 @@
 components:
 - name: github-repository
   source:
-    repository: https://github.com/agilestacks/applications.git
-    repoDir: components/github-repository
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/github-repository
+    dir: components/github-repository
     branch: master
     fromEnv: GITHUB_TOKEN
 - name: github-webhook
   source:
-    repository: https://github.com/agilestacks/applications.git
-    repoDir: components/github-webhook
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/github-webhook
+    dir: components/github-webhook
     branch: master
     fromEnv: GITHUB_TOKEN
 
