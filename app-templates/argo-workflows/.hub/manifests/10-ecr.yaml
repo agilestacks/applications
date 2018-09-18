@@ -21,7 +21,7 @@ parameters:
   parameters:
   - name: name
   - name: region
-- name: component.ecr.name
+- name: component.ecr
   parameters:
   - name: name
     value: myargoapp.${dns.domain}
