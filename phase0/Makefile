@@ -28,6 +28,10 @@ push:
 
 deploy: build ecr-login push output
 
+undeploy:
+	echo "Done"
+.PHONY: undeploy
+
 
 output:
 	@echo Outputs:
