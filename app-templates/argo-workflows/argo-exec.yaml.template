@@ -34,17 +34,18 @@ spec:
       kind: Workflow
       source:
         inline: |
-            apiVersion: argoproj.io/v1alpha1
-            kind: Workflow
-            metadata:
-              generateName: {component.argo.sensor.name}-
-            spec:
-              entrypoint: docker
-              templates:
-              - container:
-                  args:
-                  - "hello world"
-                  command:
-                  - cowsay
-                  image: "docker.io/agilestacks/toolbox:stable"
-                name: docker
+          apiVersion: argoproj.io/v1alpha1
+          kind: Workflow
+          metadata:
+            generateName: {component.argo.sensor.name}0-
+          spec:
+            entrypoint: ffmpeg
+            templates:
+            - name: toolbox
+              container:
+                image: "${component.ecr.name}:latest"
+                command:
+                - ffmpeg
+                args:
+                - deploy
+
