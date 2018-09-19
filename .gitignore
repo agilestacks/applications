@@ -16,3 +16,5 @@ components/argo-sensor-artifact/sensor.yaml
 components/github-webhook/payload.json
 components/github-webhook/ingress.yaml
 
+app-templates/argo-workflows/argo-exec.yaml
+app-templates/argo-workflows/argo-build.yaml
