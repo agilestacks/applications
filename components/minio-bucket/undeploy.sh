@@ -19,7 +19,7 @@ if test "$ARCH" == "darwin"; then
     base64_decode='base64 --decode'
 fi
 
-if "$INGRESS_PROTOCOL" == "https"; then
+if test "$INGRESS_PROTOCOL" == "https"; then
     mc='mc --no-color'
 fi
 
