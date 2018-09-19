@@ -3,14 +3,14 @@ components:
 - name: github-repository
   source:
     repoUrl: https://github.com/agilestacks/applications.git
-    repoPath: applications/components/github-repository
+    repoPath: applications/components
     dir: components/github-repository
     branch: master
     fromEnv: GITHUB_TOKEN
 - name: github-webhook
   source:
     repoUrl: https://github.com/agilestacks/applications.git
-    repoPath: applications/components/github-webhook
+    repoPath: applications/components
     dir: components/github-webhook
     branch: master
     fromEnv: GITHUB_TOKEN

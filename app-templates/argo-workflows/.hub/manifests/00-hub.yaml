@@ -8,7 +8,7 @@ meta:
   source:
     repoUrl: https://github.com/agilestacks/applications.git
     repoPath: applications/app-templates/argo-workflows
-    dir: components/argo-workflows
+    dir: .
     branch: master
     fromEnv: GITHUB_TOKEN
 

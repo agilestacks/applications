@@ -3,7 +3,7 @@ components:
 - name: argo-sensor-artifact
   source:
     repoUrl: https://github.com/agilestacks/applications.git
-    repoPath: applications/components/argo-sensor-artifact
+    repoPath: applications/components
     dir: components/argo-sensor-artifact
     branch: master
     fromEnv: GITHUB_TOKEN

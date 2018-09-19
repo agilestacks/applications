@@ -3,7 +3,7 @@ components:
 - name: ecr
   source:
     repoUrl: https://github.com/agilestacks/components.git
-    repoPath: components/ecr
+    repoPath: components
     dir: components/ecr
     branch: master
     fromEnv: GITHUB_TOKEN

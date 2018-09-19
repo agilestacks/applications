@@ -3,7 +3,7 @@ components:
 - name: minio-bucket
   source:
     repoUrl: https://github.com/agilestacks/applications.git
-    repoPath: applications/components/minio-bucket
+    repoPath: applications/components
     dir: components/minio-bucket
     branch: master
     fromEnv: GITHUB_TOKEN

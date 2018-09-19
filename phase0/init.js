@@ -18,7 +18,6 @@ const shell = require('child_process').execSync;
 const manifestURL = process.env.APPLICATION_MANIFEST;
 const workspaceDir = process.env.WORKSPACE_DIR === undefined ? '/Users/oginskis/workspace' :
     process.env.WORKSPACE_DIR;
-const token = process.env.GITHUB_TOKEN;
 const logger = winston.createLogger({
     transports: [
         new winston.transports.Console()
@@ -33,10 +32,6 @@ function fail() {
 function checkEnv() {
     if (manifestURL === undefined) {
         logger.error('APPLICATION_MANIFEST env variable is not set');
-        fail();
-    }
-    if (token === undefined) {
-        logger.error('GITHUB_TOKEN env variable is not set');
         fail();
     }
 }
@@ -66,12 +61,13 @@ async function clean(directories) {
     });
 }
 
-function securedGithubUrl(url) {
+function securedGithubUrl(url, token) {
+    const githubToken = process.env[token];
     if (!url.startsWith('https://github.com')) {
         logger.error('Only repositories from Github are supported right now');
         fail();
     }
-    return url.replace('github.com', `${token}@github.com`);
+    return url.replace('github.com', `${githubToken}@github.com`);
 }
 
 async function checkoutApplication(meta) {
@@ -80,16 +76,20 @@ async function checkoutApplication(meta) {
         source
     } = meta;
     const {
-        repository: url,
-        repoDir,
-        branch
+        repoUrl: url,
+        repoPath,
+        branch,
+        dir,
+        fromEnv: token
     } = source;
     const appName = name.split(':')[0];
-    const securedGithub = securedGithubUrl(url);
+    const securedGithub = securedGithubUrl(url, token);
     shell(`git clone --single-branch -b ${branch} ${securedGithub}`);
     const srcPath = path
-        .dirname((repoDir === undefined) ? appName : [repoDir, appName].join('/'));
-    shell(`cp ${[srcPath, appName].join('/')}/Makefile ${workspaceDir}`);
+        .dirname((repoPath === undefined) ? appName : [repoPath, appName].join('/'));
+    const destPath = [workspaceDir, dir].join('/');
+    shell(`mkdir -p ${destPath}`);
+    shell(`cp ${[srcPath, appName].join('/')}/* ${destPath}`);
     return url;
 }
 
@@ -109,46 +109,59 @@ async function prepareWorkspace(manifest) {
             source
         } = component;
         const {
-            repository: url,
-            repoDir,
+            repoUrl: url,
+            repoPath,
             branch,
-            dir
+            dir,
+            fromEnv: token
         } = source;
         if (!clonedRepos.includes(url)) {
             clonedRepos.push(url);
-            const securedGithub = securedGithubUrl(url);
+            const securedGithub = securedGithubUrl(url, token);
             shell(`git clone --single-branch -b ${branch} ${securedGithub}`);
         }
         const srcPath = path
-            .dirname((repoDir === undefined) ? name : [repoDir, name].join('/'));
+            .dirname((repoPath === undefined) ? name : [repoPath, name].join('/'));
         const destPath = [workspaceDir, dir].join('/');
         shell(`mkdir -p ${destPath}`);
         shell(`cp -r ${[srcPath, name].join('/')}/* ${destPath}`);
     });
-    logger.info(`Components [${components
+    logger.info(`Components required by the application [${components
         .map(element => element.name)}] placed to ${workspaceDir}`);
-    await clean(uniq(components.map(component => component.source.repoDir.split('/')[0])));
+    await clean(uniq(components.map(component => component.source.repoPath.split('/')[0])));
 }
 
-function createAndPlaceManifest(manifest) {
+function deleteObsoleteProperties(manifest) {
     const {
+        meta,
         components
     } = manifest;
+    delete meta.source.repoUrl;
+    delete meta.source.repoPath;
+    delete meta.source.branch;
+    delete meta.source.fromEnv;
     components.forEach((element) => {
         const {
             source
         } = element;
-        delete source.repository;
+        delete source.repoUrl;
+        delete source.repoPath;
         delete source.branch;
-        delete source.repoDir;
+        delete source.fromEnv;
     });
+}
+
+function copyManifest(manifest) {
+    deleteObsoleteProperties(manifest);
     const yaml = safeDump(manifest);
-    fs.writeFile(`${workspaceDir}/hub.yaml`, yaml, (err) => {
+    fs.writeFile([workspaceDir, manifest.meta.source.dir, 'hub.yaml'].join('/'), yaml, (err) => {
         if (err) {
             logger.error('Cannot write manifest file to disk', err);
             fail();
         }
-        logger.info(`Manifest has been created and placed to ${workspaceDir}`);
+        logger
+            .info(`Application manifest and configuration has been created and placed to 
+                ${[workspaceDir, manifest.meta.source.dir].join('/')}`);
     });
 }
 
@@ -156,7 +169,7 @@ async function perform() {
     checkEnv();
     const manifest = downloadManifest();
     await prepareWorkspace(manifest);
-    createAndPlaceManifest(manifest);
+    copyManifest(manifest);
 }
 
 perform();
