@@ -81,6 +81,9 @@ parameters:
   - name: secret.namespace
   - name: secret.accessKeyRef
   - name: secret.secretKeyRef
+- name: component.bucket
+  component: argo-sensor-artifact
+  parameters:
   - name: endpoint
     value: ${component.minio.service.host}:${component.minio.service.port}
 
@@ -89,6 +92,10 @@ parameters:
   - name: namespace
   - name: sensor.subject
     value: bucketevents
+  - name: sensor.name
+    value: bucketsensor
+  - name: sensor.event
+    value: s3:ObjectCreated:Put
 
 - name: component.github
   parameters:
@@ -98,6 +105,8 @@ parameters:
     value: asibot
   - name: repository.name
     value: antonargo1
+  - name: webhook.name
+    value: github
   - name: webhook.events.json
     value: '["push"]'
   - name: repository.description
