@@ -15,7 +15,9 @@ lifecycle:
     - argo-sensor-artifact
 
 parameters:
-- name: component.nats.fqdn
+- name: component.nats
+  parameters: 
+  - name: fqdn
 - name: component.bucket
   parameters:
   - name: name
