@@ -1,7 +1,7 @@
 {
   "name": "${component.github.webhook.name}",
   "active": true,
-  "events": "${component.github.webhook.events.json}",
+  "events": ${component.github.webhook.events.json},
   "config": {
     "url": "${component.ingress.protocol}://argo.${component.ingress.urlPrefix}.${dns.domain}/webhooks/${component.github.webhook.name}",
     "content_type": "json"

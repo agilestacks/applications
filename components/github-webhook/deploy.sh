@@ -6,13 +6,18 @@
 # fi
 
 # WEBHOOK_NAME
+
+kubectl="kubectl --context=${DOMAIN_NAME:?Unknown domain name} --namespace=${NAMESPACE:?Unknown namespace}"
+
 # shellcheck disable=SC2089
-curl="curl -H 'Authorization: token $GITHUB_TOKEN'"
+curl="curl -H 'Authorization: token ${GITHUB_TOKEN:?Github token required}'"
 API_SERVER="${API_SERVER:-api.github.com}"
 
 echo "Checking github access"
 $curl -I "https://$API_SERVER/orgs/$ORG" || \
     $curl -I "https://$API_SERVER/users/$ORG"
+
+$kubectl apply -f ingress.yaml
 
 # WEBHOOK_NAME
 

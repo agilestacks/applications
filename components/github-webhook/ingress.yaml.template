@@ -1,13 +1,13 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: github-webhook-${component.github.webhook.name}
+  name: argo-webhook-${component.github.webhook.name}
   namespace: ${component.argo.namespace}
   labels:
-    provider:  agilestacks.com
-    project:   jenkins
+    provider: agilestacks.com
+    project:  argo
   annotations:
-    agilestacks.com/stack-component: Jenkins
+    agilestacks.com/stack-component: github-webhook
 spec:
   rules:
   - host: argo.${component.ingress.urlPrefix}.${dns.domain}

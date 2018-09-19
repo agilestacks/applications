@@ -45,17 +45,11 @@ parameters:
 - name: component.argo
   parameters:
   - name: namespace
-
-- name: component.nats.fqdn
-
-- name: component.argo
-  parameters:
-  - name: namespace
     env: NAMESPACE
     value: argoproj
 
-lifecycle:
-  bare: allow
+# lifecycle:
+#   bare: allow
 
 outputs: []
 
