@@ -7,6 +7,13 @@ components:
     dir: components/github-repository
     branch: master
     fromEnv: GITHUB_TOKEN
+- name: buildbox
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components
+    dir: components/buildbox
+    branch: master
+    fromEnv: GITHUB_TOKEN
 # - name: github-webhook
 #   source:
 #     repoUrl: https://github.com/agilestacks/applications.git
@@ -18,12 +25,20 @@ components:
 lifecycle:
   order:
     - github-repository
+    - buildbox
     # - github-webhook
   mandatory:
     - github-repository
+    - buildbox
     # - github-webhook
 
 parameters:
+- name: component.buildbox
+  parameters:
+  - name: directory
+    value: .
+  - name: dockerfile
+    value: Dockerfile
 - name: component.github
   parameters:
   - name: token
