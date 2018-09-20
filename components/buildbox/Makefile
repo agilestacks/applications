@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := deploy
 
-SRC_DIR := $(realpath .).tmp/$(shell echo "$(REMOTE)" | sha1sum | tr -cd '[[:alnum:]]')
+SRC_DIR := $(realpath .)/.tmp/$(shell echo "$(REMOTE)" | sha1sum | tr -cd '[[:alnum:]]')
 BRANCH ?= master
 DOCKERFILE ?= Dockerfile
 
