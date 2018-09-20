@@ -31,20 +31,21 @@ ifneq ($(HOMEPAGE),)
 endif
 
 check-github-api:
-	printf "Connecting to $(API_SERVER)... "
-	@ $(curl) -I https://$(API_SERVER)/orgs/$(ORG) || \
-		$(curl) -I https://$(API_SERVER)/users/$(ORG) || \
-		(printf "Error!\nProbably due to invalid GITHUB_TOKEN"; exit -1)
+	echo "Connecting to $(API_SERVER)... "
+	- $(eval org=$(shell $(curl) -I https://$(API_SERVER)/orgs/$(ORG)))
+	- $(eval user=$(shell $(curl) -I https://$(API_SERVER)/users/$(ORG)))
+
+	$(if $(or $(org),$(user)),$(info "Connected"),$(error "Error connecting to $(API_SERVER)"))
 PHONY: check-github-api
 
-deploy: check-github-api push output
+deploy: create push output
 
 init:
 	$(git) init
 .PHONY: init
 
-create: init
-	$(git) create $(CREATE_ARGS) $(ORG)/$(REPO)
+create: init check-github-api
+	- $(git) create $(CREATE_ARGS) $(ORG)/$(REPO)
 .PHONY: create
 
 undeploy: $(HUB_CONFIG)
@@ -52,7 +53,7 @@ undeploy: $(HUB_CONFIG)
 	rm -rf $(realpath $(SRC_DIR))/.git
 .PHONY: undeploy
 
-push: create
+push:
 	$(eval REMOTE=$(shell $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.clone_url'))
 	@ echo Pushing to remote: $(REMOTE)
 
@@ -70,6 +71,7 @@ endif
 .PHONY: clone
 
 output:
+	$(eval SRC_DIR := $(realpath .)/.$(shell echo "$(REMOTE)" | sha1sum | tr -cd '[[:alnum:]]'))
 	@ $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.' > $(ORG).$(REPO).tmp
 	@ echo Outputs:
 	@ echo clone_url = $(shell $(jq) '.clone_url' < $(ORG).$(REPO).tmp)
