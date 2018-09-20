@@ -18,3 +18,4 @@ components/github-webhook/ingress.yaml
 
 app-templates/argo-workflows/argo-exec.yaml
 app-templates/argo-workflows/argo-build.yaml
+app-templates/argo-workflows/argo-workflow.yaml

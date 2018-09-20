@@ -1,2 +1,4 @@
 .hub/manifests
+hub.elaborate
+hub.state
 hub.yaml

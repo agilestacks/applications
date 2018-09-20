@@ -43,7 +43,7 @@ spec:
             templates:
             - name: toolbox
               container:
-                image: "${component.ecr.name}:latest"
+                image: "${component.docker.image}"
                 command:
                 - ffmpeg
                 args:
