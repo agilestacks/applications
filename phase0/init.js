@@ -12,7 +12,6 @@ const {
 } = require('lodash');
 
 const fs = require('fs');
-const path = require('path');
 const shell = require('child_process').execSync;
 
 const manifestURL = process.env.APPLICATION_MANIFEST;
@@ -85,11 +84,11 @@ async function checkoutApplication(meta) {
     const appName = name.split(':')[0];
     const securedGithub = securedGithubUrl(url, token);
     shell(`git clone --single-branch -b ${branch} ${securedGithub}`);
-    const srcPath = path
-        .dirname((repoPath === undefined) ? appName : [repoPath, appName].join('/'));
+    const srcPath = repoPath === undefined ? appName : [repoPath, appName].join('/');
     const destPath = [workspaceDir, dir].join('/');
     shell(`mkdir -p ${destPath}`);
-    shell(`cp ${[srcPath, appName].join('/')}/* ${destPath}`);
+    shell(`touch ${srcPath}/.cpignore`)
+    shell(`rsync -htrzai --progress --exclude-from ${srcPath}/.cpignore ${srcPath}/ ${destPath}`);
     return url;
 }
 
@@ -120,11 +119,11 @@ async function prepareWorkspace(manifest) {
             const securedGithub = securedGithubUrl(url, token);
             shell(`git clone --single-branch -b ${branch} ${securedGithub}`);
         }
-        const srcPath = path
-            .dirname((repoPath === undefined) ? name : [repoPath, name].join('/'));
+        const srcPath = repoPath === undefined ? name : [repoPath, name].join('/');
         const destPath = [workspaceDir, dir].join('/');
         shell(`mkdir -p ${destPath}`);
-        shell(`cp -r ${[srcPath, name].join('/')}/* ${destPath}`);
+        shell(`touch ${srcPath}/.cpignore`)
+        shell(`rsync -htrzai --progress --exclude-from ${srcPath}/.cpignore ${srcPath}/ ${destPath}`);
     });
     logger.info(`Components required by the application [${components
         .map(element => element.name)}] placed to ${workspaceDir}`);
