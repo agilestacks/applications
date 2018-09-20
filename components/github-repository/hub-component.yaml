@@ -40,6 +40,8 @@ parameters:
     empty: allow
 
 outputs:
+- name: component.git.remote
+  fromTfVar: clone_url
 - name: component.github.repository.cloneUrl
   fromTfVar: clone_url
 - name: component.github.repository.gitUrl

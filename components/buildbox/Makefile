@@ -37,10 +37,14 @@ push:
 	$(docker) push $(IMAGE):$(shell $(git) rev-parse --short HEAD)
 .PHONY: push
 
-deploy: clone build
-	echo "Done"
-.PHONY: deploy
+deploy: clone build push output
 
 undeploy:
 	echo "Done"
 .PHONY: undeploy
+
+output:
+	@ echo Outputs:
+	@ echo image = $(IMAGE):$(shell $(git) rev-parse --short HEAD)
+	@ echo tag = $(shell $(git) rev-parse --short HEAD)
+.PHONY: output
