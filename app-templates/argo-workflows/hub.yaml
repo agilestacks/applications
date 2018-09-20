@@ -18,6 +18,9 @@ components:
 - name: github-webhook
   source:
     dir: ../../components/github-webhook
+- name: buildbox
+  source:
+    dir: ../../components/buildbox
 - name: minio-bucket
   source:
     dir: ../../components/minio-bucket
@@ -34,12 +37,14 @@ lifecycle:
   order:
     - ecr
     - github-repository
+    - buildbox
     - github-webhook
     - minio-bucket
     - argo-sensor-artifact
   mandatory:
     - ecr
     - github-repository
+    - buildbox
     - github-webhook
     - minio-bucket
     - argo-sensor-artifact
@@ -86,6 +91,13 @@ parameters:
   parameters:
   - name: endpoint
     value: ${component.minio.service.host}:${component.minio.service.port}
+
+- name: component.buildbox
+  parameters:
+  - name: directory
+    value: .
+  - name: dockerfile
+    value: Dockerfile
 
 - name: component.argo
   parameters:

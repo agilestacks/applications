@@ -17,12 +17,14 @@ hub := hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credentia
 hub.elaborate:
 	$(hub) elaborate hub.yaml -s $(PLATFORM_STATE_FILE) -o $@
 
+clean:
+	rm -rf $(APP_ELABORATE_FILE) $(APP_STATE_FILE)
 
-deploy: $(APP_ELABORATE_FILE)
-	$(hub) deploy $< -s $(APP_STATE_FILE)
-.PHONY: deploy
+install: $(APP_ELABORATE_FILE)
+	$(hub) deploy $(lastword $^) -s $(APP_STATE_FILE)
+.PHONY: install
 
+uninstall: $(APP_ELABORATE_FILE)
+	$(hub) undeploy $(APP_ELABORATE_FILE) -s $(APP_STATE_FILE)
+.PHONY: uninstall
 
-undeploy: $(APP_ELABORATE_FILE)
-	$(hub) undeploy $<
-.PHONY: undeploy
