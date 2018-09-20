@@ -1,4 +1,4 @@
-.phase0/
+.hub/manifests
 hub.elaborate
 .terraform
 *.tfplan
