@@ -1,0 +1,34 @@
+---
+version: 1
+kind: component
+meta:
+  name: github
+  brief: Encapsulates operations with Github
+# requires: [ghub]
+parameters:
+- name: component.git.remote
+  env: REMOTE
+- name: component.git.branch
+  value: master
+  env: BRANCH
+- name: component.buildbox
+  parameters:
+  - name: dockerfile
+    env: DOCKERFILE
+    value: Dockerfile
+  - name: directory
+    value: .
+    env: DIRECTORY
+  - name: dind
+    value: docker.io/agilestacks/toolbox:latest
+    env: TOOLBOX
+- name: component.docker
+  parameters:
+  - name: image
+    env: IMAGE
+- name: component.github
+  parameters:
+  - name: token
+    value:
+    env: GITHUB_TOKEN
+    empty: allow
