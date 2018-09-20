@@ -15,8 +15,8 @@ parameters:
   - name: api
     value: api.github.com
     env: API_SERVER
-  - name: directory
-    value: ../../app-templates/argo-workflows
+  - name: workspace
+    value: .
     env: SRC_DIR
 - name: component.github.repository
   parameters:

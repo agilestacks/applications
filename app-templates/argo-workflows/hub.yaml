@@ -111,6 +111,8 @@ parameters:
 
 - name: component.github
   parameters:
+  - name: workspace
+    value: ../../app-templates/argo-workflows
   - name: token
     fromEnv: GITHUB_TOKEN
   - name: repository.organization
