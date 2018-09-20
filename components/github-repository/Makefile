@@ -31,13 +31,14 @@ ifneq ($(HOMEPAGE),)
 	CREATE_ARGS += -h "$(HOMEPAGE)"
 endif
 
-$(HUB_CONFIG):
+check-github-api:
+	printf "Connecting to $(API_SERVER)... "
 	@ $(curl) -I https://$(API_SERVER)/orgs/$(ORG) || \
-		$(curl) -I https://$(API_SERVER)/users/$(ORG)
-	@ mkdir -p $(dir $(HUB_CONFIG))
-	@ touch $(HUB_CONFIG)
+		$(curl) -I https://$(API_SERVER)/users/$(ORG) || \
+		(printf "Error!\nProbably due to invalid GITHUB_TOKEN"; exit -1)
+PHONY: check-github-api
 
-deploy: $(HUB_CONFIG) create push output
+deploy: check-github-api create push output
 
 create:
 	$(hub) create $(CREATE_ARGS) $(ORG)/$(REPO)
