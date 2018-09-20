@@ -13,10 +13,9 @@ SRC_DIR ?= $(realpath .)
 
 export GITHUB_TOKEN ?=
 
-hub := ghub
 curl := curl -fs -H "Authorization: token $(GITHUB_TOKEN)"
 jq := jq -cM
-git := $(hub) -C $(SRC_DIR)
+git := $(ghub) -C $(SRC_DIR)
 
 ifeq ($(GITHUB_TOKEN),)
 	unexport GITHUB_TOKEN
@@ -38,26 +37,28 @@ check-github-api:
 		(printf "Error!\nProbably due to invalid GITHUB_TOKEN"; exit -1)
 PHONY: check-github-api
 
-deploy: check-github-api create push output
+deploy: check-github-api push output
 
-create:
-	$(hub) create $(CREATE_ARGS) $(ORG)/$(REPO)
+init:
+	$(git) init
+.PHONY: init
+
+create: init
+	$(git) create $(CREATE_ARGS) $(ORG)/$(REPO)
 .PHONY: create
 
 undeploy: $(HUB_CONFIG)
-	- echo yes | $(hub) delete $(ORG)/$(REPO)
+	- echo yes | $(git) delete $(ORG)/$(REPO)
 	rm -rf $(realpath $(SRC_DIR))/.git
 .PHONY: undeploy
 
-push:
+push: create
 	$(eval REMOTE=$(shell $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.clone_url'))
 	@ echo Pushing to remote: $(REMOTE)
 
 ifneq ($(GITHUB_TOKEN),)
 	$(eval REMOTE=$(subst ://,://x-oauth-basic:$(GITHUB_TOKEN)@,$(REMOTE)))
 endif
-
-	$(git) init
 	@ $(git) remote add origin "$(REMOTE)" || $(git) remote set-url origin "$(REMOTE)"
 	$(git) fetch --tags --progress origin
 	$(git) add -A
