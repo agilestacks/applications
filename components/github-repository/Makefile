@@ -71,12 +71,12 @@ endif
 .PHONY: clone
 
 output:
-	$(eval SRC_DIR := $(realpath .)/.$(shell echo "$(REMOTE)" | sha1sum | tr -cd '[[:alnum:]]'))
-	@ $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.' > $(ORG).$(REPO).tmp
+	$(eval TEMPFILE = $(realpath .)/.github.tmp)
+	$(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) > $(TEMPFILE)
 	@ echo Outputs:
-	@ echo clone_url = $(shell $(jq) '.clone_url' < $(ORG).$(REPO).tmp)
-	@ echo git_url = $(shell $(jq) '.git_url' < $(ORG).$(REPO).tmp)
-	@ echo html_url = $(shell $(jq) '.html_url' < $(ORG).$(REPO).tmp)
-	@ echo ssh_url = $(shell $(jq) '.ssh_url' < $(ORG).$(REPO).tmp)
-	@ echo private = $(shell $(jq) '.private' < $(ORG).$(REPO).tmp)
+	@ echo clone_url = $(shell $(jq) '.clone_url' < $(TEMPFILE))
+	@ echo git_url = $(shell $(jq) '.git_url' < $(TEMPFILE))
+	@ echo html_url = $(shell $(jq) '.html_url' < $(TEMPFILE))
+	@ echo ssh_url = $(shell $(jq) '.ssh_url' < $(TEMPFILE))
+	@ echo private = $(shell $(jq) '.private' < $(TEMPFILE))
 .PHONY: output
