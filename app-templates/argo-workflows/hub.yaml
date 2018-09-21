@@ -38,14 +38,14 @@ lifecycle:
     - ecr
     - github-repository
     - buildbox
-    - github-webhook
+    # - github-webhook
     - minio-bucket
     # - argo-sensor-artifact
   mandatory:
     - ecr
     - github-repository
     - buildbox
-    - github-webhook
+    # - github-webhook
     - minio-bucket
     # - argo-sensor-artifact
 
