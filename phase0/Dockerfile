@@ -15,6 +15,5 @@ ENV WORKSPACE_DIR /workspace/repo
 
 COPY ["package.json", "package-lock.json", "init.js", "/script/"]
 RUN npm -q install --only=prod && npm -q cache clean --force
-RUN apt update && apt install rsync -y
 
 ENTRYPOINT [ "node", "init.js" ]
