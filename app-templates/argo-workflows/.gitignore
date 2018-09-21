@@ -4,3 +4,4 @@ hub.elaborate
 *.tfplan
 *.state
 *.elaborate
+*.cpignore
