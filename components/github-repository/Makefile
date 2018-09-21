@@ -71,12 +71,10 @@ endif
 .PHONY: clone
 
 output:
-	$(eval TEMPFILE = $(realpath .)/.github.tmp)
-	$(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) > $(TEMPFILE)
 	@ echo Outputs:
-	@ echo clone_url = $(shell $(jq) '.clone_url' < $(TEMPFILE))
-	@ echo git_url = $(shell $(jq) '.git_url' < $(TEMPFILE))
-	@ echo html_url = $(shell $(jq) '.html_url' < $(TEMPFILE))
-	@ echo ssh_url = $(shell $(jq) '.ssh_url' < $(TEMPFILE))
-	@ echo private = $(shell $(jq) '.private' < $(TEMPFILE))
+	@ echo clone_url = $(shell $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.clone_url')
+	@ echo git_url = $(shell $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.git_url')
+	@ echo html_url = $(shell $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.html_url')
+	@ echo ssh_url = $(shell $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.ssh_url')
+	@ echo private = $(shell $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.private')
 .PHONY: output
