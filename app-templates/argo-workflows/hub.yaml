@@ -15,9 +15,9 @@ components:
 - name: github-repository
   source:
     dir: ../../components/github-repository
-- name: github-webhook
-  source:
-    dir: ../../components/github-webhook
+# - name: github-webhook
+#   source:
+#     dir: ../../components/github-webhook
 - name: buildbox
   source:
     dir: ../../components/buildbox
@@ -27,9 +27,9 @@ components:
 # - name: argo-sensor-webhook
 #   source:
 #     dir: ../../components/argo-sensor-webhook
-- name: argo-sensor-artifact
-  source:
-    dir: ../../components/argo-sensor-artifact
+# - name: argo-sensor-artifact
+#   source:
+#     dir: ../../components/argo-sensor-artifact
 
 lifecycle:
   bare: allow
@@ -40,14 +40,14 @@ lifecycle:
     - buildbox
     - github-webhook
     - minio-bucket
-    - argo-sensor-artifact
+    # - argo-sensor-artifact
   mandatory:
     - ecr
     - github-repository
     - buildbox
     - github-webhook
     - minio-bucket
-    - argo-sensor-artifact
+    # - argo-sensor-artifact
 
 parameters:
 - name: dns.domain
@@ -129,6 +129,10 @@ parameters:
       Optimized to carry simulation and data science tasks
 - name: component.ecr.name
   value: myargoapp.${dns.domain}
+
+outputs:
+- name: app.git.remote
+  value: ${component.git.remote}
 
 templates:
   files:

@@ -14,11 +14,15 @@ APP_ELABORATE_FILE 	  ?= hub.elaborate
 hub := hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credentials=false
 
 
-hub.elaborate:
+$(APP_ELABORATE_FILE):
 	$(hub) elaborate hub.yaml -s $(PLATFORM_STATE_FILE) -o $@
 
 clean:
 	rm -rf $(APP_ELABORATE_FILE) $(APP_STATE_FILE)
+
+deploy:
+
+.PHONY: deploy
 
 install: $(APP_ELABORATE_FILE)
 	$(hub) deploy $(lastword $^) -s $(APP_STATE_FILE)
