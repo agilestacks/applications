@@ -1,6 +1,11 @@
 FROM node:10.10
 LABEL maintainer="Victor Oginskis <victor@agilestacks.com>"
 
+RUN apt-get update && \
+    apt-get install -yqq rsync && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 RUN mkdir /script
 WORKDIR /script
 
