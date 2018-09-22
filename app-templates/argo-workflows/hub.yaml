@@ -50,8 +50,19 @@ lifecycle:
     # - argo-sensor-artifact
 
 parameters:
-- name: dns.domain
 - name: cloud.region
+  value: us-east-1
+- name: application
+  parameters:
+  - name: name
+    value: antonargo1
+  - name: webhook
+    value: ${application.name}
+  - name: namespace
+    value: argoproj
+    env: NAMESPACE
+- name: dns.domain
+  env: DOMAIN_NAME
 - name: terraform.bucket
   parameters:
   - name: name
@@ -106,8 +117,6 @@ parameters:
     value: bucketevents
   - name: sensor.name
     value: bucketsensor
-  - name: sensor.event
-    value: s3:ObjectCreated:Put
 
 - name: component.github
   parameters:
@@ -119,16 +128,13 @@ parameters:
     value: asibot
   - name: repository.name
     value: antonargo1
-  - name: webhook.name
-    value: github
-  - name: webhook.events.json
-    value: '["push"]'
   - name: repository.description
     value: >
       Worfklow application template backed with Argo.
       Optimized to carry simulation and data science tasks
 - name: component.ecr.name
   value: myargoapp.${dns.domain}
+- name: component.git.remote
 
 outputs:
 - name: app.git.remote

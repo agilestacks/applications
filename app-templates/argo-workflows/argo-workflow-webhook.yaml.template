@@ -1,32 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
-  name: ${component.argo.sensor.name}
-  namespace: ${component.argo.namespace}
+  name: ${application.name}-webhook
+  namespace: ${application.namespace}
   labels:
+    provider:  agilestacks.com
+    application: ${application.name}
     sensors.argoproj.io/controller-instanceid: axis
 spec:
   signals:
-  - name: ${component.argo.sensor.name}0
-    artifact:
-      s3:
-        bucket: ${component.bucket.name}
-        event: ${component.argo.sensor.event}
-        endpoint: ${component.bucket.endpoint}
-        insecure: true
-        accessKey:
-          key: ${component.bucket.secret.accessKeyRef}
-          name: ${component.bucket.secret.name}
-        secretKey:
-          key: ${component.bucket.secret.secretKeyRef}
-          name: ${component.bucket.secret.name}
-      target:
-        type: nats
-        url: nats://${component.nats.fqdn}
-        attributes:
-          subject: ${component.argo.sensor.subject}
+  - name: webhook
+    webhook:
+      endpoint: /webhooks/${application.name}/${application.webhook}
+      method: POST
   triggers:
-  - name: exec-{component.argo.sensor.name}
+  - name: exec-{app.argo.name}
     resource:
       namespace: ${component.argo.namespace}
       group: argoproj.io
@@ -48,4 +36,23 @@ spec:
                 - ffmpeg
                 args:
                 - deploy
-
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ${application.name}-${application.webhook}
+  namespace: ${application.namespace}
+  labels:
+    provider:  agilestacks.com
+    application: ${application.name}
+  annotations:
+    agilestacks.com/stack-component: ArgoWorkflows
+spec:
+  rules:
+  - host: ${component.argo.ingress}
+    http:
+      paths:
+      - path: /webhooks/${applicaiton-name}/${application.webhook}
+        backend:
+          serviceName: ${component.argo.events.webhook.service.name}
+          servicePort: ${component.argo.events.webhook.service.port}

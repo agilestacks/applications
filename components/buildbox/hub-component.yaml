@@ -24,8 +24,14 @@ parameters:
     env: TOOLBOX
 - name: component.docker
   parameters:
+  - name: registry.kind
+    value: ecr
+    env: KIND
   - name: image
     env: IMAGE
+- name: cloud.region
+  kind: user
+  env: AWS_DEFAULT_REGION
 - name: component.github
   parameters:
   - name: token

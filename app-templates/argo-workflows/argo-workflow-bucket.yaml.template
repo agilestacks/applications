@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
-  name: ${component.argo.sensor.name}
-  namespace: ${component.argo.namespace}
+  name: ${application.name}-bucketevents
+  namespace: ${application.namespace}
   labels:
     sensors.argoproj.io/controller-instanceid: axis
 spec:
   signals:
-  - name: ${component.argo.sensor.name}0
+  - name: ${application.name}-bucketevents
     artifact:
       s3:
         bucket: ${component.bucket.name}
-        event: ${component.argo.sensor.event}
+        event: s3:ObjectCreated:Put
         endpoint: ${component.bucket.endpoint}
         insecure: true
         accessKey:
@@ -26,9 +26,9 @@ spec:
         attributes:
           subject: ${component.argo.sensor.subject}
   triggers:
-  - name: exec-{component.argo.sensor.name}
+  - name: ${application.name}-onbucketchange
     resource:
-      namespace: ${component.argo.namespace}
+      namespace: ${application.namespace}
       group: argoproj.io
       version: v1alpha1
       kind: Workflow
@@ -37,7 +37,7 @@ spec:
           apiVersion: argoproj.io/v1alpha1
           kind: Workflow
           metadata:
-            generateName: {component.argo.sensor.name}0-
+            generateName: ${application.name}-bucketevent-
           spec:
             entrypoint: ffmpeg
             templates:

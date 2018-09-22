@@ -3,7 +3,10 @@
 SRC_DIR := $(realpath .)/.tmp/$(shell echo "$(REMOTE)" | sha1sum | tr -cd '[[:alnum:]]')
 BRANCH ?= master
 DOCKERFILE ?= Dockerfile
+AWS_DEFAULT_REGION ?= us-east-1
+KIND ?= ecr
 
+aws ?= aws --region=$(AWS_DEFAULT_REGION)
 # ifneq ($(GITHUB_TOKEN),)
 # 	$(eval REMOTE=$(subst ://,://x-oauth-basic:$(GITHUB_TOKEN)@,$(REMOTE)))
 # endif
@@ -22,6 +25,14 @@ clone: $(SRC_DIR)
 	$(git) fetch --tags --progress origin
 	$(git) checkout $(BRANCH)
 
+login-ecr:
+	$(aws) ecr get-login --no-include-email | $(SHELL) -
+.PHONY: login
+
+login-disabled:
+	@ echo "Docker login not needed"
+.PHONY: login
+
 build:
 	$(docker) build \
 		--force-rm \
@@ -32,7 +43,7 @@ build:
 		$(SRC_DIR)
 .PHONY: build
 
-push:
+push: login-$(KIND)
 	$(docker) push $(IMAGE):latest
 	$(docker) push $(IMAGE):$(shell $(git) rev-parse --short HEAD)
 .PHONY: push
