@@ -42,7 +42,7 @@ parameters:
 - name: component.github
   parameters:
   - name: token
-    fromEnv: GITHUB_TOKEN
+    fromEnv: COMPONENT_GITHUB_TOKEN
   - name: repository.organization
     value: asibot
   - name: repository.name
