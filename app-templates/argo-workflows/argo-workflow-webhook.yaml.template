@@ -52,7 +52,7 @@ spec:
   - host: ${component.argo.ingress}
     http:
       paths:
-      - path: /webhooks/${applicaiton-name}/${application.webhook}
+      - path: /webhooks/${application.name}/${application.webhook}
         backend:
           serviceName: ${component.argo.events.webhook.service.name}
           servicePort: ${component.argo.events.webhook.service.port}

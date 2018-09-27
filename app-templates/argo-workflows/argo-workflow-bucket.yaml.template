@@ -26,7 +26,7 @@ spec:
         attributes:
           subject: ${component.argo.sensor.subject}
   triggers:
-  - name: ${application.name}-onbucketchange
+  - name: ${application.name}-bucketevent
     resource:
       namespace: ${application.namespace}
       group: argoproj.io

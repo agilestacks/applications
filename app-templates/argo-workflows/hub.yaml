@@ -117,6 +117,9 @@ parameters:
     value: bucketevents
   - name: sensor.name
     value: bucketsensor
+  - name: ingress
+  - name: events.webhook.service.name
+  - name: events.webhook.service.port
 
 - name: component.github
   parameters:
@@ -137,7 +140,7 @@ parameters:
 - name: component.git.remote
 
 outputs:
-- name: app.git.remote
+- name: application.git.remote
   value: ${component.git.remote}
 
 templates:
