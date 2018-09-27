@@ -27,6 +27,7 @@ parameters:
   parameters:
   - name: protocol
 - name: component.bucket
+  component: minio-bucket
   parameters:
   - name: endpoint
   - name: name
