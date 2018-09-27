@@ -22,3 +22,11 @@ parameters: []
 templates:
   files:
     - "*.template"
+
+outputs:
+- name: application.git.remote
+  value: ${component.git.remote}
+- name: application.webhook.url
+  value: ${component.argo.ingress}/webhooks/${application.name}/${application.webhook}
+- name: application.webhook.method
+  value: POST
