@@ -14,7 +14,7 @@ spec:
       endpoint: /webhooks/${application.name}/${application.webhook}
       method: POST
   triggers:
-  - name: exec-{app.argo.name}
+  - name: exec-${application.name}
     resource:
       namespace: ${component.argo.namespace}
       group: argoproj.io
@@ -25,13 +25,13 @@ spec:
           apiVersion: argoproj.io/v1alpha1
           kind: Workflow
           metadata:
-            generateName: {component.argo.sensor.name}0-
+            generateName: ${application.name}-
           spec:
             entrypoint: ffmpeg
             templates:
             - name: toolbox
               container:
-                image: "${component.docker.image}"
+                image: ${component.docker.image}
                 command:
                 - ffmpeg
                 args:
