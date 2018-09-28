@@ -56,8 +56,10 @@ parameters:
   parameters:
   - name: name
     value: antonargo1
-  - name: webhook
-    value: ${application.name}
+  - name: webhook.name
+    value: run
+  - name: webhook.method
+    value: GET
   - name: namespace
     value: argoproj
     env: NAMESPACE
@@ -74,10 +76,10 @@ parameters:
   - name: fqdn
 
 - name: component.nats.fqdn
-- name: component.minio
-  parameters:
-  - name: service.host
-  - name: service.port
+# - name: component.minio
+#   parameters:
+#   - name: service.host
+#   - name: service.port
 # - name: component.minio
 #   parameters:
 #   - name: endpoint
@@ -91,17 +93,17 @@ parameters:
   parameters:
   - name: endpoint
   - name: name
-    value: myapplication
+    value: ${application.name}
   - name: namespace
   - name: secret.name
   - name: secret.namespace
   - name: secret.accessKeyRef
   - name: secret.secretKeyRef
-- name: component.bucket
-  component: argo-sensor-artifact
-  parameters:
-  - name: endpoint
-    value: ${component.minio.service.host}:${component.minio.service.port}
+# - name: component.bucket
+#   component: argo-sensor-artifact
+#   parameters:
+#   - name: endpoint
+#     value: ${component.minio.service.host}:${component.minio.service.port}
 
 - name: component.buildbox
   parameters:
@@ -113,10 +115,6 @@ parameters:
 - name: component.argo
   parameters:
   - name: namespace
-  - name: sensor.subject
-    value: bucketevents
-  - name: sensor.name
-    value: bucketsensor
   - name: ingress
   - name: events.webhook.service.name
   - name: events.webhook.service.port
@@ -143,9 +141,9 @@ outputs:
 - name: application.git.remote
   value: ${component.git.remote}
 - name: application.webhook.url
-  value: ${component.argo.ingress}/webhooks/${application.name}/${application.webhook}
+  value: ${component.argo.ingress}/webhooks/${application.name}/${application.webhook.name}
 - name: application.webhook.method
-  value: POST
+  value: ${application.webhook.method}
 
 templates:
   files:

@@ -33,12 +33,9 @@ lifecycle:
     # - github-webhook
 
 parameters:
-- name: component.buildbox
+- name: component.git
   parameters:
-  - name: directory
-    value: .
-  - name: dockerfile
-    value: Dockerfile
+  - name: remote
 - name: component.github
   parameters:
   - name: token
@@ -55,3 +52,7 @@ parameters:
     value: >
       Worfklow application template backed with Argo.
       Optimized to carry simulation and data science tasks
+
+outputs:
+- name: application.git.remote
+  value: ${component.git.remote}

@@ -36,3 +36,8 @@ parameters:
   - name: secret.namespace
   - name: secret.accessKeyRef
   - name: secret.secretKeyRef
+- name: component.nats.fqdn
+# - name: component.minio
+#   parameters:
+#   - name: service.host
+#   - name: service.port

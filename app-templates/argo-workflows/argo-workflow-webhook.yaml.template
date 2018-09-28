@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
-  name: ${application.name}-webhook
+  name: ${application.name}-${application.webhook.name}-webhook
   namespace: ${application.namespace}
   labels:
     provider:  agilestacks.com
@@ -11,8 +11,8 @@ spec:
   signals:
   - name: webhook
     webhook:
-      endpoint: /webhooks/${application.name}/${application.webhook}
-      method: POST
+      endpoint: /webhooks/${application.name}/${application.webhook.name}
+      method: ${application.webhook.method}
   triggers:
   - name: exec-${application.name}
     resource:
@@ -40,7 +40,7 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: ${application.name}-${application.webhook}
+  name: ${application.name}-${application.webhook.name}
   namespace: ${application.namespace}
   labels:
     provider:  agilestacks.com
@@ -52,7 +52,7 @@ spec:
   - host: ${component.argo.ingress}
     http:
       paths:
-      - path: /webhooks/${application.name}/${application.webhook}
+      - path: /webhooks/${application.name}/${application.webhook.name}
         backend:
           serviceName: ${component.argo.events.webhook.service.name}
           servicePort: ${component.argo.events.webhook.service.port}

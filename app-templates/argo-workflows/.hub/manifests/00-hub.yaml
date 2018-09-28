@@ -18,7 +18,36 @@ lifecycle:
   bare: allow
   verbs: [deploy, undeploy]
 
-parameters: []
+parameters:
+- name: application
+  parameters:
+  - name: name
+  - name: webhook.name
+    value: run
+  - name: webhook.method
+    value: POST
+  - name: namespace
+    value: argoproj
+    env: NAMESPACE
+- name: component.argo
+  parameters:
+  - name: namespace
+  - name: ingress
+  - name: events.webhook.service.name
+  - name: events.webhook.service.port
+- name: component.ingress
+  parameters:
+  - name: protocol
+  - name: urlPrefix
+  - name: fqdn
+- name: component.buildbox
+  parameters:
+  - name: directory
+    value: .
+  - name: dockerfile
+    value: Dockerfile
+
+
 templates:
   files:
     - "*.template"
