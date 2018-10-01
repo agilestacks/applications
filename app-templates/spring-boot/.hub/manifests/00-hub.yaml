@@ -1,0 +1,39 @@
+---
+version: 1
+kind: application
+meta:
+  name: spring-boot:1
+  brief: Java microservice with Spring Boot
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/app-templates
+    dir: .
+    branch: master
+    fromEnv: GITHUB_TOKEN
+
+requires:
+  - kubernetes
+
+components: []
+
+lifecycle:
+  bare: allow
+  verbs: [deploy, undeploy]
+
+parameters:
+- name: application
+  parameters:
+  - name: name
+  - name: namespace
+  - name: replicas
+  - name: version
+    value: latest
+  - name: ingress.host
+  - name: ingress.path
+- name: cloud.region
+- name: terraform.bucket
+  parameters:
+  - name: name
+  - name: region
+- name: component.ingress.fqdn
+- name: dns.domain
