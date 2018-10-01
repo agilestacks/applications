@@ -1,0 +1,7 @@
+.hub/manifests
+hub.elaborate
+.terraform
+*.tfplan
+*.state
+*.elaborate
+*.cpignore
