@@ -29,6 +29,8 @@ parameters:
   - name: namespace
     value: argoproj
     env: NAMESPACE
+- name: dns.domain
+  env: DOMAIN_NAME
 - name: component.argo
   parameters:
   - name: namespace
