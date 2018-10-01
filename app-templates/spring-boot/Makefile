@@ -1,12 +1,12 @@
-.DEFAULT_GOAL := install
+.DEFAULT_GOAL := deploy
 
 aws := aws
 jq  := jq -r
 
-PLATFORM_STATE_FILE   ?= s3://terraform.agilestacks.com/example/hub.state
+PLATFORM_STATE_FILE   ?= s3://terraform.demo01.agilestacks.com/example/hub.state
 PLATFORM_STATE_BUCKET ?= $(firstword $(subst /, ,$(PLATFORM_STATE_FILE:s3://%=%)))
 PLATFORM_STATE_REGION ?= $(shell $(aws) s3api get-bucket-location --bucket $(PLATFORM_STATE_BUCKET) | $(jq) '.LocationConstraint//"us-east-1"')
-NAMESPACE 	          ?= jenkins
+NAMESPACE 	          ?= default
 DOMAIN_NAME           ?= localhost
 APP_STATE_FILE 		  ?= hub.state
 APP_ELABORATE_FILE 	  ?= hub.elaborate
@@ -37,9 +37,13 @@ $(APP_ELABORATE_FILE):
 	$(hub) elaborate hub.yaml -s $(PLATFORM_STATE_FILE) -o $@
 
 install: $(APP_ELABORATE_FILE)
+	$(hub) kubeconfig $(PLATFORM_STATE_FILE)
 	$(hub) deploy $(lastword $^) -s $(APP_STATE_FILE)
 .PHONY: install
 
 uninstall: $(APP_ELABORATE_FILE)
 	$(hub) undeploy $(APP_ELABORATE_FILE) -s $(APP_STATE_FILE)
 .PHONY: uninstall
+
+clean: 
+	rm -rf $(APP_ELABORATE_FILE) $(APP_STATE_FILE)
