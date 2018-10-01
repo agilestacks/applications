@@ -71,6 +71,13 @@ endif
 .PHONY: clone
 
 output:
+	- $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO)
+	- $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.clone_url'
+	- $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.git_url'
+	- $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.html_url'
+	- $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.ssh_url'
+	- $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.private'
+
 	@ echo Outputs:
 	@ echo clone_url = $(shell $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.clone_url')
 	@ echo git_url = $(shell $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.git_url')
