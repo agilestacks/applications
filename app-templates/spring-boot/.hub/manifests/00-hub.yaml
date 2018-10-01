@@ -18,7 +18,7 @@ components: []
 
 lifecycle:
   bare: allow
-  verbs: [install, uninstall]
+  verbs: [deploy, undeploy]
 
 parameters:
 - name: application
