@@ -37,3 +37,7 @@ parameters:
   - name: region
 - name: component.ingress.fqdn
 - name: dns.domain
+
+templates:
+  files:
+    - "templates/*.template"

@@ -16,6 +16,7 @@ lifecycle:
 
 parameters:
 - name: dns.domain
+  env: DOMAIN_NAME
 - name: cloud.region
 - name: terraform.bucket
   parameters:
@@ -24,4 +25,4 @@ parameters:
 - name: component.ecr
   parameters:
   - name: name
-    value: myargoapp.${dns.domain}
+    value: myspringbootapp.${dns.domain}
