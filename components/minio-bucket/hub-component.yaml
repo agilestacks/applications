@@ -8,7 +8,7 @@ meta:
 
 requires:
   - kubernetes
-  - ingress
+  # - ingress
 provides:
   - bucket
 
