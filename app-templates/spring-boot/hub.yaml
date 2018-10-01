@@ -7,9 +7,6 @@ meta:
   source:
     dir: ./
 
-requires:
-  - kubernetes
-
 components:
 - name: ecr
   source:
