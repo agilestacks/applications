@@ -17,7 +17,6 @@ lifecycle:
     - minio-bucket
 
 parameters:
-- name: dns.domain
 - name: cloud.region
 - name: terraform.bucket
   parameters:
