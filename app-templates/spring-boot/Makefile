@@ -1,5 +1,8 @@
 .DEFAULT_GOAL := install
 
+aws := aws
+jq  := jq -r
+
 PLATFORM_STATE_FILE   ?= s3://terraform.agilestacks.com/example/hub.state
 PLATFORM_STATE_BUCKET ?= $(firstword $(subst /, ,$(PLATFORM_STATE_FILE:s3://%=%)))
 PLATFORM_STATE_REGION ?= $(shell $(aws) s3api get-bucket-location --bucket $(PLATFORM_STATE_BUCKET) | $(jq) '.LocationConstraint//"us-east-1"')
