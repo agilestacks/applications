@@ -31,7 +31,7 @@ login-ecr:
 
 login-disabled:
 	@ echo "Docker login not needed"
-.PHONY: login
+.PHONY: login-disabled
 
 build:
 	$(docker) build \
@@ -55,6 +55,9 @@ undeploy:
 .PHONY: undeploy
 
 output:
+	$(git) rev-parse --short HEAD
+	echo tag = $(shell $(git) rev-parse --short HEAD)
+
 	@ echo Outputs:
 	@ echo image = $(IMAGE):$(shell $(git) rev-parse --short HEAD)
 	@ echo tag = $(shell $(git) rev-parse --short HEAD)
