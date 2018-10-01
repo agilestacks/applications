@@ -1,13 +1,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
-  name: ${application.name}-bucketevents
+  name: ${application.name}-${component.bucket.name}-bucketevents
   namespace: ${application.namespace}
   labels:
     sensors.argoproj.io/controller-instanceid: axis
 spec:
   signals:
-  - name: ${application.name}-bucketevents
+  - name: ${application.name}-${component.bucket.name}-bucketevents
     artifact:
       s3:
         bucket: ${component.bucket.name}
@@ -24,7 +24,7 @@ spec:
         type: nats
         url: nats://${component.nats.fqdn}
         attributes:
-          subject: ${component.argo.sensor.subject}
+          subject: bucketevents
   triggers:
   - name: ${application.name}-bucketevent
     resource:
@@ -37,7 +37,7 @@ spec:
           apiVersion: argoproj.io/v1alpha1
           kind: Workflow
           metadata:
-            generateName: ${application.name}-bucketevent-
+            generateName: ${application.name}-${component.bucket.name}-bucketevent-
           spec:
             entrypoint: ffmpeg
             templates:
