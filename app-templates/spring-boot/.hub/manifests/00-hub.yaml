@@ -41,6 +41,7 @@ parameters:
   parameters:
   - name: state.file
     fromEnv: PLATFORM_STATE_FILE
+    default: state
 
 templates:
   files:
