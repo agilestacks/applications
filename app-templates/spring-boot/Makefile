@@ -3,7 +3,7 @@
 aws := aws
 jq  := jq -r
 
-APPLICATION_NAME 	  ?= spring-boot 
+APPLICATION_NAME 	  ?= spring-boot
 PLATFORM_STATE_FILE   ?= s3://terraform.demo01.agilestacks.com/example/hub.state
 PLATFORM_STATE_BUCKET ?= $(firstword $(subst /, ,$(PLATFORM_STATE_FILE:s3://%=%)))
 PLATFORM_STATE_REGION ?= $(shell $(aws) s3api get-bucket-location --bucket $(PLATFORM_STATE_BUCKET) | $(jq) '.LocationConstraint//"us-east-1"')
