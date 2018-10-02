@@ -26,6 +26,7 @@ compile:
 
 deploy:
 	$(kubectl) apply -f templates/credentials.yaml
+	$(kubectl) apply -f templates/pipeline.yaml
 	@echo Deployed
 .PHONY: deploy
 
