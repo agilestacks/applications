@@ -4,7 +4,7 @@ kind: Pipeline
 metadata:
   name: ${application.name}-pipeline
 spec:
-  repositoryUrl: ${application.git.remote}
+  repositoryUrl: ${component.git.remote}
   credentialsId: github-${component.github.repository.organization}
   branchSpec: '*/master'
   pipeline: Jenkinsfile
