@@ -15,7 +15,7 @@ spec:
       defaultValue: ${platform.state.file}
     - name: IMAGE_NAME
       type: string
-      defaultValue: ${component.ecr.name}
+      defaultValue: ${component.ecr.image}
     - name: NAME
       type: string
       defaultValue: ${application.name}

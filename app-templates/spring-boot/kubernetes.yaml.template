@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: application
-        image: ${application.image}
+        image: ${component.ecr.image}
         ports:
         - name: http
           containerPort: 8080

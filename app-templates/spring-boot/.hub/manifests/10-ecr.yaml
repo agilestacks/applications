@@ -26,3 +26,8 @@ parameters:
   parameters:
   - name: name
     value: myspringbootapp.${dns.domain}
+
+outputs:
+- name: component.ecr.image
+  value: ${component.ecr.image}
+  
