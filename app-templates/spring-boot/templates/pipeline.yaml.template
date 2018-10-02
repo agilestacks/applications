@@ -13,3 +13,18 @@ spec:
     - name: STATE_FILE
       type: string
       defaultValue: ${platform.state.file}
+    - name: IMAGE_NAME
+      type: string
+      defaultValue: ${component.ecr.name}
+    - name: NAME
+      type: string
+      defaultValue: ${application.name}
+    - name: REPLICAS
+      type: string
+      defaultValue: ${application.replicas}
+    - name: INGRESS_HOST
+      type: string
+      defaultValue: ${application.ingress.host}
+    - name: INGRESS_PATH
+      type: string
+      defaultValue: ${application.ingress.path}

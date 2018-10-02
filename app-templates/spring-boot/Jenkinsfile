@@ -71,12 +71,11 @@ pipeline {
       steps {
         container('toolbox') {
           script {
-            final image = hub.explain().stackOutputs['component.ecr.name'] as String
-            sh script: "docker build --pull --rm -t ${image}:latest -t ${image}:${gitscm.shortCommit} ."
+            sh script: "docker build --pull --rm -t ${params.IMAGE_NAME}:latest -t ${params.IMAGE_NAME}:${gitscm.shortCommit} ."
             withAWS(role:params.AWS_TRUST_ROLE) {
               sh script: ecrLogin()
-              sh script: "docker push ${image}:${gitscm.shortCommit}"
-              sh script: "docker push ${image}:latest"
+              sh script: "docker push ${params.IMAGE_NAME}:${gitscm.shortCommit}"
+              sh script: "docker push ${params.IMAGE_NAME}:latest"
             }
           }
         }
@@ -94,7 +93,6 @@ pipeline {
       steps {
         container('toolbox') {
           script {
-            final image = hub.explain().stackOutputs['component.ecr.name']
             final version = "${gitscm.shortCommit}"
             final kubectl = "kubectl -n ${env.NAMESPACE}"
 
@@ -105,7 +103,7 @@ pipeline {
             final exists = sh script: "${kubectl} get -f kubernetes.yaml", returnStatus: true
             try {
               if (exists == 0) {
-                sh script: "${kubectl} set image --record 'deployment/${params.NAME}' 'application=${image}:${version}'"
+                sh script: "${kubectl} set image --record 'deployment/${params.NAME}' 'application=${params.IMAGE_NAME}:${version}'"
               } else {
                 sh script: "${kubectl} apply --force --record -f kubernetes.yaml"
               }
