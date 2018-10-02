@@ -21,7 +21,7 @@ pipeline {
       label 'pod'
       containerTemplate(
         name: 'buildbox',
-        image: 'openjdk:jdk',
+        image: 'openjdk:8-jdk',
         ttyEnabled: true,
         command: 'cat'
       )
