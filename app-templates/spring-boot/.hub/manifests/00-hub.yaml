@@ -37,6 +37,10 @@ parameters:
   - name: region
 - name: component.ingress.fqdn
 - name: dns.domain
+- name: platform
+  parameters:
+  - name: state.file
+    fromEnv: PLATFORM_STATE_FILE
 
 templates:
   files:

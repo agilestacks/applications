@@ -9,3 +9,7 @@ spec:
   branchSpec: '*/master'
   pipeline: Jenkinsfile
   origin: 'SuperHub'
+  parameters:
+    - name: STATE_FILE
+      type: string
+      defaultValue: ${platform.state.file}
