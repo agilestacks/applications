@@ -8,12 +8,12 @@ meta:
 requires:
   - kubernetes
 components:
-  - name: github-repository
-    source:
-      dir: components/github-repository
-  - name: ecr
-    source:
-      dir: components/ecr
+- name: ecr
+  source:
+    dir: ../../../components/ecr
+- name: github-repository
+  source:
+    dir: ../../components/github-repository
 lifecycle:
   bare: allow
   verbs:
@@ -27,20 +27,18 @@ lifecycle:
     - github-repository
 parameters:
   - name: application.name
-    value: vo-spring-boot-41
+    fromEnv: APP_NAME
   - name: application.description
-    value: vo-spring-boot
+    value: Java applciation
   - name: component.github.repository.name
-    value: vo-spring-boot-41
+    value: ${application.name}
   - name: component.github.repository.organization
     value: asibot
   - name: component.ecr.name
-    value: '${dns.domain}/vo41'
-  - name: component.bucket.name
-    value: vo2
+    value: '${dns.domain}/${application.name}'
   - name: component.git.remote
   - name: component.github.token
-    fromEnv: COMPONENT_GITHUB_TOKEN
+    fromEnv: GITHUB_TOKEN
   - name: component.github.webhook.name
     value: github
   - name: component.github.webhook.events.json
@@ -73,5 +71,4 @@ templates:
 outputs:
   - name: application.git.remote
     value: '${component.git.remote}'
-  - name: component.ecr.image
-    value: '${component.ecr.image}'
+

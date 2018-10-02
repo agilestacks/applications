@@ -37,5 +37,6 @@ uninstall: $(APP_ELABORATE_FILE)
 	$(hub) undeploy $(APP_ELABORATE_FILE) -s $(APP_STATE_FILE)
 .PHONY: uninstall
 
-clean: 
+clean:
 	rm -rf $(APP_ELABORATE_FILE) $(APP_STATE_FILE)
+	rm -rf .git
