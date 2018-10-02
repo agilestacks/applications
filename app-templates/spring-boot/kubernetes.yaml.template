@@ -64,7 +64,7 @@ spec:
   - host: ${application.ingress.host}
     http:
       paths:
-      - path: /
+      - path: ${application.ingress.path}
         backend:
           serviceName: ${application.name}
           servicePort: 80

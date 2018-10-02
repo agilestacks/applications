@@ -25,11 +25,15 @@ parameters:
   parameters:
   - name: name
   - name: namespace
+    value: default
   - name: replicas
+    value: 1
   - name: version
     value: latest
   - name: ingress.host
+    value: ${application.name}.${component.ingress.fqdn}
   - name: ingress.path
+    value: /
 - name: cloud.region
 - name: terraform.bucket
   parameters:
