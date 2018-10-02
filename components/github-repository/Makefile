@@ -48,6 +48,9 @@ create: init check-github-api
 	- $(git) create $(CREATE_ARGS) $(ORG)/$(REPO)
 .PHONY: create
 
+$(HUB_CONFIG):
+	touch $@
+
 undeploy: $(HUB_CONFIG)
 	- echo yes | $(git) delete $(ORG)/$(REPO)
 	rm -rf $(realpath $(SRC_DIR))/.git

@@ -5,3 +5,5 @@ hub.elaborate
 *.state
 *.elaborate
 *.cpignore
+templates/credentials.yaml
+templates/pipeline.yaml
