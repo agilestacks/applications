@@ -3,26 +3,17 @@
 aws := aws
 jq  := jq -r
 
+APPLICATION_NAME 	  ?= spring-boot 
 PLATFORM_STATE_FILE   ?= s3://terraform.demo01.agilestacks.com/example/hub.state
 PLATFORM_STATE_BUCKET ?= $(firstword $(subst /, ,$(PLATFORM_STATE_FILE:s3://%=%)))
 PLATFORM_STATE_REGION ?= $(shell $(aws) s3api get-bucket-location --bucket $(PLATFORM_STATE_BUCKET) | $(jq) '.LocationConstraint//"us-east-1"')
 NAMESPACE 	          ?= jenkins
 DOMAIN_NAME           ?= localhost
-APP_STATE_FILE 		  ?= hub.state
+APP_STATE_FILE 		  ?= hub.state,s3://$(PLATFORM_STATE_BUCKET)/$(DOMAIN_NAME)/app/$(APPLICATION_NAME)/hub.state
 APP_ELABORATE_FILE 	  ?= hub.elaborate
 
 hub := hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credentials=false
 kubectl := kubectl --context="$(DOMAIN_NAME)" --namespace="$(NAMESPACE)"
-
-compile:
-	@docker run \
-		-e USER_NAME=$(id -un) \
-		-e GRADLE_USER_HOME=/tmp \
-	 	-v $(shell pwd):/usr/src/app \
-	 	--user $(shell id -u):$(shell id -g) \
-	 	java:8-alpine \
-		/usr/src/app/gradlew build -p /usr/src/app/
-.PHONE: compile
 
 deploy:
 	$(kubectl) apply -f templates/credentials.yaml

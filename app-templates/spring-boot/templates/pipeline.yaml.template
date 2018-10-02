@@ -10,9 +10,9 @@ spec:
   pipeline: Jenkinsfile
   origin: 'SuperHub'
   parameters:
-    - name: STATE_FILE
+    - name: APP_STATE_FILE
       type: string
-      defaultValue: ${platform.state.file}
+      defaultValue: s3://${terraform.bucket.name}/${dns.domainName}/app/${application.name}/hub.state
     - name: IMAGE_NAME
       type: string
       defaultValue: ${component.ecr.image}

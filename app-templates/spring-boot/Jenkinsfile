@@ -88,14 +88,14 @@ pipeline {
         REPLICAS      = "${params.REPLICAS ?: 1}"
         INGRESS_HOST  = "${params.INGRESS_HOST}"
         INGRESS_PATH  = "${params.INGRESS_PATH}"
-        HUB_COMPONENT = 'application'
+        HUB_COMPONENT = 'spring-boot'
       }
       steps {
         container('toolbox') {
           script {
             final version = "${gitscm.shortCommit}"
             final kubectl = "kubectl -n ${env.NAMESPACE}"
-
+            sh sleep (100000)
             hub.render template: 'kubernetes.yaml.template'
 
             echo readFile('kubernetes.yaml')

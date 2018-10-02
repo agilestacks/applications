@@ -24,6 +24,7 @@ parameters:
 - name: application
   parameters:
   - name: name
+    env: APPLICATION_NAME
   - name: namespace
     value: default
   - name: replicas
@@ -41,11 +42,6 @@ parameters:
   - name: region
 - name: component.ingress.fqdn
 - name: dns.domain
-- name: platform
-  parameters:
-  - name: state.file
-    fromEnv: PLATFORM_STATE_FILE
-    default: state
 
 templates:
   files:

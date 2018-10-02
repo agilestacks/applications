@@ -1,60 +1,77 @@
----
 version: 1
 kind: application
 meta:
-  name: application:1
+  name: 'spring-boot:1'
   brief: Java microservice with Spring Boot
   source:
-    dir: ./
-
+    dir: .
+requires:
+  - kubernetes
 components:
-- name: ecr
-  source:
-    dir: ./ecr
-
+  - name: github-repository
+    source:
+      dir: components/github-repository
+  - name: ecr
+    source:
+      dir: components/ecr
 lifecycle:
-  bare: true
-  verbs: [deploy, undeploy]
+  bare: allow
+  verbs:
+    - deploy
+    - undeploy
   order:
     - ecr
+    - github-repository
   mandatory:
     - ecr
-
+    - github-repository
 parameters:
-- name: application
-  parameters:
-  - name: name
-    fromEnv: NAME
-  - name: namespace
-    fromEnv: NAMESPACE
-  - name: replicas
-    fromEnv: REPLICAS
-  - name: version
-    fromEnv: VERSION
+  - name: application.name
+    value: vo-spring-boot-41
+  - name: application.description
+    value: vo-spring-boot
+  - name: component.github.repository.name
+    value: vo-spring-boot-41
+  - name: component.github.repository.organization
+    value: asibot
+  - name: component.ecr.name
+    value: '${dns.domain}/vo41'
+  - name: component.bucket.name
+    value: vo2
+  - name: component.git.remote
+  - name: component.github.token
+    fromEnv: COMPONENT_GITHUB_TOKEN
+  - name: component.github.webhook.name
+    value: github
+  - name: component.github.webhook.events.json
+    value: '["push"]'
+  - name: component.github.repository.description
+    value: >
+      Worfklow application template backed with Argo. Optimized to carry
+      simulation and data science tasks
+  - name: dns.domain
+    env: DOMAIN_NAME
+  - name: cloud.region
+  - name: terraform.bucket.name
+  - name: terraform.bucket.region
+  - name: application.namespace
+    value: default
+  - name: application.replicas
+    value: 1
+  - name: application.version
     value: latest
-    empty: allow
-  - name: ingress.host
-    fromEnv: INGRESS_HOST
-  - name: ingress.path
-    fromEnv: INGRESS_PATH
-    empty: allow
-- name: cloud.region
-- name: terraform.bucket
-  parameters:
-  - name: name
-    fromEnv: STATE_BUCKET
-  - name: region
-    fromEnv: STATE_REGION
-- name: component.ingress.fqdn
-- name: dns.domain
-  env: DOMAIN_NAME
-
-- name: component.ecr
-  parameters:
-  - name: image
-  - name: name
-    value: ${dns.domain}/${application.name}
-
+  - name: application.ingress.host
+    value: '${application.name}.${component.ingress.fqdn}'
+  - name: application.ingress.path
+    value: /
+  - name: component.ingress.fqdn
+  - name: platform.state.file
+    fromEnv: PLATFORM_STATE_FILE
+templates:
+  files:
+    - templates/*.template
 outputs:
-  - name: application.image
-    value: ${component.ecr.image}
+  - name: application.git.remote
+    value: '${component.git.remote}'
+  - name: component.ecr.image
+    value: '${component.ecr.image}'
