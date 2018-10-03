@@ -22,7 +22,7 @@ deploy:
 .PHONY: deploy
 
 undeploy:
-	@echo Undeployed
+	$(kubectl) delete -f templates/pipeline.yaml
 .PHONY: undeploy
 
 $(APP_ELABORATE_FILE):
@@ -34,6 +34,7 @@ install: $(APP_ELABORATE_FILE)
 .PHONY: install
 
 uninstall: $(APP_ELABORATE_FILE)
+	$(hub) kubeconfig $(PLATFORM_STATE_FILE)
 	$(hub) undeploy $(APP_ELABORATE_FILE) -s $(APP_STATE)
 .PHONY: uninstall
 
