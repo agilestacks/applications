@@ -45,21 +45,6 @@ pipeline {
         checkout scm
       }
     }
-    stage('Deploy Components') {
-      environment {
-        HUB_DEBUG = '1'
-        NAME = "${params.NAME}"
-      }
-      steps {
-        container('toolbox') {
-          script {
-            withAWS(role:params.AWS_TRUST_ROLE) {
-              hub.elaborate(state: params.STATE_FILE)
-            }
-          }
-        }
-      }
-    }
     stage('Compile') {
       steps {
         container('buildbox') {
@@ -71,11 +56,13 @@ pipeline {
       steps {
         container('toolbox') {
           script {
-            sh script: "docker build --pull --rm -t ${params.IMAGE_NAME}:latest -t ${params.IMAGE_NAME}:${gitscm.shortCommit} ."
+            hub.elaborate(state: params.APP_STATE_FILE)
+            final image = hub.explain(state: params.APP_STATE_FILE).stackOutputs['application.docker.image'] as String
+            sh script: "docker build --pull --rm -t ${image}:latest -t ${image}:${gitscm.shortCommit} ."
             withAWS(role:params.AWS_TRUST_ROLE) {
               sh script: ecrLogin()
-              sh script: "docker push ${params.IMAGE_NAME}:${gitscm.shortCommit}"
-              sh script: "docker push ${params.IMAGE_NAME}:latest"
+              sh script: "docker push ${image}:${gitscm.shortCommit}"
+              sh script: "docker push ${image}:latest"
             }
           }
         }
@@ -83,36 +70,29 @@ pipeline {
     }
     stage('Deploy') {
       environment {
-        NAME          = "${params.NAME}"
-        NAMESPACE     = "${params.NAMESPACE ?: 'default'}"
-        REPLICAS      = "${params.REPLICAS ?: 1}"
-        INGRESS_HOST  = "${params.INGRESS_HOST}"
-        INGRESS_PATH  = "${params.INGRESS_PATH}"
         HUB_COMPONENT = 'spring-boot'
       }
       steps {
         container('toolbox') {
           script {
             final version = "${gitscm.shortCommit}"
-            final kubectl = "kubectl -n ${env.NAMESPACE}"
-            sh sleep (100000)
-            hub.render template: 'kubernetes.yaml.template'
-
+            final outputs = hub.explain(state: params.APP_STATE_FILE).stackOutputs
+            final kubectl = "kubectl -n ${outputs['application.namespace']}"
+            hub.render(template: 'kubernetes.yaml.template', state: params.APP_STATE_FILE)
             echo readFile('kubernetes.yaml')
-
             final exists = sh script: "${kubectl} get -f kubernetes.yaml", returnStatus: true
             try {
               if (exists == 0) {
-                sh script: "${kubectl} set image --record 'deployment/${params.NAME}' 'application=${params.IMAGE_NAME}:${version}'"
+                sh script: "${kubectl} set image --record 'deployment/${outputs['application.name']}' 'application=${outputs['application.docker.image']}:${version}'"
               } else {
                 sh script: "${kubectl} apply --force --record -f kubernetes.yaml"
               }
             } catch (err) {
               echo "Rolling back"
-              sh script: "${kubectl} rollout undo 'deployment/${params.NAME}'"
-              sh script: "${kubectl} rollout status -w 'deployment/${params.NAME}'"
+              sh script: "${kubectl} rollout undo 'deployment/${outputs['application.name']}"
+              sh script: "${kubectl} rollout status -w 'deployment/${outputs['application.name']}'"
               echo "Done"
-              error "Failed to deploy ${params.NAME}@${version}. Rolled back"
+              error "Failed to deploy ${outputs['application.name']}@${version}. Rolled back"
             }
           }
         }
@@ -120,12 +100,15 @@ pipeline {
     }
     stage('Validate') {
       steps {
-        script {
-          retry(30) {
-            sleep time: 3, unit: 'SECONDS'
-            final resp = httpRequest url: "http://${params.INGRESS_HOST}/status"
-            echo resp.content
-            assert resp.status == 200
+        container('toolbox') {
+          script {
+            final fqdn = hub.explain(state: params.APP_STATE_FILE).stackOutputs['application.fqdn'] as String
+            retry(30) {
+              sleep time: 3, unit: 'SECONDS'
+              final resp = httpRequest url: "http://${fqdn}/status"
+              echo resp.content
+              assert resp.status == 200
+            }
           }
         }
       }

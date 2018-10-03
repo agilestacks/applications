@@ -12,19 +12,5 @@ spec:
   parameters:
     - name: APP_STATE_FILE
       type: string
-      defaultValue: s3://${terraform.bucket.name}/${dns.domain}/app/${application.name}/hub.state
-    - name: IMAGE_NAME
-      type: string
-      defaultValue: ${component.ecr.image}
-    - name: NAME
-      type: string
-      defaultValue: ${application.name}
-    - name: REPLICAS
-      type: string
-      defaultValue: ${application.replicas}
-    - name: INGRESS_HOST
-      type: string
-      defaultValue: ${application.ingress.host}
-    - name: INGRESS_PATH
-      type: string
-      defaultValue: ${application.ingress.path}
+      defaultValue: ${application.state.file}
+      description: 'State file of the application stack'

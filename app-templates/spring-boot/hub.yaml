@@ -27,9 +27,9 @@ lifecycle:
     - github-repository
 parameters:
   - name: application.name
-    fromEnv: APP_NAME
+    value: viktors-93
   - name: application.description
-    value: Java applciation
+    value: Java application
   - name: component.github.repository.name
     value: ${application.name}
   - name: component.github.repository.organization
@@ -53,7 +53,7 @@ parameters:
   - name: terraform.bucket.name
   - name: terraform.bucket.region
   - name: application.namespace
-    value: default
+    value: cool
   - name: application.replicas
     value: 1
   - name: application.version
@@ -63,12 +63,20 @@ parameters:
   - name: application.ingress.path
     value: /
   - name: component.ingress.fqdn
-  - name: platform.state.file
-    fromEnv: PLATFORM_STATE_FILE
+  - name: component.docker.image
+  - name: application.state.file
+    fromEnv: APP_STATE_FILE
 templates:
   files:
     - templates/*.template
 outputs:
   - name: application.git.remote
-    value: '${component.git.remote}'
-
+    value: '${component.git.remote}' 
+  - name: application.docker.image
+    value: '${component.docker.image}' 
+  - name: application.name
+    value: '${application.name}'
+  - name: application.namespace
+    value: '${application.namespace}'  
+  - name: application.fqdn
+    value: '${application.ingress.host}'
