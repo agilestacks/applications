@@ -2,7 +2,7 @@
 version: 1
 kind: application
 meta:
-  name: spring-boot:1
+  name: 'spring-boot:1'
   brief: Java microservice with Spring Boot
   source:
     repoUrl: https://github.com/agilestacks/applications.git
@@ -10,39 +10,42 @@ meta:
     dir: .
     branch: master
     fromEnv: GITHUB_TOKEN
-
 requires:
   - kubernetes
-
 components: []
-
-lifecycle:
-  bare: allow
-  verbs: [deploy, undeploy]
-
 parameters:
-- name: application
-  parameters:
-  - name: name
-    env: APPLICATION_NAME
-  - name: namespace
-    value: default
-  - name: replicas
+  - name: application.name
+    value: viktors-93
+  - name: application.description
+    value: Java application
+  - name: application.namespace
+    value: cool
+  - name: application.replicas
     value: 1
-  - name: version
+  - name: application.version
     value: latest
-  - name: ingress.host
-    value: ${application.name}.${component.ingress.fqdn}
-  - name: ingress.path
+  - name: application.state.file
+    fromEnv: APP_STATE_FILE
+  - name: application.ingress.host
+    value: '${application.name}.${component.ingress.fqdn}'
+  - name: application.ingress.path
     value: /
-- name: cloud.region
-- name: terraform.bucket
-  parameters:
-  - name: name
-  - name: region
-- name: component.ingress.fqdn
-- name: dns.domain
-
+  - name: component.ingress.fqdn
+  - name: component.docker.image
+  - name: component.git.remote                
+outputs:
+  - name: application.git.remote
+    value: '${component.git.remote}' 
+  - name: application.docker.image
+    value: '${component.docker.image}' 
+  - name: application.name
+    value: '${application.name}'
+  - name: application.namespace
+    value: '${application.namespace}'  
+  - name: application.fqdn
+    value: '${application.ingress.host}'
+  - name: application.path
+    value: '${application.ingress.path}'     
 templates:
   files:
-    - "templates/*.template"
+    - templates/*.template

@@ -25,8 +25,4 @@ parameters:
 - name: component.ecr
   parameters:
   - name: name
-    value: myspringbootapp.${dns.domain}
-
-outputs:
-- name: component.docker.image
-  value: ${component.ecr.image}
+    value: '${dns.domain}/${application.name}'

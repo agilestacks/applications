@@ -61,10 +61,10 @@ metadata:
     app: ${application.name}
 spec:
   rules:
-  - host: ${application.ingress.host}
+  - host: ${application.fqdn}
     http:
       paths:
-      - path: ${application.ingress.path}
+      - path: ${application.path}
         backend:
           serviceName: ${application.name}
           servicePort: 80
