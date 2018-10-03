@@ -28,7 +28,7 @@ parameters:
     fromEnv: APP_STATE_FILE
   - name: application.ingress.host
     value: '${application.name}.${component.ingress.fqdn}'
-  - name: application.ingress.path
+  - name: application.path
     value: /
   - name: component.ingress.fqdn
   - name: component.docker.image
@@ -45,7 +45,7 @@ outputs:
   - name: application.fqdn
     value: '${application.ingress.host}'
   - name: application.path
-    value: '${application.ingress.path}'     
+    value: '${application.path}'     
 templates:
   files:
     - templates/*.template
