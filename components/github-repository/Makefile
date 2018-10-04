@@ -10,6 +10,7 @@ DESCRIPTION ?=
 HOMEPAGE ?=
 API_SERVER ?= api.github.com
 SRC_DIR ?= $(realpath .)
+REMOTE_NAME ?= $(ORGANIZATION)-$(REPOSITORY)
 
 export GITHUB_TOKEN ?=
 
@@ -63,14 +64,14 @@ push:
 ifneq ($(GITHUB_TOKEN),)
 	$(eval REMOTE=$(subst ://,://x-oauth-basic:$(GITHUB_TOKEN)@,$(REMOTE)))
 endif
-	@ $(git) remote add origin "$(REMOTE)" || $(git) remote set-url origin "$(REMOTE)"
-	$(git) fetch --tags --progress origin
+	@ $(git) remote add $(REMOTE_NAME) "$(REMOTE)" || $(git) remote set-url $(REMOTE_NAME) "$(REMOTE)"
+	$(git) fetch --tags --progress $(REMOTE_NAME)
 	$(git) add -A
 	$(git) config user.name "SuperHub"
 	$(git) config user.email "support@agilestacks.com"
 	- $(git) commit -am "Initial commit"
 	$(git) checkout --ours .
-	$(git) push origin master
+	$(git) push $(REMOTE_NAME) master
 .PHONY: clone
 
 output:
