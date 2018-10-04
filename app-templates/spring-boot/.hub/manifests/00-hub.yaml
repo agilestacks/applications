@@ -44,6 +44,10 @@ outputs:
     value: '${application.name}'
   - name: application.namespace
     value: '${application.namespace}'
+  - name: application.fqdn
+    value: '${application.ingress.host}'
+  - name: application.path
+    value: '${application.path}'    
   - name: application.url 
     value: '${component.ingress.protocol}://${application.ingress.host}${application.path}'
   - name: application.jenkins.pipeline.url
