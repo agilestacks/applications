@@ -105,7 +105,7 @@ pipeline {
             final appUrl = hub.explain(state: params.APP_STATE_FILE).stackOutputs['application.url'] as String
             retry(30) {
               sleep time: 3, unit: 'SECONDS'
-              final resp = httpRequest url: "${appUrl}"
+              final resp = httpRequest url: "${appUrl}/status"
               echo resp.content
               assert resp.status == 200
             }
