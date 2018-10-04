@@ -34,7 +34,7 @@ parameters:
   - name: component.ingress.fqdn
   - name: component.docker.image
   - name: component.git.remote
-  - name: component.jenkins.fqdn                
+  - name: component.jenkins.url                
 outputs:
   - name: application.git.remote
     value: '${component.git.remote}' 
@@ -45,7 +45,7 @@ outputs:
   - name: application.namespace
     value: '${application.namespace}'
   - name: application.url 
-    value: '${component.ingress.protocol}://${application.ingress.host}/${application.path}'
+    value: '${component.ingress.protocol}://${application.ingress.host}${application.path}'
   - name: application.jenkins.pipeline.url
     value: '${component.jenkins.url}/job/${application.name}-pipeline'     
 templates:
