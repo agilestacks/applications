@@ -1,6 +1,13 @@
 ---
 components:
-- name: minio-bucket
+- name: minio-source
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components
+    dir: components/minio-bucket
+    branch: master
+    fromEnv: GITHUB_TOKEN
+- name: minio-target
   source:
     repoUrl: https://github.com/agilestacks/applications.git
     repoPath: applications/components
@@ -26,6 +33,18 @@ parameters:
   parameters:
   - name: protocol
 - name: component.bucket
+  component: minio-source
+  parameters:
+  - name: endpoint
+  - name: name
+    value: myapplication
+  - name: namespace
+  - name: secret.name
+  - name: secret.namespace
+  - name: secret.accessKeyRef
+  - name: secret.secretKeyRef
+- name: component.bucket
+  component: minio-target
   parameters:
   - name: endpoint
   - name: name
