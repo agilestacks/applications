@@ -47,8 +47,8 @@ outputs:
     value: '${application.ingress.host}'
   - name: application.path
     value: '${application.path}' 
-  - name: application.jenkins.pipeline
-    value: '${component.jenkins.fqdn}/job/${application.name}-pipeline'      
+  - name: application.jenkins.pipeline.url
+    value: '${component.jenkins.url}/job/${application.name}-pipeline'     
 templates:
   files:
     - templates/*.template
