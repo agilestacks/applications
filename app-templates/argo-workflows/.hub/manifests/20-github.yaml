@@ -14,23 +14,14 @@ components:
     dir: components/buildbox
     branch: master
     fromEnv: GITHUB_TOKEN
-# - name: github-webhook
-#   source:
-#     repoUrl: https://github.com/agilestacks/applications.git
-#     repoPath: applications/components
-#     dir: components/github-webhook
-#     branch: master
-#     fromEnv: GITHUB_TOKEN
 
 lifecycle:
   order:
     - github-repository
     - buildbox
-    # - github-webhook
   mandatory:
     - github-repository
     - buildbox
-    # - github-webhook
 
 parameters:
 - name: component.git

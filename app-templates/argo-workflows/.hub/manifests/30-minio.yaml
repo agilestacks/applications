@@ -19,9 +19,11 @@ lifecycle:
   bare: allow
   verbs: [deploy, undeploy]
   order:
-    - minio-bucket
+    - minio-source
+    - minio-target
   mandatory:
-    - minio-bucket
+    - minio-source
+    - minio-target
 
 parameters:
 - name: cloud.region
@@ -55,7 +57,3 @@ parameters:
   - name: secret.accessKeyRef
   - name: secret.secretKeyRef
 - name: component.nats.fqdn
-# - name: component.minio
-#   parameters:
-#   - name: service.host
-#   - name: service.port
