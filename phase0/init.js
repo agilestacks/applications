@@ -44,6 +44,8 @@ function downloadManifest() {
         logger.error('Cannot download the manifest', err);
         fail();
     }
+    logger.info('Downloaded manifest: ');
+    logger.info(res.body);
     const {
         body: manifest
     } = res;
@@ -104,7 +106,6 @@ async function prepareWorkspace(manifest) {
     clonedRepos.push(appRepo);
     await forEach(components, async (component) => {
         const {
-            name,
             source
         } = component;
         const {
@@ -119,7 +120,7 @@ async function prepareWorkspace(manifest) {
             const securedGithub = securedGithubUrl(url, token);
             shell(`git clone --single-branch -b ${branch} ${securedGithub}`);
         }
-        const srcPath = repoPath === undefined ? name : [repoPath, name].join('/');
+        const srcPath = repoPath
         const destPath = [workspaceDir, dir].join('/');
         shell(`mkdir -p ${destPath}`);
         shell(`touch ${srcPath}/.cpignore`)

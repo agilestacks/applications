@@ -3,7 +3,7 @@ components:
 - name: github-repository
   source:
     repoUrl: https://github.com/agilestacks/applications.git
-    repoPath: applications/components
+    repoPath: applications/components/github-repository
     dir: components/github-repository
     branch: master
     fromEnv: GITHUB_TOKEN
