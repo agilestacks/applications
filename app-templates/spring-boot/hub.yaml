@@ -45,8 +45,7 @@ parameters:
     value: '["push"]'
   - name: component.github.repository.description
     value: >
-      Worfklow application template backed with Argo. Optimized to carry
-      simulation and data science tasks
+      Java microservice with Spring Boot
   - name: dns.domain
     env: DOMAIN_NAME
   - name: cloud.region
@@ -71,12 +70,12 @@ templates:
     - templates/*.template
 outputs:
   - name: application.git.remote
-    value: '${component.git.remote}' 
+    value: '${component.git.remote}'
   - name: application.docker.image
-    value: '${component.docker.image}' 
+    value: '${component.docker.image}'
   - name: application.name
     value: '${application.name}'
   - name: application.namespace
-    value: '${application.namespace}'  
+    value: '${application.namespace}'
   - name: application.fqdn
     value: '${application.ingress.host}'
