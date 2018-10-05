@@ -19,13 +19,11 @@ hub 	:= hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credenti
 
 deploy:
 	- $(kubectl) create namespace $(NAMESPACE)
-	$(kubectl) apply -f argo-workflow-bucket.yaml
 	$(kubectl) apply -f argo-workflow-webhook.yaml
 .PHONY: deploy
 
 undeploy:
 	- $(kubectl) delete -f argo-workflow-webhook.yaml
-	- $(kubectl) delete -f argo-workflow-bucket.yaml
 .PHONY: undeploy
 
 $(APP_ELABORATE_FILE):
