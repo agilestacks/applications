@@ -58,6 +58,6 @@ outputs:
 - name: application.git.remote
   value: ${component.git.remote}
 - name: application.webhook.url
-  value: ${component.argo.ingress}/webhooks/${application.name}/${application.webhook.name}
+  value: ${component.ingress.protocol}://${component.argo.ingress}/webhooks/${application.name}/${application.webhook.name}
 - name: application.webhook.method
   value: POST
