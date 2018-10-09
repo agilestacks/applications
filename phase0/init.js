@@ -165,16 +165,11 @@ function copyManifest(manifest) {
     });
 }
 
-function moveMakefile() {
-    shell(`mv ${[workspaceDir, 'Makefile'].join('/')} ${[workspaceDir, '.hub'].join('/')}`);
-}
-
 async function perform() {
     checkEnv();
     const manifest = downloadManifest();
     await prepareWorkspace(manifest);
     copyManifest(manifest);
-    moveMakefile(); 
 }
 
 perform();
