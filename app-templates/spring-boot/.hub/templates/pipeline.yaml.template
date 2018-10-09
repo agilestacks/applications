@@ -1,28 +1,16 @@
 ---
-apiVersion: v1
-kind: Secret
-metadata:
-  name: ${component.github.repository.organization}-secret
-  namespace: jenkins
-  labels:
-    provider: agilestacks.com
-    project: jenkins
-    qualifier: credentials
-data:
-  deployKey: ${component.github.token/base64}
----
 apiVersion: "jenkins.agilestacks.com/v1"
-kind: Credentials
+kind: Pipeline
 metadata:
-  name: ${component.github.repository.organization}-credentials
+  name: ${application.name}-pipeline
 spec:
-  id: github-${component.github.repository.organization}
-  domain: global
-  description: Git credentials for ${component.github.repository.organization} organization
-  usernamePassword:
-    username: github
-    password:
-      secretKeyRef:
-        name: ${component.github.repository.organization}-secret
-        key: deployKey
-
+  repositoryUrl: ${component.git.remote}
+  credentialsId: github-${component.github.repository.organization}
+  branchSpec: '*/master'
+  pipeline: Jenkinsfile
+  origin: 'SuperHub'
+  parameters:
+    - name: APP_STATE_FILE
+      type: string
+      defaultValue: ${application.state.file}
+      description: 'State file of the application stack'
