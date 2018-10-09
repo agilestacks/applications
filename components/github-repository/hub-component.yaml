@@ -16,7 +16,7 @@ parameters:
     value: api.github.com
     env: API_SERVER
   - name: workspace
-    value: ../../
+    value: ../../../
     env: SRC_DIR
 - name: component.github.repository
   parameters:

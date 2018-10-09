@@ -121,13 +121,13 @@ async function prepareWorkspace(manifest) {
             shell(`git clone --single-branch -b ${branch} ${securedGithub}`);
         }
         const srcPath = repoPath
-        const destPath = [workspaceDir, dir].join('/');
+        const destPath = [workspaceDir, '.hub', dir].join('/');
         shell(`mkdir -p ${destPath}`);
         shell(`touch ${srcPath}/.cpignore`)
         shell(`rsync -htrzai --progress --exclude-from ${srcPath}/.cpignore ${srcPath}/ ${destPath}`);
     });
     logger.info(`Components required by the application [${components
-        .map(element => element.name)}] placed to ${workspaceDir}`);
+        .map(element => element.name)}] placed to ${workspaceDir}/.hub`);
     await clean(uniq(components.map(component => component.source.repoPath.split('/')[0])));
 }
 
@@ -154,15 +154,19 @@ function deleteObsoleteProperties(manifest) {
 function copyManifest(manifest) {
     deleteObsoleteProperties(manifest);
     const yaml = safeDump(manifest);
-    fs.writeFile([workspaceDir, manifest.meta.source.dir, 'hub.yaml'].join('/'), yaml, (err) => {
+    fs.writeFile([workspaceDir, '.hub', manifest.meta.source.dir, 'hub.yaml'].join('/'), yaml, (err) => {
         if (err) {
             logger.error('Cannot write manifest file to disk', err);
             fail();
         }
         logger
             .info(`Application manifest and configuration has been created and placed to 
-                ${[workspaceDir, manifest.meta.source.dir].join('/')}`);
+                ${[workspaceDir, '.hub'].join('/')}`);
     });
+}
+
+function moveMakefile() {
+    shell(`mv ${[workspaceDir, 'Makefile'].join('/')} ${[workspaceDir, '.hub'].join('/')}`);
 }
 
 async function perform() {
@@ -170,6 +174,7 @@ async function perform() {
     const manifest = downloadManifest();
     await prepareWorkspace(manifest);
     copyManifest(manifest);
+    moveMakefile(); 
 }
 
 perform();

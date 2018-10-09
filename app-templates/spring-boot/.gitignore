@@ -1,9 +1,1 @@
-.hub/manifests
-hub.elaborate
-.terraform
-*.tfplan
-*.state
-*.elaborate
-*.cpignore
-templates/credentials.yaml
-templates/pipeline.yaml
+.hub
