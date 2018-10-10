@@ -21,3 +21,8 @@ app-templates/argo-workflows/argo-build.yaml
 app-templates/argo-workflows/argo-workflow.yaml
 app-templates/argo-workflows/argo-workflow-bucket.yaml
 app-templates/argo-workflows/argo-workflow-webhook.yaml
+app-templates/argo-workflows/argo-workflow-bucketevents.yaml
+app-templates/argo-workflows/rbac.yaml
+app-templates/argo-workflows/webhook-gateway.yaml
+app-templates/argo-workflows/webhook-sensor.yaml
+app-templates/argo-workflows/webhook-gateway-configmap.yaml

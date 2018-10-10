@@ -1,0 +1,51 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Gateway
+metadata:
+  name: ${application.name}-webhook
+  namespace: ${application.namespace}
+  labels:
+    gateways.argoproj.io/gateway-controller-instanceid: argo-events
+    gateway-name: "${application.name}"
+spec:
+  configMap: "${application.name}-webhook"
+  type: "webhook"
+  dispatchMechanism: "HTTP"
+  version: "1.0"
+  deploySpec:
+    containers:
+    - name: "webhook-events"
+      image: "agilestacks/argo-webhook-gateway"
+      imagePullPolicy: "Always"
+      command: ["/bin/webhook-gateway"]
+    serviceAccountName: "argo-events-sa"
+  serviceSpec:
+    selector:
+      gateway-name: "${application.name}-webhook"
+    ports:
+      - port: 12000
+        targetPort: 12000
+    type: ClusterIP
+  watchers:
+    sensors:
+    - name: "${application.name}-webhook"
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ${application.name}-webhook
+  namespace: ${application.namespace}
+  labels:
+    gateways.argoproj.io/gateway-controller-instanceid: argo-events
+    gateway-name: "${application.name}"
+  annotations:
+    agilestacks.com/stack-component: Argo
+spec:
+  rules:
+  - host: ${application.name}.${component.ingress.fqdn}
+    http:
+      paths:
+      - path: /webhooks/${application.webhook.name}
+        backend:
+          serviceName: ${application.name}-webhook-gateway-svc
+          servicePort: 12000
+

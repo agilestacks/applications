@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: ${application.name}-webhook
+  namespace: ${application.namespace}
+  labels:
+    sensors.argoproj.io/sensor-controller-instanceid: argo-events
+spec:
+  repeat: true
+  serviceAccountName: ${application.name}-sa
+  signals:
+  - name: ${application.name}-webhook/${application.name}.Config
+  triggers:
+  - name: webhook-workflow-trigger
+    resource:
+      namespace: ${application.namespace}
+      group: argoproj.io
+      version: v1alpha1
+      kind: Workflow
+      parameters:
+      - src:
+          signal: ${application.name}-webhook/${application.name}.Config
+        # pass payload of webhook-gateway/webhook.fooConfig signal to first parameter value
+        # of arguments.
+        dest: spec.arguments.parameters.0.value
+      source:
+        inline: |
+          apiVersion: argoproj.io/v1alpha1
+          kind: Workflow
+          metadata:
+            generateName: ${application.name}-
+          spec:
+            entrypoint: whalesay
+            templates:
+            - name: whalesay
+              container:
+                args:
+                - "hello world"
+                command:
+                - cowsay
+                image: "docker/whalesay:latest"

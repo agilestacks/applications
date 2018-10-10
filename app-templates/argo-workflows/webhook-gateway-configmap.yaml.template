@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ${application.name}-webhook
+  namespace: ${application.namespace}
+data:
+  ${application.name}.portConfig: |-
+    port: "12000"
+  ${application.name}.Config: |-
+    endpoint: "/webhooks/${application.webhook.name}"
+    method: "${application.webhook.method}"

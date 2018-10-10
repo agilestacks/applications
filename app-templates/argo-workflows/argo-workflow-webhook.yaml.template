@@ -1,22 +1,39 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
-  name: ${application.name}-${application.webhook.name}-webhook
+  name: wat-${application.name}-${application.uuid}
   namespace: ${application.namespace}
   labels:
-    provider:  agilestacks.com
-    application: ${application.name}
     sensors.argoproj.io/controller-instanceid: axis
 spec:
+  repeat: true
   signals:
-  - name: webhook
+  - name: wat-${application.name}-${application.webhook.name}-webhook
     webhook:
-      endpoint: /webhooks/${application.name}/${application.webhook.name}
+      endpoint: /webhooks/${application.webhook.name}
       method: ${application.webhook.method}
+  # - name: wat-${application.name}-${application.source.bucket.name}-bucketevent
+  #   artifact:
+  #     s3:
+  #       bucket: ${application.source.bucket.name}
+  #       endpoint: ${application.source.bucket.endpoint}
+  #       event: s3:ObjectCreated:Put
+  #       insecure: true
+  #       accessKey:
+  #         key: ${application.source.bucket.secret.accessKeyRef}
+  #         name: ${application.source.bucket.secret.name}
+  #       secretKey:
+  #         key: ${application.source.bucket.secret.secretKeyRef}
+  #         name: ${application.source.bucket.secret.name}
+  #     target:
+  #       type: nats
+  #       url: nats://${component.nats.fqdn}
+  #       attributes:
+  #         subject: bucketevents
   triggers:
-  - name: exec-${application.name}
+  - name: wat-${application.name}-${application.webhook.name}-trigger
     resource:
-      namespace: ${component.argo.namespace}
+      namespace: ${application.namespace}
       group: argoproj.io
       version: v1alpha1
       kind: Workflow
@@ -25,22 +42,22 @@ spec:
           apiVersion: argoproj.io/v1alpha1
           kind: Workflow
           metadata:
-            generateName: ${application.name}-
+            generateName: wat-${application.name}-webhook-
           spec:
             entrypoint: ffmpeg
             templates:
             - name: toolbox
               container:
-                image: ${component.docker.image}
+                image: "${component.docker.image}"
                 command:
-                - ffmpeg
+                - echo
                 args:
-                - deploy
+                - hello, world
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: ${application.name}-${application.webhook.name}
+  name: wat-${application.name}-webhook
   namespace: ${application.namespace}
   labels:
     provider:  agilestacks.com
@@ -49,10 +66,10 @@ metadata:
     agilestacks.com/stack-component: ArgoWorkflows
 spec:
   rules:
-  - host: ${component.argo.ingress}
+  - host: ${application.name}.${component.ingress.fqdn}
     http:
       paths:
-      - path: /webhooks/${application.name}/${application.webhook.name}
+      - path: /webhooks/${application.webhook.name}
         backend:
           serviceName: ${component.argo.events.webhook.service.name}
           servicePort: ${component.argo.events.webhook.service.port}

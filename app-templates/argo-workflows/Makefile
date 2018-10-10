@@ -16,21 +16,37 @@ DOMAIN_NAME           ?= localhost
 kubectl := kubectl --context="$(DOMAIN_NAME)" --namespace="$(NAMESPACE)"
 hub 	:= hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credentials=false
 
+namespace:
+	$(kubectl) create namespace $(NAMESPACE)
+.PHONY: namespace
 
-deploy:
-	- $(kubectl) create namespace $(NAMESPACE)
-	$(kubectl) apply -f argo-workflow-webhook.yaml
+deploy: namespace
+	$(kubectl) apply --force -f rbac.yaml
+	$(kubectl) apply --force -f webhook-gateway-configmap.yaml
+	$(kubectl) apply --force -f webhook-gateway.yaml
+	$(kubectl) apply --force -f webhook-sensor.yaml
+	# $(kubectl) apply --force -f argo-workflow-bucketevents.yaml
+	# $(kubectl) apply --force -f argo-workflow-webhook.yaml
+	# cat argo-workflow.yaml
 .PHONY: deploy
 
 undeploy:
-	- $(kubectl) delete -f argo-workflow-webhook.yaml
+	- $(kubectl) delete -f webhook-sensor.yaml
+	- $(kubectl) delete -f webhook-gateway.yaml
+	- $(kubectl) delete -f webhook-gateway-configmap.yaml
+	- $(kubectl) delete -f rbac.yaml
+	# - $(kubectl) delete -f argo-workflow-webhook.yaml
+	# - $(kubectl) delete -f argo-workflow-bucketevents.yaml
 .PHONY: undeploy
 
 $(APP_ELABORATE_FILE):
-	$(hub) elaborate hub.yaml -s $(PLATFORM_STATE_FILE) -o $@
+	$(hub) elaborate hub.yaml \
+		-s $(PLATFORM_STATE_FILE) \
+		-o $@
 
 install: $(APP_ELABORATE_FILE)
-	$(hub) deploy $(lastword $^) -s $(APP_STATE_FILE)
+	$(hub) deploy $(lastword $^) \
+		-s $(APP_STATE_FILE)
 .PHONY: install
 
 uninstall: $(APP_ELABORATE_FILE)

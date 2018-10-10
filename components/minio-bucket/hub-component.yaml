@@ -61,4 +61,16 @@ templates:
   files:
   - "*.template"
 
-outputs: []
+outputs:
+- name: component.bucket.name
+  value: ${component.bucket.name}
+- name: component.bucket.endpoint
+  value: ${component.bucket.endpoint}
+- name: component.bucket.secret.namespace
+  value: ${component.bucket.secret.namespace}
+- name: component.bucket.secret.name
+  value: ${component.bucket.secret.name}
+- name: component.bucket.secret.accessKeyRef
+  value: ${component.bucket.secret.accessKeyRef}
+- name: component.bucket.secret.secretKeyRef
+  value: ${component.bucket.secret.secretKeyRef}

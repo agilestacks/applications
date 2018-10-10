@@ -21,7 +21,10 @@ components:
 - name: buildbox
   source:
     dir: ../../components/buildbox
-- name: minio-bucket
+- name: source-bucket
+  source:
+    dir: ../../components/minio-bucket
+- name: target-bucket
   source:
     dir: ../../components/minio-bucket
 # - name: argo-sensor-webhook
@@ -39,14 +42,16 @@ lifecycle:
     - github-repository
     - buildbox
     # - github-webhook
-    - minio-bucket
+    - source-bucket
+    - target-bucket
     # - argo-sensor-artifact
   mandatory:
     - ecr
     - github-repository
     - buildbox
     # - github-webhook
-    - minio-bucket
+    - source-bucket
+    - target-bucket
     # - argo-sensor-artifact
 
 parameters:
@@ -57,12 +62,18 @@ parameters:
   - name: name
     value: antonargo1
   - name: webhook.name
-    value: run
+    value: wat
   - name: webhook.method
-    value: GET
+    value: POST
   - name: namespace
     value: argoproj
     env: NAMESPACE
+
+- name: application.uuid
+  value: ${hub.deploymentId}
+  env: UUID
+  kind: link
+
 - name: dns.domain
   env: DOMAIN_NAME
 - name: terraform.bucket
@@ -90,15 +101,52 @@ parameters:
 #   - name: secret.secretKeyRef
 
 - name: component.bucket
+  component: source-bucket
   parameters:
   - name: endpoint
   - name: name
-    value: ${application.name}
+    value: ${application.name}-input
   - name: namespace
   - name: secret.name
   - name: secret.namespace
   - name: secret.accessKeyRef
   - name: secret.secretKeyRef
+- name: component.bucket
+  component: target-bucket
+  parameters:
+  - name: endpoint
+  - name: name
+    value: ${application.name}-output
+  - name: namespace
+  - name: secret.name
+  - name: secret.namespace
+  - name: secret.accessKeyRef
+  - name: secret.secretKeyRef
+
+- name: application.source.bucket
+  kind: link
+  parameters:
+  - name: name
+    value: ${source-bucket:component.bucket.name}
+  - name: endpoint
+    value: ${source-bucket:component.bucket.endpoint}
+  - name: secret.name
+    value: ${source-bucket:component.bucket.secret.name}
+  - name: secret.accessKeyRef
+    value: ${source-bucket:component.bucket.secret.accessKeyRef}
+  - name: secret.secretKeyRef
+    value: ${source-bucket:component.bucket.secret.secretKeyRef}
+
+# - name: source-bucket:component.bucket.name
+# - name: source-bucket:component.bucket.endpoint
+# - name: source-bucket:component.bucket.secret.name
+# - name: source-bucket:component.bucket.secret.accessKeyRef
+# - name: source-bucket:component.bucket.secret.secretKeyRef
+
+
+# - name: application.bucket.name
+#   value: ${source-bucket:component.bucket.name}
+
 # - name: component.bucket
 #   component: argo-sensor-artifact
 #   parameters:
@@ -138,12 +186,10 @@ parameters:
 - name: component.git.remote
 
 outputs:
-- name: application.git.remote
-  value: ${component.git.remote}
 - name: application.webhook.url
-  value: ${component.argo.ingress}/webhooks/${application.name}/${application.webhook.name}
+  value: ${application.name}.${component.ingress.fqdn}/webhooks/${application.webhook.name}
+- name: application.git.remote
 - name: application.webhook.method
-  value: ${application.webhook.method}
 
 templates:
   files:
