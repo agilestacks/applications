@@ -17,7 +17,7 @@ kubectl := kubectl --context="$(DOMAIN_NAME)" --namespace="$(NAMESPACE)"
 hub 	:= hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credentials=false
 
 namespace:
-	$(kubectl) create namespace $(NAMESPACE)
+	- $(kubectl) create namespace $(NAMESPACE)
 .PHONY: namespace
 
 deploy: namespace
