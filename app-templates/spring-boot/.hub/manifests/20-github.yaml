@@ -33,10 +33,8 @@ parameters:
     value: '["push"]'
   - name: repository.description
     value: >
-      Worfklow application template backed with Argo.
-      Optimized to carry simulation and data science tasks
+      Java microservice with Spring Boot
 
 outputs:
 - name: application.git.remote
   value: ${component.git.remote}
-  
