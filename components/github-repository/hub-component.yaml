@@ -6,6 +6,14 @@ meta:
   brief: Encapsulates operations with Github
 # requires: [ghub]
 parameters:
+- name: component.git
+  parameters:
+  - name: user.name
+    value: SuperHub
+    env: USER_NAME
+  - name: user.email
+    value: support@agilestacks.io
+    env: USER_EMAIL
 - name: component.github
   parameters:
   - name: token

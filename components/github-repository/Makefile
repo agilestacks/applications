@@ -12,6 +12,9 @@ API_SERVER ?= api.github.com
 SRC_DIR ?= $(realpath .)
 REMOTE_NAME ?= $(ORGANIZATION)-$(REPOSITORY)
 
+USER_NAME ?= SuperHub
+USER_EMAIL ?= support@agilestacks.com
+
 export GITHUB_TOKEN ?=
 
 curl := curl -fs -H "Authorization: token $(GITHUB_TOKEN)"
@@ -67,8 +70,8 @@ endif
 	@ $(git) remote add $(REMOTE_NAME) "$(REMOTE)" || $(git) remote set-url $(REMOTE_NAME) "$(REMOTE)"
 	$(git) fetch --tags --progress $(REMOTE_NAME)
 	$(git) add -A
-	$(git) config user.name "SuperHub"
-	$(git) config user.email "support@agilestacks.com"
+	$(git) config user.name "$(USER_NAME)"
+	$(git) config user.email "$(USER_EMAIL)"
 	- $(git) commit -am "Initial commit"
 	$(git) checkout --ours .
 	$(git) push $(REMOTE_NAME) master

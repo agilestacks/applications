@@ -167,6 +167,11 @@ parameters:
   - name: events.webhook.service.name
   - name: events.webhook.service.port
 
+- name: component.git.user.name
+  value: Antons Kranga
+- name: component.git.user.email
+  value: anton@agilestacks.com
+
 - name: component.github
   parameters:
   - name: workspace
