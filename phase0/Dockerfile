@@ -9,7 +9,6 @@ RUN apt-get update && \
 RUN mkdir /script
 WORKDIR /script
 
-ENV APPLICATION_MANIFEST http://localhost:3002/manifest
 ENV GITHUB_TOKEN supersecret
 ENV WORKSPACE_DIR /workspace/repo
 

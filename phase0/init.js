@@ -15,6 +15,9 @@ const fs = require('fs');
 const shell = require('child_process').execSync;
 
 const manifestURL = process.env.APPLICATION_MANIFEST;
+const appRepoOrg = process.env.APP_REPO_ORG;
+const appRepoName = process.env.APP_REPO_NAME;
+const appRepoToken = process.env.COMPONENT_GITHUB_TOKEN;
 const workspaceDir = process.env.WORKSPACE_DIR === undefined ? '/Users/oginskis/workspace' :
     process.env.WORKSPACE_DIR;
 const logger = winston.createLogger({
@@ -26,13 +29,6 @@ const logger = winston.createLogger({
 
 function fail() {
     process.exit(1);
-}
-
-function checkEnv() {
-    if (manifestURL === undefined) {
-        logger.error('APPLICATION_MANIFEST env variable is not set');
-        fail();
-    }
 }
 
 function downloadManifest() {
@@ -166,10 +162,19 @@ function copyManifest(manifest) {
 }
 
 async function perform() {
-    checkEnv();
-    const manifest = downloadManifest();
-    await prepareWorkspace(manifest);
-    copyManifest(manifest);
+    if (manifestURL) {
+        const manifest = downloadManifest();
+        await prepareWorkspace(manifest);
+        copyManifest(manifest);
+    } else if (appRepoName && appRepoOrg && appRepoToken) {
+        const gitUrl = securedGithubUrl(`https://github.com/${appRepoOrg}/${appRepoName}.git`, appRepoToken); 
+        shell(`git clone --single-branch -b master ${gitUrl}`);
+        shell(`rsync -htrzai --progress ${appRepoName}/ ${workspaceDir}`);
+        logger.info('Application workspace initialized');
+    } else {
+        logger.error('Cannot initialize application workspace');
+        fail();
+    }
 }
 
 perform();
