@@ -124,6 +124,11 @@ parameters:
   - name: secret.accessKeyRef
   - name: secret.secretKeyRef
 
+- name: application.secret.name
+  value: ${application.name}-app
+  env: APP_SECRET
+  kind: link
+
 - name: application.target.bucket
   kind: link
   parameters:

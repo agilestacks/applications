@@ -25,7 +25,7 @@ DEST_BUCKET_ACCESS_KEY_REF ?= accesskey
 DEST_BUCKET_SECRET_KEY_REF ?= secretkey
 DEST_BUCKET_ENDPOINT       ?= localhost:9000
 
-APP_SECRET 				   := $(APPLICATION)-app
+APP_SECRET 				   ?= $(APPLICATION)-app
 
 ARCH := $(shell uname -s | tr '[:upper:]' '[:lower:]')
 
