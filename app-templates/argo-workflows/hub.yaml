@@ -61,6 +61,7 @@ parameters:
   parameters:
   - name: name
     value: antonargo1
+    env: APPLICATION
   - name: webhook.name
     value: wat
   - name: webhook.method
@@ -123,6 +124,24 @@ parameters:
   - name: secret.accessKeyRef
   - name: secret.secretKeyRef
 
+- name: application.target.bucket
+  kind: link
+  parameters:
+  - name: name
+    value: ${target-bucket:component.bucket.name}
+  - name: endpoint
+    value: ${target-bucket:component.bucket.endpoint}
+    env: SRC_BUCKET_ENDPOINT
+  - name: secret.name
+    value: ${target-bucket:component.bucket.secret.name}
+    env: SRC_BUCKET_SECRET_NAME
+  - name: secret.accessKeyRef
+    value: ${target-bucket:component.bucket.secret.accessKeyRef}
+    env: SRC_BUCKET_ACCESSKEY
+  - name: secret.secretKeyRef
+    value: ${target-bucket:component.bucket.secret.secretKeyRef}
+    env: SRC_BUCKET_SECRETKEY
+
 - name: application.source.bucket
   kind: link
   parameters:
@@ -130,12 +149,24 @@ parameters:
     value: ${source-bucket:component.bucket.name}
   - name: endpoint
     value: ${source-bucket:component.bucket.endpoint}
+    env: DEST_BUCKET_ENDPOINT
   - name: secret.name
     value: ${source-bucket:component.bucket.secret.name}
+    env: DEST_BUCKET_SECRET_NAME
   - name: secret.accessKeyRef
     value: ${source-bucket:component.bucket.secret.accessKeyRef}
+    env: DEST_BUCKET_ACCESSKEY
   - name: secret.secretKeyRef
     value: ${source-bucket:component.bucket.secret.secretKeyRef}
+    env: DEST_BUCKET_SECRETKEY
+  - name: prefix
+    value: ""
+    empty: allow
+    kind: user
+  - name: suffix
+    value: ""
+    empty: allow
+    kind: user
 
 # - name: source-bucket:component.bucket.name
 # - name: source-bucket:component.bucket.endpoint
