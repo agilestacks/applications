@@ -5,3 +5,14 @@ hub.elaborate
 *.state
 *.elaborate
 *.cpignore
+gateways/artifact-gateway-configmap.yaml
+gateways/artifact-gateway.yaml
+gateways/webhook-gateway-configmap.yaml
+gateways/webhook-gateway.yaml
+sensors/artifact-sensor.yaml
+sensors/webhook-sensor.yaml
+workflows/artifact-workflow.yaml
+workflows/webhook-workflow.yaml
+workflows/artifact-workflow.json
+workflows/webhook-workflow.json
+workflows/http-server.yaml

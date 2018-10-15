@@ -1,0 +1,119 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: ${application.name}-webhook-
+spec:
+  entrypoint: workflow
+  arguments:
+    parameters:
+    - name: application
+      value: ${application.name}
+    - name: sourceBucket
+      value: ${application.source.bucket.name}
+    - name: targetBucket
+      value: ${application.target.bucket.name}
+  templates:
+  - name: workflow
+    steps:
+    - - name: list-all
+        template: toolbox-script
+        arguments:
+          parameters:
+          - name: script
+            value: >
+              mc ls source/{{workflow.parameters.sourceBucket}} --recursive --json
+              | jq -sc '. | [.[].key]'
+
+    - - name: take-one
+        template: process-steps
+        withParam: "{{steps.list-all.outputs.result}}"
+        arguments:
+          parameters:
+          - name: file
+            value: "{{item}}"
+
+  - name: process-steps
+    inputs:
+      parameters:
+      - name: file
+      - name: upstream-bucket
+        value: "{{workflow.parameters.sourceBucket}}"
+    steps:
+    - - name: process
+        template: processor
+        arguments:
+          parameters:
+          - name: file
+            value: "{{inputs.parameters.file}}"
+          - name: script
+            value: >
+              echo processing file {{inputs.parameters.file}}
+    - - name: rm-completed
+        template: toolbox-script
+        arguments:
+          parameters:
+          - name: script
+            value: >
+              mc rm source/{{workflow.parameters.sourceBucket}}/{{inputs.parameters.file}} --force --dangerous
+
+  - name: toolbox-script
+    inputs:
+      parameters:
+      - name: script
+    script:
+      image: agilestacks/toolbox
+      env:
+      - name: MC_HOSTS_source
+        valueFrom:
+          secretKeyRef:
+            name: "{{workflow.parameters.application}}-app"
+            key: upstream.bucket.mcHost
+      - name: MC_HOSTS_downstream
+        valueFrom:
+          secretKeyRef:
+            name: "{{workflow.parameters.application}}-app"
+            key: downstream.bucket.mcHost
+      command: [bash]
+      source: "{{inputs.parameters.script}}"
+
+  - name: processor
+    container:
+      image: ${application.docker.image}
+      command: [sh, -c]
+      workingDir: "/workspace"
+      args: ["{{inputs.parameters.script}}"]
+    inputs:
+      parameters:
+      - name: file
+      - name: script
+      artifacts:
+      - name: bucket
+        path: /workspace/{{inputs.parameters.file}}
+        s3:
+          endpoint: ${application.source.bucket.endpoint}
+          insecure: true
+          bucket: ${application.source.bucket.name}
+          key: "{{inputs.parameters.file}}"
+          accessKeySecret:
+            key: ${application.source.bucket.secret.accessKeyRef}
+            name: ${application.source.bucket.secret.name}
+          secretKeySecret:
+            key: ${application.source.bucket.secret.secretKeyRef}
+            name: ${application.source.bucket.secret.name}
+    outputs:
+      artifacts:
+      - name: bucket
+        path: /workspace
+        archive:
+          none: {}
+        s3:
+          endpoint: ${application.target.bucket.name}
+          insecure: true
+          bucket: ${application.target.bucket.name}
+          key: ""
+          accessKeySecret:
+            name: minio
+            key: accesskey
+          secretKeySecret:
+            name: minio
+            key: secretkey

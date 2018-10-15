@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: ${application.name}-${application.source.bucket.name}-artifact
+  namespace: ${application.namespace}
+  labels:
+    sensors.argoproj.io/sensor-controller-instanceid: argo-events
+spec:
+  repeat: true
+  serviceAccountName: ${application.name}-sa
+  signals:
+  - name: ${application.name}-${application.source.bucket.name}-artifact/s3.Config
+  triggers:
+  - name: webhook-workflow-trigger
+    resource:
+      namespace: ${application.namespace}
+      group: argoproj.io
+      version: v1alpha1
+      kind: Workflow
+      parameters:
+        - src:
+            signal: ${application.name}-${application.source.bucket.name}-artifact-gateway/s3.Config
+            path: objectKey
+          dest: workflow.parameters.artifact
+      source:
+        url: ${application.name}-workflows-http-server.${application.namespace}.svc.cluster.local/artifact-workflow.json

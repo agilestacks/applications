@@ -70,10 +70,19 @@ parameters:
     value: argoproj
     env: NAMESPACE
 
-- name: application.uuid
-  value: ${hub.deploymentId}
-  env: UUID
-  kind: link
+  - name: uuid
+    value: ${hub.deploymentId}
+    env: UUID
+    kind: link
+
+  - name: secret.name
+    value: ${application.name}-app
+    env: APP_SECRET
+    kind: link
+
+  - name: docker.image
+    value: ${component.docker.image}
+    kind: link
 
 - name: dns.domain
   env: DOMAIN_NAME
@@ -123,11 +132,6 @@ parameters:
   - name: secret.namespace
   - name: secret.accessKeyRef
   - name: secret.secretKeyRef
-
-- name: application.secret.name
-  value: ${application.name}-app
-  env: APP_SECRET
-  kind: link
 
 - name: application.target.bucket
   kind: link
@@ -235,3 +239,6 @@ outputs:
 templates:
   files:
     - "*.template"
+    - "gateways/*.template"
+    - "sensors/*.template"
+    - "workflows/*.template"

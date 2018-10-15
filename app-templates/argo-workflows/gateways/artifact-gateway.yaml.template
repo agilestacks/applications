@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Gateway
+metadata:
+  name: ${application.name}-${application.source.bucket.name}-artifact
+  namespace: ${application.namespace}
+  labels:
+    gateways.argoproj.io/gateway-controller-instanceid: argo-events
+    gateway-name: "${application.name}-${application.source.bucket.name}-artifact"
+spec:
+  deploySpec:
+    containers:
+    - name: "artifact-events"
+      image: "agilestacks/argo-artifact-gateway"
+      imagePullPolicy: "Always"
+      command: ["/bin/artifact-gateway"]
+    serviceAccountName: "${application.name}-sa"
+  # serviceSpec:
+  #   selector:
+  #     gateway-name: "${application.name}-${application.source.bucket.name}-artifact"
+  #   ports:
+  #     - port: 9300
+  #       targetPort: 9300
+  #   type: ClusterIP
+  configMap: "${application.name}-${application.source.bucket.name}-artifact-gateway"
+  version: "1.0"
+  type: "artifact"
+  dispatchMechanism: "HTTP"
+  watchers:
+    sensors:
+    - name: "${application.name}-${application.source.bucket.name}-artifact"
+

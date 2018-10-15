@@ -20,22 +20,8 @@ spec:
       parameters:
       - src:
           signal: ${application.name}-webhook/${application.name}.Config
-        # pass payload of webhook-gateway/webhook.fooConfig signal to first parameter value
-        # of arguments.
+          path: message
+          value: hello default
         dest: spec.arguments.parameters.0.value
       source:
-        inline: |
-          apiVersion: argoproj.io/v1alpha1
-          kind: Workflow
-          metadata:
-            generateName: ${application.name}-
-          spec:
-            entrypoint: whalesay
-            templates:
-            - name: whalesay
-              container:
-                args:
-                - "hello world"
-                command:
-                - cowsay
-                image: "docker/whalesay:latest"
+        url: http://${application.name}-workflows-http-server.${application.namespace}.svc.cluster.local/webhook-workflow.json

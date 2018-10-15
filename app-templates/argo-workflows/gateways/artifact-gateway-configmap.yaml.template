@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ${application.name}-${application.source.bucket.name}-artifact-gateway
+  namespace: ${application.namespace}
+data:
+  s3.Config: |-
+    s3EventConfig:
+      bucket: ${application.source.bucket.name}
+      endpoint: ${application.source.bucket.endpoint}
+      event: s3:ObjectCreated:Put
+      filter:
+        prefix: "${application.source.bucket.prefix}"
+        suffix: "${application.source.bucket.suffix}"
+    insecure: true
+    accessKey:
+      key: ${application.source.bucket.secret.accessKeyRef}
+      name: ${application.source.bucket.secret.name}
+    secretKey:
+      key: ${application.source.bucket.secret.secretKeyRef}
+      name: ${application.source.bucket.secret.name}

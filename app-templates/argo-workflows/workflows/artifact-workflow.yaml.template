@@ -1,0 +1,113 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: ${application.name}-bucketevents-
+spec:
+  entrypoint: workflow
+  arguments:
+    parameters:
+    - name: artifact
+      value: undefined
+    - name: sourceBucket
+      value: antonargo1-input
+  templates:
+  - name: workflow
+    steps:
+    - - name: list-all
+        template: toolbox-script
+        arguments:
+          parameters:
+          - name: script
+            value: >
+              mc ls source/{{workflow.parameters.sourceBucket}} --recursive --json
+              | | jq -sc '. | [.[].key]'
+
+    - - name: take-one
+        template: process-steps
+        withParam: "{{steps.list-all.outputs.result}}"
+        arguments:
+          parameters:
+          - name: file
+            value: "{{item}}"
+
+  - name: process-steps
+    inputs:
+      parameters:
+      - name: file
+      - name: source-bucket
+        value: antonargo1-input
+    steps:
+    - - name: process
+        template: processor
+        arguments:
+          parameters:
+          - name: file
+            value: "{{inputs.parameters.file}}"
+    - - name: rm-completed
+        template: toolbox-script
+        arguments:
+          parameters:
+          - name: script
+            value: >
+              mc rm source/{{workflow.parameters.sourceBucket}}/{{inputs.parameters.file}} --force --dangerous
+
+  - name: toolbox-script
+    inputs:
+      parameters:
+      - name: script
+    script:
+      image: agilestacks/toolbox
+      env:
+      - name: MC_HOSTS_source
+        valueFrom:
+          secretKeyRef:
+            name: antonargo1-app
+            key: source.bucket.mcHost
+      - name: MC_HOSTS_target
+        valueFrom:
+          secretKeyRef:
+            name: antonargo1-app
+            key: target.bucket.mcHost
+      command: [bash]
+      source: "{{inputs.parameters.script}}"
+
+  - name: processor
+    container:
+      image: ${application.docker.image}
+      command: [sh, -c]
+      workingDir: "/workspace"
+      args: ["echo processing file {{inputs.parameters.file}}"]
+    inputs:
+      parameters:
+      - name: file
+      artifacts:
+      - name: bucket
+        path: /workspace/{{inputs.parameters.file}}
+        s3:
+          endpoint: minio.app.antargo5.demo01.kubernetes.delivery
+          insecure: true
+          bucket: antonargo1-input
+          key: "{{inputs.parameters.file}}"
+          accessKeySecret:
+            name: minio
+            key: accesskey
+          secretKeySecret:
+            name: minio
+            key: secretkey
+    outputs:
+      artifacts:
+      - name: bucket
+        path: /workspace
+        archive:
+          none: {}
+        s3:
+          endpoint: minio.app.antargo5.demo01.kubernetes.delivery
+          insecure: true
+          bucket: antonargo1-output
+          key: ""
+          accessKeySecret:
+            name: minio
+            key: accesskey
+          secretKeySecret:
+            name: minio
+            key: secretkey

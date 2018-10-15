@@ -1,0 +1,43 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: ${application.name}-workflows-http-server
+  namespace: ${application.namespace}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        application: ${application.name}
+        component: workflows-http-server
+    spec:
+      serviceAccountName: argo-events-sa
+      containers:
+      - name: server
+        image: python:3-alpine
+        args: ["python", "-m", "http.server", "80"]
+        imagePullPolicy: Always
+        workingDir: /data
+        volumeMounts:
+        - name: data-volume
+          mountPath: /data
+      volumes:
+      - name: data-volume
+        configMap:
+          name: ${application.name}-workflows
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ${application.name}-workflows-http-server
+  namespace: ${application.namespace}
+  labels:
+    application: ${application.name}
+    component: workflows-http-server
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    application: ${application.name}
+    component: workflows-http-server
