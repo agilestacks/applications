@@ -35,25 +35,26 @@ parameters:
   parameters:
   - name: protocol
 - name: component.bucket
-  component: minio-source
+  component: source-bucket
   parameters:
   - name: endpoint
   - name: name
-    value: myapplication
+    value: ${application.name}-input
   - name: namespace
   - name: secret.name
   - name: secret.namespace
   - name: secret.accessKeyRef
   - name: secret.secretKeyRef
 - name: component.bucket
-  component: minio-target
+  component: target-bucket
   parameters:
   - name: endpoint
   - name: name
-    value: myapplication
+    value: ${application.name}-output
   - name: namespace
   - name: secret.name
   - name: secret.namespace
   - name: secret.accessKeyRef
   - name: secret.secretKeyRef
+
 - name: component.nats.fqdn

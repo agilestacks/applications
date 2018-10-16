@@ -75,17 +75,10 @@ parameters:
   - name: namespace
     value: argoproj
     env: NAMESPACE
-
-  - name: uuid
-    value: ${hub.deploymentId}
-    env: UUID
-    kind: link
-
   - name: secret.name
     value: ${application.name}-app
     env: APP_SECRET
     kind: link
-
   - name: docker.image
     value: ${component.docker.image}
     kind: link

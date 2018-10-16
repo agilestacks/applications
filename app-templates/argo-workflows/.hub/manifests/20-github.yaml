@@ -27,6 +27,11 @@ parameters:
 - name: component.git
   parameters:
   - name: remote
+  - name: user.name
+    value: Super Hub
+  - name: user.email
+    value: support@agilestacks.com
+
 - name: component.github
   parameters:
   - name: token
