@@ -10,6 +10,10 @@ spec:
       value: undefined
     - name: application
       value: ${application.name}
+    - name: processorInputDir
+      value: /workspace
+    - name: processorOutputDir
+      value: /workspace
     - name: image
       value: ${application.docker.image}
     - name: sourceBucket
@@ -74,14 +78,14 @@ spec:
     container:
       image: "{{workflow.parameters.image}}"
       command: [sh, -c]
-      workingDir: "/workspace"
+      workingDir: "{{workflow.parameters.processorInputDir}}"
       args: ["{{inputs.parameters.script}}"]
     inputs:
       parameters:
       - name: script
       artifacts:
       - name: bucket
-        path: /workspace/{{workflow.parameters.file}}
+        path: "{{workflow.parameters.processorInputDir}}/{{workflow.parameters.file}}"
         s3:
           endpoint: "{{workflow.parameters.sourceBucketEndpoint}}"
           insecure: true
@@ -96,7 +100,7 @@ spec:
     outputs:
       artifacts:
       - name: bucket
-        path: /workspace
+        path: "{{workflow.parameters.processorOutputDir}}"
         archive:
           none: {}
         s3:

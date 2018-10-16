@@ -8,10 +8,32 @@ spec:
     parameters:
     - name: application
       value: ${application.name}
+    - name: image
+      value: ${application.docker.image}
+    - name: processorInputDir
+      value: /workspace
+    - name: processorOutputDir
+      value: /workspace
     - name: sourceBucket
       value: ${application.source.bucket.name}
+    - name: sourceBucketEndpoint
+      value: ${application.source.bucket.endpoint}
+    - name: sourceBucketSecret
+      value: ${application.source.bucket.secret.name}
+    - name: sourceBucketAccessKeyRef
+      value: ${application.source.bucket.secret.accessKeyRef}
+    - name: sourceBucketSecretKeyRef
+      value: ${application.source.bucket.secret.secretKeyRef}
     - name: targetBucket
       value: ${application.target.bucket.name}
+    - name: targetBucketEndpoint
+      value: ${application.target.bucket.endpoint}
+    - name: targetBucketSecret
+      value: ${application.target.bucket.secret.name}
+    - name: targetBucketAccessKeyRef
+      value: ${application.target.bucket.secret.accessKeyRef}
+    - name: targetBucketSecretKeyRef
+      value: ${application.target.bucket.secret.secretKeyRef}
   templates:
   - name: workflow
     steps:
@@ -48,13 +70,13 @@ spec:
           - name: script
             value: >
               echo processing file {{inputs.parameters.file}}
-    - - name: rm-completed
+    - - name: finalize
         template: toolbox-script
         arguments:
           parameters:
           - name: script
             value: >
-              mc rm source/{{workflow.parameters.sourceBucket}}/{{inputs.parameters.file}} --force --dangerous
+              mc rm source/{{workflow.parameters.sourceBucket}}/{{inputs.parameters.file}}
 
   - name: toolbox-script
     inputs:
@@ -78,42 +100,44 @@ spec:
 
   - name: processor
     container:
-      image: ${application.docker.image}
+      image: "{{workflow.parameters.image}}"
       command: [sh, -c]
-      workingDir: "/workspace"
+      workingDir: "{{workflow.parameters.processorInputDir}}"
       args: ["{{inputs.parameters.script}}"]
     inputs:
       parameters:
       - name: file
       - name: script
       artifacts:
+
+          key: "{{workflow.parameters.file}}"
+
       - name: bucket
-        path: /workspace/{{inputs.parameters.file}}
+        path: "{{workflow.parameters.processorInputDir}}/{{inputs.parameters.file}}"
         s3:
-          endpoint: ${application.source.bucket.endpoint}
+          endpoint: "{{workflow.parameters.sourceBucketEndpoint}}"
           insecure: true
-          bucket: ${application.source.bucket.name}
+          bucket: "{{workflow.parameters.sourceBucket}}"
           key: "{{inputs.parameters.file}}"
           accessKeySecret:
-            key: ${application.source.bucket.secret.accessKeyRef}
-            name: ${application.source.bucket.secret.name}
+            name: "{{workflow.parameters.sourceBucketSecret}}"
+            key: "{{workflow.parameters.sourceBucketAccessKeyRef}}"
           secretKeySecret:
-            key: ${application.source.bucket.secret.secretKeyRef}
-            name: ${application.source.bucket.secret.name}
+            name: "{{workflow.parameters.sourceBucketSecret}}"
+            key: "{{workflow.parameters.sourceBucketSecretKeyRef}}"
     outputs:
-      artifacts:
       - name: bucket
-        path: /workspace
+        path: "{{workflow.parameters.processorOutputDir}}"
         archive:
           none: {}
         s3:
-          endpoint: ${application.target.bucket.name}
+          endpoint: "{{workflow.parameters.targetBucketEndpoint}}"
           insecure: true
-          bucket: ${application.target.bucket.name}
+          bucket: "{{workflow.parameters.targetBucket}}"
           key: ""
           accessKeySecret:
-            name: minio
-            key: accesskey
+            name: "{{workflow.parameters.targetBucketSecret}}"
+            key: "{{workflow.parameters.targetBucketAccessKeyRef}}"
           secretKeySecret:
-            name: minio
-            key: secretkey
+            name: "{{workflow.parameters.targetBucketSecret}}"
+            key: "{{workflow.parameters.targetBucketSecretKeyRef}}"
