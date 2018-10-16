@@ -1,57 +1,56 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
-  generateName: ${application.name}-bucketevents-
+  generateName: ${application.name}-${application.source.bucket.name}-bucketevents-
 spec:
-  entrypoint: workflow
+  entrypoint: main
   arguments:
     parameters:
-    - name: artifact
+    - name: file
       value: undefined
+    - name: application
+      value: ${application.name}
+    - name: image
+      value: ${application.docker.image}
     - name: sourceBucket
-      value: antonargo1-input
+      value: ${application.source.bucket.name}
+    - name: sourceBucketEndpoint
+      value: ${application.source.bucket.endpoint}
+    - name: sourceBucketSecret
+      value: ${application.source.bucket.secret.name}
+    - name: sourceBucketAccessKeyRef
+      value: ${application.source.bucket.secret.accessKeyRef}
+    - name: sourceBucketSecretKeyRef
+      value: ${application.source.bucket.secret.secretKeyRef}
+    - name: targetBucket
+      value: ${application.target.bucket.name}
+    - name: targetBucketEndpoint
+      value: ${application.target.bucket.endpoint}
+    - name: targetBucketSecret
+      value: ${application.target.bucket.secret.name}
+    - name: targetBucketAccessKeyRef
+      value: ${application.target.bucket.secret.accessKeyRef}
+    - name: targetBucketSecretKeyRef
+      value: ${application.target.bucket.secret.secretKeyRef}
   templates:
-  - name: workflow
-    steps:
-    - - name: list-all
-        template: toolbox-script
-        arguments:
-          parameters:
-          - name: script
-            value: >
-              mc ls source/{{workflow.parameters.sourceBucket}} --recursive --json
-              | | jq -sc '. | [.[].key]'
-
-    - - name: take-one
-        template: process-steps
-        withParam: "{{steps.list-all.outputs.result}}"
-        arguments:
-          parameters:
-          - name: file
-            value: "{{item}}"
-
-  - name: process-steps
-    inputs:
-      parameters:
-      - name: file
-      - name: source-bucket
-        value: antonargo1-input
+  - name: main
     steps:
     - - name: process
         template: processor
         arguments:
           parameters:
-          - name: file
-            value: "{{inputs.parameters.file}}"
-    - - name: rm-completed
-        template: toolbox-script
+          - name: script
+            value: >
+              echo processing file {{workflow.parameters.file}}
+    - - name: finalize
+        template: cleanup-script
         arguments:
           parameters:
           - name: script
             value: >
-              mc rm source/{{workflow.parameters.sourceBucket}}/{{inputs.parameters.file}} --force --dangerous
+              mc rm source/{{workflow.parameters.sourceBucket}}/{{workflow.parameters.file}}
 
-  - name: toolbox-script
+  - name: cleanup-script
     inputs:
       parameters:
       - name: script
@@ -61,39 +60,39 @@ spec:
       - name: MC_HOSTS_source
         valueFrom:
           secretKeyRef:
-            name: antonargo1-app
+            name: "{{workflow.parameters.application}}-app"
             key: source.bucket.mcHost
       - name: MC_HOSTS_target
         valueFrom:
           secretKeyRef:
-            name: antonargo1-app
+            name: "{{workflow.parameters.application}}-app"
             key: target.bucket.mcHost
       command: [bash]
       source: "{{inputs.parameters.script}}"
 
   - name: processor
     container:
-      image: ${application.docker.image}
+      image: "{{workflow.parameters.image}}"
       command: [sh, -c]
       workingDir: "/workspace"
-      args: ["echo processing file {{inputs.parameters.file}}"]
+      args: ["{{inputs.parameters.script}}"]
     inputs:
       parameters:
-      - name: file
+      - name: script
       artifacts:
       - name: bucket
-        path: /workspace/{{inputs.parameters.file}}
+        path: /workspace/{{workflow.parameters.file}}
         s3:
-          endpoint: minio.app.antargo5.demo01.kubernetes.delivery
+          endpoint: "{{workflow.parameters.sourceBucketEndpoint}}"
           insecure: true
-          bucket: antonargo1-input
-          key: "{{inputs.parameters.file}}"
+          bucket: "{{workflow.parameters.sourceBucket}}"
+          key: "{{workflow.parameters.file}}"
           accessKeySecret:
-            name: minio
-            key: accesskey
+            name: "{{workflow.parameters.sourceBucketSecret}}"
+            key: "{{workflow.parameters.sourceBucketAccessKeyRef}}"
           secretKeySecret:
-            name: minio
-            key: secretkey
+            name: "{{workflow.parameters.sourceBucketSecret}}"
+            key: "{{workflow.parameters.sourceBucketSecretKeyRef}}"
     outputs:
       artifacts:
       - name: bucket
@@ -101,13 +100,13 @@ spec:
         archive:
           none: {}
         s3:
-          endpoint: minio.app.antargo5.demo01.kubernetes.delivery
+          endpoint: "{{workflow.parameters.targetBucketEndpoint}}"
           insecure: true
-          bucket: antonargo1-output
+          bucket: "{{workflow.parameters.targetBucket}}"
           key: ""
           accessKeySecret:
-            name: minio
-            key: accesskey
+            name: "{{workflow.parameters.targetBucketSecret}}"
+            key: "{{workflow.parameters.targetBucketAccessKeyRef}}"
           secretKeySecret:
-            name: minio
-            key: secretkey
+            name: "{{workflow.parameters.targetBucketSecret}}"
+            key: "{{workflow.parameters.targetBucketSecretKeyRef}}"

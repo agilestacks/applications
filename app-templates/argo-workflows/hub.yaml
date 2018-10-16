@@ -66,6 +66,12 @@ parameters:
     value: wat
   - name: webhook.method
     value: POST
+  - name: webhook.enable
+    value: false
+    env: ENABLE_WEBHOOK
+  - name: bucketEvents.enable
+    value: true
+    env: ENABLE_BUCKET_EVENTS
   - name: namespace
     value: argoproj
     env: NAMESPACE

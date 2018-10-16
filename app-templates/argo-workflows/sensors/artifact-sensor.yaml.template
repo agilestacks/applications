@@ -11,16 +11,18 @@ spec:
   signals:
   - name: ${application.name}-${application.source.bucket.name}-artifact/s3.Config
   triggers:
-  - name: webhook-workflow-trigger
+  - name: ${application.source.bucket.name}-bucketevents
     resource:
       namespace: ${application.namespace}
       group: argoproj.io
       version: v1alpha1
       kind: Workflow
       parameters:
-        - src:
-            signal: ${application.name}-${application.source.bucket.name}-artifact-gateway/s3.Config
-            path: objectKey
-          dest: workflow.parameters.artifact
+      - src:
+          signal: ${application.name}-${application.source.bucket.name}-artifact/s3.Config
+          path: s3.object.key
+        dest: spec.arguments.parameters.0.value
       source:
-        url: ${application.name}-workflows-http-server.${application.namespace}.svc.cluster.local/artifact-workflow.json
+        url:
+          path: http://${application.name}-workflows-http-server.${application.namespace}.svc.cluster.local/artifact-workflow.yaml
+          verifycert: false
