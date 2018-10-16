@@ -11,28 +11,19 @@ meta:
 components:
 - name: ecr
   source:
-    dir: ../../../components/ecr
+    dir: ../../../../components/ecr
 - name: github-repository
   source:
-    dir: ../../components/github-repository
-# - name: github-webhook
-#   source:
-#     dir: ../../components/github-webhook
+    dir: ../../../components/github-repository
 - name: buildbox
   source:
-    dir: ../../components/buildbox
+    dir: ../../../components/buildbox
 - name: source-bucket
   source:
-    dir: ../../components/minio-bucket
+    dir: ../../../components/minio-bucket
 - name: target-bucket
   source:
-    dir: ../../components/minio-bucket
-# - name: argo-sensor-webhook
-#   source:
-#     dir: ../../components/argo-sensor-webhook
-# - name: argo-sensor-artifact
-#   source:
-#     dir: ../../components/argo-sensor-artifact
+    dir: ../../../components/minio-bucket
 
 lifecycle:
   bare: allow
@@ -67,7 +58,7 @@ parameters:
   - name: webhook.method
     value: POST
   - name: webhook.enable
-    value: false
+    value: true
     env: ENABLE_WEBHOOK
   - name: bucketEvents.enable
     value: true

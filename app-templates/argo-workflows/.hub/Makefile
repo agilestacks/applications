@@ -25,9 +25,9 @@ namespace:
 deploy: namespace
 	$(kubectl) apply -f rbac.yaml
 
-	$(MAKE) -C gateways $@
-	$(MAKE) -C sensors $@
-	$(MAKE) -C workflows $@
+	$(MAKE) -C $(realpath ..)/gateways $@
+	$(MAKE) -C $(realpath ..)/sensors $@
+	$(MAKE) -C $(realpath ..)/workflows $@
 .PHONY: deploy
 
 undeploy:

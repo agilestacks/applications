@@ -6,6 +6,6 @@ metadata:
 data:
   ${application.name}.portConfig: |-
     port: "12000"
-  ${application.name}.Config: |-
+  ${application.webhook.name}.Config: |-
     endpoint: "/webhooks/${application.webhook.name}"
     method: "${application.webhook.method}"

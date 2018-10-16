@@ -9,7 +9,7 @@ spec:
   repeat: true
   serviceAccountName: ${application.name}-sa
   signals:
-  - name: ${application.name}-webhook/${application.name}.Config
+  - name: ${application.name}-webhook/${application.webhook.name}.Config
   triggers:
   - name: webhook-workflow-trigger
     resource:
