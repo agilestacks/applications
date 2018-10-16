@@ -6,7 +6,7 @@ DOMAIN_NAME ?= localhost
 ARCH := $(shell uname -s | tr '[:upper:]' '[:lower:]')
 
 kubectl     := kubectl --context="$(DOMAIN_NAME)" --namespace="$(NAMESPACE)"
-yq          := yq
+
 ifeq ($(ARCH),darwin)
 	base64_decode := base64 -D
 else
@@ -34,19 +34,14 @@ namespace:
 	- $(kubectl) create namespace $(NAMESPACE)
 .PHONY: namespace
 
-artifact-workflow.json webhook-workflow.json:
-	$(yq) r -j $(basename $@).yaml > $@
-
-deploy: namespace artifact-workflow.json webhook-workflow.json
+deploy: namespace
 	@ echo Creating applicaiton secret: $(APP_SECRET)
 	- @ $(kubectl) create secret generic $(APP_SECRET) \
 		--from-literal source.bucket.mcHost=$(INGRESS_PROTOCOL)://$(SRC_ACCESSKEY):$(SRC_SECRETKEY)@$(SRC_BUCKET_ENDPOINT) \
 		--from-literal target.bucket.mcHost=$(INGRESS_PROTOCOL)://$(DEST_ACCESSKEY):$(DEST_SECRETKEY)@$(DEST_BUCKET_ENDPOINT)
 
 	- $(kubectl) create configmap $(APPLICATION)-workflows \
-		--from-file=artifact-workflow.json \
 		--from-file=artifact-workflow.yaml \
-		--from-file=webhook-workflow.json \
 		--from-file=webhook-workflow.yaml
 	$(kubectl) apply -f http-server.yaml
 .PHONY: deploy
