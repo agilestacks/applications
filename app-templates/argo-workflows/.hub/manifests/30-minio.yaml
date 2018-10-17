@@ -1,13 +1,13 @@
 ---
 components:
-- name: minio-source
+- name: source-bucket
   source:
     repoUrl: https://github.com/agilestacks/applications.git
     repoPath: applications/components/minio-bucket
     dir: components/minio-bucket
     branch: master
     fromEnv: GITHUB_TOKEN
-- name: minio-target
+- name: source-target
   source:
     repoUrl: https://github.com/agilestacks/applications.git
     repoPath: applications/components/minio-bucket
@@ -19,11 +19,11 @@ lifecycle:
   bare: allow
   verbs: [deploy, undeploy]
   order:
-    - minio-source
-    - minio-target
+    - source-bucket
+    - source-target
   mandatory:
-    - minio-source
-    - minio-target
+    - source-bucket
+    - source-target
 
 parameters:
 - name: cloud.region
@@ -35,6 +35,14 @@ parameters:
 - name: component.ingress
   parameters:
   - name: protocol
+
+- name: component.bucket
+  parameters:
+  - name: endpoint
+  - name: secret.name
+  - name: secret.accessKeyRef
+  - name: secret.secretKeyRef
+
 - name: component.bucket
   component: source-bucket
   parameters:
