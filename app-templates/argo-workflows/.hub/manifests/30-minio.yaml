@@ -53,12 +53,16 @@ parameters:
     value: ${source-bucket:component.bucket.name}
   - name: endpoint
     value: ${component.bucket.endpoint}
+    env: DEST_BUCKET_ENDPOINT
   - name: secret.name
     value: ${component.bucket.secret.name}
+    env: DEST_BUCKET_SECRET_NAME
   - name: secret.accessKeyRef
     value: ${component.bucket.secret.accessKeyRef}
+    env: DEST_BUCKET_ACCESSKEY
   - name: secret.secretKeyRef
     value: ${component.bucket.secret.secretKeyRef}
+    env: DEST_BUCKET_SECRETKEY
   - name: prefix
     value: ""
     empty: allow
@@ -75,12 +79,16 @@ parameters:
     value: ${target-bucket:component.bucket.name}
   - name: endpoint
     value: ${component.bucket.endpoint}
+    env: SRC_BUCKET_ENDPOINT
   - name: secret.name
     value: ${component.bucket.secret.name}
+    env: SRC_BUCKET_SECRET_NAME
   - name: secret.accessKeyRef
     value: ${component.bucket.secret.accessKeyRef}
+    env: SRC_BUCKET_ACCESSKEY
   - name: secret.secretKeyRef
     value: ${component.bucket.secret.secretKeyRef}
+    env: SRC_BUCKET_SECRETKEY
   - name: prefix
     value: ""
     empty: allow
