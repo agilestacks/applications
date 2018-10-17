@@ -27,6 +27,7 @@ lifecycle:
 
 parameters:
 - name: cloud.region
+- name: component.nats.fqdn
 - name: terraform.bucket
   parameters:
   - name: name
@@ -37,24 +38,54 @@ parameters:
 - name: component.bucket
   component: source-bucket
   parameters:
-  - name: endpoint
   - name: name
     value: ${application.name}-input
-  - name: namespace
-  - name: secret.name
-  - name: secret.namespace
-  - name: secret.accessKeyRef
-  - name: secret.secretKeyRef
 - name: component.bucket
   component: target-bucket
   parameters:
-  - name: endpoint
   - name: name
     value: ${application.name}-output
-  - name: namespace
-  - name: secret.name
-  - name: secret.namespace
-  - name: secret.accessKeyRef
-  - name: secret.secretKeyRef
 
-- name: component.nats.fqdn
+- name: application.source.bucket
+  kind: link
+  parameters:
+  - name: name
+    value: ${source-bucket:component.bucket.name}
+  - name: endpoint
+    value: ${component.bucket.endpoint}
+  - name: secret.name
+    value: ${component.bucket.secret.name}
+  - name: secret.accessKeyRef
+    value: ${component.bucket.secret.accessKeyRef}
+  - name: secret.secretKeyRef
+    value: ${component.bucket.secret.secretKeyRef}
+  - name: prefix
+    value: ""
+    empty: allow
+    kind: user
+  - name: suffix
+    value: ""
+    empty: allow
+    kind: user
+
+- name: application.target.bucket
+  kind: link
+  parameters:
+  - name: name
+    value: ${target-bucket:component.bucket.name}
+  - name: endpoint
+    value: ${component.bucket.endpoint}
+  - name: secret.name
+    value: ${component.bucket.secret.name}
+  - name: secret.accessKeyRef
+    value: ${component.bucket.secret.accessKeyRef}
+  - name: secret.secretKeyRef
+    value: ${component.bucket.secret.secretKeyRef}
+  - name: prefix
+    value: ""
+    empty: allow
+    kind: user
+  - name: suffix
+    value: ""
+    empty: allow
+    kind: user
