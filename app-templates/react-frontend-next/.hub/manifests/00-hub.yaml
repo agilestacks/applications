@@ -2,8 +2,8 @@
 version: 1
 kind: application
 meta:
-  name: 'spring-boot:1'
-  brief: Java microservice with Spring Boot
+  name: 'react-frontend-next:1'
+  brief: S3 hosted React frontend application
   source:
     repoUrl: https://github.com/agilestacks/applications.git
     repoPath: applications/app-templates
@@ -15,9 +15,9 @@ requires:
 components: []
 parameters:
   - name: application.name
-    value: viktors-93
+    value: react-app-next
   - name: application.description
-    value: Java application
+    value: React application
   - name: application.namespace
     value: cool
   - name: application.replicas
@@ -30,16 +30,16 @@ parameters:
     value: '${application.name}.${component.ingress.fqdn}'
   - name: application.path
     value: /
-  - name: component.ingress.protocol  
+  - name: component.ingress.protocol
   - name: component.ingress.fqdn
   - name: component.docker.image
   - name: component.git.remote
-  - name: component.jenkins.url                
+  - name: component.jenkins.url
 outputs:
   - name: application.git.remote
-    value: '${component.git.remote}' 
+    value: '${component.git.remote}'
   - name: application.docker.image
-    value: '${component.docker.image}' 
+    value: '${component.docker.image}'
   - name: application.name
     value: '${application.name}'
   - name: application.namespace
@@ -47,11 +47,11 @@ outputs:
   - name: application.fqdn
     value: '${application.ingress.host}'
   - name: application.path
-    value: '${application.path}'    
-  - name: application.url 
+    value: '${application.path}'
+  - name: application.url
     value: '${component.ingress.protocol}://${application.ingress.host}${application.path}'
   - name: application.jenkins.pipeline.url
-    value: '${component.jenkins.url}/job/${application.name}-pipeline'     
+    value: '${component.jenkins.url}/job/${application.name}-pipeline'
 templates:
   files:
     - templates/*.template
