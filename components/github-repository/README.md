@@ -1,4 +1,4 @@
-# Manage Github on behlf of the user
+# Manage Github on behalf of the user
 
 This github can create github repository on behalf of the user
 
