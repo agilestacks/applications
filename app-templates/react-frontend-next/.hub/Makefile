@@ -25,12 +25,13 @@ undeploy:
 	$(kubectl) delete -f templates/pipeline.yaml
 .PHONY: undeploy
 
-$(APP_ELABORATE_FILE):
-	$(hub) elaborate hub.yaml -s $(PLATFORM_STATE_FILE) -e application.state=$(APP_ELABORATE_FILE) -o $@
+$(APP_ELABORATE_FILE): hub.yaml user.yaml
+	$(hub) elaborate hub.yaml user.yaml -s $(PLATFORM_STATE_FILE) -e application.state=$(APP_ELABORATE_FILE) -o $@
 
 install: $(APP_ELABORATE_FILE)
+	$(hub) render '../package.json.template' -m $(APP_ELABORATE_FILE) -s $(APP_STATE) -c 'react-frontend-next'
 	$(hub) kubeconfig $(PLATFORM_STATE_FILE)
-	$(hub) deploy $(lastword $^) -s $(APP_STATE)
+	$(hub) deploy $(APP_ELABORATE_FILE) -s $(APP_STATE)
 .PHONY: install
 
 uninstall: $(APP_ELABORATE_FILE)
@@ -41,3 +42,4 @@ uninstall: $(APP_ELABORATE_FILE)
 clean:
 	rm -rf $(APP_ELABORATE_FILE) $(APP_STATE_FILE_LOCAL)
 	rm -rf .git
+

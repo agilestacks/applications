@@ -45,21 +45,24 @@ pipeline {
         checkout scm
       }
     }
-    stage('Deploy Components') {
-      environment {
-        HUB_DEBUG = '1'
-        NAME= "${params.NAME}"
-      }
-      steps {
-        container('toolbox') {
-          script {
-            sh 'env | sort'
-            hub.elaborate(state: params.STATE_FILE)
-            hub.deploy()
-          }
-        }
-      }
-    }
+    // stage('Deploy Components') {
+    //   environment {
+    //     HUB_DEBUG = '1'
+    //     NAME= "${params.NAME}"
+    //   }
+    //   steps {
+    //     container('toolbox') {
+    //       script {
+    //         sh 'env | sort'
+    //         dir ('.hub') {
+    //           sh script: 'ls -la'
+    //           hub.elaborate(state: params.APP_STATE_FILE)
+    //           hub.deploy()
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
     stage('Build') {
       environment {
         CONTEXT_PATH = "${params.INGRESS_PATH}"
@@ -92,7 +95,9 @@ pipeline {
       steps {
         container('toolbox') {
           script {
-            final bucket = hub.explain().stackOutputs['application.bucket'] as String
+            dir ('.hub') {
+              final bucket = hub.explain().stackOutputs['application.bucket'] as String
+            }
             withAWS(role:params.AWS_TRUST_ROLE) {
               sh script: "aws s3 sync --delete dist/ s3://${bucket}/${params.INGRESS_PATH}"
             }
