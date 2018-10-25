@@ -27,3 +27,9 @@ app-templates/argo-workflows/webhook-gateway.yaml
 app-templates/argo-workflows/webhook-sensor.yaml
 app-templates/argo-workflows/webhook-gateway-configmap.yaml
 app-templates/argo-workflows/.hub/rbac.yaml
+
+app-templates/react-frontend-next/package.json
+app-templates/react-frontend-next/.hub/templates/*.yaml
+app-templates/react-frontend-next/.hub/hub.yaml
+app-templates/react-frontend-next/.hub/user.yaml
+app-templates/react-frontend-next/.hub/components/*
