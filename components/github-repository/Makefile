@@ -78,17 +78,12 @@ endif
 .PHONY: clone
 
 output:
-	- $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO)
-	- $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.clone_url'
-	- $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.git_url'
-	- $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.html_url'
-	- $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.ssh_url'
-	- $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.private'
+	- $(eval GITHUB_OUTPUTS='$(shell $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO))')
 
 	@ echo Outputs:
-	@ echo clone_url = $(shell $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.clone_url')
-	@ echo git_url = $(shell $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.git_url')
-	@ echo html_url = $(shell $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.html_url')
-	@ echo ssh_url = $(shell $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.ssh_url')
-	@ echo private = $(shell $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) | $(jq) '.private')
+	@ echo clone_url = $(shell echo $(GITHUB_OUTPUTS) | $(jq) '.clone_url')
+	@ echo git_url = $(shell echo $(GITHUB_OUTPUTS) | $(jq) '.git_url')
+	@ echo html_url = $(shell echo $(GITHUB_OUTPUTS) | $(jq) '.html_url')
+	@ echo ssh_url = $(shell echo $(GITHUB_OUTPUTS) | $(jq) '.ssh_url')
+	@ echo private = $(shell echo $(GITHUB_OUTPUTS) | $(jq) '.private')
 .PHONY: output
