@@ -1,0 +1,40 @@
+---
+components:
+- name: github-repository
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/github-repository
+    dir: components/github-repository
+    branch: master
+    fromEnv: GITHUB_TOKEN
+
+lifecycle:
+  order:
+    - github-repository
+  mandatory:
+    - github-repository
+
+parameters:
+- name: component.git
+  parameters:
+  - name: remote
+- name: component.github
+  parameters:
+  - name: token
+    fromEnv: COMPONENT_GITHUB_TOKEN
+    default: token
+  - name: repository.organization
+    value: asibot
+  - name: repository.name
+    value: antonargo1
+  - name: webhook.name
+    value: github
+  - name: webhook.events.json
+    value: '["push"]'
+  - name: repository.description
+    value: >
+      Java microservice with Spring Boot
+
+outputs:
+- name: application.git.remote
+  value: ${component.git.remote}

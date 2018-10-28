@@ -1,0 +1,29 @@
+---
+components:
+- name: ecr
+  source:
+    repoUrl: https://github.com/agilestacks/components.git
+    repoPath: components/ecr
+    dir: components/ecr
+    branch: master
+    fromEnv: GITHUB_TOKEN
+
+lifecycle:
+  order:
+    - ecr
+  mandatory:
+    - ecr
+
+parameters:
+- name: dns.domain
+  env: DOMAIN_NAME
+- name: cloud.region
+- name: terraform.bucket
+  parameters:
+  - name: name
+  - name: region
+- name: component.ecr
+  parameters:
+  - name: name
+    value: '${dns.domain}/${application.name}'
+    
