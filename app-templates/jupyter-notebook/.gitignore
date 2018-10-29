@@ -1,6 +1,5 @@
 .hub/manifests
-.hub/templates/credentials.yaml
-.hub/templates/pipeline.yaml
 .hub/hub.elaborate
 .hub/hub.state
 .terraform
+.envrc

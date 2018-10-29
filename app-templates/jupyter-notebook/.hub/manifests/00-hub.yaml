@@ -22,11 +22,10 @@ parameters:
   - name: application.state.file
     fromEnv: APP_STATE_FILE
   - name: application.image
-  - name: component.jupyterhub.url               
+  - name: component.jupyterhub.url              
 outputs:   
   - name: application.url 
-    value: '${component.ingress.protocol}://${component.jupyterhub.url}'
+    value: '${component.jupyterhub.url}'
 templates:
   files:
-    - templates/*.template
-    - ../*.template
+    - jupyterhub-notebook.yaml.template

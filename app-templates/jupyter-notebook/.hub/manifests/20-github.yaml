@@ -7,12 +7,21 @@ components:
     dir: components/github-repository
     branch: master
     fromEnv: GITHUB_TOKEN
+- name: buildbox
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/buildbox
+    dir: components/buildbox
+    branch: master
+    fromEnv: GITHUB_TOKEN    
 
 lifecycle:
   order:
     - github-repository
+    - buildbox
   mandatory:
     - github-repository
+    - buildbox
 
 parameters:
 - name: component.git
