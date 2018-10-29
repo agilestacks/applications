@@ -17,11 +17,11 @@ hub := hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credentia
 kubectl := kubectl --context="$(DOMAIN_NAME)" --namespace="$(NAMESPACE)"
 
 deploy:
-	$(kubectl) create -f jupyterhub-notebook.yaml
+	$(kubectl) create -f templates/jupyterhub-notebook.yaml
 .PHONY: deploy
 
 undeploy:
-	$(kubectl) delete -f jupyterhub-notebook.yaml
+	$(kubectl) delete -f templates/jupyterhub-notebook.yaml
 .PHONY: undeploy
 
 $(APP_ELABORATE_FILE):
@@ -41,4 +41,4 @@ clean:
 	rm -rf $(APP_ELABORATE_FILE) $(APP_STATE_FILE_LOCAL)
 	rm -rf ../.git
 	rm -rf components/ecr/.terraform
-	rm jupyterhub-notebook.yaml
+	rm templates/jupyterhub-notebook.yaml
