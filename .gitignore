@@ -1,9 +1,7 @@
 app-templates/react-frontend/package.json
 app-templates/react-frontend/components/s3-website/.terraform
-hub.state
-hub.elaborate
-hub.yaml.state
 *.elaborate
+*.state
 *.tfstate
 components/s3-website/.terraform
 phase0/.dist
