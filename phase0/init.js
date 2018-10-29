@@ -10,7 +10,8 @@ const {
 const {
     uniq
 } = require('lodash');
-var shelljs = require('shelljs');
+const shelljs = require('shelljs');
+// const shell = require('child_process').sync;
 
 const fs = require('fs');
 const glob = require("glob").sync;
@@ -162,6 +163,10 @@ function copyManifest(manifest) {
     });
 }
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
 async function callShellHooks(parameters) {
     const formattedParams = parameters
         .filter(parameter => parameter.value !== undefined)
@@ -169,12 +174,11 @@ async function callShellHooks(parameters) {
         .map(parameter => `${parameter.name}='${parameter.value}'`)
         .join(' ');
     logger.info(`Formatted params: ${formattedParams}`);   
-    shelljs.cd(hubDir);
+    shelljs.cd([hubDir, 'init.d'].join('/'));
     const scripts = glob('*.sh');
     logger.info(`Calling shell hooks: ${scripts}`); 
     await forEach(scripts, async (script) => {
-        shelljs.chmod('u+x', script);
-        shelljs.exec(`./${script} ${formattedParams} `);
+        shelljs.exec(`sh -c "./${script} ${formattedParams}"`);
     })
 }
 
