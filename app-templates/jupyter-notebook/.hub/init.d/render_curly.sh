@@ -5,7 +5,6 @@ PARAMETERS="$@"
 
 function render_curly() {
   for var in $PARAMETERS; do
-    echo $var
     key=$(echo "${var/=/ }" | awk '{print $1}')
     val=$(echo "${var/=/ }" | awk '{print $2}')
     local result="${result} -e \"s|\\\${$key}|${val}|\" "
