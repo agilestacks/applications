@@ -45,8 +45,8 @@ parameters:
     value: ${component.docker.image}
     kind: link
 
-- name: dns.domain
-  env: DOMAIN_NAME
+  - name: dns.domain
+    env: DOMAIN_NAME
 
   - name: component.argo
   parameters:
