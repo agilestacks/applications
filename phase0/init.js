@@ -173,7 +173,7 @@ async function callShellHooks(parameters) {
         .filter(parameter => !parameter.value.includes('$'))
         .map(parameter => `${parameter.name}='${parameter.value}'`)
         .join(' ');
-    logger.info(`Parameters eligable for substitution: ${formattedParams}`);   
+    logger.info(`Parameters eligible for substitution: ${formattedParams}`);   
     shelljs.cd([hubDir, 'init.d'].join('/'));
     const scripts = glob('*.sh');
     logger.info(`Calling shell hooks: ${scripts}`); 
