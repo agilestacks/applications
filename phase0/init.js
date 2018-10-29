@@ -170,10 +170,10 @@ function sleep(ms) {
 async function callShellHooks(parameters) {
     const formattedParams = parameters
         .filter(parameter => parameter.value !== undefined)
-        .filter(parameter => parameter.name == 'application.image')
+        .filter(parameter => !parameter.value.includes('$'))
         .map(parameter => `${parameter.name}='${parameter.value}'`)
         .join(' ');
-    logger.info(`Formatted params: ${formattedParams}`);   
+    logger.info(`Parameters eligable for substitution: ${formattedParams}`);   
     shelljs.cd([hubDir, 'init.d'].join('/'));
     const scripts = glob('*.sh');
     logger.info(`Calling shell hooks: ${scripts}`); 
