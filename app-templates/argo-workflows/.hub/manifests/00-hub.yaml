@@ -66,7 +66,7 @@ parameters:
 
 outputs:
 - name: application.webhook.url
-  value: ${application.name}.${component.ingress.fqdn}/webhooks/${application.webhook.name}
+  value: ${component.ingress.protocol}://${application.name}.${component.ingress.fqdn}/webhooks/${application.webhook.name}
 - name: application.git.remote
 - name: application.webhook.method
 
