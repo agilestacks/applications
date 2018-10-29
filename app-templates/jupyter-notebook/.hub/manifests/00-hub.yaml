@@ -28,4 +28,4 @@ outputs:
     value: '${component.jupyterhub.url}'
 templates:
   files:
-    - jupyterhub-notebook.yaml.template
+    - templates/jupyterhub-notebook.yaml.template

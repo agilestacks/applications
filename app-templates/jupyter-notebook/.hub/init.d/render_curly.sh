@@ -13,4 +13,4 @@ function render_curly() {
 }
 export render_curly
 
-render_curly "${WORKSPACE}/.hub/templates/Dockerfile" > ${WORKSPACE}/Dockerfile
+render_curly "${WORKSPACE}/.hub/templates/Dockerfile.template" > ${WORKSPACE}/Dockerfile
