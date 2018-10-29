@@ -1,6 +1,6 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 
-PARAMETERS=( "$@" )
+PARAMETERS="$@"
 
 function render_curly() {
   for var in $PARAMETERS; do
@@ -11,4 +11,4 @@ function render_curly() {
 }
 export -f render_curly
 
-render_curly "settings.gradle" > rendered.gradle
+render_curly "settings.gradle"
