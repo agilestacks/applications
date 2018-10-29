@@ -7,7 +7,7 @@ components:
     dir: components/minio-bucket
     branch: master
     fromEnv: GITHUB_TOKEN
-- name: source-target
+- name: target-bucket
   source:
     repoUrl: https://github.com/agilestacks/applications.git
     repoPath: applications/components/minio-bucket
@@ -20,18 +20,20 @@ lifecycle:
   verbs: [deploy, undeploy]
   order:
     - source-bucket
-    - source-target
+    - target-bucket
   mandatory:
     - source-bucket
-    - source-target
+    - target-bucket
 
 parameters:
 - name: cloud.region
 - name: component.nats.fqdn
+
 - name: terraform.bucket
   parameters:
   - name: name
   - name: region
+
 - name: component.ingress
   parameters:
   - name: protocol
@@ -48,11 +50,16 @@ parameters:
   parameters:
   - name: name
     value: ${application.name}-input
+  - name: event.prefix
+    value: ""
+
 - name: component.bucket
   component: target-bucket
   parameters:
   - name: name
     value: ${application.name}-output
+  - name: event.prefix
+    value: ""
 
 - name: application.source.bucket
   kind: link
@@ -72,7 +79,7 @@ parameters:
     value: ${component.bucket.secret.secretKeyRef}
     env: DEST_BUCKET_SECRETKEY
   - name: prefix
-    value: ""
+    value: ${source-bucket:component.bucket.event.prefix}
     empty: allow
     kind: user
   - name: suffix
@@ -98,7 +105,7 @@ parameters:
     value: ${component.bucket.secret.secretKeyRef}
     env: SRC_BUCKET_SECRETKEY
   - name: prefix
-    value: ""
+    value: ${source-bucket:component.bucket.event.prefix}
     empty: allow
     kind: user
   - name: suffix

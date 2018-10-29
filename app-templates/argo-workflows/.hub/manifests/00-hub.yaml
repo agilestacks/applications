@@ -44,20 +44,24 @@ parameters:
   - name: docker.image
     value: ${component.docker.image}
     kind: link
+
 - name: dns.domain
   env: DOMAIN_NAME
-- name: component.argo
+
+  - name: component.argo
   parameters:
   - name: namespace
   - name: ingress
   - name: events.webhook.service.name
   - name: events.webhook.service.port
-- name: component.ingress
+
+  - name: component.ingress
   parameters:
   - name: protocol
   - name: urlPrefix
   - name: fqdn
-- name: component.buildbox
+
+  - name: component.buildbox
   parameters:
   - name: directory
     value: .
