@@ -168,13 +168,13 @@ async function callShellHooks(parameters) {
         .filter(parameter => parameter.name == 'application.image')
         .map(parameter => `${parameter.name}='${parameter.value}'`)
         .join(' ');
-    logger.info(formattedParams);   
+    logger.info(`Formatted params: ${formattedParams}`);   
     shelljs.cd(hubDir);
-
     const scripts = glob('*.sh');
     logger.info(`Calling shell hooks: ${scripts}`); 
     await forEach(scripts, async (script) => {
-        shelljs.exec(`sh ${script} ${formattedParams} `);
+        shelljs.chmod('u+x', script);
+        shelljs.exec(`./${script} ${formattedParams} `);
     })
 }
 
