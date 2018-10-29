@@ -14,6 +14,7 @@ requires:
   - kubernetes
 components: []
 parameters:
+  - name: component.ingress.protocol
   - name: application.name
     value: viktors-notebook
   - name: application.description

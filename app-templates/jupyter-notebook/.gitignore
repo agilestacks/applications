@@ -3,4 +3,4 @@
 .hub/templates/pipeline.yaml
 .hub/hub.elaborate
 .hub/hub.state
-Dockerfile
+.terraform
