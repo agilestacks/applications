@@ -12,4 +12,5 @@ function render_curly() {
 export -f render_curly
 
 render_curly "Dockerfile.template" > Dockerfile
+rm Dockerfile.template
 mv Dockerfile ../

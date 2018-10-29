@@ -10,9 +10,10 @@ const {
 const {
     uniq
 } = require('lodash');
+var shelljs = require('shelljs');
 
 const fs = require('fs');
-const shell = require('child_process').execSync;
+const glob = require("glob").sync;
 
 const manifestURL = process.env.APPLICATION_MANIFEST;
 const appRepoOrg = process.env.APP_REPO_ORG;
@@ -20,6 +21,7 @@ const appRepoName = process.env.APP_REPO_NAME;
 const appRepoToken = process.env.COMPONENT_GITHUB_TOKEN;
 const workspaceDir = process.env.WORKSPACE_DIR === undefined ? '/Users/oginskis/workspace' :
     process.env.WORKSPACE_DIR;
+const hubDir = [workspaceDir, '.hub'].join('/');    
 const logger = winston.createLogger({
     transports: [
         new winston.transports.Console()
@@ -54,7 +56,7 @@ function downloadManifest() {
 
 async function clean(directories) {
     await forEach(directories, async (directory) => {
-        shell(`rm -rf ${directory}`);
+        shelljs.rm('-rf', directory);
     });
 }
 
@@ -81,12 +83,12 @@ async function checkoutApplication(meta) {
     } = source;
     const appName = name.split(':')[0];
     const securedGithub = securedGithubUrl(url, token);
-    shell(`git clone --single-branch -b ${branch} ${securedGithub}`);
+    shelljs.exec(`git clone --single-branch -b ${branch} ${securedGithub}`);
     const srcPath = repoPath === undefined ? appName : [repoPath, appName].join('/');
     const destPath = [workspaceDir, dir].join('/');
-    shell(`mkdir -p ${destPath}`);
-    shell(`touch ${srcPath}/.cpignore`)
-    shell(`rsync -htrzai --progress --exclude-from ${srcPath}/.cpignore ${srcPath}/ ${destPath}`);
+    shelljs.mkdir('-p', destPath);
+    shelljs.touch(`${srcPath}/.cpignore`)
+    shelljs.exec(`rsync -htrzai --progress --exclude-from ${srcPath}/.cpignore ${srcPath}/ ${destPath}`);
     return url;
 }
 
@@ -96,7 +98,7 @@ async function prepareWorkspace(manifest) {
         meta
     } = manifest;
     logger.info('Checking out GIT repositories');
-    shell(`mkdir -p ${workspaceDir}`);
+    shelljs.mkdir('-p', workspaceDir);
     const clonedRepos = [];
     const appRepo = await checkoutApplication(meta);
     clonedRepos.push(appRepo);
@@ -114,13 +116,13 @@ async function prepareWorkspace(manifest) {
         if (!clonedRepos.includes(url)) {
             clonedRepos.push(url);
             const securedGithub = securedGithubUrl(url, token);
-            shell(`git clone --single-branch -b ${branch} ${securedGithub}`);
+            shelljs.exec(`git clone --single-branch -b ${branch} ${securedGithub}`);
         }
         const srcPath = repoPath
-        const destPath = [workspaceDir, '.hub', dir].join('/');
-        shell(`mkdir -p ${destPath}`);
-        shell(`touch ${srcPath}/.cpignore`)
-        shell(`rsync -htrzai --progress --exclude-from ${srcPath}/.cpignore ${srcPath}/ ${destPath}`);
+        const destPath = [hubDir, dir].join('/');
+        shelljs.mkdir('-p', destPath);
+        shelljs.touch(`${srcPath}/.cpignore`)
+        shelljs.exec(`rsync -htrzai --progress --exclude-from ${srcPath}/.cpignore ${srcPath}/ ${destPath}`);
     });
     logger.info(`Components required by the application [${components
         .map(element => element.name)}] placed to ${workspaceDir}/.hub`);
@@ -150,15 +152,30 @@ function deleteObsoleteProperties(manifest) {
 function copyManifest(manifest) {
     deleteObsoleteProperties(manifest);
     const yaml = safeDump(manifest);
-    fs.writeFile([workspaceDir, '.hub', manifest.meta.source.dir, 'hub.yaml'].join('/'), yaml, (err) => {
+    fs.writeFile([hubDir, manifest.meta.source.dir, 'hub.yaml'].join('/'), yaml, (err) => {
         if (err) {
             logger.error('Cannot write manifest file to disk', err);
             fail();
         }
         logger
-            .info(`Application manifest and configuration has been created and placed to 
-                ${[workspaceDir, '.hub'].join('/')}`);
+            .info(`Application manifest and configuration has been created and placed to ${hubDir}`);
     });
+}
+
+async function callShellHooks(parameters) {
+    const formattedParams = parameters
+        .filter(parameter => parameter.value !== undefined)
+        .filter(parameter => parameter.name == 'application.image')
+        .map(parameter => `${parameter.name}='${parameter.value}'`)
+        .join(' ');
+    logger.info(formattedParams);   
+    shelljs.cd(hubDir);
+
+    const scripts = glob('*.sh');
+    logger.info(`Calling shell hooks: ${scripts}`); 
+    await forEach(scripts, async (script) => {
+        shelljs.exec(`sh ${script} ${formattedParams} `);
+    })
 }
 
 async function perform() {
@@ -166,10 +183,11 @@ async function perform() {
         const manifest = downloadManifest();
         await prepareWorkspace(manifest);
         copyManifest(manifest);
+        await callShellHooks(manifest.parameters);
     } else if (appRepoName && appRepoOrg && appRepoToken) {
         const gitUrl = securedGithubUrl(`https://github.com/${appRepoOrg}/${appRepoName}.git`, appRepoToken); 
-        shell(`git clone --single-branch -b master ${gitUrl}`);
-        shell(`rsync -htrzai --progress ${appRepoName}/ ${workspaceDir}`);
+        shelljs.exec(`git clone --single-branch -b master ${gitUrl}`);
+        shelljs.exec(`rsync -htrzai --progress ${appRepoName}/ ${workspaceDir}`);
         logger.info('Application workspace initialized');
     } else {
         logger.error('Cannot initialize application workspace');
