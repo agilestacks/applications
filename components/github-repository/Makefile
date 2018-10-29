@@ -3,14 +3,14 @@
 export HUB_CONFIG := $(realpath .)/.hubconfig
 export HUB_PROTOCOL ?= https
 
-ORGANIZATION ?= asibot
-REPOSITORY ?= mysuperapp
+ORG ?= asibot
+REPO ?= mysuperapp
 PRIVATE ?= true
 DESCRIPTION ?=
 HOMEPAGE ?=
 API_SERVER ?= api.github.com
 SRC_DIR ?= $(realpath .)
-REMOTE_NAME ?= $(ORGANIZATION)-$(REPOSITORY)
+REMOTE_NAME ?= $(ORG)-$(REPO)
 
 USER_NAME ?= SuperHub
 USER_EMAIL ?= support@agilestacks.com
