@@ -25,7 +25,7 @@ deploy:
 .PHONY: deploy
 
 undeploy:
-	$(kubectl) delete $(NAME)
+	$(kubectl) delete jupyterhubnotebook $(NAME)
 .PHONY: undeploy
 
 $(APP_ELABORATE_FILE):
