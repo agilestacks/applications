@@ -23,9 +23,9 @@ parameters:
   - name: application.state.file
     fromEnv: APP_STATE_FILE
   - name: application.image
-  - name: component.jupyterhub.url
-  - name: application.notebook.token
-    fromTfVar: token           
+  - name: component.jupyterhub.url          
 outputs:
+  - name: application.notebook.token
+    fromTfVar: token
   - name: application.url 
     value: '${component.jupyterhub.url}/user/${application.name}/?token=${application.notebook.token}'
