@@ -1,0 +1,20 @@
+
+J u p y t e r   N o t e b o o k   A p p l i c a t i o n   T e m p l a t e
+
+The Jupyter Notebook is an open-source web application that allows you 
+to create and share documents that contain live code, equations, 
+visualizations and narrative text. Uses include: data cleaning and 
+transformation, numerical simulation, statistical modeling, data 
+visualization, machine learning, and much more.
+
+#########################################################################
+
+AgileStacks JupyterHub Notebook application template bootstraps an user 
+workspace within JupyterHub using the API.
+Additionally it creates a Git repository where it places sample 
+Jupyter notebooks and a Dockerfile that can be extended and rebuilt
+with additional Pythom libraries for machine learning.
+Users can easily navigate to their Git repo and Jupyter workspace 
+using links provided in the applications section on the Controlplane.
+
+#########################################################################

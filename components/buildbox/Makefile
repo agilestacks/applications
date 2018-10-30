@@ -53,7 +53,7 @@ push: login-$(KIND)
 	$(docker) push $(DOCKER_IMAGE):$(DOCKER_TAG)
 .PHONY: push
 
-deploy: clone build push output
+deploy: clone build push output notes
 
 undeploy:
 	echo "Done"
@@ -64,3 +64,7 @@ output:
 	@ printf image = $(DOCKER_IMAGE):$(DOCKER_TAG) \n
 	@ printf tag = $(DOCKER_TAG) \n\n
 .PHONY: output
+
+notes:
+	@cat notes.txt
+.PHONY: notes	

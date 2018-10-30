@@ -1,0 +1,18 @@
+
+B u i l d b o x   A p p l i c a t i o n   C o m p o n e n t
+
+Docker is a computer program that performs operating-system-level 
+virtualization, also known as "containerization". It was first 
+released in 2013 and is developed by Docker, Inc. Docker is used to 
+run software packages called "containers".
+
+#########################################################################
+
+Buildbox application component builds a Docker image from the Dockerfile 
+found in the application workspace and pushes the image to the Docker
+registry. Currently only ECR (Elastic Container Registry) is supported.
+Support for other registries will be added soon.
+The component is used by all application templates that has to build a
+custom Docker image. 
+
+#########################################################################

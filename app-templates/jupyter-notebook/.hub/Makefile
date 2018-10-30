@@ -27,11 +27,8 @@ deploy:
 		-s $(APP_STATE) \
 		-a 'application.token=$(TOKEN),application.name.suffix=$(SUFFIX)'
 	$(kubectl) apply -f templates/jupyterhub-notebook.yaml
-	@echo
-	@echo Outputs:
-	@echo token = $(TOKEN)
-	@echo suffix = $(SUFFIX)
-	@echo
+	$(MAKE) output 
+	$(MAKE) notes 
 .PHONY: deploy
 
 undeploy:
@@ -56,3 +53,15 @@ clean:
 	rm -rf ../.git
 	rm -rf components/ecr/.terraform
 	rm templates/jupyterhub-notebook.yaml
+
+output:
+	@echo
+	@echo Outputs:
+	@echo token = $(TOKEN)
+	@echo suffix = $(SUFFIX)
+	@echo
+.PHONY: output
+
+notes:
+	@cat notes.txt
+.PHONY: notes	

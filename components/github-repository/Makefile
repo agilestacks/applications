@@ -50,7 +50,7 @@ check-github-api:
 	$(if $(or $(org),$(user)),$(info "Connected"),$(error "Error connecting to $(API_SERVER)"))
 PHONY: check-github-api
 
-deploy: create push output
+deploy: create push output notes
 
 init:
 	$(git) init
@@ -103,3 +103,8 @@ output: .$(ORG)$(REPO).json
 	@ printf ssh_url = $(ssh_url) \n
 	@ printf private = $(private) \n\n
 .PHONY: output
+
+notes:
+	@cat notes.txt
+.PHONY: notes
+	
