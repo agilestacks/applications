@@ -6,6 +6,8 @@ DOCKERFILE ?= Dockerfile
 AWS_DEFAULT_REGION ?= us-east-1
 KIND ?= ecr
 
+git ?= git -C $(SRC_DIR)
+
 # we must cover case if variable has empty value
 ifeq ($(DOCKER_TAG),)
 	DOCKER_TAG := $(shell $(git) rev-parse --short HEAD)
@@ -15,8 +17,6 @@ aws ?= aws --region=$(AWS_DEFAULT_REGION)
 # ifneq ($(GITHUB_TOKEN),)
 # 	$(eval REMOTE=$(subst ://,://x-oauth-basic:$(GITHUB_TOKEN)@,$(REMOTE)))
 # endif
-
-git ?= git -C $(SRC_DIR)
 docker ?= docker
 
 $(SRC_DIR):
