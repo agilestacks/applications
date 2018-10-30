@@ -25,7 +25,7 @@ parameters:
   - name: application.image
   - name: component.jupyterhub.url
   - name: application.token
-    component: jupyter-notebook            
+    fromTfVar: token           
 outputs:
   - name: application.url 
     value: '${component.jupyterhub.url}/user/${application.name}/?token=${application.token}'
