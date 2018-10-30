@@ -6,6 +6,11 @@ DOCKERFILE ?= Dockerfile
 AWS_DEFAULT_REGION ?= us-east-1
 KIND ?= ecr
 
+# we must cover case if variable has empty value
+ifeq $((DOCKER_TAG),)
+	DOCKER_TAG := $(shell $(git) rev-parse --short HEAD)
+endif
+
 aws ?= aws --region=$(AWS_DEFAULT_REGION)
 # ifneq ($(GITHUB_TOKEN),)
 # 	$(eval REMOTE=$(subst ://,://x-oauth-basic:$(GITHUB_TOKEN)@,$(REMOTE)))
@@ -38,14 +43,14 @@ build:
 		--force-rm \
 		--pull \
 		--file $(SRC_DIR)/$(DOCKERFILE) \
-		--tag $(IMAGE):latest \
-		--tag $(IMAGE):$(shell $(git) rev-parse --short HEAD) \
+		--tag $(DOCKER_IMAGE):latest \
+		--tag $(DOCKER_IMAGE):$(DOCKER_TAG) \
 		$(SRC_DIR)
 .PHONY: build
 
 push: login-$(KIND)
-	$(docker) push $(IMAGE):latest
-	$(docker) push $(IMAGE):$(shell $(git) rev-parse --short HEAD)
+	$(docker) push $(DOCKER_IMAGE):latest
+	$(docker) push $(DOCKER_IMAGE):$(DOCKER_TAG)
 .PHONY: push
 
 deploy: clone build push output
@@ -57,8 +62,8 @@ undeploy:
 output:
 	@ echo
 	@ echo Outputs:
-	@ echo image = $(IMAGE):$(shell $(git) rev-parse --short HEAD)
-	@ echo tag = $(shell $(git) rev-parse --short HEAD)
+	@ echo image = $(DOCKER_IMAGE):$(DOCKER_TAG)
+	@ echo tag = $(DOCKER_TAG)
 	@ echo
 .PHONY: output
 .ONESHELL: output

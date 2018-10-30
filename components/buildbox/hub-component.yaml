@@ -28,7 +28,11 @@ parameters:
     value: ecr
     env: KIND
   - name: image
-    env: IMAGE
+    env: DOCKER_IMAGE
+  - name: tag
+    value:
+    empty: allow
+    env: DOCKER_TAG
 - name: cloud.region
   kind: user
   env: AWS_DEFAULT_REGION

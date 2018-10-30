@@ -12,12 +12,20 @@ API_SERVER ?= api.github.com
 SRC_DIR ?= $(realpath .)
 REMOTE_NAME ?= $(ORG)-$(REPO)
 
-USER_NAME ?= SuperHub
-USER_EMAIL ?= support@agilestacks.com
+# We must cover case with empty value in variable
+ifeq ($(USER_NAME),)
+	USER_NAME := SuperHub
+endif
+ifeq ($(USER_NAME),)
+	USER_EMAIL := support@agilestacks.com
+endif
 
 export GITHUB_TOKEN ?=
-
-curl := curl -fs -H "Authorization: token $(GITHUB_TOKEN)"
+ifeq ($(GITHUB_TOKEN),)
+	curl := curl -fs
+else
+	curl := curl -fs -H 'Authorization: token $(GITHUB_TOKEN)'
+endif
 jq := jq -cM
 git := ghub -C $(SRC_DIR)
 
@@ -67,7 +75,8 @@ push:
 ifneq ($(GITHUB_TOKEN),)
 	$(eval REMOTE=$(subst ://,://x-oauth-basic:$(GITHUB_TOKEN)@,$(REMOTE)))
 endif
-	@ $(git) remote add $(REMOTE_NAME) "$(REMOTE)" || $(git) remote set-url $(REMOTE_NAME) "$(REMOTE)"
+	- $(git) remote add $(REMOTE_NAME) "$(REMOTE)"
+	$(git) remote set-url $(REMOTE_NAME) "$(REMOTE)"
 	$(git) fetch --tags --progress $(REMOTE_NAME)
 	$(git) add -A
 	$(git) config user.name "$(USER_NAME)"
@@ -77,13 +86,15 @@ endif
 	$(git) push $(REMOTE_NAME) master
 .PHONY: clone
 
-output:
-	$(eval outputs := $(shell $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO)))
-	$(eval clone_url := $(shell echo $(outputs) | $(jq) '.clone_url'))
-	$(eval git_url := $(shell echo $(outputs) | $(jq) '.git_url'))
-	$(eval html_url := $(shell echo $(outputs) | $(jq) '.html_url'))
-	$(eval ssh_url := $(shell echo $(outputs) | $(jq) '.ssh_url'))
-	$(eval private := $(shell echo $(outputs) | $(jq) '.private'))
+.$(ORG)$(REPO).json:
+	@ $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) > $@
+
+output: .$(ORG)$(REPO).json
+	$(eval clone_url := $(shell $(jq) '.clone_url' < $<))
+	$(eval git_url := $(shell $(jq) '.git_url' < $<))
+	$(eval html_url := $(shell $(jq) '.html_url' < $<))
+	$(eval ssh_url := $(shell $(jq) '.ssh_url' < $<))
+	$(eval private := $(shell $(jq) '.private' < $<))
 
 	@ echo
 	@ echo Outputs:
@@ -91,6 +102,6 @@ output:
 	@ echo git_url = $(git_url)
 	@ echo html_url = $(html_url)
 	@ echo ssh_url = $(ssh_url)
-	@ echo private = $(sprivate)
+	@ echo private = $(private)
 	@ echo
 .PHONY: output
