@@ -88,3 +88,4 @@ output:
 	@ echo
 .PHONY: output
 .ONESHELL: output
+.NOTPARALLEL: output
