@@ -64,5 +64,3 @@ output:
 	@ printf image = $(DOCKER_IMAGE):$(DOCKER_TAG) \n
 	@ printf tag = $(DOCKER_TAG) \n\n
 .PHONY: output
-.ONESHELL: output
-.NOTPARALLEL: output
