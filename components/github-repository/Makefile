@@ -78,14 +78,18 @@ endif
 .PHONY: clone
 
 output:
+	$(eval clone_url := $(shell echo $(GITHUB_OUTPUTS) | $(jq) '.clone_url'))
+	$(eval git_url := $(shell echo $(GITHUB_OUTPUTS) | $(jq) '.git_url'))
+	$(eval html_url := $(shell echo $(GITHUB_OUTPUTS) | $(jq) '.html_url'))
+	$(eval ssh_url := $(shell echo $(GITHUB_OUTPUTS) | $(jq) '.ssh_url'))
+	$(eval private := $(shell echo $(GITHUB_OUTPUTS) | $(jq) '.private'))
+
 	@ echo
 	@ echo Outputs:
-	@ echo clone_url = $(shell echo $(GITHUB_OUTPUTS) | $(jq) '.clone_url')
-	@ echo git_url = $(shell echo $(GITHUB_OUTPUTS) | $(jq) '.git_url')
-	@ echo html_url = $(shell echo $(GITHUB_OUTPUTS) | $(jq) '.html_url')
-	@ echo ssh_url = $(shell echo $(GITHUB_OUTPUTS) | $(jq) '.ssh_url')
-	@ echo private = $(shell echo $(GITHUB_OUTPUTS) | $(jq) '.private')
+	@ echo clone_url = $(clone_url)
+	@ echo git_url = $(git_url)
+	@ echo html_url = $(html_url)
+	@ echo ssh_url = $(ssh_url)
+	@ echo private = $(sprivate)
 	@ echo
 .PHONY: output
-.ONESHELL: output
-.NOTPARALLEL: output
