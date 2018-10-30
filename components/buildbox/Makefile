@@ -57,8 +57,8 @@ undeploy:
 output:
 	@echo
 	@echo Outputs:
-	@echo image = $(DOCKER_IMAGE):$(DOCKER_TAG)
-	@echo tag = $(DOCKER_TAG)
+	@echo image = $(DOCKER_IMAGE):$(shell $(git) rev-parse --short HEAD)
+	@echo tag = $(shell $(git) rev-parse --short HEAD)
 	@echo
 .PHONY: output
 

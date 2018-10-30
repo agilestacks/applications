@@ -17,16 +17,15 @@ NAME ?=
 hub := hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credentials=false
 kubectl := kubectl --context="$(DOMAIN_NAME)" --namespace="$(NAMESPACE)"
 
-TOKEN := $(shell openssl rand -hex 16)
-SUFFIX := $(shell openssl rand -hex 3)
+TOKEN ?= $(shell openssl rand -hex 16)
 
 deploy:
 	$(hub) render templates/jupyterhub-notebook.yaml.template \
 	 	-c jupyter-notebook  \
 		-m $(APP_ELABORATE_FILE) \
 		-s $(APP_STATE) \
-		-a 'application.token=$(TOKEN),application.name.suffix=$(SUFFIX)'
-	$(kubectl) apply -f templates/jupyterhub-notebook.yaml
+		-a 'application.token=$(TOKEN)'
+	$(kubectl) create -f templates/jupyterhub-notebook.yaml
 	$(MAKE) output 
 	$(MAKE) notes 
 .PHONY: deploy
@@ -58,7 +57,6 @@ output:
 	@echo
 	@echo Outputs:
 	@echo token = $(TOKEN)
-	@echo suffix = $(SUFFIX)
 	@echo
 .PHONY: output
 
