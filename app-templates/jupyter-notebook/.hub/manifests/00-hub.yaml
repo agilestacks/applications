@@ -27,5 +27,7 @@ parameters:
 outputs:
   - name: application.notebook.token
     fromTfVar: token
+  - name: application.name.suffix
+    fromTfVar: suffix
   - name: application.url 
-    value: '${component.jupyterhub.url}/user/${application.name}/?token=${application.notebook.token}'
+    value: '${component.jupyterhub.url}/user/${application.name}-${application.name.suffix}/?token=${application.notebook.token}'

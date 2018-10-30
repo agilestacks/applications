@@ -18,12 +18,20 @@ hub := hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credentia
 kubectl := kubectl --context="$(DOMAIN_NAME)" --namespace="$(NAMESPACE)"
 
 TOKEN := $(shell openssl rand -hex 16)
+SUFFIX := $(shell openssl rand -hex 3)
 
 deploy:
-	$(hub) render templates/jupyterhub-notebook.yaml.template -c jupyter-notebook  \
-		-m $(APP_ELABORATE_FILE) -s $(APP_STATE) -a 'application.token=$(TOKEN)'
+	$(hub) render templates/jupyterhub-notebook.yaml.template \
+	 	-c jupyter-notebook  \
+		-m $(APP_ELABORATE_FILE) \
+		-s $(APP_STATE) \
+		-a 'application.token=$(TOKEN),application.name.suffix=$(SUFFIX)'
 	$(kubectl) apply -f templates/jupyterhub-notebook.yaml
-	$(MAKE) output
+	@echo
+	@echo Outputs:
+	@echo token = $(TOKEN)
+	@echo suffix = $(SUFFIX)
+	@echo
 .PHONY: deploy
 
 undeploy:
@@ -42,13 +50,6 @@ uninstall: $(APP_ELABORATE_FILE)
 	$(hub) kubeconfig $(PLATFORM_STATE_FILE)
 	$(hub) undeploy $(APP_ELABORATE_FILE) -s $(APP_STATE)
 .PHONY: uninstall
-
-output:
-	@echo
-	@echo Outputs:
-	@echo token = $(TOKEN)
-	@echo
-.PHONY: output	
 
 clean:
 	rm -rf $(APP_ELABORATE_FILE) $(APP_STATE_FILE_LOCAL)

@@ -1,7 +1,7 @@
 apiVersion: agilestacks.com/v1alpha1
 kind: JupyterHubNotebook
 metadata:
-  name: ${application.name}
+  name: ${application.name}-${application.name.suffix}
 spec:
   image: ${component.docker.image}
   token: ${application.token}
