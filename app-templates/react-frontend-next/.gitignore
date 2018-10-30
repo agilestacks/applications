@@ -2,5 +2,7 @@
 node_modules/
 dist/
 *-junit\.xml
-*.state
-*.elaborate
+**.state
+**.elaborate
+**.template
+**/.terraform
