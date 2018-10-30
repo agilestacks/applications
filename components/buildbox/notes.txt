@@ -6,6 +6,16 @@ virtualization, also known as "containerization". It was first
 released in 2013 and is developed by Docker, Inc. Docker is used to 
 run software packages called "containers".
 
+Docker unlocks the potential of your organization by giving 
+developers and IT the freedom to build, manage and secure business-critical 
+applications without the fear of technology or infrastructure lock-in.
+
+By combining its industry-leading container engine technology, an 
+enterprise-grade container platform and world-class services, Docker 
+enables you to bring traditional and cloud native applications built on 
+Windows Server, Linux and mainframe into an automated and secure supply
+chain, advancing dev to ops collaboration and reducing time to value.
+
 #########################################################################
 
 Buildbox application component builds a Docker image from the Dockerfile 
