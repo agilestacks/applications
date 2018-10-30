@@ -18,16 +18,16 @@ hub := hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credentia
 kubectl := kubectl --context="$(DOMAIN_NAME)" --namespace="$(NAMESPACE)"
 $(eval TOKEN=$(shell openssl rand -hex 16))
 
-deploy:
+create:
 	$(hub) render templates/jupyterhub-notebook.yaml.template \
 	 	-c jupyter-notebook  \
 		-m $(APP_ELABORATE_FILE) \
 		-s $(APP_STATE) \
 		-a 'application.token=$(TOKEN)'
-	$(kubectl) create -f templates/jupyterhub-notebook.yaml
-	$(MAKE) output 
-	$(MAKE) notes 
-.PHONY: deploy
+	$(kubectl) create -f templates/jupyterhub-notebook.yaml	
+.PHONY: create	
+
+deploy: create output notes
 
 undeploy:
 	$(kubectl) delete jupyterhubnotebook $(NAME)
