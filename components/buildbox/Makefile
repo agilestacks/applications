@@ -60,11 +60,9 @@ undeploy:
 .PHONY: undeploy
 
 output:
-	@ echo
-	@ echo Outputs:
-	@ echo image = $(DOCKER_IMAGE):$(DOCKER_TAG)
-	@ echo tag = $(DOCKER_TAG)
-	@ echo
+	@ printf \nOutputs:\n
+	@ printf image = $(DOCKER_IMAGE):$(DOCKER_TAG) \n
+	@ printf tag = $(DOCKER_TAG) \n\n
 .PHONY: output
 .ONESHELL: output
 .NOTPARALLEL: output
