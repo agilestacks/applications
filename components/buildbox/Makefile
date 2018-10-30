@@ -38,14 +38,14 @@ build:
 		--force-rm \
 		--pull \
 		--file $(SRC_DIR)/$(DOCKERFILE) \
-		--tag $(IMAGE):latest \
-		--tag $(IMAGE):$(shell $(git) rev-parse --short HEAD) \
+		--tag $(DOCKER_IMAGE):latest \
+		--tag $(DOCKER_IMAGE):$(shell $(git) rev-parse --short HEAD) \
 		$(SRC_DIR)
 .PHONY: build
 
 push: login-$(KIND)
-	$(docker) push $(IMAGE):latest
-	$(docker) push $(IMAGE):$(shell $(git) rev-parse --short HEAD)
+	$(docker) push $(DOCKER_IMAGE):latest
+	$(docker) push $(DOCKER_IMAGE):$(shell $(git) rev-parse --short HEAD)
 .PHONY: push
 
 deploy: clone build push output notes
