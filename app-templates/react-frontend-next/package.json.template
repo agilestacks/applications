@@ -1,5 +1,5 @@
 {
-  "name": "${application.name}",
+  "name": "application-name",
   "version": "1.0.0",
   "description": "Basic boilerplate with React, ReactBootstrap, Babel and Webpack",
   "scripts": {

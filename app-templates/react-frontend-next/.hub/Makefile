@@ -29,7 +29,8 @@ $(APP_ELABORATE_FILE): hub.yaml user.yaml
 	$(hub) elaborate hub.yaml user.yaml -s $(PLATFORM_STATE_FILE) -e application.state=$(APP_ELABORATE_FILE) -o $@
 
 install: $(APP_ELABORATE_FILE)
-	$(hub) render '../package.json.template' -m $(APP_ELABORATE_FILE) -s $(APP_STATE) -c 'react-frontend-next'
+	# $(hub) render '../package.json.template' -m $(APP_ELABORATE_FILE) -s $(APP_STATE) -c 'react-frontend-next'
+	cp ../package.json.template ../package.json
 	$(hub) kubeconfig $(PLATFORM_STATE_FILE)
 	$(hub) deploy $(APP_ELABORATE_FILE) -s $(APP_STATE)
 .PHONY: install
@@ -42,4 +43,11 @@ uninstall: $(APP_ELABORATE_FILE)
 clean:
 	rm -rf $(APP_ELABORATE_FILE) $(APP_STATE_FILE_LOCAL)
 	rm -rf .git
+
+explain: $(APP_ELABORATE_FILE)
+	echo $(PLATFORM_STATE_REGION)
+	#$(hub) explain $(APP_ELABORATE_FILE) $(APP_STATE)
+	hub elaborate hub.yaml user.yaml -s $(APP_STATE)
+	$(hub) explain hub1.yaml.elaborate $(APP_STATE) --json
+.PHONY: describe
 

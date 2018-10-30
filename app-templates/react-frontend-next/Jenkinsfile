@@ -77,41 +77,53 @@ pipeline {
         }
       }
     }
-    stage('Lint') {
-      steps {
-        container('buildbox') {
-          script {
-            try {
-              sh script: 'npm run junit:lint'
-            } catch (err) {
-              currentBuild.result = 'UNSTABLE'
-              currentBuild.description = 'Found lint violations'
-            }
-          }
-        }
-      }
-    }
+    // stage('Lint') {
+    //   steps {
+    //     container('buildbox') {
+    //       script {
+    //         try {
+    //           sh script: 'npm run junit:lint'
+    //         } catch (err) {
+    //           currentBuild.result = 'UNSTABLE'
+    //           currentBuild.description = 'Found lint violations'
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
     stage('Deploy Application') {
       steps {
         container('toolbox') {
           script {
+            def bucket
+            def ingressPath
             dir ('.hub') {
-              final bucket = hub.explain().stackOutputs['application.bucket'] as String
+              hub.elaborate(manifest: 'hub.yaml user.yaml', state: params.APP_STATE_FILE)
+              final outputs = hub.explain(manifest: 'hub.yaml user.yaml', state: params.APP_STATE_FILE).stackOutputs
+              bucket = outputs['application.bucket'] as String
+              applicationPath = outputs['application.ingress.path'] as String
             }
+            sh script: "env | sort"
+            sh script: "ls -la"
+            sh script: "ls -la .hub"
             withAWS(role:params.AWS_TRUST_ROLE) {
-              sh script: "aws s3 sync --delete dist/ s3://${bucket}/${params.INGRESS_PATH}"
+              sh script: "aws s3 sync --delete dist/ s3://${bucket}/${applicationPath}"
             }
+            println params.APP_BUCKET
+            print bucket
+            println params.INGRESS_PATH
+            println applicationPath
           }
         }
       }
     }
   }
-  post {
-    always {
-      junit testResults: './tests-*.xml', allowEmptyResults: true
-    }
-    changed {
-      slackSend color: slack.buildColor, message: slack.buildReport
-    }
-  }
+  // post {
+  //   always {
+  //     junit testResults: './tests-*.xml', allowEmptyResults: true
+  //   }
+  //   changed {
+  //     slackSend color: slack.buildColor, message: slack.buildReport
+  //   }
+  // }
 }
