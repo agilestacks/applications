@@ -78,12 +78,13 @@ endif
 .PHONY: clone
 
 output:
-	- $(eval GITHUB_OUTPUTS='$(shell $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO))')
-
+	@ echo
 	@ echo Outputs:
 	@ echo clone_url = $(shell echo $(GITHUB_OUTPUTS) | $(jq) '.clone_url')
 	@ echo git_url = $(shell echo $(GITHUB_OUTPUTS) | $(jq) '.git_url')
 	@ echo html_url = $(shell echo $(GITHUB_OUTPUTS) | $(jq) '.html_url')
 	@ echo ssh_url = $(shell echo $(GITHUB_OUTPUTS) | $(jq) '.ssh_url')
 	@ echo private = $(shell echo $(GITHUB_OUTPUTS) | $(jq) '.private')
+	@ echo
 .PHONY: output
+.ONESHELL: output

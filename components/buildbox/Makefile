@@ -55,10 +55,11 @@ undeploy:
 .PHONY: undeploy
 
 output:
-	$(git) rev-parse --short HEAD
-	echo tag = $(shell $(git) rev-parse --short HEAD)
-
+	@ echo
 	@ echo Outputs:
 	@ echo image = $(IMAGE):$(shell $(git) rev-parse --short HEAD)
 	@ echo tag = $(shell $(git) rev-parse --short HEAD)
+	@ echo
 .PHONY: output
+.ONESHELL: output
+
