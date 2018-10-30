@@ -6,17 +6,12 @@ DOCKERFILE ?= Dockerfile
 AWS_DEFAULT_REGION ?= us-east-1
 KIND ?= ecr
 
-git ?= git -C $(SRC_DIR)
-
-# we must cover case if variable has empty value
-ifeq ($(DOCKER_TAG),)
-	DOCKER_TAG := $(shell $(git) rev-parse --short HEAD)
-endif
-
 aws ?= aws --region=$(AWS_DEFAULT_REGION)
 # ifneq ($(GITHUB_TOKEN),)
 # 	$(eval REMOTE=$(subst ://,://x-oauth-basic:$(GITHUB_TOKEN)@,$(REMOTE)))
 # endif
+
+git ?= git -C $(SRC_DIR)
 docker ?= docker
 
 $(SRC_DIR):
@@ -43,14 +38,14 @@ build:
 		--force-rm \
 		--pull \
 		--file $(SRC_DIR)/$(DOCKERFILE) \
-		--tag $(DOCKER_IMAGE):latest \
-		--tag $(DOCKER_IMAGE):$(DOCKER_TAG) \
+		--tag $(IMAGE):latest \
+		--tag $(IMAGE):$(shell $(git) rev-parse --short HEAD) \
 		$(SRC_DIR)
 .PHONY: build
 
 push: login-$(KIND)
-	$(docker) push $(DOCKER_IMAGE):latest
-	$(docker) push $(DOCKER_IMAGE):$(DOCKER_TAG)
+	$(docker) push $(IMAGE):latest
+	$(docker) push $(IMAGE):$(shell $(git) rev-parse --short HEAD)
 .PHONY: push
 
 deploy: clone build push output notes
@@ -69,4 +64,4 @@ output:
 
 notes:
 	@cat notes.txt
-.PHONY: notes	
+.PHONY: notes
