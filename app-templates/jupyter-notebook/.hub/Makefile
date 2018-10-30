@@ -16,8 +16,7 @@ NAME ?=
 
 hub := hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credentials=false
 kubectl := kubectl --context="$(DOMAIN_NAME)" --namespace="$(NAMESPACE)"
-
-TOKEN ?= $(shell openssl rand -hex 16)
+$(eval TOKEN=$(shell openssl rand -hex 16))
 
 deploy:
 	$(hub) render templates/jupyterhub-notebook.yaml.template \
