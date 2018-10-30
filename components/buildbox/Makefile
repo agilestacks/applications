@@ -7,7 +7,7 @@ AWS_DEFAULT_REGION ?= us-east-1
 KIND ?= ecr
 
 # we must cover case if variable has empty value
-ifeq $((DOCKER_TAG),)
+ifeq ($(DOCKER_TAG),)
 	DOCKER_TAG := $(shell $(git) rev-parse --short HEAD)
 endif
 
@@ -60,9 +60,11 @@ undeploy:
 .PHONY: undeploy
 
 output:
-	@ printf \nOutputs:\n
-	@ printf image = $(DOCKER_IMAGE):$(DOCKER_TAG) \n
-	@ printf tag = $(DOCKER_TAG) \n\n
+	@echo
+	@echo Outputs:
+	@echo image = $(DOCKER_IMAGE):$(DOCKER_TAG)
+	@echo tag = $(DOCKER_TAG)
+	@echo
 .PHONY: output
 
 notes:
