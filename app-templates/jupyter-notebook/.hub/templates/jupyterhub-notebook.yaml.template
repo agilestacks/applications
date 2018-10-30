@@ -4,3 +4,4 @@ metadata:
   name: ${application.name}
 spec:
   image: ${component.docker.image}
+  token: ${application.token}

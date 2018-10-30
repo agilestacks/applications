@@ -16,7 +16,10 @@ APP_ELABORATE_FILE 	  ?= hub.elaborate
 hub := hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credentials=false
 kubectl := kubectl --context="$(DOMAIN_NAME)" --namespace="$(NAMESPACE)"
 
+TOKEN := $(shell openssl rand -hex 16)
+
 deploy:
+	$(hub) render templates/jupyterhub-notebook.yaml.template -c jupyter-notebook -m $(APP_ELABORATE_FILE) -s $(APP_STATE) -a 'application.token=$(TOKEN)'
 	$(kubectl) create -f templates/jupyterhub-notebook.yaml
 .PHONY: deploy
 

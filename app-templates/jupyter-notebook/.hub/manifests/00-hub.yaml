@@ -26,6 +26,3 @@ parameters:
 outputs:   
   - name: application.url 
     value: '${component.jupyterhub.url}'
-templates:
-  files:
-    - templates/jupyterhub-notebook.yaml.template
