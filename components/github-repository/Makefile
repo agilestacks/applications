@@ -75,8 +75,8 @@ push:
 ifneq ($(GITHUB_TOKEN),)
 	$(eval REMOTE=$(subst ://,://x-oauth-basic:$(GITHUB_TOKEN)@,$(REMOTE)))
 endif
-	- $(git) remote add $(REMOTE_NAME) "$(REMOTE)"
-	$(git) remote set-url $(REMOTE_NAME) "$(REMOTE)"
+	- @ $(git) remote add $(REMOTE_NAME) "$(REMOTE)"
+	- @ $(git) remote set-url $(REMOTE_NAME) "$(REMOTE)"
 	$(git) fetch --tags --progress $(REMOTE_NAME)
 	$(git) add -A
 	$(git) config user.name "$(USER_NAME)"
@@ -95,6 +95,12 @@ output: .$(ORG)$(REPO).json
 	$(eval html_url := $(shell $(jq) '.html_url' < $<))
 	$(eval ssh_url := $(shell $(jq) '.ssh_url' < $<))
 	$(eval private := $(shell $(jq) '.private' < $<))
+
+	echo clone_url = $(clone_url)
+	echo git_url = $(git_url)
+	echo html_url = $(html_url)
+	echo ssh_url = $(ssh_url)
+	echo private = $(private)
 
 	@ echo
 	@ echo Outputs:
