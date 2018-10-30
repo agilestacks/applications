@@ -22,7 +22,8 @@ parameters:
   - name: application.state.file
     fromEnv: APP_STATE_FILE
   - name: application.image
-  - name: component.jupyterhub.url              
-outputs:   
+  - name: component.jupyterhub.url
+  - name: application.token            
+outputs:
   - name: application.url 
-    value: '${component.jupyterhub.url}'
+    value: '${component.jupyterhub.url}/user/${application.name}/?token=${application.token}'
