@@ -27,7 +27,7 @@ create:
 	$(kubectl) create -f templates/jupyterhub-notebook.yaml	
 .PHONY: create	
 
-deploy: create output notes
+deploy: create output
 
 undeploy:
 	$(kubectl) delete jupyterhubnotebook $(NAME)
@@ -57,8 +57,6 @@ output:
 	@echo Outputs:
 	@echo token = $(TOKEN)
 	@echo
+	@cat notes.txt
 .PHONY: output
 
-notes:
-	@cat notes.txt
-.PHONY: notes	
