@@ -58,5 +58,7 @@ output:
 	@echo token = $(TOKEN)
 	@echo
 	@cat notes.txt
+	@echo
+	@cat notes.txt
 .PHONY: output
 
