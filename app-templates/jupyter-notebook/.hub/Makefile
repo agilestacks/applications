@@ -12,6 +12,7 @@ APP_STATE_FILE_LOCAL  ?= hub.state
 APP_STATE_FILE        ?= should-come-from-env
 APP_STATE 			  ?= $(APP_STATE_FILE_LOCAL),$(APP_STATE_FILE)
 APP_ELABORATE_FILE 	  ?= hub.elaborate
+NAME ?=
 
 hub := hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credentials=false
 kubectl := kubectl --context="$(DOMAIN_NAME)" --namespace="$(NAMESPACE)"
@@ -24,7 +25,7 @@ deploy:
 .PHONY: deploy
 
 undeploy:
-	$(kubectl) delete -f templates/jupyterhub-notebook.yaml
+	$(kubectl) delete $(NAME)
 .PHONY: undeploy
 
 $(APP_ELABORATE_FILE):

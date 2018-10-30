@@ -17,6 +17,7 @@ parameters:
   - name: component.ingress.protocol
   - name: application.name
     value: viktors-notebook
+    env: NAME
   - name: application.description
     value: Java application
   - name: application.state.file
