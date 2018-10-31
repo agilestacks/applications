@@ -1,9 +1,10 @@
 {
-  "name": "${name}",
+  "name": "node-backend",
   "description": "A simple express application",
   "version": "1.0.0",
   "engines": {
-    "node": ">=8.11.1"
+    "node": ">=10.12",
+    "npm": ">=6.4"
   },
   "private": true,
   "main": "app/server.js",
@@ -17,15 +18,15 @@
   },
   "dependencies": {
     "express": "^4.16.3",
-    "winston": "^2.4.2"
+    "winston": "^3.1.0"
   },
   "devDependencies": {
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb": "^16.1.0",
+    "eslint": "^5.8.0",
+    "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.11.0",
-    "jest": "^22.4.3",
+    "jest": "^23.6.0",
     "jest-junit": "^5.1.0",
-    "supertest": "~3.0.0"
+    "supertest": "^3.3.0"
   },
   "jest": {
     "testEnvironment": "node",

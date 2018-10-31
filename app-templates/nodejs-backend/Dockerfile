@@ -1,8 +1,11 @@
-FROM node:8.11.3
+FROM node:10.12
 
+RUN mkdir -p /application
 WORKDIR /application
 
-COPY . /application
+COPY package.json package-lock.json /application/
+RUN npm -q install --only=prod && npm -q cache clean --force
+COPY app/ /application/app/
 
 EXPOSE 3000
 
