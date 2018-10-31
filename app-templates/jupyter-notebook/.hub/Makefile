@@ -13,6 +13,7 @@ APP_STATE_FILE        ?= should-come-from-env
 APP_STATE 			  ?= $(APP_STATE_FILE_LOCAL),$(APP_STATE_FILE)
 APP_ELABORATE_FILE 	  ?= hub.elaborate
 APPLICATION ?= should-be-set
+TIMEOUT     ?= 600
 
 hub := hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credentials=false
 kubectl := kubectl --context="$(DOMAIN_NAME)" --namespace="$(NAMESPACE)"
@@ -59,6 +60,22 @@ output:
 	@echo
 	@cat notes.txt
 	@echo
-	@cat notes.txt
+	- $(MAKE) wait_up
 .PHONY: output
 
+wait_up:
+	$(eval timeout=$(shell echo "`date +%s` + $(TIMEOUT)" | bc ))
+	$(eval count=$(shell $(kubectl) get pods --no-headers --output=json -l 'app=jupyterhub,component=singleuser-server' --output=json | jq -M '.items[0].spec.containers | length'))
+	$(eval get_pod=$(kubectl) get pods --no-headers -l 'project=jenkins,qualifier=master' --output=jsonpath='{.items..containerStatuses[?(@.ready==true)].containerID}')
+	@ printf "Waiting for Jupyter Notebook pod up and running [container count: $(count)]"
+
+	@ while [ `date +%s` -le "$(timeout)" ]; do \
+		if [[ `$(get_pod) | wc -w | xargs` -eq '$(count)' ]]; then \
+			echo " done"; \
+			exit 0; \
+		fi; \
+		printf "."; \
+		sleep 8; \
+	done; \
+	echo " ERROR timeout $(TIMEOUT)sec"; \
+	exit 1	
