@@ -96,20 +96,19 @@ output: .$(ORG)$(REPO).json
 	$(eval ssh_url := $(shell $(jq) '.ssh_url' < $<))
 	$(eval private := $(shell $(jq) '.private' < $<))
 
-	echo clone_url = $(clone_url)
-	echo git_url = $(git_url)
-	echo html_url = $(html_url)
-	echo ssh_url = $(ssh_url)
-	echo private = $(private)
-	
-	@ echo
-	@ echo Outputs:
-	@ echo clone_url = $(clone_url)
-	@ echo git_url = $(git_url)
-	@ echo html_url = $(html_url)
-	@ echo ssh_url = $(ssh_url)
-	@ echo private = $(private)
-	@ echo
+	-echo clone_url = $(clone_url)
+	-echo git_url = $(git_url)
+	-echo html_url = $(html_url)
+	-echo ssh_url = $(ssh_url)
+	-echo private = $(private)
+	-@ echo
+	-@ echo Outputs:
+	-@ echo clone_url = $(clone_url)
+	-@ echo git_url = $(git_url)
+	-@ echo html_url = $(html_url)
+	-@ echo ssh_url = $(ssh_url)
+	-@ echo private = $(private)
+	-@ echo
 .PHONY: output
 
 notes:
