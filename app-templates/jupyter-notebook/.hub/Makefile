@@ -60,22 +60,4 @@ output:
 	@echo
 	@cat notes.txt
 	@echo
-	- $(MAKE) wait_up
-.PHONY: output
-
-wait_up:
-	$(eval timeout=$(shell echo "`date +%s` + $(TIMEOUT)" | bc ))
-	$(eval count=$(shell $(kubectl) get pods --no-headers --output=json -l 'app=jupyterhub,component=singleuser-server' --output=json | jq -M '.items[0].spec.containers | length'))
-	$(eval get_pod=$(kubectl) get pods --no-headers -l 'app=jupyterhub,component=singleuser-server' --output=jsonpath='{.items..containerStatuses[?(@.ready==true)].containerID}')
-	@ printf "Waiting for Jupyter Notebook pod up and running [container count: $(count)]"
-
-	@ while [ `date +%s` -le "$(timeout)" ]; do \
-		if [[ `$(get_pod) | wc -w | xargs` -eq '$(count)' ]]; then \
-			echo " done"; \
-			exit 0; \
-		fi; \
-		printf "."; \
-		sleep 8; \
-	done; \
-	echo " ERROR timeout $(TIMEOUT)sec"; \
-	exit 1	
+.PHONY: output	
