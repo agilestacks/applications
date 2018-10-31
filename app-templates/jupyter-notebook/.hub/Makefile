@@ -66,7 +66,7 @@ output:
 wait_up:
 	$(eval timeout=$(shell echo "`date +%s` + $(TIMEOUT)" | bc ))
 	$(eval count=$(shell $(kubectl) get pods --no-headers --output=json -l 'app=jupyterhub,component=singleuser-server' --output=json | jq -M '.items[0].spec.containers | length'))
-	$(eval get_pod=$(kubectl) get pods --no-headers -l 'project=jenkins,qualifier=master' --output=jsonpath='{.items..containerStatuses[?(@.ready==true)].containerID}')
+	$(eval get_pod=$(kubectl) get pods --no-headers -l 'app=jupyterhub,component=singleuser-server' --output=jsonpath='{.items..containerStatuses[?(@.ready==true)].containerID}')
 	@ printf "Waiting for Jupyter Notebook pod up and running [container count: $(count)]"
 
 	@ while [ `date +%s` -le "$(timeout)" ]; do \
