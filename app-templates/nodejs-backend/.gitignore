@@ -1,3 +1,10 @@
 node_modules
 npm-debug.log*
 coverage
+.hub/templates/*.yaml
+.hub/hub.elaborate
+.hub/hub.state
+.terraform
+*.tfplan
+eslint-junit.xml
+junit.xml
