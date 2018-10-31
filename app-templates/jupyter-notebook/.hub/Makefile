@@ -24,7 +24,7 @@ create:
 		-m $(APP_ELABORATE_FILE) \
 		-s $(APP_STATE) \
 		-a 'application.token=$(TOKEN)'
-	$(kubectl) create -f templates/jupyterhub-notebook.yaml	
+	-$(kubectl) create -f templates/jupyterhub-notebook.yaml	
 .PHONY: create	
 
 deploy: create output

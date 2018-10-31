@@ -34,7 +34,7 @@ login-disabled:
 .PHONY: login-disabled
 
 build:
-	$(docker) build \
+	-$(docker) build \
 		--force-rm \
 		--pull \
 		--file $(SRC_DIR)/$(DOCKERFILE) \
