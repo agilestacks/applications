@@ -1,4 +1,3 @@
----
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -23,18 +22,18 @@ spec:
     spec:
       containers:
       - name: application
-        image: ${application.image}
+        image: ${component.ecr.image}
         ports:
         - name: http
           containerPort: 3000
         readinessProbe:
           httpGet:
-            path: /status
+            path: ${application.path}
             port: http
           initialDelaySeconds: 5
         livenessProbe:
           httpGet:
-            path: /status
+            path: ${application.path}
             port: http
           initialDelaySeconds: 5
           timeoutSeconds: 1
@@ -62,10 +61,10 @@ metadata:
     app: ${application.name}
 spec:
   rules:
-  - host: ${application.ingress.host}
+  - host: ${application.url}
     http:
       paths:
-      - path: /${application.ingress.path}
+      - path: ${application.path}
         backend:
           serviceName: ${application.name}
           servicePort: 80
