@@ -35,8 +35,8 @@ install: $(APP_ELABORATE_FILE)
 	# $(hub) render '../package.json.template' -m $(APP_ELABORATE_FILE) -s $(APP_STATE) -c 'react-frontend-next'
 	cp ../package.json.template ../package.json
 
-	# $(hub) kubeconfig $(PLATFORM_STATE_FILE)
-	# $(hub) deploy $(APP_ELABORATE_FILE) -s $(APP_STATE)
+	$(hub) kubeconfig $(PLATFORM_STATE_FILE)
+	$(hub) deploy $(APP_ELABORATE_FILE) -s $(APP_STATE)
 .PHONY: install
 
 uninstall: $(APP_ELABORATE_FILE)
