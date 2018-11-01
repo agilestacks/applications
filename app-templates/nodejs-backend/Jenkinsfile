@@ -55,7 +55,7 @@ pipeline {
     stage('Test') {
       steps {
         container('buildbox') {
-          sh script: 'npm test'
+          sh script: 'npm run junit'
         }
       }
     }
