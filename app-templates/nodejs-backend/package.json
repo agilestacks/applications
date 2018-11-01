@@ -14,7 +14,8 @@
     "jest": "jest",
     "lint": "eslint app/**",
     "junit:lint": "eslint -o eslint-junit.xml -f junit app/**",
-    "junit:test": "jest --ci --reporters=jest-junit"
+    "junit:test": "jest --ci --reporters=jest-junit",
+    "junit": "npm run junit:lint && npm run junit:test"
   },
   "dependencies": {
     "express": "^4.16.3",
