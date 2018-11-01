@@ -29,7 +29,6 @@ parameters:
 - name: component.s3website
   parameters:
   - name: name
-    fromEnv: NAME
   - name: baseDomain
     value: ${dns.domain}
   - name: bucket
