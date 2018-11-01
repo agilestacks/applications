@@ -5,7 +5,26 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const {ProvidePlugin, DefinePlugin} = webpack;
 
-const CONTEXT_PATH = process.env.CONTEXT_PATH || '';
+const {
+    CONTEXT_PATH = '',
+    APPLICATION_THEME
+} = process.env;
+
+DEFAULT_THEME = 'purple';
+
+const THEMES = [
+    'khaki',
+    'olive',
+    'indy',
+    'navy',
+    'purple',
+    'pink',
+    'ruby'
+];
+
+const theme = THEMES.includes(APPLICATION_THEME)
+    ? APPLICATION_THEME
+    : DEFAULT_THEME;
 
 module.exports = {
     entry: './src',
@@ -38,7 +57,12 @@ module.exports = {
                 use: [
                     'style-loader', // creates style nodes from JS strings
                     'css-loader', // translates CSS into CommonJS
-                    'sass-loader' // compiles Sass to CSS
+                    {
+                        loader: 'sass-loader', // compiles Sass to CSS,
+                        options: {
+                            includePaths: [path.resolve(__dirname, 'src/themes', theme)]
+                        }
+                    }
                 ]
             },
             {

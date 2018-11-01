@@ -15,9 +15,6 @@ requires:
 components: []
 parameters:
   - name: application.theme
-  - name: application.theme.binding
-    value: ${application.theme}
-    env: APPLICTION_THEME
   - name: application.name
     value: react-app-next
   - name: application.description
