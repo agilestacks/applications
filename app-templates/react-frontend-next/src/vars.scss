@@ -7,8 +7,9 @@ $color-pink: #9c517d;
 $color-ruby: #9c5151;
 $color-white: #ffffff;
 
-
 $theme-color: $color-purple;
+
+@import './theme';
 
 $theme-text-color: darken($theme-color, 10);
 $theme-background: $theme-color;

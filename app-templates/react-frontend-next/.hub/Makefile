@@ -31,9 +31,19 @@ $(APP_ELABORATE_FILE): hub.yaml
 #$(APP_ELABORATE_FILE): hub.yaml user.yaml
 	# $(hub) elaborate hub.yaml user.yaml -s $(PLATFORM_STATE_FILE) -e application.state=$(APP_ELABORATE_FILE) -o $@
 
-install: $(APP_ELABORATE_FILE)
+THEME:= $(shell echo $(APPLICTION_THEME) | grep -E '(khaki|olive|indy|navy|purple|pink|ruby|white)')
+install: #$(APP_ELABORATE_FILE)
 	# $(hub) render '../package.json.template' -m $(APP_ELABORATE_FILE) -s $(APP_STATE) -c 'react-frontend-next'
 	cp ../package.json.template ../package.json
+ifeq ($(THEME),)
+ifneq ($(APPLICTION_THEME),)
+	@echo WARNING! Unknown Application theme is provided: $(APPLICTION_THEME)
+endif
+	@echo > ../src/theme.scss
+else
+	@echo \$$theme-color: \$$color-$(THEME)  > ../src/theme.scss
+endif
+
 	$(hub) kubeconfig $(PLATFORM_STATE_FILE)
 	$(hub) deploy $(APP_ELABORATE_FILE) -s $(APP_STATE)
 .PHONY: install
