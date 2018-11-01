@@ -17,7 +17,7 @@ describe('index route', () => {
   });
 
   test('should respond with a 200 and status json', () => request(app)
-    .get('/status')
+    .get('/')
     .expect('Content-Type', 'application/json; charset=utf-8')
     .expect(200)
     .then((response) => {
