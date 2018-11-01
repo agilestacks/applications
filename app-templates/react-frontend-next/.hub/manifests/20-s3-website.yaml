@@ -3,7 +3,7 @@ components:
 - name: s3
   source:
     repoUrl: https://github.com/agilestacks/components.git
-    repoPath: components/s3-website
+    repoPath: applications/components/s3-website
     dir: components/s3-website
     branch: master
     fromEnv: GITHUB_TOKEN

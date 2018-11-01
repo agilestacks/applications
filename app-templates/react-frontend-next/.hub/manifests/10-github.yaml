@@ -20,6 +20,8 @@ parameters:
   - name: remote
 - name: component.github
   parameters:
+  - name: workspace
+    value: ../../..
   - name: token
     fromEnv: COMPONENT_GITHUB_TOKEN
     default: token
