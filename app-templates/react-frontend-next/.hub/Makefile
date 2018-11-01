@@ -32,7 +32,7 @@ $(APP_ELABORATE_FILE): hub.yaml
 	# $(hub) elaborate hub.yaml user.yaml -s $(PLATFORM_STATE_FILE) -e application.state=$(APP_ELABORATE_FILE) -o $@
 
 THEME:= $(shell echo $(APPLICTION_THEME) | grep -E '(khaki|olive|indy|navy|purple|pink|ruby|white)')
-install: #$(APP_ELABORATE_FILE)
+install: $(APP_ELABORATE_FILE)
 	# $(hub) render '../package.json.template' -m $(APP_ELABORATE_FILE) -s $(APP_STATE) -c 'react-frontend-next'
 	cp ../package.json.template ../package.json
 ifeq ($(THEME),)
