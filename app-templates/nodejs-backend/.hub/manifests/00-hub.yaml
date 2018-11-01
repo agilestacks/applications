@@ -2,7 +2,7 @@
 version: 1
 kind: application
 meta:
-  name: 'nodejs-backed:1'
+  name: 'nodejs-backend:1'
   brief: 'NodeJS microservice with Express web framework'
   source:
     repoUrl: https://github.com/agilestacks/applications.git
