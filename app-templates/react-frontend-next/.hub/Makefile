@@ -35,6 +35,7 @@ THEME:= $(shell echo $(APPLICTION_THEME) | grep -E '(khaki|olive|indy|navy|purpl
 install: $(APP_ELABORATE_FILE)
 	# $(hub) render '../package.json.template' -m $(APP_ELABORATE_FILE) -s $(APP_STATE) -c 'react-frontend-next'
 	cp ../package.json.template ../package.json
+	@echo THEMMING input: $(APPLICTION_THEME)  resolved: $(THEME)
 ifeq ($(THEME),)
 ifneq ($(APPLICTION_THEME),)
 	@echo WARNING! Unknown Application theme is provided: $(APPLICTION_THEME)

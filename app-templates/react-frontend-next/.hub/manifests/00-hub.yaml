@@ -15,7 +15,7 @@ requires:
 components: []
 parameters:
   - name: application.theme
-  - name: application.then.binding
+  - name: application.theme.binding
     value: ${application.theme}
     env: APPLICTION_THEME
   - name: application.name
