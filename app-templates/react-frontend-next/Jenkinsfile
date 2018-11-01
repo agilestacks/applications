@@ -98,8 +98,8 @@ pipeline {
             def bucket
             def ingressPath
             dir ('.hub') {
-              hub.elaborate(manifest: 'hub.yaml user.yaml', state: params.APP_STATE_FILE)
-              final outputs = hub.explain(manifest: 'hub.yaml user.yaml', state: params.APP_STATE_FILE).stackOutputs
+              hub.elaborate(manifest: 'hub.yaml', state: params.APP_STATE_FILE)
+              final outputs = hub.explain(manifest: 'hub.yaml', state: params.APP_STATE_FILE).stackOutputs
               bucket = outputs['application.bucket'] as String
               applicationPath = outputs['application.ingress.path'] as String
             }
