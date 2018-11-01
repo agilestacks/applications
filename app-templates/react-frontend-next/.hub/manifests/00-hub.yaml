@@ -39,6 +39,8 @@ parameters:
   - name: component.jenkins.url
   - name: component.s3website.name
     value: ${application.name}
+- name: dns.domain
+  env: DOMAIN_NAME
 outputs:
   - name: application.git.remote
     value: '${component.git.remote}'
