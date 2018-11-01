@@ -10,7 +10,7 @@ const {
     APPLICATION_THEME
 } = process.env;
 
-DEFAULT_THEME = 'purple';
+const DEFAULT_THEME = 'purple';
 
 const THEMES = [
     'khaki',
@@ -60,7 +60,10 @@ module.exports = {
                     {
                         loader: 'sass-loader', // compiles Sass to CSS,
                         options: {
-                            includePaths: [path.resolve(__dirname, 'src/themes', theme)]
+                            includePaths: [
+                                path.resolve(__dirname, 'src/themes', theme),
+                                path.resolve(__dirname, 'src')
+                            ]
                         }
                     }
                 ]
