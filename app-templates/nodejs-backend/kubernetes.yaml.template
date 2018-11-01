@@ -61,7 +61,7 @@ metadata:
     app: ${application.name}
 spec:
   rules:
-  - host: ${application.url}
+  - host: ${application.fqdn}
     http:
       paths:
       - path: ${application.path}
