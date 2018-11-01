@@ -1,6 +1,6 @@
 {
-  "name": "${name}",
-  "description": "A simple express application",
+  "name": "${application.name}",
+  "description": "${application.description}",
   "version": "1.0.0",
   "engines": {
     "node": ">=10.12",
