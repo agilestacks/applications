@@ -34,5 +34,8 @@ app-templates/react-frontend-next/.hub/user.yaml
 app-templates/react-frontend-next/.hub/components/*
 .asibot*
 
+# nodejs-backend ignores
 app-templates/nodejs-backend/.hub/hub.yaml
 app-templates/nodejs-backend/.hub/components
+app-templates/nodejs-backend/.hub/manifests
+app-templates/nodejs-backend/.hub/templates/*.yaml
