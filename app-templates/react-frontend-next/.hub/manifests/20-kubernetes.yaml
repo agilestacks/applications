@@ -17,7 +17,6 @@ lifecycle:
     - s3
 
 parameters:
-- name: dns.domain
 - name: terraform.bucket.name
   fromEnv: STATE_BUCKET
 - name: terraform.bucket.region
