@@ -10,8 +10,6 @@ meta:
     dir: .
     branch: master
     fromEnv: GITHUB_TOKEN
-requires:
-  - kubernetes
 components: []
 parameters:
   - name: application.name
