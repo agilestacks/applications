@@ -28,12 +28,12 @@ spec:
           containerPort: 3000
         readinessProbe:
           httpGet:
-            path: ${application.path}
+            path: /status
             port: http
           initialDelaySeconds: 5
         livenessProbe:
           httpGet:
-            path: ${application.path}
+            path: /status
             port: http
           initialDelaySeconds: 5
           timeoutSeconds: 1
