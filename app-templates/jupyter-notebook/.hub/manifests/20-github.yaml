@@ -24,6 +24,8 @@ lifecycle:
     - buildbox
 
 parameters:
+- name: component.buildbox.docker.image
+- name: component.buildbox.docker.tag
 - name: component.git
   parameters:
   - name: remote
