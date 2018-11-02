@@ -1,1 +1,12 @@
 FROM ${application.image}
+
+USER root
+
+RUN apt-get update && apt-get -yq dist-upgrade
+RUN apt-get install -yq --no-install-recommends git
+
+COPY .gitinit.sh /tmp
+
+RUN chown jovyan:users /tmp/.gitinit.sh
+
+USER jovyan

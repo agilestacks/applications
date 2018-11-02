@@ -5,3 +5,5 @@ metadata:
 spec:
   image: ${component.docker.image}
   token: ${application.token}
+  githubRepo: ${application.git.remote}
+  githubToken: ${application.git.token}

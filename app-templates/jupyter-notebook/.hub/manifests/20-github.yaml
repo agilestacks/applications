@@ -47,3 +47,5 @@ parameters:
 outputs:
 - name: application.git.remote
   value: ${component.git.remote}
+- name: application.git.token
+  value: ${component.github.token}
