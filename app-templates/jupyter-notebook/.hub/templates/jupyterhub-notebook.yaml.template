@@ -3,7 +3,7 @@ kind: JupyterHubNotebook
 metadata:
   name: ${application.name}
 spec:
-  image: ${application.image}
+  image: ${component.ecr.image}
   token: ${application.token}
   githubRepo: ${component.git.remote}
   githubToken: ${component.github.token}
