@@ -4,6 +4,7 @@ coverage
 .hub/templates/*.yaml
 .hub/hub.elaborate
 .hub/hub.state
+.hub/manifests
 .terraform
 *.tfplan
 eslint-junit.xml
