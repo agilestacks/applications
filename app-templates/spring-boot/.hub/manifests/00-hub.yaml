@@ -12,6 +12,7 @@ meta:
     fromEnv: GITHUB_TOKEN
 requires:
   - kubernetes
+  - jenkins
 components: []
 parameters:
   - name: application.name
@@ -30,16 +31,16 @@ parameters:
     value: '${application.name}.${component.ingress.fqdn}'
   - name: application.path
     value: /
-  - name: component.ingress.protocol  
+  - name: component.ingress.protocol
   - name: component.ingress.fqdn
   - name: component.docker.image
   - name: component.git.remote
-  - name: component.jenkins.url                
+  - name: component.jenkins.url
 outputs:
   - name: application.git.remote
-    value: '${component.git.remote}' 
+    value: '${component.git.remote}'
   - name: application.docker.image
-    value: '${component.docker.image}' 
+    value: '${component.docker.image}'
   - name: application.name
     value: '${application.name}'
   - name: application.namespace
@@ -47,11 +48,11 @@ outputs:
   - name: application.fqdn
     value: '${application.ingress.host}'
   - name: application.path
-    value: '${application.path}'    
-  - name: application.url 
+    value: '${application.path}'
+  - name: application.url
     value: '${component.ingress.protocol}://${application.ingress.host}${application.path}'
   - name: application.jenkins.pipeline.url
-    value: '${component.jenkins.url}/job/${application.name}-pipeline'     
+    value: '${component.jenkins.url}/job/${application.name}-pipeline'
 templates:
   files:
     - templates/*.template

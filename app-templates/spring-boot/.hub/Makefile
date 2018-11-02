@@ -29,12 +29,10 @@ $(APP_ELABORATE_FILE):
 	$(hub) elaborate hub.yaml -s $(PLATFORM_STATE_FILE) -e application.state=$(APP_ELABORATE_FILE) -o $@
 
 install: $(APP_ELABORATE_FILE)
-	$(hub) kubeconfig $(PLATFORM_STATE_FILE)
 	$(hub) deploy $(lastword $^) -s $(APP_STATE)
 .PHONY: install
 
 uninstall: $(APP_ELABORATE_FILE)
-	$(hub) kubeconfig $(PLATFORM_STATE_FILE)
 	$(hub) undeploy $(APP_ELABORATE_FILE) -s $(APP_STATE)
 .PHONY: uninstall
 
