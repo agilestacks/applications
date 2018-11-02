@@ -25,6 +25,7 @@ parameters:
   - name: application.state.file
     fromEnv: APP_STATE_FILE
   - name: application.image
+    value: ${component.ecr.image}
   - name: component.jupyterhub.url          
 outputs:
   - name: application.notebook.token
