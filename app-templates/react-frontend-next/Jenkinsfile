@@ -70,6 +70,22 @@ pipeline {
         APPLICATION_BRANCH = "${gitscm.branch}"
       }
       steps {
+        container('toolbox') {
+          script {
+            dir ('.hub') {
+              hub.elaborate(manifest: 'hub.yaml', state: params.APP_STATE_FILE)
+              final outputs = hub.explain(manifest: 'hub.yaml', state: params.APP_STATE_FILE).stackOutputs
+              appBucket = outputs['application.bucket'] as String
+              appIngressPath = outputs['application.ingress.path'] as String
+              appTheme = outputs['application.theme'] as String
+              if (appTheme?.trim()) {
+                println "Application theme is ${appTheme}"
+                env.APPLICATION_THEME = appTheme.trim()
+              }
+
+            }
+          }
+        }
         container('buildbox') {
           sh script: 'npm install'
           sh script: 'npm run junit:test'
@@ -95,24 +111,9 @@ pipeline {
       steps {
         container('toolbox') {
           script {
-            def bucket
-            def ingressPath
-            dir ('.hub') {
-              hub.elaborate(manifest: 'hub.yaml', state: params.APP_STATE_FILE)
-              final outputs = hub.explain(manifest: 'hub.yaml', state: params.APP_STATE_FILE).stackOutputs
-              bucket = outputs['application.bucket'] as String
-              applicationPath = outputs['application.ingress.path'] as String
-            }
-            sh script: "env | sort"
-            sh script: "ls -la"
-            sh script: "ls -la .hub"
             withAWS(role:params.AWS_TRUST_ROLE) {
-              sh script: "aws s3 sync --delete dist/ s3://${bucket}/${applicationPath}"
+              sh script: "aws s3 sync --delete dist/ s3://${appBucket}/${appIngressPath}"
             }
-            println params.APP_BUCKET
-            print bucket
-            println params.INGRESS_PATH
-            println applicationPath
           }
         }
       }

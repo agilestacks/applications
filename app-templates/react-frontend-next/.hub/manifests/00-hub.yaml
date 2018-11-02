@@ -14,7 +14,6 @@ requires:
   - kubernetes
 components: []
 parameters:
-  - name: application.theme
   - name: application.name
     value: react-app-next
   - name: application.description
@@ -33,6 +32,7 @@ parameters:
     value: /
   - name: application.bucket
     value: '${component.s3website.bucket}'
+  - name: application.theme
   - name: component.ingress.protocol
   - name: component.ingress.fqdn
   - name: component.docker.image
@@ -51,6 +51,7 @@ outputs:
     value: '${application.name}'
   - name: application.namespace
     value: '${application.namespace}'
+  - name: application.theme
   - name: application.fqdn
     value: '${application.ingress.host}'
   - name: application.path
