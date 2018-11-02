@@ -12,7 +12,7 @@ import java.time.temporal.ChronoUnit;
 @RestController
 public class StatusController {
 
-    @RequestMapping("/status")
+    @RequestMapping(value={"/", "/status"})
     public StatusBean getStatus() {
         RuntimeMXBean rb = ManagementFactory.getRuntimeMXBean();
 
