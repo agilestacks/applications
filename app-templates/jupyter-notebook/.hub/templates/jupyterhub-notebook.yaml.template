@@ -6,4 +6,4 @@ spec:
   image: ${application.image}
   token: ${application.token}
   githubRepo: ${component.git.remote}
-  githubToken: ${component.git.token}
+  githubToken: ${component.github.token}
