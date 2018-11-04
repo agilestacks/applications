@@ -23,7 +23,4 @@ parameters:
   - name: name
   - name: region
 - name: component.ecr
-  parameters:
-  - name: name
-    value: '${dns.domain}/${application.name}'
     
