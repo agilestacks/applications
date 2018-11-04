@@ -28,7 +28,7 @@ create:
 	$(kubectl) create -f templates/jupyterhub-notebook.yaml	
 .PHONY: create	
 
-deploy: create output
+deploy: create output wait_up
 
 undeploy:
 	$(kubectl) delete jupyterhubnotebook $(APPLICATION)
@@ -47,6 +47,21 @@ uninstall: $(APP_ELABORATE_FILE)
 	$(hub) kubeconfig $(PLATFORM_STATE_FILE)
 	$(hub) undeploy $(APP_ELABORATE_FILE) -s $(APP_STATE)
 .PHONY: uninstall
+
+wait_up:
+	$(eval timeout=$(shell echo "`date +%s` + $(TIMEOUT)" | bc ))
+	$(eval get_pod=$(kubectl) get pod jupyter-$(APPLICATION) --no-headers -o json --output=jsonpath='{.status.containerStatuses[?(@.ready==true)].containerID}')
+	@ printf "Waiting for Jupyter Notebook pod up and running"
+	@ while [ `date +%s` -le "$(timeout)" ]; do \
+		if [[ `$(get_pod) | wc -w | xargs` -eq '1' ]]; then \
+			echo " done"; \
+			exit 0; \
+		fi; \
+		printf "."; \
+		sleep 8; \
+	done; \
+	echo " ERROR timeout $(TIMEOUT)sec"; \
+	exit 1
 
 clean:
 	rm -rf $(APP_ELABORATE_FILE) $(APP_STATE_FILE_LOCAL)
