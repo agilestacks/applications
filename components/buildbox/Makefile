@@ -60,5 +60,4 @@ output:
 	@echo image = $(DOCKER_IMAGE):$(shell $(git) rev-parse --short HEAD)
 	@echo tag = $(shell $(git) rev-parse --short HEAD)
 	@echo
-	@cat notes.txt
 .PHONY: output
