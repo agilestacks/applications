@@ -44,7 +44,7 @@ parameters:
     value: '["push"]'
   - name: repository.description
     value: >
-      Java microservice with Spring Boot
+      Jupyter Notebook Sample Application
 
 outputs:
 - name: application.git.remote
