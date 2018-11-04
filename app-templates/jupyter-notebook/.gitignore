@@ -1,5 +1,6 @@
 .hub/manifests
 .hub/hub.elaborate
 .hub/hub.state
+.local
 .terraform
 .envrc
