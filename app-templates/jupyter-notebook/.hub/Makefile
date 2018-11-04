@@ -25,13 +25,14 @@ create:
 		-m $(APP_ELABORATE_FILE) \
 		-s $(APP_STATE) \
 		-a 'application.token=$(TOKEN)'
-	-$(kubectl) create -f templates/jupyterhub-notebook.yaml	
+	$(kubectl) create -f templates/jupyterhub-notebook.yaml	
 .PHONY: create	
 
 deploy: create output
 
 undeploy:
 	$(kubectl) delete jupyterhubnotebook $(APPLICATION)
+	$(kubectl) delete pvc claim-$(APPLICATION)
 .PHONY: undeploy
 
 $(APP_ELABORATE_FILE):
