@@ -47,7 +47,7 @@ pipeline {
     }
     stage('Build') {
       environment {
-        CONTEXT_PATH = "${params.INGRESS_PATH}"
+        CONTEXT_PATH = "${params.INGRESS_CONTEXT}"
         APPLICATION_REPOSITORY = "${gitscm.remote}"
         APPLICATION_BRANCH = "${gitscm.branch}"
       }

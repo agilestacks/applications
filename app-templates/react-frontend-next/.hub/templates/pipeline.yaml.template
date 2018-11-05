@@ -14,9 +14,9 @@ spec:
       type: string
       defaultValue: ${application.state.file}
       description: 'State file of the application stack'
-    - name: INGRESS_PATH
+    - name: INGRESS_CONTEXT
       type: string
-      defaultValue: ${component.s3website.ingress}
+      defaultValue: ${component.s3website.path}
       description: 'Path to host application within ${application.ingress.host}'
     - name: APP_BUCKET
       type: string
