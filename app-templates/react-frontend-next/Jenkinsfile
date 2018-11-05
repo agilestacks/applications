@@ -47,7 +47,6 @@ pipeline {
     }
     stage('Build') {
       environment {
-        CONTEXT_PATH = "${params.INGRESS_CONTEXT}"
         APPLICATION_REPOSITORY = "${gitscm.remote}"
         APPLICATION_BRANCH = "${gitscm.branch}"
       }
@@ -63,6 +62,9 @@ pipeline {
               if (appTheme?.trim()) {
                 println "Application theme is defined as \"${appTheme}\""
                 env.APPLICATION_THEME = appTheme.trim()
+              }
+              if (appPath?.trim()) {
+                env.CONTEXT_PATH = appPath.trim()
               }
             }
           }
