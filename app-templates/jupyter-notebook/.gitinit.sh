@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if [ -z "$GITHUB_TOKEN" ]; then exit 0; fi;
+if [ -z "$GITHUB_TOKEN" ]; then exit 0; fi
 
-WORKSPACE=~/workspace
+WORKSPACE=~
 GITHUB_PROTECTED=${GITHUB_REPO/:\/\//:\/\/x-oauth-basic:$GITHUB_TOKEN@}
 echo $GITHUB_PROTECTED
 
