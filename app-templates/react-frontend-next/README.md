@@ -76,7 +76,7 @@ To change environment variable `APPLICATION_THEME` should be set to appropriate 
 ```
 APPLICATION_THEME=navy npm start
 ```
-Application support such themes
+Application supports such themes
 + `khaki`
 + `olive`
 + `indy`
