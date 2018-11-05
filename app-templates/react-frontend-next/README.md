@@ -71,6 +71,7 @@ aws s3 sync .dist s3://$DEPLOYMENT_BUCKET/
 ## Theming
 
 Application can be preconfigured to be ran with different themes.
+
 To change environment variable `APPLICATION_THEME` should be set to appropriate value. E.g.
 ```
 APPLICATION_THEME=navy npm start
