@@ -58,7 +58,7 @@ pipeline {
               hub.elaborate(manifest: 'hub.yaml', state: params.APP_STATE_FILE)
               final outputs = hub.explain(manifest: 'hub.yaml', state: params.APP_STATE_FILE).stackOutputs
               appBucket = outputs['application.bucket'] as String
-              appIngressPath = outputs['application.ingress.path'] as String
+              appPath = outputs['application.path'] as String
               appTheme = outputs['application.theme'] as String
               if (appTheme?.trim()) {
                 println "Application theme is defined as \"${appTheme}\""
@@ -93,7 +93,7 @@ pipeline {
         container('toolbox') {
           script {
             withAWS(role:params.AWS_TRUST_ROLE) {
-              sh script: "aws s3 sync --delete dist/ s3://${appBucket}/${appIngressPath}"
+              sh script: "aws s3 sync --delete dist/ s3://${appBucket}${appPath}"
             }
           }
         }
