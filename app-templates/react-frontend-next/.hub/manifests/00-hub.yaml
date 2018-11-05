@@ -28,8 +28,6 @@ parameters:
     fromEnv: APP_STATE_FILE
   - name: application.ingress.host
     value: '${application.name}.${component.ingress.fqdn}'
-  - name: application.path
-    value: /
   - name: application.bucket
     value: '${component.s3website.bucket}'
   - name: application.theme
@@ -55,7 +53,7 @@ outputs:
   - name: application.fqdn
     value: '${application.ingress.host}'
   - name: application.path
-    value: '${application.path}'
+    value: '${component.s3website.path}'
   - name: application.url
     value: '${component.ingress.protocol}://${application.ingress.host}${application.path}'
   - name: application.bucket

@@ -93,7 +93,7 @@ pipeline {
         container('toolbox') {
           script {
             withAWS(role:params.AWS_TRUST_ROLE) {
-              sh script: "aws s3 sync --delete dist/ s3://${appBucket}${appPath}"
+              sh script: "aws s3 sync --delete dist/ s3://${appBucket}/${appPath}"
             }
           }
         }
