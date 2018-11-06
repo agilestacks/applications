@@ -29,7 +29,7 @@ parameters:
   parameters:
   - name: name
   - name: baseDomain
-    value: ${dns.domain}
+    value: '${component.ingress.fqdn}'
   - name: bucket
   - name: endpoint
 
