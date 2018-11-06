@@ -55,7 +55,7 @@ outputs:
   - name: application.path
     value: '${component.s3website.path}'
   - name: application.url
-    value: '${component.ingress.protocol}://${application.ingress.host}${application.path}'
+    value: '${component.ingress.protocol}://${application.ingress.host}/${application.path}'
   - name: application.bucket
     value: '${component.s3website.bucket}'
   - name: application.ingress.path
