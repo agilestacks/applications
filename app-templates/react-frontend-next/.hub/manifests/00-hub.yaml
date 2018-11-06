@@ -28,9 +28,13 @@ parameters:
     fromEnv: APP_STATE_FILE
   - name: application.protocol
     value: http
-  - name: application.host
+  - name: application.ingress.host
     value: '${component.s3website.name}.${dns.domain}'
+  - name: application.bucket
+    value: '${component.s3website.bucket}'
   - name: application.theme
+  - name: component.ingress.protocol
+  - name: component.ingress.fqdn
   - name: component.docker.image
   - name: component.git.remote
   - name: component.jenkins.url
@@ -49,13 +53,15 @@ outputs:
     value: '${application.namespace}'
   - name: application.theme
   - name: application.fqdn
-    value: '${application.host}'
+    value: '${application.ingress.host}'
   - name: application.path
     value: '${component.s3website.path}'
   - name: application.url
-    value: '${application.protocol}://${application.host}/${application.path}'
+    value: '${application.protocol}://${application.ingress.host}/${application.path}'
   - name: application.bucket
     value: '${component.s3website.bucket}'
+  - name: application.ingress.path
+    value: '${component.s3website.ingress}'
   - name: application.jenkins.pipeline.url
     value: '${component.jenkins.url}/job/${application.name}-pipeline'
 templates:
