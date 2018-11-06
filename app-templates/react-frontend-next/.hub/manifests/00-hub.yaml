@@ -27,7 +27,7 @@ parameters:
   - name: application.state.file
     fromEnv: APP_STATE_FILE
   - name: application.ingress.host
-    value: '${application.name}.${component.ingress.fqdn}'
+    value: '${component.s3website.name}.${component.ingress.fqdn}'
   - name: application.bucket
     value: '${component.s3website.bucket}'
   - name: application.theme
