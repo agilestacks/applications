@@ -10,3 +10,4 @@ coverage
 *.tfplan
 eslint-junit.xml
 junit.xml
+kubernetes.yaml

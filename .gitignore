@@ -39,3 +39,5 @@ app-templates/nodejs-backend/.hub/hub.yaml
 app-templates/nodejs-backend/.hub/components
 app-templates/nodejs-backend/.hub/manifests
 app-templates/nodejs-backend/.hub/templates/*.yaml
+
+.DS_STORE
