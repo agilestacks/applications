@@ -13,8 +13,6 @@ lifecycle:
   verbs: [deploy, undeploy]
   order:
     - s3
-  mandatory:
-    - s3
 
 parameters:
 - name: terraform.bucket.name

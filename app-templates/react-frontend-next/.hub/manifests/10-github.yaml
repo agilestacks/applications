@@ -11,8 +11,6 @@ components:
 lifecycle:
   order:
     - github-repository
-  mandatory:
-    - github-repository
 
 parameters:
 - name: component.git
