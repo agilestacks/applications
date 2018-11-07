@@ -4,7 +4,7 @@ export HUB_CONFIG := $(realpath .)/.hubconfig
 export HUB_PROTOCOL ?= https
 
 ORG ?= asitest
-REPO ?= test3
+REPO ?= test4
 PRIVATE ?= true
 DESCRIPTION ?=
 HOMEPAGE ?=
@@ -22,7 +22,7 @@ curl := curl -fs -H "Private-Token: $(GITLAB_TOKEN)"
 jq := jq -cM
 git := git
 
-ifeq ($(GITLAB_TOKEN),)
+ifeq ($(GITLAB_TOKEN), "CHANGEME")
 	unexport GITLAB_TOKEN
 endif
 
@@ -82,4 +82,5 @@ output:
 	@ echo html_url = $(shell echo '$(GITLAB_OUTPUTS)' | $(jq) ".web_url")
 	@ echo ssh_url = $(shell echo '$(GITLAB_OUTPUTS)' | $(jq) ".ssh_url_to_repo")
 	@ echo private = $(shell echo '$(GITLAB_OUTPUTS)'| $(jq) ".visibility == \"private\"")
+	@ echo project_id = $(shell echo $(ID))
 .PHONY: output
