@@ -60,8 +60,6 @@ outputs:
     value: '${application.protocol}://${application.ingress.host}/${application.path}'
   - name: application.bucket
     value: '${component.s3website.bucket}'
-  - name: application.ingress.path
-    value: '${component.s3website.ingress}'
   - name: application.jenkins.pipeline.url
     value: '${component.jenkins.url}/job/${application.name}-pipeline'
 templates:
