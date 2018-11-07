@@ -25,7 +25,7 @@ undeploy:
 	$(kubectl) delete -f templates/pipeline.yaml
 .PHONY: undeploy
 
-$(APP_ELABORATE_FILE): hub.yaml failure.yaml
+$(APP_ELABORATE_FILE): hub.yaml
 	$(hub) elaborate hub.yaml -s $(PLATFORM_STATE_FILE) -e application.state=$(APP_ELABORATE_FILE) -o $@
 
 #$(APP_ELABORATE_FILE): hub.yaml user.yaml
