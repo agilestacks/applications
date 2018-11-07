@@ -1,4 +1,4 @@
-FROM node:10.12
+FROM node:10.13
 LABEL maintainer="Victor Oginskis <victor@agilestacks.com>"
 
 RUN apt-get update && \
