@@ -13,6 +13,4 @@ lifecycle:
     - jenkins-iam-role
 
 parameters:
-- name: dns.domain
-- name: cloud.region
 - name: cloud.role.worker
