@@ -22,7 +22,7 @@ deploy:
 .PHONY: deploy
 
 undeploy:
-	$(kubectl) delete -f templates/pipeline.yaml
+	- $(kubectl) delete -f templates/pipeline.yaml
 .PHONY: undeploy
 
 $(APP_ELABORATE_FILE):
