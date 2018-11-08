@@ -13,10 +13,6 @@ lifecycle:
     - ecr
 
 parameters:
-- name: terraform.bucket
-  parameters:
-  - name: name
-  - name: region
 - name: component.ecr
   parameters:
   - name: name
