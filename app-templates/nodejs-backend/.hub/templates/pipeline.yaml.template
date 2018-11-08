@@ -14,3 +14,7 @@ spec:
       type: string
       defaultValue: ${application.state.file}
       description: 'State file of the application stack'
+    - name: AWS_TRUST_ROLE
+      type: string
+      defaultValue: ${component.jenkins-iam-role.roleArn}
+      description: 'Role to assume for to deploy application'

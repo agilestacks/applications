@@ -36,6 +36,7 @@ parameters:
   - name: component.docker.image
   - name: component.git.remote
   - name: component.jenkins.url
+  - name: component.jenkins-iam-role.roleArn
 outputs:
   - name: application.git.remote
     value: '${component.git.remote}'
