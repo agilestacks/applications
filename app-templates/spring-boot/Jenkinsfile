@@ -4,11 +4,6 @@ pipeline {
     pollSCM('H/15 * * * *')
   }
   parameters {
-    string(
-          name: 'AWS_TRUST_ROLE',
-          defaultValue: env.DEPLOY_ROLE_ARN,
-          description: "Role to assume for to deploy application"
-      )
     booleanParam(
           name: 'CLEAN_WORKSPACE',
           defaultValue: false,

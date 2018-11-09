@@ -16,7 +16,7 @@ requires:
 components: []
 parameters:
   - name: application.name
-    value: viktors-93
+    value: springboot-app
   - name: application.description
     value: Java application
   - name: application.namespace
@@ -36,6 +36,13 @@ parameters:
   - name: component.docker.image
   - name: component.git.remote
   - name: component.jenkins.url
+  - name: dns.domain
+    env: DOMAIN_NAME
+  - name: cloud.region
+  - name: terraform.bucket
+    parameters:
+    - name: name
+    - name: region
 outputs:
   - name: application.git.remote
     value: '${component.git.remote}'
@@ -53,6 +60,9 @@ outputs:
     value: '${component.ingress.protocol}://${application.ingress.host}${application.path}'
   - name: application.jenkins.pipeline.url
     value: '${component.jenkins.url}/job/${application.name}-pipeline'
+  - name: application.cloud.role
+    value: '${component.jenkins-iam-role.roleArn}'
+
 templates:
   files:
     - templates/*.template
