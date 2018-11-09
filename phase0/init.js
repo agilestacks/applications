@@ -22,7 +22,7 @@ const appRepoName = process.env.APP_REPO_NAME;
 const appRepoToken = process.env.COMPONENT_GITHUB_TOKEN;
 const workspaceDir = process.env.WORKSPACE_DIR === undefined ? '/Users/oginskis/workspace' :
     process.env.WORKSPACE_DIR;
-const hubDir = [workspaceDir, '.hub'].join('/');    
+const hubDir = [workspaceDir, '.hub'].join('/');
 const logger = winston.createLogger({
     transports: [
         new winston.transports.Console()
@@ -30,7 +30,8 @@ const logger = winston.createLogger({
     format: winston.format.simple()
 });
 
-function fail() {
+function fail(error) {
+    error && logger.error(error);
     process.exit(1);
 }
 
@@ -173,29 +174,32 @@ async function callShellHooks(parameters) {
         .filter(parameter => !parameter.value.includes('$'))
         .map(parameter => `${parameter.name}='${parameter.value}'`)
         .join(' ');
-    logger.info(`Parameters eligible for substitution: ${formattedParams}`);   
+    logger.info(`Parameters eligible for substitution: ${formattedParams}`);
     shelljs.cd([hubDir, 'init.d'].join('/'));
     const scripts = glob('*.sh');
-    logger.info(`Calling shell hooks: ${scripts}`); 
+    logger.info(`Calling shell hooks: ${scripts}`);
     await forEach(scripts, async (script) => {
         shelljs.exec(`sh -c "./${script} ${formattedParams}"`);
     })
 }
 
 async function perform() {
-    if (manifestURL) {
-        const manifest = downloadManifest();
-        await prepareWorkspace(manifest);
-        copyManifest(manifest);
-        await callShellHooks(manifest.parameters);
-    } else if (appRepoName && appRepoOrg && appRepoToken) {
-        const gitUrl = securedGithubUrl(`https://github.com/${appRepoOrg}/${appRepoName}.git`, appRepoToken); 
-        shelljs.exec(`git clone --single-branch -b master ${gitUrl}`);
-        shelljs.exec(`rsync -htrzai --progress ${appRepoName}/ ${workspaceDir}`);
-        logger.info('Application workspace initialized');
-    } else {
-        logger.error('Cannot initialize application workspace');
-        fail();
+    try {
+        if (manifestURL) {
+            const manifest = downloadManifest();
+            await prepareWorkspace(manifest);
+            copyManifest(manifest);
+            await callShellHooks(manifest.parameters);
+        } else if (appRepoName && appRepoOrg && appRepoToken) {
+            const gitUrl = securedGithubUrl(`https://github.com/${appRepoOrg}/${appRepoName}.git`, appRepoToken);
+            shelljs.exec(`git clone --single-branch -b master ${gitUrl}`);
+            shelljs.exec(`rsync -htrzai --progress ${appRepoName}/ ${workspaceDir}`);
+            logger.info('Application workspace initialized');
+        } else {
+            throw new Error('Cannot initialize application workspace');
+        }
+    } catch (error) {
+        fail(error);
     }
 }
 
