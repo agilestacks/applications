@@ -29,9 +29,6 @@ $(APP_ELABORATE_FILE): hub.yaml
 	$(hub) elaborate hub.yaml -s $(PLATFORM_STATE_FILE) -e application.state=$(APP_ELABORATE_FILE) -o $@
 
 install: $(APP_ELABORATE_FILE)
-	# $(hub) render '../package.json.template' -m $(APP_ELABORATE_FILE) -s $(APP_STATE) -c 'react-frontend-next'
-	cp ../package.json.template ../package.json
-
 	$(hub) kubeconfig $(PLATFORM_STATE_FILE)
 	$(hub) deploy $(APP_ELABORATE_FILE) -s $(APP_STATE)
 .PHONY: install
