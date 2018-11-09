@@ -171,7 +171,7 @@ function sleep(ms) {
 async function callShellHooks(parameters) {
     const formattedParams = parameters
         .filter(parameter => parameter.value !== undefined)
-        .filter(parameter => !parameter.value.includes('$'))
+        .filter(parameter => !String(parameter.value).includes('$'))
         .map(parameter => `${parameter.name}='${parameter.value}'`)
         .join(' ');
     logger.info(`Parameters eligible for substitution: ${formattedParams}`);
