@@ -11,8 +11,6 @@ components:
 lifecycle:
   order:
     - ecr
-  mandatory:
-    - ecr
 
 parameters:
 - name: dns.domain
@@ -23,4 +21,3 @@ parameters:
   - name: name
   - name: region
 - name: component.ecr
-    

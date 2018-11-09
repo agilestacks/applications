@@ -21,9 +21,6 @@ lifecycle:
   order:
     - source-bucket
     - target-bucket
-  mandatory:
-    - source-bucket
-    - target-bucket
 
 parameters:
 - name: cloud.region

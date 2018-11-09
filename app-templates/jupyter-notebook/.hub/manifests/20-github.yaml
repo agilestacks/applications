@@ -13,13 +13,10 @@ components:
     repoPath: applications/components/buildbox
     dir: components/buildbox
     branch: master
-    fromEnv: GITHUB_TOKEN    
+    fromEnv: GITHUB_TOKEN
 
 lifecycle:
   order:
-    - github-repository
-    - buildbox
-  mandatory:
     - github-repository
     - buildbox
 

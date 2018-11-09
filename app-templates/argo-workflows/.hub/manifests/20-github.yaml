@@ -19,9 +19,6 @@ lifecycle:
   order:
     - github-repository
     - buildbox
-  mandatory:
-    - github-repository
-    - buildbox
 
 parameters:
 - name: component.git
