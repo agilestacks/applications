@@ -42,6 +42,11 @@ parameters:
     value: ${application.name}
   - name: dns.domain
     env: DOMAIN_NAME
+  - name: cloud.region
+  - name: terraform.bucket
+    parameters:
+    - name: name
+    - name: region
 outputs:
   - name: application.git.remote
     value: '${component.git.remote}'
@@ -62,6 +67,8 @@ outputs:
     value: '${component.s3website.bucket}'
   - name: application.jenkins.pipeline.url
     value: '${component.jenkins.url}/job/${application.name}-pipeline'
+  - name: application.cloud.role
+    value: '${component.jenkins-iam-role.roleArn}'
 templates:
   files:
     - templates/*.template
