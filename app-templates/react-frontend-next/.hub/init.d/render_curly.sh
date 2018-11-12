@@ -13,4 +13,4 @@ function render_curly() {
 }
 export render_curly
 
-render_curly "${WORKSPACE}/package.json.template" > ${WORKSPACE}/package.json
+render_curly "${WORKSPACE}/.hub/templates/package.json.template" > "${WORKSPACE}/package.json"

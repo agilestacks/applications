@@ -4,5 +4,4 @@ dist/
 *-junit\.xml
 **.state
 **.elaborate
-**.template
 **/.terraform
