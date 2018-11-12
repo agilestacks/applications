@@ -22,11 +22,3 @@ spec:
       type: string
       defaultValue: '${component.s3website.path}'
       description: 'Path to host application within ${application.ingress.host}'
-    - name: APP_BUCKET
-      type: string
-      defaultValue: '${component.s3website.bucket}'
-      description: 'Path to host application within ${application.ingress.host}'
-    - name: APP_BUCKET-2
-      type: string
-      defaultValue: '${application.bucket}'
-      description: 'Path to host application within ${application.ingress.host}'
