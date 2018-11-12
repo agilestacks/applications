@@ -2,8 +2,8 @@
 components:
 - name: jenkins-iam-role
   source:
-    repoUrl: https://github.com/agilestacks/components.git
-    repoPath: components/jenkins-iam-role
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/jenkins-iam-role
     dir: components/jenkins-iam-role
     branch: master
     fromEnv: GITHUB_TOKEN
