@@ -11,6 +11,7 @@ HOMEPAGE ?=
 API_SERVER ?= api.github.com
 SRC_DIR ?= $(realpath .)
 REMOTE_NAME ?= $(ORG)-$(REPO)
+GITHUB_FILE := .$(ORG)$(REPO).json
 
 # We must cover case with empty value in variable
 ifeq ($(USER_NAME),)
@@ -86,21 +87,16 @@ endif
 	$(git) push $(REMOTE_NAME) master
 .PHONY: clone
 
-.$(ORG)$(REPO).json:
+$(GITHUB_FILE):
 	@ $(curl) https://$(API_SERVER)/repos/$(ORG)/$(REPO) > $@
 
-output: .$(ORG)$(REPO).json
+output: $(GITHUB_FILE)
 	$(eval clone_url := $(shell $(jq) '.clone_url' < $<))
 	$(eval git_url := $(shell $(jq) '.git_url' < $<))
 	$(eval html_url := $(shell $(jq) '.html_url' < $<))
 	$(eval ssh_url := $(shell $(jq) '.ssh_url' < $<))
 	$(eval private := $(shell $(jq) '.private' < $<))
 
-	-echo clone_url = $(clone_url)
-	-echo git_url = $(git_url)
-	-echo html_url = $(html_url)
-	-echo ssh_url = $(ssh_url)
-	-echo private = $(private)
 	-@ echo
 	-@ echo Outputs:
 	-@ echo clone_url = $(clone_url)
