@@ -17,7 +17,7 @@ components:
     dir: ../../../components/github-repository
 - name: buildbox
   source:
-    dir: ../../../components/buildbox
+    dir: ../../../../buildbox
 - name: source-bucket
   source:
     dir: ../../../components/minio-bucket
