@@ -9,7 +9,7 @@ meta:
     repoUrl: https://github.com/agilestacks/applications.git
     repoPath: applications/app-templates
     dir: .
-    branch: master
+    branch: COMPONENTS_TAG
     fromEnv: GITHUB_TOKEN
 
 components: []

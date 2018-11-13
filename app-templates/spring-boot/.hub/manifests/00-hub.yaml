@@ -8,12 +8,15 @@ meta:
     repoUrl: https://github.com/agilestacks/applications.git
     repoPath: applications/app-templates
     dir: .
-    branch: master
+    branch: COMPONENTS_TAG
     fromEnv: GITHUB_TOKEN
+
 requires:
   - kubernetes
   - jenkins
+
 components: []
+
 parameters:
   - name: application.name
     value: springboot-app
@@ -43,6 +46,7 @@ parameters:
     parameters:
     - name: name
     - name: region
+
 outputs:
   - name: application.git.remote
     value: '${component.git.remote}'

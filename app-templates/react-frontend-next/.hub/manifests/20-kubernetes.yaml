@@ -5,7 +5,7 @@ components:
     repoUrl: https://github.com/agilestacks/components.git
     repoPath: applications/components/s3-website
     dir: components/s3-website
-    branch: master
+    branch: COMPONENTS_TAG
     fromEnv: GITHUB_TOKEN
 
 lifecycle:
