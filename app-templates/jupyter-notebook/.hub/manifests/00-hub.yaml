@@ -8,11 +8,14 @@ meta:
     repoUrl: https://github.com/agilestacks/applications.git
     repoPath: applications/app-templates
     dir: .
-    branch: master
+    branch: COMPONENTS_TAG
     fromEnv: GITHUB_TOKEN
+
 requires:
   - jupyterhub
+
 components: []
+
 parameters:
   - name: component.ingress.protocol
   - name: application.name
@@ -25,9 +28,10 @@ parameters:
   - name: application.state.file
     fromEnv: APP_STATE_FILE
   - name: application.image
-  - name: component.jupyterhub.url          
+  - name: component.jupyterhub.url
+
 outputs:
   - name: application.notebook.token
     fromTfVar: token
-  - name: application.url 
+  - name: application.url
     value: '${component.jupyterhub.url}/user/${application.name}/?token=${application.notebook.token}'

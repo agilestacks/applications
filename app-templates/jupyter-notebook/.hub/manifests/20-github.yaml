@@ -5,14 +5,14 @@ components:
     repoUrl: https://github.com/agilestacks/applications.git
     repoPath: applications/components/github-repository
     dir: components/github-repository
-    branch: master
+    branch: COMPONENTS_TAG
     fromEnv: GITHUB_TOKEN
 - name: buildbox
   source:
     repoUrl: https://github.com/agilestacks/applications.git
     repoPath: applications/components/buildbox
     dir: components/buildbox
-    branch: master
+    branch: COMPONENTS_TAG
     fromEnv: GITHUB_TOKEN
 
 lifecycle:

@@ -20,7 +20,7 @@ const manifestURL = process.env.APPLICATION_MANIFEST;
 const appRepoOrg = process.env.APP_REPO_ORG;
 const appRepoName = process.env.APP_REPO_NAME;
 const appRepoToken = process.env.COMPONENT_GITHUB_TOKEN;
-const workspaceDir = process.env.WORKSPACE_DIR === undefined ? '/Users/oginskis/workspace' :
+const workspaceDir = process.env.WORKSPACE_DIR === undefined ? './workspace' :
     process.env.WORKSPACE_DIR;
 const hubDir = [workspaceDir, '.hub'].join('/');
 const logger = winston.createLogger({
@@ -85,7 +85,8 @@ async function checkoutApplication(meta) {
     } = source;
     const appName = name.split(':')[0];
     const securedGithub = securedGithubUrl(url, token);
-    shelljs.exec(`git clone --single-branch -b ${branch} ${securedGithub}`);
+    const gitBranch = process.env[branch] || 'master';
+    shelljs.exec(`git clone --single-branch -b ${gitBranch} ${securedGithub}`);
     const srcPath = repoPath === undefined ? appName : [repoPath, appName].join('/');
     const destPath = [workspaceDir, dir].join('/');
     shelljs.mkdir('-p', destPath);

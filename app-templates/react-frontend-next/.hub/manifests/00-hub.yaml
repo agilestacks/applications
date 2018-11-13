@@ -8,11 +8,14 @@ meta:
     repoUrl: https://github.com/agilestacks/applications.git
     repoPath: applications/app-templates
     dir: .
-    branch: master
+    branch: COMPONENTS_TAG
     fromEnv: GITHUB_TOKEN
+
 requires:
   - kubernetes
+
 components: []
+
 parameters:
   - name: application.name
     value: react-app-next
@@ -47,6 +50,7 @@ parameters:
     parameters:
     - name: name
     - name: region
+
 outputs:
   - name: application.git.remote
     value: '${component.git.remote}'
@@ -69,6 +73,7 @@ outputs:
     value: '${component.jenkins.url}/job/${application.name}-pipeline'
   - name: application.cloud.role
     value: '${component.jenkins-iam-role.roleArn}'
+
 templates:
   files:
     - templates/*.template
