@@ -1,0 +1,12 @@
+parameters:
+  - name: application.name
+    value: app-14
+  - name: application.description
+    value: >
+     HTML5/JavaScript application that has been deployed to AWS S3 hosted website with Jenkins CI server
+  - name: component.github.repository.name
+    value: app-14
+  - name: component.github.repository.organization
+    value: asibot
+  - name: component.s3website.ingress
+    value: app-14

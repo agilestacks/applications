@@ -2,7 +2,7 @@
 version: 1
 kind: application
 meta:
-  name: 'react-es6:1'
+  name: 'react-es2018:1'
   brief: S3 hosted React frontend application
   source:
     repoUrl: https://github.com/agilestacks/applications.git

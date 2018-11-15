@@ -9,7 +9,7 @@ meta:
     github:
       remote: https://github.com/agilestacks/applications.git
       refSpec: master
-      subDir: app-templates/react-es6
+      subDir: app-templates/react-es2018
       token:
         fromEnv: GITHUB_TOKEN
 components:

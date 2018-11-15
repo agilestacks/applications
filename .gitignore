@@ -29,12 +29,12 @@ app-templates/argo-workflows/webhook-sensor.yaml
 app-templates/argo-workflows/webhook-gateway-configmap.yaml
 app-templates/argo-workflows/.hub/rbac.yaml
 
-# react-es6
-app-templates/react-es6/package.json
-app-templates/react-es6/.hub/templates/*.yaml
-app-templates/react-es6/.hub/hub.yaml
-app-templates/react-es6/.hub/user.yaml
-app-templates/react-es6/.hub/components/*
+# react-es2018
+app-templates/react-es2018/package.json
+app-templates/react-es2018/.hub/templates/*.yaml
+app-templates/react-es2018/.hub/hub.yaml
+app-templates/react-es2018/.hub/user.yaml
+app-templates/react-es2018/.hub/components/*
 .asibot*
 
 # nodejs-backend
