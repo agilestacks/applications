@@ -71,7 +71,6 @@ outputs:
     value: '${component.s3website.bucket}'
   - name: application.jenkins.pipeline.url
     value: '${component.jenkins.url}/job/${application.name}-pipeline'
-'
 
 templates:
   files:
