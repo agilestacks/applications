@@ -3,6 +3,10 @@ terraform {
   backend "s3" {}
 }
 
+provider "aws" {
+  version = "1.41.0"
+}
+
 data "aws_caller_identity" "current" {}
 
 resource "aws_iam_role" "jenkins" {
