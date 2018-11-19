@@ -19,18 +19,18 @@ parameters:
     value:
     env: GITLAB_TOKEN
     empty: allow
-  - name: api
-    value: gitlab.com
-    env: API_SERVER
+  - name: url
+    value: https://gitlab.com/api/v4
+    env: BASE_URL
   - name: workspace
     value: ../../../
     env: SRC_DIR
-- name: component.gitlab.repository
+- name: component.gitlab
   parameters:
-  - name: organization
-    env: ORG
-  - name: name
-    env: REPO
+  - name: namespace
+    env: GITLAB_NAMESPACE
+  - name: project
+    env: GITLAB_PROJECT
   - name: protocol
     value: https
     env: HUB_PROTOCOL
@@ -49,13 +49,15 @@ parameters:
 outputs:
 - name: component.git.remote
   fromTfVar: clone_url
-- name: component.gitlab.repository.cloneUrl
+- name: component.gitlab.project.id
+  fromTfVar: private
+- name: component.gitlab.project.cloneUrl
   fromTfVar: clone_url
-- name: component.gitlab.repository.gitUrl
+- name: component.gitlab.project.gitUrl
   fromTfVar: git_url
-- name: component.gitlab.repository.htlmUrl
+- name: component.gitlab.project.htlmUrl
   fromTfVar: html_url
-- name: component.gitlab.repository.sshUrl
+- name: component.gitlab.project.sshUrl
   fromTfVar: ssh_url
-- name: component.gitlab.repository.private
+- name: component.gitlab.project.private
   fromTfVar: private

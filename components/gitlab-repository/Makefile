@@ -3,35 +3,33 @@
 export HUB_CONFIG := $(realpath .)/.hubconfig
 export HUB_PROTOCOL ?= https
 
-ORG ?= asitest
-REPO ?= test4
+GITLAB_NAMESPACE ?= asitest
+GITLAB_PROJECT ?= test4
 PRIVATE ?= true
 DESCRIPTION ?=
 HOMEPAGE ?=
-API_SERVER ?= gitlab.com
-BASE_URL = https://$(API_SERVER)/api/v4
+BASE_URL ?= https://gitlab.com/api/v4
 SRC_DIR ?= $(realpath .)
-REMOTE_NAME ?= $(ORG)-$(REPO)
+REMOTE_NAME ?= $(GITLAB_NAMESPACE)-$(GITLAB_PROJECT)
 
-USER_NAME ?= rick_r
-USER_EMAIL ?= rick.richardson@gmail.com
+USER_NAME ?= SuperHub
+USER_EMAIL ?= suppport@agilestacks.com
+
+jq := jq -cM
+git := git -C $(SRC_DIR)
 
 export GITLAB_TOKEN ?= CHANGEME
-
-curl := curl -fs -H "Private-Token: $(GITLAB_TOKEN)"
-jq := jq -cM
-git := git
-
-ifeq ($(GITLAB_TOKEN), "CHANGEME")
+ifeq ($(GITLAB_TOKEN),"CHANGEME")
 	unexport GITLAB_TOKEN
+	curl := curl -fs
+else
+	curl := curl -fs -H "Private-Token: $(GITLAB_TOKEN)"
 endif
 
 
 check-gitlab-api:
-	echo "Connecting to $(API_SERVER) with $(GITLAB_TOKEN)... "
-	$(eval orgdata=$(shell $(curl) -I $(BASE_URL)/groups/$(ORG)))
-	echo "org == $(orgdata)"
-	$(if $(orgdata),$(info "Connected"),$(error "Error connecting to $(API_SERVER)"))
+	@ echo "Connecting to $(BASE_URL)... "
+	$(eval orgdata=$(shell $(curl) -I $(BASE_URL)/projects))
 PHONY: check-gitlab-api
 
 deploy: create push output
@@ -41,21 +39,21 @@ init:
 .PHONY: init
 
 create: init check-gitlab-api
-	$(eval NAMESPACE=$(shell $(curl) $(BASE_URL)/groups/$(ORG) | jq '.id'))
-	$(curl) -XPOST "$(BASE_URL)/projects?name=$(REPO)&namespace_id=$(NAMESPACE)"
+	$(eval NID=$(shell $(curl) $(BASE_URL)/namespaces/$(GITLAB_NAMESPACE) | jq '.id'))
+	- $(curl) -XPOST "$(BASE_URL)/projects?name=$(GITLAB_PROJECT)&namespace_id=$(NID)"
 .PHONY: create
 
 $(HUB_CONFIG):
 	touch $@
 
 undeploy: $(HUB_CONFIG)
-	$(eval ID=$(shell $(curl) $(BASE_URL)/projects?owned=true | jq ".[] | select(.name == \"$(REPO)\") | .id"))
+	$(eval ID=$(shell $(curl) $(BASE_URL)/projects?owned=true | jq ".[] | select(.name == \"$(GITLAB_PROJECT)\") | .id"))
 	- $(curl) -XDELETE $(BASE_URL)/projects/$(ID)
 	rm -rf $(realpath $(SRC_DIR))/.git
 .PHONY: undeploy
 
 push:
-	$(eval ID=$(shell $(curl) $(BASE_URL)/projects?owned=true | jq ".[] | select(.name == \"$(REPO)\") | .id"))
+	$(eval ID=$(shell $(curl) $(BASE_URL)/projects?owned=true | jq ".[] | select(.name == \"$(GITLAB_PROJECT)\") | .id"))
 	$(eval REMOTE=$(shell $(curl) $(BASE_URL)/projects/$(ID) | $(jq) '.http_url_to_repo'))
 	@ echo Pushing to remote: $(REMOTE)
 
@@ -73,8 +71,8 @@ endif
 .PHONY: clone
 
 output:
-	$(eval ID=$(shell $(curl) $(BASE_URL)/projects?owned=true | jq ".[] | select(.name == \"$(REPO)\") | .id"))
-	$(eval GITLAB_OUTPUTS=$(shell $(curl) $(BASE_URL)/projects/$(ID)))
+	$(eval PID=$(shell $(curl) $(BASE_URL)/projects?owned=true | jq ".[] | select(.name == \"$(GITLAB_PROJECT)\") | .id"))
+	$(eval GITLAB_OUTPUTS=$(shell $(curl) $(BASE_URL)/projects/$(PID)))
 
 	@ echo Outputs:
 	@ echo clone_url = $(shell echo '$(GITLAB_OUTPUTS)' | $(jq) ".http_url_to_repo")

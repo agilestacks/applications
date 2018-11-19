@@ -12,9 +12,12 @@ components:
 - name: ecr
   source:
     dir: ../../../../components/ecr
-- name: github-repository
+- name: gitlab-repository
   source:
-    dir: ../../../components/github-repository
+    dir: ../../../components/gitlab-repository
+# - name: github-repository
+#   source:
+#     dir: ../../../components/github-repository
 - name: buildbox
   source:
     dir: ../../../../buildbox
@@ -30,7 +33,8 @@ lifecycle:
   verbs: [deploy, undeploy]
   order:
     - ecr
-    - github-repository
+    - gitlab-repository
+    # - github-repository
     - buildbox
     # - github-webhook
     - source-bucket
@@ -38,7 +42,8 @@ lifecycle:
     # - argo-sensor-artifact
   mandatory:
     - ecr
-    - github-repository
+    - gitlab-repository
+    # - github-repository
     - buildbox
     # - github-webhook
     - source-bucket
@@ -73,6 +78,8 @@ parameters:
   - name: docker.image
     value: ${component.docker.image}
     kind: link
+
+- name: component.docker.image
 
 - name: dns.domain
   env: DOMAIN_NAME
@@ -189,6 +196,17 @@ parameters:
     value: .
   - name: dockerfile
     value: Dockerfile
+  - name: namespace
+    value: ${component.argo.namespace}
+- name: component.gitlab
+  parameters:
+  - name: token
+    fromEnv: GITLAB_TOKEN
+    empty: allow
+  - name: namespace
+    value: akranga
+  - name: project
+    value: test-here
 
 - name: component.argo
   parameters:

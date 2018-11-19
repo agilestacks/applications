@@ -39,12 +39,10 @@ parameters:
 - name: component.github
   parameters:
   - name: token
-    value:
     env: GITHUB_TOKEN
-    empty: allow
-
+    empty: allows
 outputs:
-- name: component.buildbox.docker.image
+- name: component.docker.image
   fromTfVar: image
 - name: component.buildbox.docker.tag
   fromTfVar: tag
