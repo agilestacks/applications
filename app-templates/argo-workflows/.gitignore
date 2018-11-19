@@ -1,4 +1,5 @@
 .hub/manifests
+.hub/rbac.yaml
 .terraform
 *.tfplan
 *.state

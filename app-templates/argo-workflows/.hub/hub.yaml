@@ -207,6 +207,8 @@ parameters:
     value: akranga
   - name: project
     value: test-here
+  - name: workspace
+    value: ../../app-templates/argo-workflows
 
 - name: component.argo
   parameters:

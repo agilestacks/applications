@@ -10,7 +10,7 @@ DESCRIPTION ?=
 HOMEPAGE ?=
 BASE_URL ?= https://gitlab.com/api/v4
 SRC_DIR ?= $(realpath .)
-REMOTE_NAME ?= $(GITLAB_NAMESPACE)-$(GITLAB_PROJECT)
+REMOTE_NAME ?= gitlab-$(GITLAB_NAMESPACE)-$(GITLAB_PROJECT)
 
 USER_NAME ?= SuperHub
 USER_EMAIL ?= suppport@agilestacks.com
@@ -21,9 +21,9 @@ git := git -C $(SRC_DIR)
 export GITLAB_TOKEN ?= CHANGEME
 ifeq ($(GITLAB_TOKEN),"CHANGEME")
 	unexport GITLAB_TOKEN
-	curl := curl -fs
+	curl := curl -s
 else
-	curl := curl -fs -H "Private-Token: $(GITLAB_TOKEN)"
+	curl := curl -s -H "Private-Token: $(GITLAB_TOKEN)"
 endif
 
 
@@ -38,24 +38,30 @@ init:
 	$(git) init
 .PHONY: init
 
-create: init check-gitlab-api
-	$(eval NID=$(shell $(curl) $(BASE_URL)/namespaces/$(GITLAB_NAMESPACE) | jq '.id'))
-	- $(curl) -XPOST "$(BASE_URL)/projects?name=$(GITLAB_PROJECT)&namespace_id=$(NID)"
+create: check-gitlab-api
+	$(eval NID=$(shell $(curl) $(BASE_URL)/namespaces/$(GITLAB_NAMESPACE) | $(jq) '.id'))
+	echo Creating gitlab project: $(GITLAB_PROJECT) in namespace: $(NID)
+	$(curl) --request POST \
+	--form "namespace_id=$(NID)" \
+	--form "path=$(GITLAB_PROJECT)" \
+	"$(BASE_URL)/projects"
+
 .PHONY: create
 
 $(HUB_CONFIG):
 	touch $@
 
 undeploy: $(HUB_CONFIG)
-	$(eval ID=$(shell $(curl) $(BASE_URL)/projects?owned=true | jq ".[] | select(.name == \"$(GITLAB_PROJECT)\") | .id"))
-	- $(curl) -XDELETE $(BASE_URL)/projects/$(ID)
+	$(eval NID=$(shell $(curl) $(BASE_URL)/namespaces/$(GITLAB_NAMESPACE) | $(jq) '.id'))
+	$(eval PID=$(shell $(curl) $(BASE_URL)/projects?owned=true| jq ".[] | select(.name == \"$(GITLAB_PROJECT)\") | .id"))
+	- $(curl) -XDELETE $(BASE_URL)/projects/$(PID)
 	rm -rf $(realpath $(SRC_DIR))/.git
 .PHONY: undeploy
 
-push:
-	$(eval ID=$(shell $(curl) $(BASE_URL)/projects?owned=true | jq ".[] | select(.name == \"$(GITLAB_PROJECT)\") | .id"))
-	$(eval REMOTE=$(shell $(curl) $(BASE_URL)/projects/$(ID) | $(jq) '.http_url_to_repo'))
-	@ echo Pushing to remote: $(REMOTE)
+push: init
+	$(eval PID=$(shell $(curl) $(BASE_URL)/projects?owned=true | $(jq) ".[] | select(.name == \"$(GITLAB_PROJECT)\") | .id"))
+	$(eval REMOTE=$(shell $(curl) $(BASE_URL)/projects/$(PID) | $(jq) '.http_url_to_repo'))
+	@ echo Pushing to namespace: project: $(PID), remote: $(REMOTE)
 
 ifneq ($(GITLAB_TOKEN),)
 	$(eval REMOTE=$(subst ://,://oauth2:$(GITLAB_TOKEN)@,$(REMOTE)))
@@ -71,7 +77,7 @@ endif
 .PHONY: clone
 
 output:
-	$(eval PID=$(shell $(curl) $(BASE_URL)/projects?owned=true | jq ".[] | select(.name == \"$(GITLAB_PROJECT)\") | .id"))
+	$(eval PID=$(shell $(curl) $(BASE_URL)/projects?owned=true | $(jq) ".[] | select(.name == \"$(GITLAB_PROJECT)\") | .id"))
 	$(eval GITLAB_OUTPUTS=$(shell $(curl) $(BASE_URL)/projects/$(PID)))
 
 	@ echo Outputs:
