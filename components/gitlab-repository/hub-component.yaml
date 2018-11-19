@@ -50,7 +50,7 @@ outputs:
 - name: component.git.remote
   fromTfVar: clone_url
 - name: component.gitlab.project.id
-  fromTfVar: private
+  fromTfVar: project_id
 - name: component.gitlab.project.cloneUrl
   fromTfVar: clone_url
 - name: component.gitlab.project.gitUrl

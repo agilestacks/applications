@@ -86,5 +86,5 @@ output:
 	@ echo html_url = $(shell echo '$(GITLAB_OUTPUTS)' | $(jq) ".web_url")
 	@ echo ssh_url = $(shell echo '$(GITLAB_OUTPUTS)' | $(jq) ".ssh_url_to_repo")
 	@ echo private = $(shell echo '$(GITLAB_OUTPUTS)'| $(jq) ".visibility == \"private\"")
-	@ echo project_id = $(shell echo $(ID))
+	@ echo project_id = $(PID)
 .PHONY: output

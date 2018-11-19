@@ -209,6 +209,8 @@ parameters:
     value: test-here
   - name: workspace
     value: ../../app-templates/argo-workflows
+  - name: project.id
+    empty: allow
 
 - name: component.argo
   parameters:
