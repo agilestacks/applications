@@ -29,19 +29,19 @@ parameters:
   parameters:
   - name: namespace
     env: GITLAB_NAMESPACE
-  - name: project
-    env: GITLAB_PROJECT
   - name: protocol
     value: https
     env: HUB_PROTOCOL
-  - name: private
-    value: 'false'
-    env: PRIVATE
-  - name: description
+  - name: project.name
+    env: PROJECT_NAME
+  - name: project.visibility
+    value: private
+    env: PROJECT_VISIBILITY
+  - name: project.description
     value:
-    env: DESCRIPTION
+    env: PROJECT_DESCRIPTION
     empty: allow
-  - name: homepage
+  - name: project.homepage
     value:
     env: HOMEPAGE
     empty: allow

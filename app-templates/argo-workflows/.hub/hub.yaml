@@ -205,12 +205,16 @@ parameters:
     empty: allow
   - name: namespace
     value: akranga
-  - name: project
-    value: test-here
   - name: workspace
     value: ../../app-templates/argo-workflows
   - name: project.id
     empty: allow
+  - name: project.name
+    value: test-here
+  - name: project.path
+    value: test-here
+  - name: project.visibility
+    value: public
 
 - name: component.argo
   parameters:

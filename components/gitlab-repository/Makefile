@@ -4,19 +4,23 @@ export HUB_CONFIG := $(realpath .)/.hubconfig
 export HUB_PROTOCOL ?= https
 
 GITLAB_NAMESPACE ?= asitest
-GITLAB_PROJECT ?= test4
-PRIVATE ?= true
-DESCRIPTION ?=
 HOMEPAGE ?=
 BASE_URL ?= https://gitlab.com/api/v4
 SRC_DIR ?= $(realpath .)
-REMOTE_NAME ?= gitlab-$(GITLAB_NAMESPACE)-$(GITLAB_PROJECT)
+REMOTE_NAME ?= gitlab-$(GITLAB_NAMESPACE)-$(PROJECT_PATH)
+PROJECT_PATH ?= test4
+PROJECT_DESCRIPTION ?=
+PROJECT_VISIBILITY ?= private
+ifeq ($(PROJECT_NAME),)
+	PROJECT_NAME := $(PROJECT_PATH)
+endif
 
 USER_NAME ?= SuperHub
 USER_EMAIL ?= suppport@agilestacks.com
 
 jq := jq -cM
 git := git -C $(SRC_DIR)
+
 
 export GITLAB_TOKEN ?= CHANGEME
 ifeq ($(GITLAB_TOKEN),"CHANGEME")
@@ -40,10 +44,12 @@ init:
 
 create: check-gitlab-api
 	$(eval NID=$(shell $(curl) $(BASE_URL)/namespaces/$(GITLAB_NAMESPACE) | $(jq) '.id'))
-	echo Creating gitlab project: $(GITLAB_PROJECT) in namespace: $(NID)
+	echo Creating gitlab project: $(PROJECT_PATH) in namespace: $(NID)
 	$(curl) --request POST \
 	--form "namespace_id=$(NID)" \
-	--form "path=$(GITLAB_PROJECT)" \
+	--form "name=$(PROJECT_NAME)" \
+	--form "path=$(PROJECT_PATH)" \
+	--form "visibility=$(PROJECT_VISIBILITY)" \
 	"$(BASE_URL)/projects"
 
 .PHONY: create
@@ -53,13 +59,13 @@ $(HUB_CONFIG):
 
 undeploy: $(HUB_CONFIG)
 	$(eval NID=$(shell $(curl) $(BASE_URL)/namespaces/$(GITLAB_NAMESPACE) | $(jq) '.id'))
-	$(eval PID=$(shell $(curl) $(BASE_URL)/projects?owned=true| jq ".[] | select(.name == \"$(GITLAB_PROJECT)\") | .id"))
+	$(eval PID=$(shell $(curl) $(BASE_URL)/projects?owned=true| jq ".[] | select(.name == \"$(PROJECT_NAME)\") | .id"))
 	- $(curl) -XDELETE $(BASE_URL)/projects/$(PID)
 	rm -rf $(realpath $(SRC_DIR))/.git
 .PHONY: undeploy
 
 push: init
-	$(eval PID=$(shell $(curl) $(BASE_URL)/projects?owned=true | $(jq) ".[] | select(.name == \"$(GITLAB_PROJECT)\") | .id"))
+	$(eval PID=$(shell $(curl) $(BASE_URL)/projects?owned=true | $(jq) ".[] | select(.name == \"$(PROJECT_NAME)\") | .id"))
 	$(eval REMOTE=$(shell $(curl) $(BASE_URL)/projects/$(PID) | $(jq) '.http_url_to_repo'))
 	@ echo Pushing to namespace: project: $(PID), remote: $(REMOTE)
 
@@ -77,7 +83,7 @@ endif
 .PHONY: clone
 
 output:
-	$(eval PID=$(shell $(curl) $(BASE_URL)/projects?owned=true | $(jq) ".[] | select(.name == \"$(GITLAB_PROJECT)\") | .id"))
+	$(eval PID=$(shell $(curl) $(BASE_URL)/projects?owned=true | $(jq) ".[] | select(.name == \"$(PROJECT_NAME)\") | .id"))
 	$(eval GITLAB_OUTPUTS=$(shell $(curl) $(BASE_URL)/projects/$(PID)))
 
 	@ echo Outputs:
