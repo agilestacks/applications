@@ -10,7 +10,7 @@ components:
 - name: buildbox
   source:
     repoUrl: https://github.com/agilestacks/buildbox.git
-    repoPath: .
+    repoPath: buildbox
     dir: components/buildbox
     branch: COMPONENTS_TAG
     fromEnv: GITHUB_TOKEN
