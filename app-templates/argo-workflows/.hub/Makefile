@@ -43,7 +43,7 @@ $(APP_ELABORATE_FILE):
 		-s $(PLATFORM_STATE_FILE) \
 		-o $@
 
-install: $(APP_ELABORATE_FILE)
+install: debug $(APP_ELABORATE_FILE)
 	$(hub) deploy $(lastword $^) \
 		-s $(APP_STATE_FILE)
 .PHONY: install
@@ -55,3 +55,7 @@ uninstall: $(APP_ELABORATE_FILE)
 clean:
 	rm -rf $(APP_ELABORATE_FILE) $(APP_STATE_FILE) .git
 
+debug:
+	find $(realpath ..)
+	cat hub.yaml
+.PHONY: debug
