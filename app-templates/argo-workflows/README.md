@@ -19,7 +19,7 @@ Workflow Applications also automate the dev/test/deploy cycle by automatically r
 ## Prerequisites
 - Create an API access token in either Github or Gitlab. **Important!**: token must have following capabilities: `repo`, `admin:repo_hook`, `delete_repo`
 - These can be created and configured [here](https://github.com/settings/tokens)
-- Once you have this token, assignn it to the environment Environment variable `GITHUB_TOKEN`,  or `GITLAB_TOKEN` depending on your chosen platform. 
+- Once you have this token, assign it to the environment Environment variable `GITHUB_TOKEN`,  or `GITLAB_TOKEN` depending on your chosen platform. 
 
 ## Configuration
 Define following parameters in `hub.yaml`:
