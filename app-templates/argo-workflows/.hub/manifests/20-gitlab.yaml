@@ -1,0 +1,69 @@
+---
+components:
+- name: gitlab-repository
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/github-repository
+    dir: components/github-repository
+    branch: COMPONENTS_TAG
+    fromEnv: GITHUB_TOKEN
+- name: buildbox
+  source:
+    repoUrl: https://github.com/agilestacks/buildbox.git
+    repoPath: .
+    dir: components/buildbox
+    branch: COMPONENTS_TAG
+    fromEnv: GITHUB_TOKEN
+
+lifecycle:
+  order:
+    - gitlab-repository
+    - buildbox
+
+parameters:
+- name: applications.gitlab.project.path
+
+- name: component.git
+  parameters:
+  - name: remote
+  - name: user.name
+    value: Super Hub
+  - name: user.email
+    value: support@agilestacks.com
+  - name: remote
+
+- name: component.buildbox
+  parameters:
+  - name: directory
+    value: .
+  - name: dockerfile
+    value: Dockerfile
+  - name: namespace
+    value: ${component.argo.namespace}
+  - name: timeout
+    value: 900
+    env: TIMEOUT
+- name: component.gitlab
+  parameters:
+  - name: token
+    fromEnv: COMPONENT_GITLAB_TOKEN
+    empty: allow
+  - name: namespace
+    value: akranga
+  - name: project.id
+    empty: allow
+  - name: project.name
+    value: akranga
+  - name: project.path
+    value: ${applications.gitlab.project.path}
+    kind: link
+  - name: project.visibility
+    value: public
+  - name: project.description
+    value: >
+      Worfklow application template backed with Argo.
+      Optimized to carry simulation and data science tasks
+
+outputs:
+- name: application.git.remote
+  value: ${component.git.remote}
