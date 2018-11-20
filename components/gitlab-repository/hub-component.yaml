@@ -16,10 +16,9 @@ parameters:
 - name: component.gitlab
   parameters:
   - name: token
-    value:
     env: GITLAB_TOKEN
     empty: allow
-  - name: url
+  - name: server.url
     value: https://gitlab.com/api/v4
     env: BASE_URL
   - name: workspace
@@ -29,11 +28,13 @@ parameters:
   parameters:
   - name: namespace
     env: GITLAB_NAMESPACE
-  - name: protocol
-    value: https
-    env: HUB_PROTOCOL
+    empty: allow
   - name: project.name
     env: PROJECT_NAME
+    empty: allow
+  - name: project.path
+    env: PROJECT_PATH
+    empty: allow
   - name: project.visibility
     value: private
     env: PROJECT_VISIBILITY
@@ -41,6 +42,9 @@ parameters:
     value:
     env: PROJECT_DESCRIPTION
     empty: allow
+  - name: protocol
+    value: https
+    env: HUB_PROTOCOL
   - name: project.homepage
     value:
     env: HOMEPAGE
