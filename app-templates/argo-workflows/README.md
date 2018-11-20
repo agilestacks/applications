@@ -1,11 +1,13 @@
 # Workflow Application Template
-Workflow applications allow to create data processing pipelines for execution of distributed simulation, training and inferencing jobs in containers. This workflow applications template has been optimized for data preparation and simulation tasks.  The example workflow step performs video transcoding for video files copied to input storage bucket and writes transcoded vide to the output storage bucket.
+Workflow applications are useful for any multi-stage computational pipeline. They simplify the task of performing complex staging or data ETL to run dependent chains of jobs, such as simulations or machine learning. The example workflow step performs video transcoding for video files copied to input storage bucket and writes transcoded video to the output storage bucket. This demonstrates integration between Argo and Minio.
 
-# Components 
+Workflow Applications also automate the dev/test/deploy cycle by automatically registering with your source control system to initiate build jobs when commits occur under the specified conditions. 
+
+# Major Components 
 - Git repository in order to store Docker files that define workflow steps
 - Argo workflow specs
-- Container registry where to push containers to be executed by the workflow
-- Object storage and event processing to automatically schedule execution of workflow steps
+- Container registry for resulting containers.
+- Event-Monitoring integrated with Object storage
 
 ## Usage Scenario
 1. Create a Git repository
@@ -15,7 +17,9 @@ Workflow applications allow to create data processing pipelines for execution of
 4. Push source code for container to Git to activate the build and deploy process
 
 ## Prerequisites
-- Environment variable `GITHUB_TOKEN`: Github OAuth token (configured [here](https://github.com/settings/tokens)) **Important!**: token must have following capabilities: `repo`, `admin:repo_hook`, `delete_repo`
+- Create an API access token in either Github or Gitlab. **Important!**: token must have following capabilities: `repo`, `admin:repo_hook`, `delete_repo`
+- These can be created and configured [here](https://github.com/settings/tokens)
+- Once you have this token, assignn it to the environment Environment variable `GITHUB_TOKEN`,  or `GITLAB_TOKEN` depending on your chosen platform. 
 
 ## Configuration
 Define following parameters in `hub.yaml`:
