@@ -3,8 +3,8 @@ components:
 - name: gitlab-repository
   source:
     repoUrl: https://github.com/agilestacks/applications.git
-    repoPath: applications/components/github-repository
-    dir: components/github-repository
+    repoPath: applications/components/gitlab-repository
+    dir: components/gitlab-repository
     branch: COMPONENTS_TAG
     fromEnv: GITHUB_TOKEN
 - name: buildbox
