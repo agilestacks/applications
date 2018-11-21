@@ -72,7 +72,7 @@ outputs:
   - name: application.jenkins.pipeline.url
     value: '${component.jenkins.url}/job/${application.name}-pipeline'
   - name: application.promotion.templates
-    value: simple
+    value: simple-promote,custom-promote
 
 templates:
   files:
