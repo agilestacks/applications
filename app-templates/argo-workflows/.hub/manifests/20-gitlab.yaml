@@ -65,5 +65,7 @@ parameters:
       Optimized to carry simulation and data science tasks
 
 outputs:
+- name: application.git.kind
+  value: gitlab
 - name: application.git.remote
   value: ${component.git.remote}
