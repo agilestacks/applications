@@ -11,15 +11,13 @@ const {
     uniq
 } = require('lodash');
 const shelljs = require('shelljs');
-// const shell = require('child_process').sync;
 
 const fs = require('fs');
 const glob = require("glob").sync;
 
 const manifestURL = process.env.APPLICATION_MANIFEST;
-const appRepoOrg = process.env.APP_REPO_ORG;
-const appRepoName = process.env.APP_REPO_NAME;
-const appRepoToken = process.env.COMPONENT_GITHUB_TOKEN;
+const repoUrl = process.env.APP_GIT_REMOTE;
+
 const workspaceDir = process.env.WORKSPACE_DIR === undefined ? './workspace' :
     process.env.WORKSPACE_DIR;
 const hubDir = [workspaceDir, '.hub'].join('/');
@@ -62,13 +60,19 @@ async function clean(directories) {
     });
 }
 
-function securedGithubUrl(url, token) {
-    const githubToken = process.env[token];
-    if (!url.startsWith('https://github.com')) {
-        logger.error('Only repositories from Github are supported right now');
-        fail();
+function securedGitUrl({repoUrl, tokenEnv}) {
+    let token = process.env[tokenEnv];
+    if (repoUrl.startsWith('https://github.com')) {
+        if (!token) {
+            token = process.env.COMPONENT_GITHUB_TOKEN;
+        }
+        return repoUrl.replace('github.com', `${token}@github.com`);
+    } else {
+        if (!token) {
+            token = process.env.COMPONENT_GITLAB_TOKEN;
+        }
+        return repoUrl.replace('://', `://oauth2:${token}@`);
     }
-    return url.replace('github.com', `${githubToken}@github.com`);
 }
 
 async function checkoutApplication(meta) {
@@ -77,14 +81,14 @@ async function checkoutApplication(meta) {
         source
     } = meta;
     const {
-        repoUrl: url,
+        repoUrl,
         repoPath,
         branch,
         dir,
-        fromEnv: token
+        fromEnv: tokenEnv
     } = source;
     const appName = name.split(':')[0];
-    const securedGithub = securedGithubUrl(url, token);
+    const securedGithub = securedGitUrl({repoUrl, tokenEnv});
     const gitBranch = process.env[branch] || 'master';
     shelljs.exec(`git clone --single-branch -b ${gitBranch} ${securedGithub}`);
     const srcPath = repoPath === undefined ? appName : [repoPath, appName].join('/');
@@ -92,7 +96,7 @@ async function checkoutApplication(meta) {
     shelljs.mkdir('-p', destPath);
     shelljs.touch(`${srcPath}/.cpignore`)
     shelljs.exec(`rsync -htrzai --progress --exclude-from ${srcPath}/.cpignore ${srcPath}/ ${destPath}`);
-    return url;
+    return repoUrl;
 }
 
 async function prepareWorkspace(manifest) {
@@ -110,16 +114,16 @@ async function prepareWorkspace(manifest) {
             source
         } = component;
         const {
-            repoUrl: url,
+            repoUrl,
             repoPath,
             branch,
             dir,
-            fromEnv: token
+            fromEnv: tokenEnv
         } = source;
         const gitBranch = process.env[branch] || 'master';
-        if (!clonedRepos.includes(url)) {
-            clonedRepos.push(url);
-            const securedGithub = securedGithubUrl(url, token);
+        if (!clonedRepos.includes(repoUrl)) {
+            clonedRepos.push(repoUrl);
+            const securedGithub = securedGitUrl({repoUrl, tokenEnv});
             shelljs.exec(`git clone --single-branch -b ${gitBranch} ${securedGithub}`);
         }
         const srcPath = repoPath
@@ -192,10 +196,10 @@ async function perform() {
             await prepareWorkspace(manifest);
             copyManifest(manifest);
             await callShellHooks(manifest.parameters);
-        } else if (appRepoName && appRepoOrg && appRepoToken) {
-            const gitUrl = securedGithubUrl(`https://github.com/${appRepoOrg}/${appRepoName}.git`, appRepoToken);
+        } else if (repoUrl) {
+            const gitUrl = securedGitUrl({repoUrl});
             shelljs.exec(`git clone --single-branch -b master ${gitUrl}`);
-            shelljs.exec(`rsync -htrzai --progress ${appRepoName}/ ${workspaceDir}`);
+            shelljs.exec(`rsync -htrzai --progress $(basename ${gitUrl} .git)/ ${workspaceDir}`);
             logger.info('Application workspace initialized');
         } else {
             throw new Error('Cannot initialize application workspace');
