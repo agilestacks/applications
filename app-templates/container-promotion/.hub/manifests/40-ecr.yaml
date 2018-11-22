@@ -3,8 +3,8 @@ components:
 - name: target-ecr
   source:
     repoUrl: https://github.com/agilestacks/applications.git
-    repoPath: applications/components/target-ecr
-    dir: components/target-ecr
+    repoPath: applications/components/ecr
+    dir: components/ecr
     branch: master
     fromEnv: GITHUB_TOKEN
 lifecycle:
