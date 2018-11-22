@@ -14,7 +14,7 @@ parameters:
 - name: component.ecr
   parameters:
   - name: name
-    value: ${application.target.environment}.${application.name}.${component.kubernetesProvider.domain}
+    value: ${promotion.environment}.${application.name}.${component.kubernetesProvider.domain}
     kind: link
 - name: cloud.region
   component: target-ecr

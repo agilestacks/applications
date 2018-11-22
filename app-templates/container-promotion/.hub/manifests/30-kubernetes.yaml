@@ -39,7 +39,7 @@ outputs:
 - name: application.target.domain
   value: ${component.kubernetesProvider.domain}
 - name: application.target.fqdn
-  value: ${application.target.environment}.${application.name}.${application.target.ingress.fqdn}
+  value: ${promotion.environment}.${application.name}.${application.target.ingress.fqdn}
 - name: application.target.jenkins.pipeline.url
-  value: '${component.jenkins.url}/job/${application.name}-pipeline-${application.target.environment}'
+  value: '${component.jenkins.url}/job/${application.name}-pipeline-${promotion.environment}'
            

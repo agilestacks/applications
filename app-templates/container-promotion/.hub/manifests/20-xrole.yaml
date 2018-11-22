@@ -21,7 +21,7 @@ parameters:
     fromEnv: TARGET_AWS_SESSION_TOKEN
   - name: roleArn  
   - name: name
-    value: ${application.target.environment}.${application.name}
+    value: ${promotion.environment}.${application.name}
 outputs:  
 - name: application.target.roleArn  
   value: ${component.xaccountRole.roleArn}
