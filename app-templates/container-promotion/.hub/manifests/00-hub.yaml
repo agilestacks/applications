@@ -51,7 +51,9 @@ outputs:
 - name: application.target.environment
   value: ${application.target.environment}
 - name: application.target.path
-  value: ${application.path}                
+  value: ${application.path}
+- name: application.target.url
+  value: ${application.target.ingress.protocol}://${application.target.fqdn}${application.target.path}                  
 templates:
   files:
     - templates/*.template    

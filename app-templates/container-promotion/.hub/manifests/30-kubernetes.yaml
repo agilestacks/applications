@@ -40,8 +40,6 @@ outputs:
   value: ${component.kubernetesProvider.domain}
 - name: application.target.fqdn
   value: ${application.target.environment}.${application.name}.${application.target.ingress.fqdn}
-- name: application.target.url
-  value: ${application.target.ingress.protocol}://${application.target.fqdn}${application.target.path}
 - name: application.target.jenkins.pipeline.url
   value: '${component.jenkins.url}/job/${application.name}-pipeline-${application.target.environment}'
            
