@@ -1,0 +1,21 @@
+---
+version: 1
+kind: component
+meta:
+  name: github-orphan
+  brief: Github orphan branch
+  source:
+    dir: components/github-orphan
+
+parameters:
+- name: component.githubOrphan
+  parameters:
+  - name: git.token
+    env: GITHUB_TOKEN
+  - name: git.branch
+    env: OPRHAN_NAME
+  - name: git.repository
+    env: REMOTE
+- name: workspace
+  value: ../../../
+  env: SRC_DIR 
