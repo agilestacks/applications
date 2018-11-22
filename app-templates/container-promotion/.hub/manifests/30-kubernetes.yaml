@@ -1,0 +1,47 @@
+---
+components:
+- name: kubernetes-provider
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/kubernetes-provider
+    dir: components/kubernetes-provider
+    branch: master
+    fromEnv: GITHUB_TOKEN
+lifecycle:
+  order:
+    - kubernetes-provider
+parameters:
+- name: component.kubernetesProvider
+  parameters:
+  - name: stateFile
+    fromEnv: KUBE_PROVIDER_STATE_FILE
+  - name: elaborateFile
+    fromEnv: KUBE_PROVIDER_ELABORATE_FILE
+  - name: roleArn
+    value: ${component.xaccountRole.roleArn}
+    kind: link  
+  - name: ingress.fqdn
+  - name: ingress.ssoFqdn
+  - name: ingress.protocol
+  - name: region
+  - name: domain
+outputs:
+- name: application.target.platform.state.file
+  value: ${component.kubernetesProvider.stateFile}
+- name: application.target.ingress.fqdn
+  value: ${component.kubernetesProvider.ingress.fqdn}        
+- name: application.target.ingress.ssoFqdn
+  value: ${component.kubernetesProvider.ingress.ssoFqdn} 
+- name: application.target.ingress.protocol
+  value: ${component.kubernetesProvider.ingress.protocol} 
+- name: application.target.region
+  value: ${component.kubernetesProvider.region}
+- name: application.target.domain
+  value: ${component.kubernetesProvider.domain}
+- name: application.target.fqdn
+  value: ${application.target.environment}.${application.name}.${application.target.ingress.fqdn}
+- name: application.target.url
+  value: ${application.target.ingress.protocol}://${application.target.fqdn}${application.target.path}
+- name: application.target.jenkins.pipeline.url
+  value: '${component.jenkins.url}/job/${application.name}-pipeline-${application.target.environment}'
+           

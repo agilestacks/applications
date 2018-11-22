@@ -1,0 +1,25 @@
+---
+components:
+- name: target-ecr
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/target-ecr
+    dir: components/target-ecr
+    branch: master
+    fromEnv: GITHUB_TOKEN
+lifecycle:
+  order:
+    - target-ecr
+parameters:
+- name: component.ecr
+  parameters:
+  - name: name
+    value: ${application.target.environment}.${application.name}.${component.kubernetesProvider.domain}
+    kind: link
+- name: cloud.region
+  component: target-ecr
+  value: ${component.kubernetesProvider.region} 
+  kind: link
+outputs:
+- name: application.target.ecr
+  value: ${component.docker.image}

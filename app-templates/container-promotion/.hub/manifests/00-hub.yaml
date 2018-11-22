@@ -1,0 +1,56 @@
+version: 1
+kind: application
+meta:
+  name: 'container-promotion:1'
+  brief: Template that promotes containerized applications to greater environments
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/app-templates
+    dir: .
+    branch: master
+    fromEnv: GITHUB_TOKEN
+requires:
+  - kubernetes
+  - jenkins
+components: []
+parameters:
+- name: component.jenkins.url
+- name: dns.domain
+  env: DOMAIN_NAME
+- name: cloud.region    
+- name: application.cloud.role
+- name: application.docker.image
+- name: application.name
+- name: application.path
+- name: application.namespace
+- name: application.version
+- name: application.replicas
+- name: application.git.remote
+- name: application.target.environment
+- name: application.target.branch
+  value: ${application.target.environment} 
+- name: terraform.bucket.name
+- name: terraform.bucket.region
+- name: component.docker.image
+- name: application.promotion.state.file
+  fromEnv: APP_STATE_FILE
+outputs:
+- name: application.source.ecr
+  value: ${application.docker.image}
+- name: application.name 
+  value: ${application.name} 
+- name: application.namespace
+  value: ${application.namespace}
+- name: application.version
+  value: ${application.version}  
+- name: application.replicas
+  value: ${application.replicas}   
+- name: application.git.remote
+  value: ${application.git.remote}
+- name: application.target.environment
+  value: ${application.target.environment}
+- name: application.target.path
+  value: ${application.path}                
+templates:
+  files:
+    - templates/*.template    
