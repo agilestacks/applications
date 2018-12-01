@@ -70,7 +70,7 @@ parameters:
     value: ${source-bucket:component.bucket.secret.namespace}
     env: SRC_BUCKET_ENDPOINT
   - name: endpoint
-    value: ${source-bucket:omponent.bucket.endpoint}
+    value: ${source-bucket:component.bucket.endpoint}
     env: SRC_BUCKET_ENDPOINT
   - name: secret.name
     value: ${source-bucket:component.bucket.secret.name}
