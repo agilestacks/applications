@@ -16,3 +16,4 @@ workflows/webhook-workflow.yaml
 workflows/artifact-workflow.json
 workflows/webhook-workflow.json
 workflows/http-server.yaml
+README.md.template

@@ -67,6 +67,9 @@ parameters:
     value: .
   - name: dockerfile
     value: Dockerfile
+  - name: timeout
+    value: 900
+    env: TIMEOUT
 
 outputs:
 - name: application.webhook.url

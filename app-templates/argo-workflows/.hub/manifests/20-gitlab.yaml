@@ -40,9 +40,7 @@ parameters:
     value: Dockerfile
   - name: namespace
     value: ${component.argo.namespace}
-  - name: timeout
-    value: 900
-    env: TIMEOUT
+
 - name: component.gitlab
   parameters:
   - name: token

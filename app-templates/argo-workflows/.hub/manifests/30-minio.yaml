@@ -39,6 +39,7 @@ parameters:
   parameters:
   - name: endpoint
   - name: secret.name
+  - name: secret.namespace
   - name: secret.accessKeyRef
   - name: secret.secretKeyRef
 

@@ -258,6 +258,7 @@ outputs:
 templates:
   files:
     - "*.template"
+    - "../*.template"
     - "../gateways/*.template"
     - "../sensors/*.template"
     - "../workflows/*.template"

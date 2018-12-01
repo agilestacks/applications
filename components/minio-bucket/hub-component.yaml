@@ -31,10 +31,10 @@ parameters:
   - name: endpoint
     env: ENDPOINT
   - name: secret.namespace
-    value: minio
+    default: minio
     env: NAMESPACE
   - name: secret.name
-    value: minio
+    default: minio
     env: SECRET_NAME
   - name: secret.accessKeyRef
     value: accesskey
