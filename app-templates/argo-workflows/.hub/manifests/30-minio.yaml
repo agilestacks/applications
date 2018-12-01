@@ -36,20 +36,17 @@ parameters:
   - name: protocol
 
 - name: component.bucket
-  parameters:
-  - name: endpoint
-  - name: secret.name
-  - name: secret.namespace
-  - name: secret.accessKeyRef
-  - name: secret.secretKeyRef
-
-- name: component.bucket
   component: source-bucket
   parameters:
   - name: name
     value: ${application.name}-input
   - name: event.prefix
     value: ""
+  - name: endpoint
+  - name: secret.name
+  - name: secret.namespace
+  - name: secret.accessKeyRef
+  - name: secret.secretKeyRef
 
 - name: component.bucket
   component: target-bucket
@@ -58,24 +55,32 @@ parameters:
     value: ${application.name}-output
   - name: event.prefix
     value: ""
+  - name: endpoint
+  - name: secret.name
+  - name: secret.namespace
+  - name: secret.accessKeyRef
+  - name: secret.secretKeyRef
 
 - name: application.source.bucket
   kind: link
   parameters:
   - name: name
     value: ${source-bucket:component.bucket.name}
+  - name: secret.namespace
+    value: ${source-bucket:component.bucket.secret.namespace}
+    env: SRC_BUCKET_ENDPOINT
   - name: endpoint
-    value: ${component.bucket.endpoint}
-    env: DEST_BUCKET_ENDPOINT
+    value: ${source-bucket:omponent.bucket.endpoint}
+    env: SRC_BUCKET_ENDPOINT
   - name: secret.name
-    value: ${component.bucket.secret.name}
-    env: DEST_BUCKET_SECRET_NAME
+    value: ${source-bucket:component.bucket.secret.name}
+    env: SRC_BUCKET_SECRET_NAME
   - name: secret.accessKeyRef
-    value: ${component.bucket.secret.accessKeyRef}
-    env: DEST_BUCKET_ACCESSKEY
+    value: ${source-bucket:component.bucket.secret.accessKeyRef}
+    env: SRC_BUCKET_ACCESSKEY
   - name: secret.secretKeyRef
-    value: ${component.bucket.secret.secretKeyRef}
-    env: DEST_BUCKET_SECRETKEY
+    value: ${source-bucket:component.bucket.secret.secretKeyRef}
+    env: SRC_BUCKET_SECRETKEY
   - name: prefix
     value: ${source-bucket:component.bucket.event.prefix}
     empty: allow
@@ -90,20 +95,23 @@ parameters:
   parameters:
   - name: name
     value: ${target-bucket:component.bucket.name}
+  - name: secret.namespace
+    value: ${target-bucket:component.bucket.secret.namespace}
+    env: DEST_BUCKET_ENDPOINT
   - name: endpoint
-    value: ${component.bucket.endpoint}
-    env: SRC_BUCKET_ENDPOINT
+    value: ${target-bucket:component.bucket.endpoint}
+    env: DEST_BUCKET_ENDPOINT
   - name: secret.name
-    value: ${component.bucket.secret.name}
-    env: SRC_BUCKET_SECRET_NAME
+    value: ${target-bucket:component.bucket.secret.name}
+    env: DEST_BUCKET_SECRET_NAME
   - name: secret.accessKeyRef
-    value: ${component.bucket.secret.accessKeyRef}
-    env: SRC_BUCKET_ACCESSKEY
+    value: ${target-bucket:component.bucket.secret.accessKeyRef}
+    env: DEST_BUCKET_ACCESSKEY
   - name: secret.secretKeyRef
-    value: ${component.bucket.secret.secretKeyRef}
-    env: SRC_BUCKET_SECRETKEY
+    value: ${target-bucket:component.bucket.secret.secretKeyRef}
+    env: DEST_BUCKET_SECRETKEY
   - name: prefix
-    value: ${source-bucket:component.bucket.event.prefix}
+    value: ${target-bucket::component.bucket.event.prefix}
     empty: allow
     kind: user
   - name: suffix
