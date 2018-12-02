@@ -68,7 +68,7 @@ parameters:
     value: ${source-bucket:component.bucket.name}
   - name: secret.namespace
     value: ${source-bucket:component.bucket.secret.namespace}
-    env: SRC_BUCKET_ENDPOINT
+    env: SRC_BUCKET_NAMESPACE
   - name: endpoint
     value: ${source-bucket:component.bucket.endpoint}
     env: SRC_BUCKET_ENDPOINT
@@ -97,7 +97,7 @@ parameters:
     value: ${target-bucket:component.bucket.name}
   - name: secret.namespace
     value: ${target-bucket:component.bucket.secret.namespace}
-    env: DEST_BUCKET_ENDPOINT
+    env: DEST_BUCKET_NAMESPACE
   - name: endpoint
     value: ${target-bucket:component.bucket.endpoint}
     env: DEST_BUCKET_ENDPOINT

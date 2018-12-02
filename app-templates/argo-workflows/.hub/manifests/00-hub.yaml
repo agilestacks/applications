@@ -35,8 +35,9 @@ parameters:
     value: true
     env: ENABLE_BUCKET_EVENTS
   - name: namespace
-    value: argoproj
+    value: ${application.name}
     env: NAMESPACE
+    kind: link
   - name: secret.name
     value: ${application.name}-app
     env: APP_SECRET
