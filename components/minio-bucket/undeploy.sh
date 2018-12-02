@@ -31,4 +31,4 @@ SECRET_KEY=$($kubectl get secret "$SECRET_NAME" -o "json" | jq -r ".data?.$SECRE
 export MC_HOSTS_${ALIAS}="$INGRESS_PORTOCOL://$ACCESS_KEY:$SECRET_KEY@$ENDPOINT"
 
 $mc rm -r --force "$ALIAS/$BUCKET" || true
-$mc ls "$ALIAS"
+$mc ls "$ALIAS" || true
