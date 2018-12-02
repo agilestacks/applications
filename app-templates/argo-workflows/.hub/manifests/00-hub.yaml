@@ -22,8 +22,6 @@ parameters:
 - name: application
   parameters:
   - name: name
-    value: changeme
-    env: APPLICATION
   - name: webhook.name
     value: wat
   - name: webhook.method
@@ -45,6 +43,10 @@ parameters:
   - name: docker.image
     value: ${component.docker.image}
     kind: link
+  - name: name.technical
+    kind: link
+    value: ${application.name}
+    env: APPLICATION
 
 - name: dns.domain
   env: DOMAIN_NAME
