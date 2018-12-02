@@ -35,7 +35,7 @@ parameters:
     value: true
     env: ENABLE_BUCKET_EVENTS
   - name: namespace
-    value: ${application.name}
+    value: ${component.argo.namespace}
     env: NAMESPACE
     kind: link
   - name: secret.name
