@@ -38,8 +38,10 @@ parameters:
     value: .
   - name: dockerfile
     value: Dockerfile
+  - name: component.buildbox.name
+    value: ${application.name}
   - name: namespace
-    value: ${component.argo.namespace}
+    value: ${application.namespace}
 
 - name: component.gitlab
   parameters:
