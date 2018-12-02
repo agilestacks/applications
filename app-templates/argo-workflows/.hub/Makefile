@@ -31,9 +31,9 @@ deploy: namespace
 .PHONY: deploy
 
 undeploy:
-	- $(MAKE) -C workflows $@
-	- $(MAKE) -C sensors $@
-	- $(MAKE) -C gateways $@
+	- $(MAKE) -C $(realpath ..)/workflows $@
+	- $(MAKE) -C $(realpath ..)/sensors $@
+	- $(MAKE) -C $(realpath ..)/gateways $@
 	- $(kubectl) delete secret $(APP_SECRET)
 	- $(kubectl) delete -f rbac.yaml
 .PHONY: undeploy
