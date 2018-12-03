@@ -21,6 +21,7 @@ lifecycle:
     - buildbox
 
 parameters:
+- name: applications.gitlab.project.name
 - name: applications.gitlab.project.path
 
 - name: component.git
