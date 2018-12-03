@@ -21,8 +21,8 @@ lifecycle:
     - buildbox
 
 parameters:
-- name: applications.gitlab.project.name
-- name: applications.gitlab.project.path
+- name: application.gitlab.project.name
+- name: application.gitlab.project.path
 
 - name: component.git
   parameters:
@@ -53,9 +53,10 @@ parameters:
   - name: project.id
     empty: allow
   - name: project.name
-    value: ${applications.gitlab.project.name}
+    value: ${application.gitlab.project.name}
+    kind: link
   - name: project.path
-    value: ${applications.gitlab.project.path}
+    value: ${application.gitlab.project.path}
     kind: link
   - name: project.visibility
     value: public
