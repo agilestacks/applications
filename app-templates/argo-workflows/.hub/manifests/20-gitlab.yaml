@@ -49,11 +49,10 @@ parameters:
     fromEnv: COMPONENT_GITLAB_TOKEN
     empty: allow
   - name: namespace
-    value: akranga
   - name: project.id
     empty: allow
   - name: project.name
-    value: akranga
+    value: ${applications.gitlab.project.name}
   - name: project.path
     value: ${applications.gitlab.project.path}
     kind: link
