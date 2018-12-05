@@ -54,7 +54,7 @@ parameters:
 - name: application.replicas
 - name: application.git.remote
 - name: promotion.environment
-- name: promotion.branch
+- name: component.branch.name
   value: ${promotion.environment} 
 - name: terraform.bucket.name
 - name: terraform.bucket.region

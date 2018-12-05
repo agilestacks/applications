@@ -14,9 +14,9 @@ parameters:
 - name: component.githubOrphan
   parameters:
   - name: git.token
-    fromEnv: COMPONENT_GITHUB_TOKEN
+    fromEnv: COMPONENT_BRANCH_GIT_TOKEN
   - name: git.branch
-    value: ${application.target.branch}   
+    value: ${component.branch.name}   
   - name: git.repository
     value: ${application.git.remote}
 outputs:
