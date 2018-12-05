@@ -79,11 +79,6 @@ pipeline {
         container('toolbox') {
           script {
             final version = "${gitscm.shortCommit}"
-            final targetPlatformState
-            final targetAccountRole
-            final targetRegion
-            final targetDomain
-            final applicationNamespace
             dir ('.hub') {
                 outputs = hub.explain(state: params.APP_STATE_FILE).stackOutputs
                 targetPlatformState = outputs['application.target.platform.state.file'] as String
@@ -91,6 +86,9 @@ pipeline {
                 targetRegion = outputs['application.target.region'] as String
                 targetDomain = outputs['application.target.domain'] as String
                 applicationNamespace = outputs['application.namespace'] as String
+                applicationName = outputs['application.name'] as String
+                promotionEnv = outputs['promotion.environment'] as String
+                applicationImage = outputs['application.target.ecr'] as String
                 hub.render(template: '../kubernetes.yaml.template', state: params.APP_STATE_FILE)
             }
             echo readFile('kubernetes.yaml')
@@ -107,7 +105,7 @@ pipeline {
               final exists = sh script: "${kubectl} get -f kubernetes.yaml", returnStatus: true
               try {
                 if (exists == 0) {
-                  sh script: "${kubectl} set image --record 'deployment/${outputs['application.name']}' 'application=${outputs['application.docker.image']}:${version}'"
+                  sh script: "${kubectl} set image --record 'deployment/${applicationName}-${promotionEnv}' 'application=${applicationImage}:${version}'"
                 } else {
                   sh script: "${kubectl} apply --force --record -f kubernetes.yaml"
                 }
