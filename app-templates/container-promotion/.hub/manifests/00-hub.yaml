@@ -12,7 +12,33 @@ meta:
 requires:
   - kubernetes
   - jenkins
-components: []
+components:
+- name: xaccount-role
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/xaccount-role
+    dir: components/xaccount-role
+    branch: master
+    fromEnv: GITHUB_TOKEN
+- name: kubernetes-provider
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/kubernetes-provider
+    dir: components/kubernetes-provider
+    branch: master
+    fromEnv: GITHUB_TOKEN
+- name: target-ecr
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/ecr
+    dir: components/ecr
+    branch: master
+    fromEnv: GITHUB_TOKEN
+lifecycle:
+  order:
+    - xaccount-role
+    - kubernetes-provider
+    - target-ecr            
 parameters:
 - name: component.github.repository.organization  
 - name: component.jenkins.url
@@ -27,14 +53,48 @@ parameters:
 - name: application.version
 - name: application.replicas
 - name: application.git.remote
-- name: application.target.environment
-- name: application.target.branch
-  value: ${application.target.environment} 
+- name: promotion.environment
+- name: promotion.branch
+  value: ${promotion.environment} 
 - name: terraform.bucket.name
 - name: terraform.bucket.region
 - name: component.docker.image
 - name: application.promotion.state.file
   fromEnv: APP_STATE_FILE
+- name: component.xaccountRole
+  parameters: 
+  - name: target.awsAccessKey
+    fromEnv: TARGET_AWS_ACCESS_KEY_ID
+  - name: target.awsSecretKey
+    fromEnv: TARGET_AWS_SECRET_ACCESS_KEY
+  - name: target.awsSessionKey
+    fromEnv: TARGET_AWS_SESSION_TOKEN
+  - name: roleArn  
+  - name: name
+    value: ${promotion.environment}.${application.name}
+- name: component.kubernetesProvider
+  parameters:
+  - name: stateFile
+    fromEnv: KUBE_PROVIDER_STATE_FILE
+  - name: elaborateFile
+    fromEnv: KUBE_PROVIDER_ELABORATE_FILE
+  - name: roleArn
+    value: ${component.xaccountRole.roleArn}
+    kind: link  
+  - name: ingress.fqdn
+  - name: ingress.ssoFqdn
+  - name: ingress.protocol
+  - name: region
+  - name: domain
+- name: component.ecr
+  parameters:
+  - name: name
+    value: ${promotion.environment}.${application.name}.${component.kubernetesProvider.domain}
+    kind: link
+- name: cloud.region
+  component: target-ecr
+  value: ${component.kubernetesProvider.region} 
+  kind: link    
 outputs:
 - name: application.source.ecr
   value: ${application.docker.image}
@@ -48,12 +108,33 @@ outputs:
   value: ${application.replicas}   
 - name: application.git.remote
   value: ${application.git.remote}
-- name: application.target.environment
-  value: ${application.target.environment}
+- name: promotion.environment
+  value: ${promotion.environment}
 - name: application.target.path
   value: ${application.path}
 - name: application.target.url
-  value: ${application.target.ingress.protocol}://${application.target.fqdn}${application.target.path}                  
+  value: ${application.target.ingress.protocol}://${application.target.fqdn}${application.target.path}
+- name: application.target.roleArn  
+  value: ${component.xaccountRole.roleArn}
+- name: application.target.platform.state.file
+  value: ${component.kubernetesProvider.stateFile}
+- name: application.target.ingress.fqdn
+  value: ${component.kubernetesProvider.ingress.fqdn}        
+- name: application.target.ingress.ssoFqdn
+  value: ${component.kubernetesProvider.ingress.ssoFqdn} 
+- name: application.target.ingress.protocol
+  value: ${component.kubernetesProvider.ingress.protocol} 
+- name: application.target.region
+  value: ${component.kubernetesProvider.region}
+- name: application.target.domain
+  value: ${component.kubernetesProvider.domain}
+- name: application.target.fqdn
+  value: ${promotion.environment}.${application.name}.${application.target.ingress.fqdn}
+- name: application.target.jenkins.pipeline.url
+  value: '${component.jenkins.url}/job/${application.name}-pipeline-${promotion.environment}'
+- name: application.target.ecr
+  value: ${component.docker.image}                      
 templates:
   files:
-    - templates/*.template    
+    - templates/*.template  
+      

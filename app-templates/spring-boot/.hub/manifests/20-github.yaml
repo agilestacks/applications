@@ -21,6 +21,7 @@ parameters:
   - name: token
     fromEnv: COMPONENT_GITHUB_TOKEN
     default: token
+  - name: reference  
   - name: repository.organization
     value: asibot
   - name: repository.name
