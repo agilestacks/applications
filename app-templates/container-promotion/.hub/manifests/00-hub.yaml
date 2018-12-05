@@ -112,8 +112,6 @@ outputs:
   value: ${promotion.environment}
 - name: application.target.path
   value: ${application.path}
-- name: application.target.url
-  value: ${application.target.ingress.protocol}://${application.target.fqdn}${application.target.path}
 - name: application.target.roleArn  
   value: ${component.xaccountRole.roleArn}
 - name: application.target.platform.state.file
@@ -129,7 +127,9 @@ outputs:
 - name: application.target.domain
   value: ${component.kubernetesProvider.domain}
 - name: application.target.fqdn
-  value: ${promotion.environment}.${application.name}.${application.target.ingress.fqdn}
+  value: ${promotion.environment}.${application.name}.${application.target.ingress.fqdn}  
+- name: application.target.url
+  value: ${application.target.ingress.protocol}://${application.target.fqdn}${application.target.path}
 - name: application.target.jenkins.pipeline.url
   value: '${component.jenkins.url}/job/${application.name}-pipeline-${promotion.environment}'
 - name: application.target.ecr
