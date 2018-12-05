@@ -17,6 +17,7 @@ const glob = require("glob").sync;
 
 const manifestURL = process.env.APPLICATION_MANIFEST;
 const repoUrl = process.env.APP_GIT_REMOTE;
+const repoBranch = process.env.APP_GIT_BRANCH;
 
 const workspaceDir = process.env.WORKSPACE_DIR === undefined ? './workspace' :
     process.env.WORKSPACE_DIR;
@@ -198,7 +199,7 @@ async function perform() {
             await callShellHooks(manifest.parameters);
         } else if (repoUrl) {
             const gitUrl = securedGitUrl({repoUrl});
-            shelljs.exec(`git clone --single-branch -b master ${gitUrl}`);
+            shelljs.exec(`git clone --single-branch -b ${repoBranch} ${gitUrl}`);
             shelljs.exec(`rsync -htrzai --progress $(basename ${gitUrl} .git)/ ${workspaceDir}`);
             logger.info('Application workspace initialized');
         } else {
