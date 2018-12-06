@@ -2,7 +2,7 @@
 apiVersion: "jenkins.agilestacks.com/v1"
 kind: Pipeline
 metadata:
-  name: ${promotion.environment}.${component.kubernetesProvider.ingress.fqdn}
+  name: ${promotion.environment}.${application.name}.${component.kubernetesProvider.ingress.fqdn}
 spec:
   repositoryUrl: ${application.git.remote}
   credentialsId: github-${component.github.repository.organization}
