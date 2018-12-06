@@ -44,7 +44,8 @@ parameters:
 - name: component.jenkins.url
 - name: dns.domain
   env: DOMAIN_NAME
-- name: cloud.region    
+- name: cloud.region
+- name: application.fqdn    
 - name: application.cloud.role
 - name: application.docker.image
 - name: application.name
