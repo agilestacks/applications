@@ -35,7 +35,7 @@ export AWS_SECRET_ACCESS_KEY := $(shell echo '$(TEMP_ROLE)' | $(jq) '.Credential
 hub := hub -d --aws_use_iam_role_credentials=false
 
 .$(COMPONENT_NAME).json:
-	echo $(TEMP_ROLE)
+	sleep 10
 	$(hub) explain $(KUBE_PROVIDER_ELABORATE_FILE) $(KUBE_PROVIDER_STATE_FILE) --json > $@
 
 output: .$(COMPONENT_NAME).json
