@@ -4,6 +4,10 @@ metadata:
   generateName: ${application.name}-webhook-
 spec:
   entrypoint: workflow
+  volumes:
+  - name: dockersock
+    hostPath:
+      path: /var/run/docker.sock
   arguments:
     parameters:
     - name: application
@@ -84,6 +88,8 @@ spec:
       - name: script
     script:
       image: agilestacks/toolbox
+      securityContext:
+        privileged: true
       env:
       - name: MC_HOSTS_source
         valueFrom:

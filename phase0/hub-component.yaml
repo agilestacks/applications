@@ -11,7 +11,8 @@ requires:
   - aws
 
 parameters:
-  - name: applications-phase0-cloud:component.ecr.image
+  - name: component.automation-hub.application-job-phase0.image
+    value: docker.io/agilestacks/zero
     env: IMAGE
   - name: dns.domain
     env: DOMAIN_NAME

@@ -26,7 +26,7 @@ push:
 	docker push $(IMAGE):latest
 .PHONY: push
 
-deploy: build ecr-login push output
+deploy: build push output
 
 undeploy:
 	echo "Done"

@@ -4,6 +4,10 @@ metadata:
   generateName: ${application.name}-${application.source.bucket.name}-bucketevents-
 spec:
   entrypoint: main
+  volumes:
+  - name: dockersock
+    hostPath:
+      path: /var/run/docker.sock
   arguments:
     parameters:
     - name: file
@@ -39,7 +43,14 @@ spec:
   templates:
   - name: main
     steps:
-    - - name: process
+    - - name: login
+        template: awscli
+        arguments:
+          parameters:
+          - name: script
+            value: >
+              aws ecr get-login --region ${cloud.region} --no-include-email | bash -
+      - name: process
         template: processor
         arguments:
           parameters:
@@ -53,6 +64,22 @@ spec:
           - name: script
             value: >
               mc rm source/{{workflow.parameters.sourceBucket}}/{{workflow.parameters.file}}
+- name: awscli
+    inputs:
+      parameters:
+      - name: script
+    script:
+      image: agilestacks/toolbox
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: dockersock
+        mountPath: "/var/run/docker.sock"
+      env:
+      - name: AWS_REGION
+        value: ${cloud.region}
+      command: [bash]
+      source: "{{inputs.parameters.script}}"
 
   - name: cleanup-script
     inputs:

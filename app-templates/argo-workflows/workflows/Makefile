@@ -36,7 +36,7 @@ namespace:
 	- $(kubectl) create namespace $(NAMESPACE)
 .PHONY: namespace
 
-deploy: namespace
+deploy: namespace debug
 	@ echo Creating applicaiton secret: $(APP_SECRET)
 	- @ $(kubectl) -n "$(NAMESPACE)" create secret generic $(APP_SECRET) \
 		--from-literal source.bucket.mcHost=$(INGRESS_PROTOCOL)://$(SRC_ACCESSKEY):$(SRC_SECRETKEY)@$(SRC_BUCKET_ENDPOINT) \
@@ -53,3 +53,7 @@ undeploy:
 	- $(kubectl) -n "$(NAMESPACE)" delete configmap $(APPLICATION)-workflows
 	- $(kubectl) -n "$(NAMESPACE)" delete secret $(APP_SECRET)
 .PHONY: undeploy
+
+debug:
+	cat artifact-workflow.yaml
+	cat webhook-workflow.yaml
