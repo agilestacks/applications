@@ -1,0 +1,72 @@
+---
+version: 1
+kind: application
+meta:
+  name: 'golang-backend:1'
+  brief: 'Golang webservice with Gorilla Mux'
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/app-templates
+    dir: .
+    branch: COMPONENTS_TAG
+    fromEnv: GITHUB_TOKEN
+
+requires:
+  - kubernetes
+  - jenkins
+
+components: []
+
+parameters:
+  - name: application.name
+    value: golang-backend
+  - name: application.description
+    value: Golang webservice with Gorilla Mux
+  - name: application.namespace
+    value: applications
+  - name: application.replicas
+    value: 1
+  - name: application.version
+    value: latest
+  - name: application.state.file
+    fromEnv: APP_STATE_FILE
+  - name: application.ingress.host
+    value: '${application.name}.${component.ingress.fqdn}'
+  - name: application.path
+    value: /
+  - name: component.ingress.protocol
+  - name: component.ingress.fqdn
+  - name: component.docker.image
+  - name: component.git.remote
+  - name: component.jenkins.url
+  - name: dns.domain
+    env: DOMAIN_NAME
+  - name: cloud.region
+  - name: terraform.bucket
+    parameters:
+    - name: name
+    - name: region
+
+outputs:
+  - name: application.git.remote
+    value: '${component.git.remote}'
+  - name: application.docker.image
+    value: '${component.docker.image}'
+  - name: application.name
+    value: '${application.name}'
+  - name: application.namespace
+    value: '${application.namespace}'
+  - name: application.fqdn
+    value: '${application.ingress.host}'
+  - name: application.path
+    value: '${application.path}'
+  - name: application.url
+    value: '${component.ingress.protocol}://${application.ingress.host}${application.path}'
+  - name: application.jenkins.pipeline.url
+    value: '${component.jenkins.url}/job/${application.name}-pipeline'
+  - name: application.cloud.role
+    value: '${component.jenkins-iam-role.roleArn}'
+
+templates:
+  files:
+    - templates/*.template

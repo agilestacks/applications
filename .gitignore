@@ -46,3 +46,8 @@ app-templates/nodejs-backend/.hub/templates/*.yaml
 app-templates/spring-boot/.hub/hub.yaml
 app-templates/spring-boot/.hub/components/*
 app-templates/spring-boot/.hub/templates/*.yaml
+
+# golang-backend
+app-templates/golang-backend/.hub/hub.yaml
+app-templates/golang-backend/.hub/components/*
+app-templates/golang-backend/.hub/templates/*.yaml
