@@ -66,6 +66,9 @@ parameters:
 
 - name: component.buildbox
   parameters:
+  - name: name
+    value: bb-${application.name}
+    kind: link
   - name: directory
     value: .
   - name: dockerfile
