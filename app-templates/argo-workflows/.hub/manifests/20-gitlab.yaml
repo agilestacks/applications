@@ -39,7 +39,7 @@ parameters:
     value: .
   - name: dockerfile
     value: Dockerfile
-  - name: component.buildbox.name
+  - name: name
     value: ${application.name}
   - name: namespace
     value: ${application.namespace}
