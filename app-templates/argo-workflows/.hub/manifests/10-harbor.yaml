@@ -1,0 +1,54 @@
+---
+components:
+- name: pull-secret
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/pull-secret
+    dir: components/pull-secret
+    branch: COMPONENTS_TAG
+    fromEnv: GITHUB_TOKEN
+
+lifecycle:
+  order:
+    - pull-secret
+
+parameters:
+- name: cloud.region
+- name: terraform.bucket
+  parameters:
+  - name: name
+  - name: region
+- name: component.ecr
+  parameters:
+  - name: name
+    value: myargoapp.${dns.domain}
+
+- name: application.docker-registry
+  parameters:
+  - name: url
+  - name: username
+    empty: allow
+  - name: password
+    empty: allow
+    value: Harbor12345
+  - name: email
+    empty: allow
+
+- name: component.pullSecret
+  kind: link
+  parameters:
+  - name: name
+    value: ${application.name}-regcred
+  - name: namespace
+    value: ${application.namespace}
+  - name: docker.server
+    value: ${application.docker-registry.url}
+  - name: docker.username
+    value: ${application.docker-registry.username}
+    empty: allow
+  - name: docker.password
+    value: ${application.docker-registry.password}
+    empty: allow
+  - name: docker.email
+    value: ${application.docker-registry.email}
+    empty: allow
