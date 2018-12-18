@@ -15,7 +15,7 @@ provides:
 parameters:
 - name: dns.domain
   env: DOMAIN_NAME
-- name: component.pullSecret:
+- name: component.pullSecret
   parameters:
   - name: name
     name: pull-secret
