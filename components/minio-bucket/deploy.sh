@@ -51,7 +51,7 @@ fi
 
 for ARN in $ARNS; do
     echo "Setting event listener to $ARN"
-    $mc event add "$ALIAS/$BUCKET $ARN $ARGS" 2>/dev/null || true
+    $mc event add $ALIAS/$BUCKET $ARN $ARGS 2>/dev/null || true
 done
 $mc events list "$ALIAS/$BUCKET"
 
