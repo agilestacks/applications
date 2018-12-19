@@ -12,9 +12,9 @@ spec:
     - name: "artifact-events"
       image: "agilestacks/argo-artifact-gateway"
       imagePullPolicy: "Always"
-      env:
-      - name: GATEWAY_NAMESPACE
-        value: ${application.namespace}
+      # env:
+      # - name: GATEWAY_NAMESPACE
+      #   value: ${application.namespace}
       command: ["/bin/artifact-gateway"]
     serviceAccountName: "${application.name}-sa"
   # serviceSpec:
