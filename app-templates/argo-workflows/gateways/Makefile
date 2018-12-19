@@ -29,7 +29,11 @@ namespace:
 	- $(kubectl) create namespace $(NAMESPACE)
 .PHONY: namespace
 
-deploy: namespace copy-minio-secrets
+debug:
+	cat artifact-gateway.yaml
+	cat webhook-gateway.yaml
+
+deploy: namespace copy-minio-secrets debug
 	$(kubectl) apply --force -f artifact-gateway-configmap.yaml
 	$(kubectl) apply --force -f artifact-gateway.yaml
 	$(kubectl) apply --force -f webhook-gateway-configmap.yaml
