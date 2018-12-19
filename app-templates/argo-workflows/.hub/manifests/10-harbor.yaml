@@ -35,7 +35,7 @@ parameters:
   value: dockerregistry
 
 - name: component.docker
-  kind: LINK
+  kind: link
   parameters:
   - name: image
     value: ${application.docker-registry.image.url}
