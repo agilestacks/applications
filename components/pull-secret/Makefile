@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := deploy
 
-kubectl := kubectl --context="$(DOMAIN_NAME)" --namespace=$(NAMESPACE)"
+kubectl := kubectl --context="$(DOMAIN_NAME)" --namespace="$(NAMESPACE)"
 
 KUBECTL_ARGS :=
 
