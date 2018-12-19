@@ -32,7 +32,7 @@ parameters:
   - name: image.url
 
 - name: component.docker.registry.kind
-  value: harbor
+  value: dockerregistry
 
 - name: component.docker
   kind: LINK
