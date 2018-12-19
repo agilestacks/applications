@@ -24,6 +24,7 @@ spec:
   configMap: "${application.name}-${application.source.bucket.name}-artifact-gateway"
   version: "1.0"
   type: "artifact"
+  eventVersion: "1.0"
   dispatchMechanism: "HTTP"
   watchers:
     sensors:

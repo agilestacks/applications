@@ -9,6 +9,7 @@ metadata:
 spec:
   configMap: "${application.name}-webhook"
   type: "webhook"
+  eventVersion: "1.0"
   dispatchMechanism: "HTTP"
   version: "1.0"
   deploySpec:
