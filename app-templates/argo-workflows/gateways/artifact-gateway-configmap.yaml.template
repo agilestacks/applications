@@ -10,7 +10,7 @@ data:
       endpoint: ${application.source.bucket.endpoint}
       event: s3:ObjectCreated:Put
       filter:
-        prefix: "${application.source.bucket.prefix}"
+        # prefix: "${application.source.bucket.prefix}"
         suffix: "${application.source.bucket.suffix}"
     insecure: true
     accessKey:
