@@ -1,4 +1,4 @@
-#!/bin/sh -xe
+#!/bin/sh -e
 # shellcheck disable=SC2155
 
 export MC_HOME="$(pwd)/.mc"
