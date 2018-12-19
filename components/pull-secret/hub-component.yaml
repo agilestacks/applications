@@ -18,7 +18,6 @@ parameters:
 - name: component.pullSecret
   parameters:
   - name: name
-    name: pull-secret
     env: COMPONENT_NAME
   - name: namespace
     env: NAMESPACE
