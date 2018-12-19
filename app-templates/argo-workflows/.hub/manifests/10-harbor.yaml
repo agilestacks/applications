@@ -31,11 +31,23 @@ parameters:
     empty: allow
   - name: image.url
 
-- name: component.docker.image
-  kind: link
-  value: ${application.docker-registry.image.url}
 - name: component.docker.registry.kind
   value: harbor
+
+- name: component.docker
+  kind: LINK
+  parameters:
+  - name: image
+    value: ${application.docker-registry.image.url}
+  - name: registry.server
+    value: ${application.docker-registry.url}
+  - name: registry.username
+    value: ${application.docker-registry.username}    
+  - name: registry.password
+    value: ${application.docker-registry.password}  
+  - name: registry.email
+    value: ${application.docker-registry.email}
+    empty: allow
 
 - name: component.pullSecret
   kind: link
@@ -44,14 +56,3 @@ parameters:
     value: ${application.name}-regcred
   - name: namespace
     value: ${application.namespace}
-  - name: docker.server
-    value: ${application.docker-registry.url}
-  - name: docker.username
-    value: ${application.docker-registry.username}
-    empty: allow
-  - name: docker.password
-    value: ${application.docker-registry.password}
-    empty: allow
-  - name: docker.email
-    value: ${application.docker-registry.email}
-    empty: allow

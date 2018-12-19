@@ -21,16 +21,17 @@ parameters:
     env: COMPONENT_NAME
   - name: namespace
     env: NAMESPACE
-  - name: docker.server
+- name: component.docker.registry
+  - name: server
     value: docker.io
     env: DOCKER_SERVER
-  - name: docker.username
+  - name: username
     empty: allow
     env: DOCKER_USERNAME
-  - name: docker.password
+  - name: password
     empty: allow
     env: DOCKER_PASSWORD
-  - name: docker.email
+  - name: email
     empty: allow
     env: DOCKER_EMAIL
 
