@@ -39,7 +39,6 @@ ARNS="$( $mc admin config get "$ALIAS" \
        | jq '"arn:minio:sqs:"+.region+":"+(.notify.args|keys)[]+":"+.notify.service' \
        | xargs )"
 
-ARGS=()
 if test ! -z "$EVENT_PREFIX"; then
     ARGS="$ARGS --prefix $EVENT_PREFIX "
 fi
