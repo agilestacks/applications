@@ -22,6 +22,7 @@ parameters:
   - name: namespace
     env: NAMESPACE
 - name: component.docker.registry
+  parameters:
   - name: server
     value: docker.io
     env: DOCKER_SERVER
