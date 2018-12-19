@@ -50,8 +50,8 @@ if test ! -z "$EVENTS"; then
 fi
 
 for ARN in $ARNS; do
-    echo "Setting event liscener to $ARN"
-    $mc events add "$ALIAS/$BUCKET" "$ARN" "$ARGS" 2>/dev/null || true
+    echo "Setting event listener to $ARN"
+    $mc event add "$ALIAS/$BUCKET" "$ARN" "$ARGS" 2>/dev/null || true
 done
 $mc events list "$ALIAS/$BUCKET"
 
