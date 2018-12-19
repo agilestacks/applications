@@ -20,6 +20,8 @@ spec:
       value: /workspace
     - name: image
       value: ${application.docker.image}
+    - name: pullSecret
+      value: ${component.pullSecret.name}
     - name: sourceBucket
       value: ${application.source.bucket.name}
     - name: sourceBucketEndpoint
@@ -107,6 +109,8 @@ spec:
       command: [sh, -c]
       workingDir: "{{workflow.parameters.processorInputDir}}"
       args: ["{{inputs.parameters.script}}"]
+    imagePullSecrets:
+    - name: {{inputs.parameters.pullSecret}}
     inputs:
       parameters:
       - name: script
