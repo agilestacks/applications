@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: application
-        image: ${component.ecr.image}
+        image: ${component.docker.image}
         ports:
         - name: http
           containerPort: 8080
@@ -61,7 +61,7 @@ metadata:
     app: ${application.name}
 spec:
   rules:
-  - host: ${application.fqdn}
+  - host: ${application.ingress.host}
     http:
       paths:
       - path: ${application.path}

@@ -15,6 +15,7 @@ APP_ELABORATE_FILE 	  ?= hub.elaborate
 
 hub := hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credentials=false
 kubectl := kubectl --context="$(DOMAIN_NAME)" --namespace="$(NAMESPACE)"
+kubectlapp := kubectl --context="$(DOMAIN_NAME)"
 
 deploy:
 	$(kubectl) apply -f templates/credentials.yaml
@@ -23,6 +24,7 @@ deploy:
 
 undeploy:
 	- $(kubectl) delete -f templates/pipeline.yaml
+	- $(kubectlapp) delete -f ../kubernetes.yaml
 .PHONY: undeploy
 
 $(APP_ELABORATE_FILE):
