@@ -14,9 +14,7 @@ spec:
       imagePullPolicy: "Always"
       env:
       - name: GATEWAY_NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
+        value: ${application.namespace}
       command: ["/bin/artifact-gateway"]
     serviceAccountName: "${application.name}-sa"
   # serviceSpec:
