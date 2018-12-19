@@ -137,19 +137,19 @@ parameters:
     value: ${target-bucket:component.bucket.name}
   - name: secret.namespace
     value: ${source-bucket:component.bucket.secret.namespace}
-    env: SRC_BUCKET_NAMESPACE
+    env: DEST_BUCKET_NAMESPACE
   - name: endpoint
     value: ${target-bucket:component.bucket.endpoint}
-    env: SRC_BUCKET_ENDPOINT
+    env: DEST_BUCKET_ENDPOINT
   - name: secret.name
     value: ${target-bucket:component.bucket.secret.name}
-    env: SRC_BUCKET_SECRET_NAME
+    env: DEST_BUCKET_SECRET_NAME
   - name: secret.accessKeyRef
     value: ${target-bucket:component.bucket.secret.accessKeyRef}
-    env: SRC_BUCKET_ACCESSKEY
+    env: DEST_BUCKET_ACCESSKEY
   - name: secret.secretKeyRef
     value: ${target-bucket:component.bucket.secret.secretKeyRef}
-    env: SRC_BUCKET_SECRETKEY
+    env: DEST_BUCKET_SECRETKEY
 
 - name: application.source.bucket
   kind: link
@@ -161,16 +161,16 @@ parameters:
     env: SRC_BUCKET_NAMESPACE
   - name: endpoint
     value: ${source-bucket:component.bucket.endpoint}
-    env: DEST_BUCKET_ENDPOINT
+    env: SRC_BUCKET_ENDPOINT
   - name: secret.name
     value: ${source-bucket:component.bucket.secret.name}
-    env: DEST_BUCKET_SECRET_NAME
+    env: SRC_BUCKET_SECRET_NAME
   - name: secret.accessKeyRef
     value: ${source-bucket:component.bucket.secret.accessKeyRef}
-    env: DEST_BUCKET_ACCESSKEY
+    env: SRC_BUCKET_ACCESSKEY
   - name: secret.secretKeyRef
     value: ${source-bucket:component.bucket.secret.secretKeyRef}
-    env: DEST_BUCKET_SECRETKEY
+    env: SRC_BUCKET_SECRETKEY
   - name: prefix
     value: ""
     empty: allow

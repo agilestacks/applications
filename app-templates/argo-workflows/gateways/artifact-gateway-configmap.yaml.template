@@ -15,7 +15,7 @@ data:
     insecure: true
     accessKey:
       key: ${application.source.bucket.secret.accessKeyRef}
-      name: ${application.source.bucket.secret.name}
+      name: ${application.name}-minio-source
     secretKey:
       key: ${application.source.bucket.secret.secretKeyRef}
-      name: ${application.source.bucket.secret.name}
+      name: ${application.name}-minio-target
