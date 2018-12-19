@@ -1,4 +1,4 @@
-#!/bin/bash -xe
+#!/bin/sh -xe
 # shellcheck disable=SC2155
 
 export MC_HOME="$(pwd)/.mc"
@@ -41,18 +41,18 @@ ARNS="$( $mc admin config get "$ALIAS" \
 
 ARGS=()
 if test ! -z "$EVENT_PREFIX"; then
-    ARGS+=(--prefix "$EVENT_PREFIX")
+    ARGS="$ARGS --prefix $EVENT_PREFIX "
 fi
 if test ! -z "$EVENT_SUFFIX"; then
-    ARGS+=(--suffix "$EVENT_SUFFIX")
+    ARGS="$ARGS --suffix $EVENT_SUFFIX "
 fi
 if test ! -z "$EVENTS"; then
-    ARGS+=(--events "$EVENTS")
+    ARGS="$ARGS --events $EVENTS "
 fi
 
-for a in $ARNS; do
-    echo "Setting event liscener to $a"
-    $mc events add "$ALIAS/$BUCKET" "$a" "${ARGS[@]}" 2>/dev/null || true
+for ARN in $ARNS; do
+    echo "Setting event liscener to $ARN"
+    $mc events add "$ALIAS/$BUCKET" "$ARN" "$ARGS" 2>/dev/null || true
 done
 $mc events list "$ALIAS/$BUCKET"
 
