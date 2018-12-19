@@ -18,10 +18,6 @@ parameters:
   parameters:
   - name: name
   - name: region
-- name: component.ecr
-  parameters:
-  - name: name
-    value: myargoapp.${dns.domain}
 
 - name: application.docker-registry
   parameters:
@@ -33,6 +29,13 @@ parameters:
     value: Harbor12345
   - name: email
     empty: allow
+  - name: image.url
+
+- name: component.docker.image
+  kind: link
+  value: ${application.docker-registry.image.url}
+- name: component.docker.registry.kind
+  value: harbor
 
 - name: component.pullSecret
   kind: link
