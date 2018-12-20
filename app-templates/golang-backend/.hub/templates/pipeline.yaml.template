@@ -2,7 +2,7 @@
 apiVersion: "jenkins.agilestacks.com/v1"
 kind: Pipeline
 metadata:
-  name: ${application.name}-pipeline
+  name: ${application.ingress}
 spec:
   repositoryUrl: ${component.git.remote}
   credentialsId: github-${component.github.repository.organization}
