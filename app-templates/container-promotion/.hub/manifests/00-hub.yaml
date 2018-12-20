@@ -132,7 +132,7 @@ outputs:
 - name: application.target.url
   value: ${application.target.ingress.protocol}://${application.target.fqdn}${application.target.path}
 - name: application.target.jenkins.pipeline.url
-  value: '${component.jenkins.url}/job/${application.name}-pipeline-${promotion.environment}'
+  value: '${component.jenkins.url}/job/${application.target.fqdn}'
 - name: application.target.ecr
   value: ${component.docker.image}                      
 templates:
