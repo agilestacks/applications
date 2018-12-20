@@ -85,6 +85,10 @@ pipeline {
             dir ('.hub') {
                 outputs = hub.explain(state: params.APP_STATE_FILE).stackOutputs
             }
+            final namespaceExists = sh script: "kubectl get namespace ${outputs['application.namespace']}", returnStatus: true
+            if (namespaceExists != 0) {
+              sh script: "kubectl create namespace ${outputs['application.namespace']}"
+            }
             final kubectl = "kubectl -n ${outputs['application.namespace']}"
             dir ('.hub') {
                 hub.render(template: '../kubernetes.yaml.template', state: params.APP_STATE_FILE)
