@@ -97,6 +97,8 @@ parameters:
   value: ${component.kubernetesProvider.region} 
   kind: link    
 outputs:
+- name: application.git.remote
+  value: ${application.git.remote}  
 - name: application.source.ecr
   value: ${application.docker.image}
 - name: application.name 
