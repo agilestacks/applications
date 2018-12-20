@@ -63,7 +63,7 @@ outputs:
   - name: application.url
     value: '${component.ingress.protocol}://${application.ingress.host}${application.path}'
   - name: application.jenkins.pipeline.url
-    value: '${component.jenkins.url}/job/${application.name}-pipeline'
+    value: '${component.jenkins.url}/job/${application.ingress.host}'
   - name: application.cloud.role
     value: '${component.jenkins-iam-role.roleArn}'
   - name: application.promotion.templates
