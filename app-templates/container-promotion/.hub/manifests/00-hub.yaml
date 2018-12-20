@@ -107,8 +107,8 @@ outputs:
   value: ${application.version}  
 - name: application.replicas
   value: ${application.replicas}   
-- name: application.git.remote
-  value: ${application.git.remote}
+- name: promotion.git.remote
+  value: ${application.git.remote}/tree/${promotion.branch}
 - name: promotion.environment
   value: ${promotion.environment}
 - name: application.target.path
