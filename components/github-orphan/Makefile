@@ -39,6 +39,13 @@ endif
 	-$(git) remote set-url orphan-$(OPRHAN_NAME) "$(REMOTE)"
 .PHONY: remote	
 
+output:
+	-@ echo
+	-@ echo Outputs:
+	-@ echo link_to_branch = $(subst .git,,$(REMOTE))/tree/$(OPRHAN_NAME)
+	-@ echo
+.PHONY: output
+
 push:
 	-$(git) checkout --orphan $(OPRHAN_NAME)
 	$(git) add -A
@@ -48,7 +55,7 @@ push:
 	-$(git) push --set-upstream orphan-$(OPRHAN_NAME) $(OPRHAN_NAME)
 .PHONY: push
 
-deploy: check-github-api init remote push
+deploy: check-github-api init remote push output
 
 undeploy: check-github-api init remote
 	-$(git) push --set-upstream orphan-$(OPRHAN_NAME) --force --delete $(OPRHAN_NAME)

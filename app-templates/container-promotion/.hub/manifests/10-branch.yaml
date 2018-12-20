@@ -19,7 +19,10 @@ parameters:
     value: ${promotion.branch}   
   - name: git.repository
     value: ${application.git.remote}
+  - name: url
 outputs:
 - name: application.git.branch
   value: ${component.githubOrphan.git.branch}
+- name: promotion.git.remote
+  value: ${component.githubOrphan.url}
           

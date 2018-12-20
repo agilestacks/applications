@@ -19,3 +19,7 @@ parameters:
 - name: workspace
   value: ../../../
   env: SRC_DIR 
+
+outputs:
+- name: component.githubOrphan.url
+  fromTfVar: link_to_branch
