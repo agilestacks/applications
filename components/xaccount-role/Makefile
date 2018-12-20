@@ -51,7 +51,9 @@ clean:
 .PHONY: clean		
 
 import:
-	-$(terraform) import $(TF_OPTS) aws_iam_role.application $(TF_VAR_name)_role
-	-$(terraform) import $(TF_OPTS) aws_iam_role_policy.application $(TF_VAR_name)_role:$(TF_VAR_name)_policy
+	$(eval SHORTENED_ROLE_NAME=$(shell echo $(TF_VAR_name)_role | cut -c 0-63))
+	-$(terraform) import $(TF_OPTS) aws_iam_role.application $(SHORTENED_ROLE)
+	$(eval SHORTENED_POLICY_NAME=$(shell echo $(TF_VAR_name)_policy | cut -c 0-63))
+	-$(terraform) import $(TF_OPTS) aws_iam_role_policy.application $(SHORTENED_ROLE_NAME):$(SHORTENED_POLICY_NAME)
 .PHONY: import
 	
