@@ -3,6 +3,7 @@
 SRC_DIR ?= $(realpath .)
 OPRHAN_NAME ?= qa
 REMOTE ?= must-be-set
+REMOTE_WITH_TOKEN ?=
 
 export GITHUB_TOKEN ?=
 ifeq ($(GITHUB_TOKEN),)
@@ -33,10 +34,10 @@ init:
 
 remote:
 ifneq ($(GITHUB_TOKEN),)
-	$(eval REMOTE=$(subst ://,://x-oauth-basic:$(GITHUB_TOKEN)@,$(REMOTE)))
+	$(eval REMOTE_WITH_TOKEN=$(subst ://,://x-oauth-basic:$(GITHUB_TOKEN)@,$(REMOTE)))
 endif
-	-$(git) remote add orphan-$(OPRHAN_NAME) "$(REMOTE)"
-	-$(git) remote set-url orphan-$(OPRHAN_NAME) "$(REMOTE)"
+	-$(git) remote add orphan-$(OPRHAN_NAME) "$(REMOTE_WITH_TOKEN)"
+	-$(git) remote set-url orphan-$(OPRHAN_NAME) "$(REMOTE_WITH_TOKEN)"
 .PHONY: remote	
 
 output:
