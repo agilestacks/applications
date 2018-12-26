@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import {Component} from 'react';
-import {NavbarGroup, Button, Intent, NavbarDivider, AnchorButton} from '@blueprintjs/core';
+import {NavbarGroup, Button, Intent, NavbarDivider, AnchorButton, Classes} from '@blueprintjs/core';
 import {IconNames} from '@blueprintjs/icons';
+import classNames from 'classnames';
 
 import './RepoActions.scss';
 
@@ -12,7 +13,9 @@ export class RepoActions extends Component {
             document.execCommand('copy');
         }
     }
+
     mountSourceInput = sourceInput => Object.assign(this, {sourceInput})
+
     render() {
         const {copy, mountSourceInput} = this;
         const {repo, branch} = this.props;
@@ -24,7 +27,7 @@ export class RepoActions extends Component {
             <NavbarGroup className="repo-actions">
                 <span className="repo-actions-source">
                     <input
-                        className="pt-input repo-actions-source-value"
+                        className={classNames(Classes.INPUT, 'repo-actions-source-value')}
                         ref={mountSourceInput}
                         readOnly
                         value={repoUrl}

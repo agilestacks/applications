@@ -1,12 +1,31 @@
+/* eslint-disable import/no-extraneous-dependencies,no-console */
+const webpack = require('webpack');
 const merge = require('webpack-merge');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const common = require('./webpack.common.js');
 
 module.exports = merge(common, {
-    devtool: 'source-map',
+    mode: 'production',
+    devtool: 'hidden-source-map',
     plugins: [
-        new UglifyJSPlugin({
-            sourceMap: true
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: JSON.stringify('production')
+            }
         })
-    ]
+    ],
+    optimization: {
+        minimizer: [
+            new UglifyJSPlugin({
+                parallel: true,
+                sourceMap: true,
+                uglifyOptions: {
+                    ecma: 5,
+                    output: {
+                        beautify: false
+                    }
+                }
+            })
+        ]
+    }
 });

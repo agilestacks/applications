@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies,no-console */
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
@@ -38,20 +39,16 @@ module.exports = {
         extensions: ['.js', '.jsx']
     },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
-                loader: 'babel-loader'
+                use: 'babel-loader'
             },
-            {
-                test: /\.html$/,
-                use: [
-                    {
-                        loader: 'html-loader'
-                    }
-                ]
-            },
+            // {
+            //     test: /\.html$/,
+            //     use: 'html-loader'
+            // },
             {
                 test: /\.scss$/,
                 use: [

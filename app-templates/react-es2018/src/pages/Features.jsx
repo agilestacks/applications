@@ -1,44 +1,45 @@
 import {Feature} from '../components';
+import {dependencies, devDependencies} from '../../package.json';
 
 const features = [
     {
         name: 'Babel',
-        version: '6.26',
+        version: devDependencies['@babel/core'].replace('^', ''),
         link: 'https://babeljs.io/'
     },
     {
         name: 'Webpack',
-        version: '3.12',
+        version: devDependencies.webpack.replace('^', ''),
         link: 'https://webpack.js.org/'
     },
     {
         name: 'React',
-        version: '16.2',
+        version: dependencies.react.replace('^', ''),
         link: 'https://reactjs.org/'
     },
     {
         name: 'React router',
-        version: '4.3',
+        version: dependencies['react-router-dom'].replace('^', ''),
         link: 'https://github.com/ReactTraining/react-router'
     },
     {
         name: 'Blueprintjs',
-        version: '2.3',
-        link: 'http://blueprintjs.com/docs/v2/'
+        version: dependencies['@blueprintjs/core'].replace('^', ''),
+        link: 'http://blueprintjs.com/docs'
     },
     {
         name: 'ESLint',
-        version: '4.19',
+        version: devDependencies.eslint.replace('^', ''),
         link: 'https://eslint.org/'
     },
     {
         name: 'Sass Lint',
-        version: '1.12',
+        version: devDependencies['sass-lint'].replace('^', ''),
         link: 'https://github.com/sasstools/sass-lint/'
     },
     {
         name: 'Jest',
-        version: '23.1',
+        version: devDependencies.jest.replace('^', ''),
         link: 'https://facebook.github.io/jest/'
     }
 ];
