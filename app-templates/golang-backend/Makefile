@@ -15,7 +15,8 @@ build: init
 fmt:
 	@go fmt \
 		golang-backend \
-		golang-backend/controllers
+		golang-backend/controllers \
+		golang-backend/consts
 .PHONY: fmt
 
 test:

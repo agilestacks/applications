@@ -9,3 +9,6 @@ kubernetes.yaml
 app
 vendor
 junit.xml
+
+.idea/*
+*.iml
