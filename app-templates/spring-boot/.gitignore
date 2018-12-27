@@ -5,3 +5,11 @@
 .hub/hub.state
 .terraform
 *.tfplan
+
+# Gradle ignores
+.classpath
+.project
+.settings/*
+.gradle/*
+bin/*
+out/*

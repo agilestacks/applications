@@ -1,12 +1,16 @@
 package io.agilestacks.controllers.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.time.Duration;
 
+@JsonInclude(value = JsonInclude.Include.NON_EMPTY, content = JsonInclude.Include.NON_NULL)
 public class StatusBean {
 
     private String name;
     private String version;
     private Duration uptime;
+    private String environmentName;
 
     public String getName() {
         return name;
@@ -32,10 +36,19 @@ public class StatusBean {
         this.uptime = uptime;
     }
 
-    public StatusBean(String name, String version, Duration uptime) {
+    public String getEnvironmentName() {
+        return environmentName;
+    }
+
+    public void setEnvironmentName(String environmentName) {
+        this.environmentName = environmentName;
+    }
+
+    public StatusBean(String name, String version, Duration uptime, String environmentName) {
         this.name = name;
         this.version = version;
         this.uptime = uptime;
+        this.environmentName = environmentName;
     }
 
     public static Builder builder() {
@@ -46,6 +59,7 @@ public class StatusBean {
         private String name;
         private String version;
         private Duration uptime;
+        private String environmentName;
 
         public Builder setName(final String name) {
             this.name = name;
@@ -62,8 +76,13 @@ public class StatusBean {
             return this;
         }
 
+        public Builder setEnvironmentName(String environmentName) {
+            this.environmentName = environmentName;
+            return this;
+        }
+
         public StatusBean build() {
-            return new StatusBean(this.name, this.version, this.uptime);
+            return new StatusBean(this.name, this.version, this.uptime, this.environmentName);
         }
     }
 }

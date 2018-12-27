@@ -34,6 +34,8 @@ parameters:
     value: '${application.name}.${component.ingress.fqdn}'
   - name: application.path
     value: /
+  - name: application.environment.name
+    value: ''
   - name: component.ingress.protocol
   - name: component.ingress.fqdn
   - name: component.docker.image
@@ -67,10 +69,10 @@ outputs:
   - name: application.cloud.role
     value: '${component.jenkins-iam-role.roleArn}'
   - name: application.promotion.templates
-    value: simple-promote,container-promotion  
+    value: simple-promote,container-promotion
 
 templates:
   files:
     - templates/*.template
     - ../kubernetes.yaml.template
-    
+
