@@ -37,6 +37,7 @@ app-templates/react-es2018/.hub/components/*
 .asibot*
 
 # nodejs-backend
+app-templates/nodejs-backend/package.json
 app-templates/nodejs-backend/.hub/*.yaml
 app-templates/nodejs-backend/.hub/components/*
 app-templates/nodejs-backend/.hub/manifests

@@ -34,6 +34,8 @@ parameters:
     value: '${application.name}.${component.ingress.fqdn}'
   - name: application.path
     value: /
+  - name: application.environment.name
+    value: ''
   - name: component.ingress.protocol
   - name: component.ingress.fqdn
   - name: component.docker.image
@@ -71,4 +73,4 @@ templates:
   files:
     - templates/*.template
     - ../kubernetes.yaml.template
-    
+

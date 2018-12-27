@@ -18,6 +18,9 @@ spec:
       containers:
       - name: application
         image: ${component.docker.image}
+        env:
+        - name: ENVIRONMENT_NAME
+          value: ${application.environment.name}
         ports:
         - name: http
           containerPort: 3000
