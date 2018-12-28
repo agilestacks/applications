@@ -32,6 +32,7 @@ app-templates/argo-workflows/.hub/rbac.yaml
 # react-es2018
 app-templates/react-es2018/package.json
 app-templates/react-es2018/.hub/templates/*.yaml
+app-templates/react-es2018/.hub/templates/*.json
 app-templates/react-es2018/.hub/*.yaml
 app-templates/react-es2018/.hub/components/*
 .asibot*
