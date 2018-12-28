@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {HashRouter} from 'react-router-dom';
 
-import '@blueprintjs/core/src/blueprint.scss';
+
 import './index.scss';
 
 import {App} from './App';
