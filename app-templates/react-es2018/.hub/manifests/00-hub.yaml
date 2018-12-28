@@ -38,7 +38,6 @@ parameters:
   - name: application.theme
   - name: component.ingress.protocol
   - name: component.ingress.fqdn
-  - name: component.docker.image
   - name: component.git.remote
   - name: component.jenkins.url
   - name: component.s3website.name
@@ -54,8 +53,6 @@ parameters:
 outputs:
   - name: application.git.remote
     value: '${component.git.remote}'
-  - name: application.docker.image
-    value: '${component.docker.image}'
   - name: application.name
     value: '${application.name}'
   - name: application.namespace
