@@ -42,14 +42,14 @@ pipeline {
     }
     stage('Compile') {
       steps {
-        container('toolbox') {
+        container('buildbox') {
           sh script: 'npm install'
         }
       }
     }
     stage('Test') {
       steps {
-        container('toolbox') {
+        container('buildbox') {
           sh script: 'npm run junit'
         }
       }
