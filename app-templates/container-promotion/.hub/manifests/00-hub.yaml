@@ -57,6 +57,8 @@ parameters:
 - name: application.version
 - name: application.replicas
 - name: application.git.remote
+- name: application.environment.name
+  value: ''
 - name: promotion.environment
 - name: promotion.branch
   value: ${promotion.environment}
