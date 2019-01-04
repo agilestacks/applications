@@ -68,6 +68,8 @@ outputs:
     value: '${component.jenkins.url}/job/${application.ingress.host}'
   - name: application.cloud.role
     value: '${component.jenkins-iam-role.roleArn}'
+  - name: application.promotion.templates
+    value: simple-promote,container-promotion    
 
 templates:
   files:
