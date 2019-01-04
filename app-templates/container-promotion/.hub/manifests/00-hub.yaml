@@ -12,6 +12,7 @@ meta:
 requires:
   - kubernetes
   - jenkins
+
 components:
 - name: xaccount-role
   source:
@@ -38,39 +39,41 @@ lifecycle:
   order:
     - xaccount-role
     - kubernetes-provider
-    - target-ecr            
+    - target-ecr
+
 parameters:
-- name: component.github.repository.organization  
+- name: component.github.repository.organization
 - name: component.jenkins.url
 - name: dns.domain
   env: DOMAIN_NAME
 - name: cloud.region
-- name: application.fqdn    
+- name: application.fqdn
 - name: application.cloud.role
 - name: application.docker.image
 - name: application.name
 - name: application.path
 - name: application.namespace
+- name: application.port
 - name: application.version
 - name: application.replicas
 - name: application.git.remote
 - name: promotion.environment
 - name: promotion.branch
-  value: ${promotion.environment} 
+  value: ${promotion.environment}
 - name: terraform.bucket.name
 - name: terraform.bucket.region
 - name: component.docker.image
 - name: application.promotion.state.file
   fromEnv: APP_STATE_FILE
 - name: component.xaccountRole
-  parameters: 
+  parameters:
   - name: target.awsAccessKey
     fromEnv: TARGET_AWS_ACCESS_KEY_ID
   - name: target.awsSecretKey
     fromEnv: TARGET_AWS_SECRET_ACCESS_KEY
   - name: target.awsSessionKey
     fromEnv: TARGET_AWS_SESSION_TOKEN
-  - name: roleArn  
+  - name: roleArn
   - name: name
     value: ${promotion.environment}.${application.name}
 - name: component.kubernetesProvider
@@ -81,7 +84,7 @@ parameters:
     fromEnv: KUBE_PROVIDER_ELABORATE_FILE
   - name: roleArn
     value: ${component.xaccountRole.roleArn}
-    kind: link  
+    kind: link
   - name: ingress.fqdn
   - name: ingress.ssoFqdn
   - name: ingress.protocol
@@ -94,48 +97,49 @@ parameters:
     kind: link
 - name: cloud.region
   component: target-ecr
-  value: ${component.kubernetesProvider.region} 
-  kind: link    
+  value: ${component.kubernetesProvider.region}
+  kind: link
+
 outputs:
 - name: application.git.remote
-  value: ${application.git.remote}  
+  value: ${application.git.remote}
 - name: application.source.ecr
   value: ${application.docker.image}
-- name: application.name 
-  value: ${application.name} 
+- name: application.name
+  value: ${application.name}
 - name: application.namespace
   value: ${application.namespace}
 - name: application.version
-  value: ${application.version}  
+  value: ${application.version}
 - name: application.replicas
   value: ${application.replicas}
 - name: promotion.environment
   value: ${promotion.environment}
 - name: application.target.path
   value: ${application.path}
-- name: application.target.roleArn  
+- name: application.target.roleArn
   value: ${component.xaccountRole.roleArn}
 - name: application.target.platform.state.file
   value: ${component.kubernetesProvider.stateFile}
 - name: application.target.ingress.fqdn
-  value: ${component.kubernetesProvider.ingress.fqdn}        
+  value: ${component.kubernetesProvider.ingress.fqdn}
 - name: application.target.ingress.ssoFqdn
-  value: ${component.kubernetesProvider.ingress.ssoFqdn} 
+  value: ${component.kubernetesProvider.ingress.ssoFqdn}
 - name: application.target.ingress.protocol
-  value: ${component.kubernetesProvider.ingress.protocol} 
+  value: ${component.kubernetesProvider.ingress.protocol}
 - name: application.target.region
   value: ${component.kubernetesProvider.region}
 - name: application.target.domain
   value: ${component.kubernetesProvider.domain}
 - name: application.target.fqdn
-  value: ${promotion.environment}.${application.name}.${application.target.ingress.fqdn}  
+  value: ${promotion.environment}.${application.name}.${application.target.ingress.fqdn}
 - name: application.target.url
   value: ${application.target.ingress.protocol}://${application.target.fqdn}${application.target.path}
 - name: application.target.jenkins.pipeline.url
   value: '${component.jenkins.url}/job/${application.target.fqdn}'
 - name: application.target.ecr
-  value: ${component.docker.image}                      
+  value: ${component.docker.image}
+
 templates:
   files:
-    - templates/*.template  
-      
+    - templates/*.template

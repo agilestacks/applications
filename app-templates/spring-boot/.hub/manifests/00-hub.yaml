@@ -28,6 +28,8 @@ parameters:
     value: 1
   - name: application.version
     value: latest
+  - name: application.port
+    value: 8080
   - name: application.state.file
     fromEnv: APP_STATE_FILE
   - name: application.ingress.host
@@ -62,6 +64,7 @@ outputs:
     value: '${application.ingress.host}'
   - name: application.path
     value: '${application.path}'
+  - name: application.port
   - name: application.url
     value: '${component.ingress.protocol}://${application.ingress.host}${application.path}'
   - name: application.jenkins.pipeline.url

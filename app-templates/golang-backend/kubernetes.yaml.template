@@ -27,7 +27,7 @@ spec:
           value: ${application.environment.name}
         ports:
         - name: http
-          containerPort: 3000
+          containerPort: ${application.port}
         readinessProbe:
           httpGet:
             path: /status
