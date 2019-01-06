@@ -134,7 +134,7 @@ outputs:
 - name: application.target.domain
   value: ${component.kubernetesProvider.domain}
 - name: application.target.fqdn
-  value: ${promotion.environment}.${application.name}.${application.target.ingress.fqdn}
+  value: ${application.name}-${promotion.environment}.${application.target.ingress.fqdn}
 - name: application.target.url
   value: ${application.target.ingress.protocol}://${application.target.fqdn}${application.target.path}
 - name: application.target.jenkins.pipeline.url
