@@ -5,7 +5,7 @@ components:
     repoUrl: https://github.com/agilestacks/applications.git
     repoPath: applications/components/github-orphan
     dir: components/github-orphan
-    branch: master
+    branch: APPLICATIONS_TAG
     fromEnv: GITHUB_TOKEN
 lifecycle:
   order:

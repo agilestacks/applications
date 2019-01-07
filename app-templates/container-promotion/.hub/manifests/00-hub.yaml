@@ -7,7 +7,7 @@ meta:
     repoUrl: https://github.com/agilestacks/applications.git
     repoPath: applications/app-templates
     dir: .
-    branch: master
+    branch: APPLICATIONS_TAG
     fromEnv: GITHUB_TOKEN
 requires:
   - kubernetes
@@ -19,21 +19,21 @@ components:
     repoUrl: https://github.com/agilestacks/applications.git
     repoPath: applications/components/xaccount-role
     dir: components/xaccount-role
-    branch: master
+    branch: APPLICATIONS_TAG
     fromEnv: GITHUB_TOKEN
 - name: kubernetes-provider
   source:
     repoUrl: https://github.com/agilestacks/applications.git
     repoPath: applications/components/kubernetes-provider
     dir: components/kubernetes-provider
-    branch: master
+    branch: APPLICATIONS_TAG
     fromEnv: GITHUB_TOKEN
 - name: target-ecr
   source:
     repoUrl: https://github.com/agilestacks/applications.git
     repoPath: applications/components/ecr
     dir: components/ecr
-    branch: master
+    branch: APPLICATIONS_TAG
     fromEnv: GITHUB_TOKEN
 lifecycle:
   order:
