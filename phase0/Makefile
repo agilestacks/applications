@@ -1,7 +1,6 @@
 .DEFAULT_GOAL := test
 
 export AWS_DEFAULT_REGION ?= us-east-2
-export AWS_PROFILE        ?= default
 
 DOMAIN_NAME   ?= dev.stack.delivery
 REGISTRY      ?= $(subst https://,,$(lastword $(shell aws ecr get-login --region $(AWS_DEFAULT_REGION))))
@@ -32,10 +31,8 @@ undeploy:
 	echo "Done"
 .PHONY: undeploy
 
-
 output:
 	@echo Outputs:
 	@echo image_name=$(IMAGE):$(IMAGE_VERSION)
 	@echo
 .PHONY: output
-	
