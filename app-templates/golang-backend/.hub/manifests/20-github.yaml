@@ -24,14 +24,14 @@ parameters:
   - name: repository.organization
     value: asibot
   - name: repository.name
-    value: nodejs-backend
+    value: golang-backend
   - name: webhook.name
     value: github
   - name: webhook.events.json
     value: '["push"]'
   - name: repository.description
     value: >
-      NodeJS microservice with Express web framework
+      Golang webservice with Gorilla Mux
 
 outputs:
 - name: application.git.remote
