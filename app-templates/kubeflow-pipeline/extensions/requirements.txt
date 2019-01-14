@@ -1,0 +1,5 @@
+IPython >= 1.0
+ipython-secrets
+pystache
+https://storage.googleapis.com/ml-pipeline/release/0.1.6/kfp.tar.gz
+boto3
