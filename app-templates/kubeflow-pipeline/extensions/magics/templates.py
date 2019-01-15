@@ -1,10 +1,9 @@
 from IPython.core.magic_arguments import (argument, magic_arguments, parse_argstring, construct_parser)
 from IPython.core.magic import (line_magic, cell_magic, line_cell_magic, Magics, magics_class)
-
 from IPython import get_ipython
+from IPython.display import display, Markdown, FileLink, Code, HTML
 
-from IPython.display import display, Markdown
-
+import os.path
 import pystache
 
 @magics_class
@@ -20,7 +19,8 @@ class TemplateMagics(Magics):
     )
     @argument('-v', '--verbose',
         default=False,
-        help="Print output"
+        help="Print output",
+        action='store_true',
     )
     @cell_magic
     def template(self, line, cell=None):
@@ -32,9 +32,10 @@ class TemplateMagics(Magics):
         params = get_ipython().user_ns
         result = mustache(template, params, filename)
         if args.verbose:
-            return markdown(result)
+            return display( FileLink(filename), Code(result) )
         else:
-            return f'Saved to: {filename}'
+            return display( FileLink(filename) )
+
 
     @magic_arguments()
     @argument('template',
@@ -46,25 +47,43 @@ class TemplateMagics(Magics):
     )
     @argument('-v', '--verbose',
         default=False,
-        help="Print output"
+        help="Print output",
+        action='store_true',
     )
     @line_magic
-    def templatefile(self, template, line):
+    def templatefile(self, line):
         """creates a file from template stored as a file
         """
         args = parse_argstring(self.templatefile, line)
-        template = open(args.template, "rb").f.read()
-        filename = args.output
+        if not os.path.isfile(args.template):
+            raise FileNotFoundError(args.template)
+
+        with open( args.template ) as f:
+            fread = f.read()
+
+        output = args.output
         params = get_ipython().user_ns
-        result = mustache(template, params, filename)
-        if args.verbose or filename == None:
-            return markdown(result)
-        else:
-            return "Saved to: {filename}"
+        result = mustache(fread, params, output)
+        
+        if output and args.verbose:
+            return display( FileLink(output), Code(result) )
+       
+        if output:
+            return display( FileLink(output) )
 
+        return display( Code(result) )
 
-def markdown(content):
-    return display(Markdown(f"```{content}```"))
+        
+
+        # template = open(args.template, "rb").f.read()
+        # filename = args.output
+        # params = get_ipython().user_ns
+        # result = mustache(template, params, filename)
+        # if args.verbose or filename == None:
+        #     return display( FileLink(filename), Code(result) )
+        # else:
+        #     return display( Code(result) )
+
 
 def mustache(template, params=dict(), filename=None):
     r = pystache.render(template, params)
