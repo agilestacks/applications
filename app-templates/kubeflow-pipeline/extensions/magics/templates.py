@@ -22,7 +22,7 @@ class TemplateMagics(Magics):
         filename = args[0]
         with open(filename, 'w') as f:
             f.write( pystache.render(cell, get_ipython().user_ns ) )
-        return line, cell
+        return line
  
     @line_magic
     def templatefile(self, line):
