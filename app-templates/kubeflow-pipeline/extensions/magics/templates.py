@@ -1,7 +1,9 @@
-from IPython.core import magic_arguments
-from IPython.core.magic import line_magic, cell_magic, line_cell_magic, Magics, magics_class
+from IPython.core.magic_arguments import (argument, magic_arguments, parse_argstring, construct_parser)
+from IPython.core.magic import (line_magic, cell_magic, line_cell_magic, Magics, magics_class)
 
 from IPython import get_ipython
+
+from IPython.display import display, Markdown
 
 import pystache
 
@@ -12,19 +14,61 @@ class TemplateMagics(Magics):
     #     super(TemplateMagics, self).__init__(shell)
     #     self.ctx = dict
 
-    @line_cell_magic
-    def template(self, line='', cell=None):
-        "magic that defines a mustache template"
-        args = line.split(' ')
-        if cell is None:
-            print("Not yet implemented")
-            return line
-        filename = args[0]
-        with open(filename, 'w') as f:
-            f.write( pystache.render(cell, get_ipython().user_ns ) )
-        return line
- 
+    @magic_arguments()
+    @argument('filename',
+        help="File path to write results"
+    )
+    @argument('-v', '--verbose',
+        default=False,
+        help="Print output"
+    )
+    @cell_magic
+    def template(self, line, cell=None):
+        """create a template from cell content
+        """
+        args = parse_argstring(self.template, line)
+        filename = args.filename
+        template = cell.strip()
+        params = get_ipython().user_ns
+        result = mustache(template, params, filename)
+        if args.verbose:
+            return markdown(result)
+        else:
+            return f'Saved to: {filename}'
+
+    @magic_arguments()
+    @argument('template',
+        help="File path to template"
+    )
+    @argument('-o', '--output',
+        default=None,
+        help="Filename to write output"
+    )
+    @argument('-v', '--verbose',
+        default=False,
+        help="Print output"
+    )
     @line_magic
-    def templatefile(self, line):
-        args = line.split(' ')
-        return line
+    def templatefile(self, template, line):
+        """creates a file from template stored as a file
+        """
+        args = parse_argstring(self.templatefile, line)
+        template = open(args.template, "rb").f.read()
+        filename = args.output
+        params = get_ipython().user_ns
+        result = mustache(template, params, filename)
+        if args.verbose or filename == None:
+            return markdown(result)
+        else:
+            return "Saved to: {filename}"
+
+
+def markdown(content):
+    return display(Markdown(f"```{content}```"))
+
+def mustache(template, params=dict(), filename=None):
+    r = pystache.render(template, params)
+    if filename != None:
+        with open(filename, 'w') as f:
+            f.write(r)
+    return r
