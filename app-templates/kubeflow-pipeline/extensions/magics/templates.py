@@ -67,22 +67,10 @@ class TemplateMagics(Magics):
         
         if output and args.verbose:
             return display( FileLink(output), Code(result) )
-       
-        if output:
+        elif output:
             return display( FileLink(output) )
-
-        return display( Code(result) )
-
-        
-
-        # template = open(args.template, "rb").f.read()
-        # filename = args.output
-        # params = get_ipython().user_ns
-        # result = mustache(template, params, filename)
-        # if args.verbose or filename == None:
-        #     return display( FileLink(filename), Code(result) )
-        # else:
-        #     return display( Code(result) )
+        else:
+            return display( Code(result) )
 
 
 def mustache(template, params=dict(), filename=None):
