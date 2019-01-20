@@ -1,7 +1,7 @@
 {
     "scm": "git",
     "project": {
-        "key": "PROJ"
+        "key": "APPS"
     },
     "is_private": true,
     "description" : ""
