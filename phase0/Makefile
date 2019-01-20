@@ -21,8 +21,8 @@ ecr-login:
 
 push:
 	docker tag  $(IMAGE):$(IMAGE_VERSION) $(IMAGE):latest
-	docker push $(IMAGE):$(IMAGE_VERSION)
-	docker push $(IMAGE):latest
+	-docker push $(IMAGE):$(IMAGE_VERSION)
+	-docker push $(IMAGE):latest
 .PHONY: push
 
 deploy: build push output
