@@ -35,7 +35,7 @@ push:
 	$(git) add -A
 	$(git) config user.name "$(USER_NAME)"
 	$(git) config user.email "$(USER_EMAIL)"
-	- $(git) commit -am "Initial commit"
+	-$(git) commit -am "Initial commit"
 	$(git) checkout --ours .
 	$(git) push $(REPO_NAME) master		
 .PHONY: push
