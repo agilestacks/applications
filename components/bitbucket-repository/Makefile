@@ -13,7 +13,7 @@ USER_EMAIL ?= suppport@agilestacks.com
 jq := jq -cM
 SRC_DIR ?= ../
 git := git -C $(SRC_DIR)
-TEAM_NAME ?= agilestacks
+TEAM_NAME ?=
 
 ifeq ($(TEAM_NAME),)
 	TEAM_NAME := $(USER_NAME)
