@@ -53,3 +53,10 @@ app-templates/spring-boot/.hub/templates/*.yaml
 app-templates/golang-backend/.hub/hub.yaml
 app-templates/golang-backend/.hub/components/*
 app-templates/golang-backend/.hub/templates/*.yaml
+app-templates/kubeflow-pipeline/.awsconfig
+app-templates/kubeflow-pipeline/.dockerconfigjson
+app-templates/kubeflow-pipeline/.kubeconfig
+app-templates/kubeflow-pipeline/.python-version
+app-templates/kubeflow-pipeline/gcr.json
+app-templates/kubeflow-pipeline/harbor.json
+app-templates/kubeflow-pipeline/kaniko.sh
