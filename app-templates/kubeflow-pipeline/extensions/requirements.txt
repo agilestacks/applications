@@ -1,5 +1,7 @@
 IPython >= 1.0
 ipython-secrets
 pystache
-https://storage.googleapis.com/ml-pipeline/release/0.1.6/kfp.tar.gz
+https://storage.googleapis.com/ml-pipeline/release/0.1.8/kfp.tar.gz
 boto3
+kubernetes >= 8.0.0
+

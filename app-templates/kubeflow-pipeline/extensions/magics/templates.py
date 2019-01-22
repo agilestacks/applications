@@ -29,8 +29,7 @@ class TemplateMagics(Magics):
         args = parse_argstring(self.template, line)
         filename = args.filename
         template = cell.strip()
-        params = get_ipython().user_ns
-        result = mustache(template, params, filename)
+        result = mustache(template, params(), filename)
         if args.verbose:
             return display( FileLink(filename), Code(result) )
         else:
@@ -62,8 +61,7 @@ class TemplateMagics(Magics):
             fread = f.read()
 
         output = args.output
-        params = get_ipython().user_ns
-        result = mustache(fread, params, output)
+        result = mustache(fread, params(), output)
         
         if output and args.verbose:
             return display( FileLink(output), Code(result) )
@@ -79,3 +77,10 @@ def mustache(template, params=dict(), filename=None):
         with open(filename, 'w') as f:
             f.write(r)
     return r
+
+def params(ns=get_ipython().user_ns):
+    envvars = ns.get('environ', {})
+    blacklist = ['In', 'Out', 'environ']
+    globvars = {k: v for k, v in ns.items() if not k.startswith('_') and k not in blacklist} 
+    return {**envvars, **globvars}
+

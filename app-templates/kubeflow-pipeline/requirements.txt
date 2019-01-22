@@ -3,3 +3,4 @@ jupyter
 ipdb
 pip
 ./extensions
+awscli-plugin-endpoint
