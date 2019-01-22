@@ -13,9 +13,9 @@ lifecycle:
     - github-repository
 
 parameters:
-- name: component.git
-  parameters:
-  - name: remote
+- name: application.git.kind
+  value: github
+
 - name: component.github
   parameters:
   - name: token
@@ -33,6 +33,14 @@ parameters:
     value: >
       Golang webservice with Gorilla Mux
 
+- name: component.git
+  parameters:
+  - name: remote
+  - name: organization
+    value: github
+  - name: token
+    value: ${component.github.token}
+    
 outputs:
 - name: application.git.remote
   value: ${component.git.remote}
