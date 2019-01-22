@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := deploy
 
 USER_NAME ?= voginskis
-BITBUCKET_TOKEN ?= C6a5TUMXT2MNgycF8wAV
+BITBUCKET_TOKEN ?= should-be-set
 REPO_NAME ?= vikt999
 BASE_URL ?= https://api.bitbucket.org/2.0
 REPO_OUTPUT := .$(REPO_NAME).json
@@ -11,18 +11,23 @@ REMOTE ?=
 USER_NAME ?= SuperHub
 USER_EMAIL ?= suppport@agilestacks.com
 jq := jq -cM
-SRC_DIR ?= ../
+SRC_DIR ?= ../../
 git := git -C $(SRC_DIR)
 TEAM_NAME ?=
+BITBUCKET_USER ?= should-be-set
 
 ifeq ($(TEAM_NAME),)
-	TEAM_NAME := $(USER_NAME)
+	TEAM_NAME := $(BITBUCKET_USER)
 endif
 
-curl := curl --user $(USER_NAME):$(BITBUCKET_TOKEN) -H "Content-Type: application/json"
+curl := curl --user $(BITBUCKET_USER):$(BITBUCKET_TOKEN) -H "Content-Type: application/json"
 
 create-repo:
-	-$(curl) -X POST --data @create-repo.json $(BASE_URL)/repositories/$(TEAM_NAME)/$(REPO_NAME)	
+ifeq ($(PROJECT_KEY),)
+	-$(curl) -X POST --data @templates/create-repo-user.json $(BASE_URL)/repositories/$(TEAM_NAME)/$(REPO_NAME)
+else
+	-$(curl) -X POST --data @templates/create-repo-team.json $(BASE_URL)/repositories/$(TEAM_NAME)/$(REPO_NAME)
+endif	
 .PHONY: create-repo	
 
 $(REPO_OUTPUT):
@@ -30,7 +35,8 @@ $(REPO_OUTPUT):
 
 push:
 	$(eval REMOTE=$(shell $(curl) -X GET $(BASE_URL)/repositories/$(TEAM_NAME)/$(REPO_NAME) | $(jq) '.links.html.href'))
-	$(eval REMOTE=$(subst ://,://$(USER_NAME):$(BITBUCKET_TOKEN)@,$(REMOTE)))
+	$(eval REMOTE=$(subst ://,://$(BITBUCKET_USER):$(BITBUCKET_TOKEN)@,$(REMOTE)))
+	-$(git) init
 	$(git) remote add $(REPO_NAME) $(REMOTE) || $(git) remote set-url $(REPO_NAME) $(REMOTE)
 	$(git) fetch --tags --progress $(REPO_NAME)
 	$(git) add -A

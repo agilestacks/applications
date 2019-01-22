@@ -1,0 +1,8 @@
+{
+    "scm": "git",
+    "project": {
+        "key": "${component.bitbucket.project.key}"
+    },
+    "is_private": ${component.bitbucket.project.private},
+    "description" : "${component.bitbucket.project.description}"
+}

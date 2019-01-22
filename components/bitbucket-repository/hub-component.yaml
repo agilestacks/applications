@@ -3,7 +3,7 @@ version: 1
 kind: component
 meta:
   name: bitbucket
-  brief: Encapsulates operations with bitbucket
+  brief: Encapsulates operations with Bitbucket
 parameters:
 - name: component.git
   parameters:
@@ -15,6 +15,8 @@ parameters:
     env: USER_EMAIL
 - name: component.bitbucket
   parameters:
+  - name: user.name
+    env: BITBUCKET_USER
   - name: token
     env: BITBUCKET_TOKEN
     empty: allow
@@ -22,12 +24,12 @@ parameters:
     value: https://api.bitbucket.org/2.0
     env: BASE_URL
   - name: workspace
-    value: ../
+    value: ../../../
     env: SRC_DIR
-  - name: project.name
-    env: PROJECT_NAME
-    value: PROJ
-  - name: repo.name
+  - name: project.key
+    env: PROJECT_KEY
+    empty: allow
+  - name: repository.name
     env: REPO_NAME
     value: vikt999
   - name: project.private
@@ -36,6 +38,9 @@ parameters:
   - name: project.description
     env: PROJECT_DESCRIPTION
     empty: allow
+  - name: team.name
+    env: TEAM_NAME
+    empty: allow  
 
 outputs:
 - name: component.git.remote
@@ -48,3 +53,7 @@ outputs:
   fromTfVar: html_url
 - name: component.bitbucket.project.sshUrl
   fromTfVar: ssh_url
+
+templates:
+  files:
+  - "templates/*.template" 
