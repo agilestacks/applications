@@ -76,7 +76,6 @@ function securedGitUrl({repoUrl, tokenEnv, repoKind}) {
     } else if (repoKind === 'bitbucket') {
         if (!token) {
             token = process.env.COMPONENT_BITBUCKET_TOKEN;
-            logger.info(`Token: ${token}`);
         }
         const user = process.env.APP_GIT_USER;
         return repoUrl.replace('://', `://${user}:${token}@`);
@@ -207,7 +206,6 @@ async function perform() {
             copyManifest(manifest);
             await callShellHooks(manifest.parameters);
         } else if (repoUrl) {
-            logger.info(`Aaaaaaa...${process.env.APP_GIT_KIND}`);
             const gitUrl = securedGitUrl({repoUrl, repoKind: process.env.APP_GIT_KIND});
             shelljs.exec(`git clone --single-branch -b ${repoBranch} ${gitUrl}`);
             shelljs.exec(`rsync -htrzai --progress $(basename ${gitUrl} .git)/ ${workspaceDir}`);
