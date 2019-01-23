@@ -40,7 +40,10 @@ parameters:
     value: github
   - name: token
     value: ${component.github.token}
-    
+
 outputs:
 - name: application.git.remote
   value: ${component.git.remote}
+- name: application.git.user
+  value: ${component.git.organization}
+

@@ -61,18 +61,26 @@ async function clean(directories) {
     });
 }
 
-function securedGitUrl({repoUrl, tokenEnv}) {
+function securedGitUrl({repoUrl, tokenEnv, repoKind}) {
     let token = process.env[tokenEnv];
-    if (repoUrl.startsWith('https://github.com')) {
+    if (!repoKind || repoKind === 'github') {
         if (!token) {
             token = process.env.COMPONENT_GITHUB_TOKEN;
         }
         return repoUrl.replace('github.com', `${token}@github.com`);
-    } else {
+    } else if (repoKind === 'gitlab') {
         if (!token) {
             token = process.env.COMPONENT_GITLAB_TOKEN;
         }
         return repoUrl.replace('://', `://oauth2:${token}@`);
+    } else if (repoKind === 'bitbucket') {
+        if (!token) {
+            token = process.env.COMPONENT_BITBUCKET_TOKEN;
+        }
+        const user = process.env.APP_GIT_USER;
+        return repoUrl.replace('://', `://${user}:${token}@`);
+    } else {
+        fail('Unknown Git repository kind');
     }
 }
 
@@ -198,7 +206,7 @@ async function perform() {
             copyManifest(manifest);
             await callShellHooks(manifest.parameters);
         } else if (repoUrl) {
-            const gitUrl = securedGitUrl({repoUrl});
+            const gitUrl = securedGitUrl({repoUrl, repoKind: process.env.APP_GIT_KIND});
             shelljs.exec(`git clone --single-branch -b ${repoBranch} ${gitUrl}`);
             shelljs.exec(`rsync -htrzai --progress $(basename ${gitUrl} .git)/ ${workspaceDir}`);
             logger.info('Application workspace initialized');
