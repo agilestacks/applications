@@ -37,7 +37,7 @@ parameters:
   parameters:
   - name: remote
   - name: organization
-    value: github
+    value: ${component.github.repository.organization}
   - name: token
     value: ${component.github.token}
 

@@ -5,7 +5,7 @@ metadata:
   name: ${application.ingress.host}
 spec:
   repositoryUrl: ${component.git.remote}
-  credentialsId: github-${component.github.repository.organization}
+  credentialsId: ${application.git.kind}-${component.git.organization}
   branchSpec: '*/master'
   pipeline: Jenkinsfile
   origin: 'SuperHub'

@@ -13,9 +13,9 @@ lifecycle:
     - github-repository
 
 parameters:
-- name: component.git
-  parameters:
-  - name: remote
+- name: application.git.kind
+  value: github
+
 - name: component.github
   parameters:
   - name: token
@@ -24,15 +24,28 @@ parameters:
   - name: repository.organization
     value: asibot
   - name: repository.name
-    value: nodejs-backend
+    value: golang-backend
   - name: webhook.name
     value: github
   - name: webhook.events.json
     value: '["push"]'
   - name: repository.description
     value: >
-      NodeJS microservice with Express web framework
+      Golang webservice with Gorilla Mux
+
+- name: component.git
+  parameters:
+  - name: remote
+  - name: organization
+    value: ${component.github.repository.organization}
+  - name: token
+    value: ${component.github.token}
 
 outputs:
 - name: application.git.remote
   value: ${component.git.remote}
+- name: application.git.user
+  value: ${component.git.organization}
+- name: application.git.kind
+  values: ${application.git.kind}  
+

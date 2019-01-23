@@ -13,27 +13,39 @@ lifecycle:
     - github-repository
 
 parameters:
-- name: component.git
-  parameters:
-  - name: remote
+- name: application.git.kind
+  value: github
+
 - name: component.github
   parameters:
   - name: token
     fromEnv: COMPONENT_GITHUB_TOKEN
     default: token
-  - name: reference  
   - name: repository.organization
     value: asibot
   - name: repository.name
-    value: antonargo1
+    value: golang-backend
   - name: webhook.name
     value: github
   - name: webhook.events.json
     value: '["push"]'
   - name: repository.description
     value: >
-      Java microservice with Spring Boot
+      Golang webservice with Gorilla Mux
+
+- name: component.git
+  parameters:
+  - name: remote
+  - name: organization
+    value: ${component.github.repository.organization}
+  - name: token
+    value: ${component.github.token}
 
 outputs:
 - name: application.git.remote
   value: ${component.git.remote}
+- name: application.git.user
+  value: ${component.git.organization}
+- name: application.git.kind
+  values: ${application.git.kind}  
+
