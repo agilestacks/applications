@@ -44,7 +44,7 @@ parameters:
 
 outputs:
 - name: component.git.remote
-  fromTfVar: clone_url
+  fromTfVar: git_url
 - name: component.bitbucket.project.cloneUrl
   fromTfVar: clone_url
 - name: component.bitbucket.project.gitUrl

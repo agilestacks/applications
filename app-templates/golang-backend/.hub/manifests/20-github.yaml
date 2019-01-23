@@ -46,4 +46,6 @@ outputs:
   value: ${component.git.remote}
 - name: application.git.user
   value: ${component.git.organization}
+- name: application.git.kind
+  values: ${application.git.kind}  
 
