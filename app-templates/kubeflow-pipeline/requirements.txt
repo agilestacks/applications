@@ -1,6 +1,6 @@
 ipython
 jupyter
 ipdb
-pip
-# ./extensions
+#pip
+./extensions
 awscli-plugin-endpoint
