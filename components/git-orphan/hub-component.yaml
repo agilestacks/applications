@@ -2,16 +2,16 @@
 version: 1
 kind: component
 meta:
-  name: github-orphan
-  brief: Github orphan branch
+  name: git-orphan
+  brief: Git orphan branch
   source:
-    dir: components/github-orphan
+    dir: components/git-orphan
 
 parameters:
-- name: component.githubOrphan
+- name: component.gitOrphan
   parameters:
   - name: git.token
-    env: GITHUB_TOKEN
+    env: GIT_TOKEN
   - name: git.branch
     env: OPRHAN_NAME
   - name: git.repository
@@ -21,5 +21,5 @@ parameters:
   env: SRC_DIR 
 
 outputs:
-- name: component.githubOrphan.url
+- name: component.gitOrphan.url
   fromTfVar: link_to_branch

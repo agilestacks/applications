@@ -5,12 +5,7 @@ OPRHAN_NAME ?= qa
 REMOTE ?= must-be-set
 REMOTE_WITH_TOKEN ?=
 
-export GITHUB_TOKEN ?=
-ifeq ($(GITHUB_TOKEN),)
-	curl := curl -fs
-else
-	curl := curl -fs -H 'Authorization: token $(GITHUB_TOKEN)'
-endif
+export GIT_TOKEN ?=
 
 ifeq ($(USER_NAME),)
 	USER_NAME := SuperHub
@@ -19,22 +14,15 @@ ifeq ($(USER_EMAIL),)
 	USER_EMAIL := support@agilestacks.com
 endif
 
-git := ghub -C $(SRC_DIR)
-
-check-github-api:
-	echo "Connecting to $(API_SERVER)..."
-	-$(eval org=$(shell $(curl) -I $(REMOTE)))
-	-$(eval user=$(shell $(curl) -I $(REMOTE)))
-	$(if $(or $(org),$(user)),$(info "Connected"),$(error "Error connecting to $(API_SERVER)"))
-PHONY: check-github-api
+git := git -C $(SRC_DIR)
 
 init:
 	-$(git) init
 .PHONY: init
 
 remote:
-ifneq ($(GITHUB_TOKEN),)
-	$(eval REMOTE_WITH_TOKEN=$(subst ://,://x-oauth-basic:$(GITHUB_TOKEN)@,$(REMOTE)))
+ifneq ($(GIT_TOKEN),)
+	$(eval REMOTE_WITH_TOKEN=$(subst ://,://x-oauth-basic:$(GIT_TOKEN)@,$(REMOTE)))
 endif
 	-$(git) remote add orphan-$(OPRHAN_NAME) "$(REMOTE_WITH_TOKEN)"
 	-$(git) remote set-url orphan-$(OPRHAN_NAME) "$(REMOTE_WITH_TOKEN)"
@@ -56,9 +44,9 @@ push:
 	-$(git) push --set-upstream orphan-$(OPRHAN_NAME) $(OPRHAN_NAME)
 .PHONY: push
 
-deploy: check-github-api init remote push output
+deploy: init remote push output
 
-undeploy: check-github-api init remote
+undeploy:init remote
 	-$(git) push --set-upstream orphan-$(OPRHAN_NAME) --force --delete $(OPRHAN_NAME)
 	rm -rf $(realpath $(SRC_DIR))/.git
 .PHONY: undeploy	

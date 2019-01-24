@@ -1,17 +1,17 @@
 ---
 components:
-- name: github-orphan
+- name: git-orphan
   source:
     repoUrl: https://github.com/agilestacks/applications.git
-    repoPath: applications/components/github-orphan
-    dir: components/github-orphan
+    repoPath: applications/components/git-orphan
+    dir: components/git-orphan
     branch: APPLICATIONS_TAG
     fromEnv: GITHUB_TOKEN
 lifecycle:
   order:
-    - github-orphan
+    - git-orphan
 parameters:
-- name: component.githubOrphan
+- name: component.gitOrphan
   parameters:
   - name: git.token
     fromEnv: COMPONENT_GITHUB_TOKEN
@@ -22,7 +22,7 @@ parameters:
   - name: url
 outputs:
 - name: application.git.branch
-  value: ${component.githubOrphan.git.branch}
+  value: ${component.gitOrphan.git.branch}
 - name: promotion.git.remote
-  value: ${component.githubOrphan.url}
+  value: ${component.gitOrphan.url}
           
