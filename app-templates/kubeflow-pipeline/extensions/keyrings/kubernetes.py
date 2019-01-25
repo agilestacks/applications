@@ -6,10 +6,11 @@ from os import environ
 from base64 import b64encode
 from kubernetes.client.rest import ApiException
 from kubernetes import client as kube_client
-from kubernetes import config as kube_config
+from kubernetes import config
 
 from base64 import b64encode, b64decode
 
+import logging
 
 DEFAULT_KUBE_SECRET_NAME = "jupyter-keyring"
 
@@ -18,15 +19,16 @@ class KubernetesKeyring(keyring.backend.KeyringBackend):
     """Simple keyring adapter that uses kubernetes secrets as storage backend
     """
 
-
     def __init__(self, secret_name=None, namespace=None):
+        self._configure_k8s()
+        self.namespace   = namespace or self._current_namespace()
+        self.api_client  = kube_client.ApiClient()
+        self.corev1      = kube_client.CoreV1Api(self.api_client)
         self.secret_name = secret_name or environ.get('JUPYTER_KUBERNETES_SECRET', DEFAULT_KUBE_SECRET_NAME)
-        self.namespace = namespace or _current_namespace()
-        self.client = kube_config.new_client_from_config()
 
 
     def set_password(self, servicename, username, password):
-        api = kube_client.CoreV1Api()
+        api = self.corev1
         b64 = b64encode( password.encode('utf-8') ).decode('ascii')
         try:
             secret = api.read_namespaced_secret(self.secret_name, self.namespace)
@@ -39,7 +41,7 @@ class KubernetesKeyring(keyring.backend.KeyringBackend):
 
 
     def get_password(self, servicename, username):
-        api = kube_client.CoreV1Api()
+        api = self.corev1
         try:
             secret = api.read_namespaced_secret(self.secret_name, self.namespace)
             if servicename in secret.data:
@@ -50,7 +52,7 @@ class KubernetesKeyring(keyring.backend.KeyringBackend):
 
 
     def delete_password(self, servicename, username, password):
-        api = kube_client.CoreV1Api()
+        api = self.corev1
         try:
             secret = api.read_namespaced_secret(self.secret_name, self.namespace)
             if servicename in secret.data:
@@ -61,18 +63,28 @@ class KubernetesKeyring(keyring.backend.KeyringBackend):
             return None
 
 
-def _current_namespace():
-    try:
-        result = kube_config.list_kube_config_contexts()[1].get('context', {}).get('namespace')
-        if result:
-            return result
-    except IndexError:
-        pass
+    def _configure_k8s(self):
+        try:
+            config.load_kube_config()
+            logging.info('Found local kubernetes config. Initialized with kube_config.')
+        except:
+            logging.info('Cannot Find local kubernetes config. Trying in-cluster config.')
+            config.load_incluster_config()
+            logging.info('Initialized with in-cluster config.')
 
-    try:
-        return open('/var/run/secrets/kubernetes.io/serviceaccount/namespace').read()
-    except OSError:
-        return 'default'
+
+    def _current_namespace(self):
+        try:
+            result = config.list_kube_config_contexts()[1].get('context', {}).get('namespace')
+            if result:
+                return result
+        except IndexError:
+            pass
+
+        try:
+            return open('/var/run/secrets/kubernetes.io/serviceaccount/namespace').read()
+        except OSError:
+            return 'default'
 
 
 def _empty_secret(secret_name):
