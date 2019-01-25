@@ -10,24 +10,24 @@ from kubernetes import config as kube_config
 
 from base64 import b64encode, b64decode
 
+
+DEFAULT_KUBE_SECRET_NAME = "jupyter-keyring"
+
+
 class KubernetesKeyring(keyring.backend.KeyringBackend):
     """Simple keyring adapter that uses kubernetes secrets as storage backend
     """
 
-    def __init__(self, secret_name="jupyter", namespace=None):
-        self.secret_name = secret_name
+
+    def __init__(self, secret_name=None, namespace=None):
+        self.secret_name = secret_name or environ.get('JUPYTER_KUBERNETES_SECRET', DEFAULT_KUBE_SECRET_NAME)
+        self.namespace = namespace or _current_namespace()
         self.client = kube_config.new_client_from_config()
-        if not namespace:
-            self.namespace = _current_namespace()
-        else:
-            self.namespace = namespace
 
 
     def set_password(self, servicename, username, password):
         api = kube_client.CoreV1Api()
         b64 = b64encode( password.encode('utf-8') ).decode('ascii')
-
-        api = kube_client.CoreV1Api()
         try:
             secret = api.read_namespaced_secret(self.secret_name, self.namespace)
             secret.data[servicename] = b64
@@ -37,17 +37,28 @@ class KubernetesKeyring(keyring.backend.KeyringBackend):
             secret.data = {servicename: b64}
             api.create_namespaced_secret(namespace=self.namespace, body=secret)
 
+
     def get_password(self, servicename, username):
         api = kube_client.CoreV1Api()
         try:
             secret = api.read_namespaced_secret(self.secret_name, self.namespace)
-            return b64decode( secret.data[servicename] ).encode('utf-8')
+            if servicename in secret.data:
+                return b64decode( secret.data[servicename] ).decode('utf-8')
         except ApiException:
-            return None
+            pass
+        return None
 
 
     def delete_password(self, servicename, username, password):
-        pass
+        api = kube_client.CoreV1Api()
+        try:
+            secret = api.read_namespaced_secret(self.secret_name, self.namespace)
+            if servicename in secret.data:
+                val = secret.data.pop(servicename)
+                api.replace_namespaced_secret(self.secret_name, self.namespace, secret)
+                return b64decode( val ).encode('utf-8')
+        except ApiException:
+            return None
 
 
 def _current_namespace():
