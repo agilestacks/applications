@@ -1,6 +1,9 @@
 ipython
 jupyter
+jupyter_contrib_nbextensions
 ipdb
 #pip
+autopep8
 ./extensions
 awscli-plugin-endpoint
+
