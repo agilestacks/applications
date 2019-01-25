@@ -78,7 +78,7 @@ class KubernetesKeyring(keyring.backend.KeyringBackend):
             result = config.list_kube_config_contexts()[1].get('context', {}).get('namespace')
             if result:
                 return result
-        except IndexError:
+        except (IndexError, FileNotFoundError):
             pass
 
         try:
