@@ -4,6 +4,7 @@ metadata:
   generateName: build-image-
 spec:
   entrypoint: build
+  serviceAccountName: 'pipeline-runner'
   arguments:
     parameters:
     - name: image
