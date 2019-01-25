@@ -64,10 +64,11 @@ class KubernetesKeyring(keyring.backend.KeyringBackend):
 def _current_namespace():
     try:
         result = kube_config.list_kube_config_contexts()[1].get('context', {}).get('namespace')
+        if result:
+            return result
     except IndexError:
         pass
-    if result:
-        return result
+
     try:
         return open('/var/run/secrets/kubernetes.io/serviceaccount/namespace').read()
     except OSError:
