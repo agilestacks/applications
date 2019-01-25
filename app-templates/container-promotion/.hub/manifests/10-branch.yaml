@@ -29,7 +29,7 @@ parameters:
     value: ${application.git.remote}
     env: REMOTE
   - name: git.organization
-    value: ${component.git.remote}
+    value: ${component.git.organization}
     env: ORGANIZATION
   - name: git.kind
     value: ${application.git.kind}
