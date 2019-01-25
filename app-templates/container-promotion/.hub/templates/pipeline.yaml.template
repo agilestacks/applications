@@ -6,7 +6,7 @@ metadata:
 spec:
   repositoryUrl: ${application.git.remote}
   credentialsId: github-${component.github.repository.organization}
-  branchSpec: '*/${component.githubOrphan.git.branch}'
+  branchSpec: '*/${component.gitOrphan.git.branch}'
   pipeline: Jenkinsfile
   origin: 'SuperHub'
   parameters:

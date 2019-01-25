@@ -42,7 +42,6 @@ lifecycle:
     - target-ecr
 
 parameters:
-- name: component.github.repository.organization
 - name: component.jenkins.url
 - name: dns.domain
   env: DOMAIN_NAME
