@@ -16,7 +16,6 @@ parameters:
 - name: application.git.kind
 - name: component.git.token
 - name: component.git.organization
-- name: component.git.remote
 - name: component.gitBranch
   parameters:
   - name: git.token

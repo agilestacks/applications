@@ -4,7 +4,7 @@ kind: Pipeline
 metadata:
   name: ${application.name}-${promotion.environment}.${component.kubernetesProvider.ingress.fqdn}
 spec:
-  repositoryUrl: ${component.git.remote}
+  repositoryUrl: ${application.git.remote}
   credentialsId: ${application.git.kind}-${component.git.organization}
   branchSpec: '*/${component.gitBranch.git.branch}'
   pipeline: Jenkinsfile
