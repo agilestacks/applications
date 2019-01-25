@@ -32,11 +32,12 @@ parameters:
     env: ORGANIZATION
   - name: git.kind
     value: ${application.git.kind}
-    env: GIT_KIND     
+    env: GIT_KIND
+  - name: url       
 
 outputs:
 - name: application.git.branch
-  value: ${component.gitOrphan.git.branch}
+  value: ${component.gitBranch.git.branch}
 - name: promotion.git.remote
-  value: ${component.gitOrphan.url}
+  value: ${component.gitBranch.url}
           
