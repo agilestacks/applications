@@ -4,9 +4,9 @@ kind: Pipeline
 metadata:
   name: ${application.name}-${promotion.environment}.${component.kubernetesProvider.ingress.fqdn}
 spec:
-  repositoryUrl: ${application.git.remote}
-  credentialsId: github-${component.github.repository.organization}
-  branchSpec: '*/${component.gitOrphan.git.branch}'
+  repositoryUrl: ${component.git.remote}
+  credentialsId: ${application.git.kind}-${component.git.organization}
+  branchSpec: '*/${component.gitBranch.git.branch}'
   pipeline: Jenkinsfile
   origin: 'SuperHub'
   parameters:
