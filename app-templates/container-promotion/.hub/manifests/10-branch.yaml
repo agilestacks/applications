@@ -11,11 +11,11 @@ lifecycle:
   order:
     - git-branch
 
-
 parameters:
 - name: application.git.kind
 - name: component.git.token
 - name: component.git.organization
+
 - name: component.gitBranch
   parameters:
   - name: git.token
@@ -40,4 +40,8 @@ outputs:
   value: ${component.gitBranch.git.branch}
 - name: promotion.git.remote
   value: ${component.gitBranch.url}
+- name: application.git.user
+  value: ${component.git.organization}
+- name: application.git.kind
+  values: ${application.git.kind}  
           
