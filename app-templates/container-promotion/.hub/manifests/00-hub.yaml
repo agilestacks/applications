@@ -61,6 +61,8 @@ parameters:
 - name: promotion.environment
 - name: promotion.branch
   value: ${promotion.environment}
+- name: application.pipeline.name
+  value: ${promotion.branch}  
 - name: terraform.bucket.name
 - name: terraform.bucket.region
 - name: component.docker.image

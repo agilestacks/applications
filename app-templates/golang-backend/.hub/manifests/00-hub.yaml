@@ -38,6 +38,8 @@ parameters:
     value: /
   - name: application.environment.name
     value: ''
+  - name: application.pipeline.name
+    value: main    
   - name: component.ingress.protocol
   - name: component.ingress.fqdn
   - name: component.docker.image

@@ -36,6 +36,8 @@ parameters:
   - name: application.bucket
     value: '${component.s3website.bucket}'
   - name: application.theme
+  - name: application.pipeline.name
+    value: main  
   - name: component.ingress.protocol
   - name: component.ingress.fqdn
   - name: component.git.remote

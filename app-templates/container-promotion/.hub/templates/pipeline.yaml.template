@@ -2,10 +2,11 @@
 apiVersion: "jenkins.agilestacks.com/v1"
 kind: Pipeline
 metadata:
-  name: ${application.name}-${promotion.environment}.${component.kubernetesProvider.ingress.fqdn}
+  name: ${application.pipeline.name}
 spec:
   repositoryUrl: ${application.git.remote}
   credentialsId: ${application.git.kind}-${component.git.organization}
+  folder: ${application.name}  
   branchSpec: '*/${component.gitBranch.git.branch}'
   pipeline: Jenkinsfile
   origin: 'SuperHub'
