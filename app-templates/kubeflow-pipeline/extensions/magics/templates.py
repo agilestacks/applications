@@ -44,6 +44,10 @@ class TemplateMagics(Magics):
         default=None,
         help="Filename to write output"
     )
+    @argument('-f', '--format',
+        default='mustache',
+        help="Template format (mustache or fstring)"
+    )
     @argument('-v', '--verbose',
         default=False,
         help="Print output",
@@ -61,14 +65,27 @@ class TemplateMagics(Magics):
             fread = f.read()
 
         output = args.output
-        result = mustache(fread, params(), output)
-        
+        p = params()
+        if args.format == 'mustache':
+            result = mustache(fread, p, output)
+        elif args.foramt == 'fstring':
+            result = fstring(fread, p, output)
+        else:
+            raise ValueError(f'Unsupported format: {args.format}. Must be: mustache|fstring')
+
         if output and args.verbose:
             return display( FileLink(output), Code(result) )
         elif output:
             return display( FileLink(output) )
         else:
             return display( Code(result) )
+
+def fstring(template, params=dict(), filename=None):
+    r = template.format(params)
+    if filename != None:
+        with open(filename, 'w') as f:
+            f.write(r)
+    return r
 
 
 def mustache(template, params=dict(), filename=None):
