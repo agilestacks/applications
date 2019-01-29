@@ -69,7 +69,7 @@ outputs:
   - name: application.bucket
     value: '${component.s3website.bucket}'
   - name: application.jenkins.pipeline.url
-    value: '${component.jenkins.url}/job/${application.ingress.host}/${application.path}'
+    value: '${component.jenkins.url}/job/${application.name}/job/${application.pipeline.name}-${application.name}'
 
 templates:
   files:

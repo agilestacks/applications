@@ -139,7 +139,7 @@ outputs:
 - name: application.target.url
   value: ${application.target.ingress.protocol}://${application.target.fqdn}${application.target.path}
 - name: application.target.jenkins.pipeline.url
-  value: '${component.jenkins.url}/job/${application.target.fqdn}'
+  value: '${component.jenkins.url}/job/${application.name}/job/${application.pipeline.name}-${application.name}'
 - name: application.target.ecr
   value: ${component.docker.image}
 
