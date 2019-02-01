@@ -5,9 +5,12 @@ from urllib.parse import urlparse
 
 from kubernetes import client as kube_client
 from kubernetes import config
-from kubernetes.client import V1Secret, V1ObjectMeta
+from kubernetes.client import (V1EnvVar, V1EnvVarSource, V1SecretKeySelector, 
+                               V1VolumeMount, V1Volume, V1ProjectedVolumeSource, 
+                               V1VolumeProjection, V1KeyToPath, V1SecretProjection)
 from kubernetes.client.rest import ApiException
 
+from tempfile import NamedTemporaryFile
 
 class KanikoOp(ContainerOp):
     def __init__(self, 
@@ -27,7 +30,7 @@ class KanikoOp(ContainerOp):
               is_exit_handler=False)
         self.destination=image
         if package:
-            self.add_s3_package(package, files, s3_client)
+            self.add_build_package(package, package_content, dockerfile, s3_client)
 
         self.api_client  = kube_client.ApiClient()
         self.corev1      = kube_client.CoreV1Api(self.api_client)
@@ -94,20 +97,20 @@ class KanikoOp(ContainerOp):
 
         return self
         
-    def add_build_package( self,
-                           package,
+    def add_build_paHckage( self,
+                           package: str,
                            package_content=['Dockerfile'],
                            dockerfile='Dockerfile',
                            s3_client=boto3.client('s3')):
-        o = urlparse(package)
+        o = urlparse( package )
         bucket = o.netloc
         key = o.path
         
-        with tempfile.TemporaryFile as tmpfile:
-            with tarfile.open(tmpfile, 'w:gz') as tar:
+        with NamedTemporaryFile(suffix='.tar.gz') as tmpfile:
+            with tarfile.open(tmpfile.name, 'w:gz') as tar:
                 for f in package_content:
                     tar.add(f, arcname=f)
-            s3_client.upload_file(tmpfile , bucket, key.lstrip('/'))
+            s3_client.upload_file(tmpfile.name, bucket, key.lstrip('/'))
 
         self.add_argument('--context', package)
         return self
@@ -183,3 +186,4 @@ class KanikoOp(ContainerOp):
 
     def _encode_b64(value):
         return b64encode( value.encode('utf-8') ).decode('ascii')
+
