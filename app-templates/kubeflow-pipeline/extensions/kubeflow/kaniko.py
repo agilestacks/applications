@@ -1,22 +1,21 @@
 import boto3, tarfile
 
-from kfp.dsl import ContainerOp
+from kfp.dsl import ContainerOp, PipelineParam
 from urllib.parse import urlparse
 
 from kubernetes import client as kube_client
 from kubernetes import config
-from kubernetes.client import (V1EnvVar, V1EnvVarSource, V1SecretKeySelector, 
-                               V1VolumeMount, V1Volume, V1ProjectedVolumeSource, 
-                               V1VolumeProjection, V1KeyToPath, V1SecretProjection)
+from kubernetes.client import *
 from kubernetes.client.rest import ApiException
 
 from tempfile import NamedTemporaryFile
+from base64 import b64encode
 
 class KanikoOp(ContainerOp):
     def __init__(self, 
                  name, 
                  destination,
-                 package=None,
+                 package,
                  package_content=['Dockerfile'],
                  image='gcr.io/kaniko-project/executor:latest',
                  s3_client=boto3.client('s3'),
@@ -24,11 +23,12 @@ class KanikoOp(ContainerOp):
         super(KanikoOp, self).__init__(
               name=name,
               image=image,
-              arguments=['--cache=true', 
-                         '--dockerfile={dockerfile}',
-                         f'--destination={destination}'],
+              arguments=['--cache=true'],
               is_exit_handler=False)
         self.destination=image
+        self.add_argument('dockerfile', dockerfile)
+        self.add_argument('destination', destination)
+
         if package:
             self.add_build_package(package, package_content, dockerfile, s3_client)
 
@@ -59,13 +59,15 @@ class KanikoOp(ContainerOp):
             if not secret_name:
                 secret_name = f"aws-secret-{self.aws_session.profile_name}"
 
+            secret_name = self._value_or_ref(secret_name)
+
             if creds.access_key:
                 secret['access_key'] = creds.access_key
                 self.add_env_variable(
                     V1EnvVar(
                         name='AWS_SECRET_ACCESS_KEY', 
                         value_from=V1EnvVarSource(
-                            secret_key_ref='access_key'
+                            secret_key_ref=V1SecretKeySelector(name=secret_name, key='access_key')
                         )
                     )
                 )
@@ -76,7 +78,7 @@ class KanikoOp(ContainerOp):
                     V1EnvVar(
                         name='AWS_SECRET_ACCESS_KEY', 
                         value_from=V1EnvVarSource(
-                            secret_key_ref='secret_key'
+                            secret_key_ref=V1SecretKeySelector(name=secret_name, key='secret_key')
                         )
                     )
                 )
@@ -87,7 +89,7 @@ class KanikoOp(ContainerOp):
                     V1EnvVar(
                         name='AWS_SESSION_TOKEN', 
                         value_from=V1EnvVarSource(
-                            secret_key_ref='token'
+                            secret_key_ref=V1SecretKeySelector(name=secret_name, key='token')
                         )
                     )
                 )
@@ -97,12 +99,12 @@ class KanikoOp(ContainerOp):
 
         return self
         
-    def add_build_paHckage( self,
-                           package: str,
+    def add_build_package( self,
+                           package,
                            package_content=['Dockerfile'],
                            dockerfile='Dockerfile',
                            s3_client=boto3.client('s3')):
-        o = urlparse( package )
+        o = urlparse( package.value )
         bucket = o.netloc
         key = o.path
         
@@ -112,28 +114,36 @@ class KanikoOp(ContainerOp):
                     tar.add(f, arcname=f)
             s3_client.upload_file(tmpfile.name, bucket, key.lstrip('/'))
 
-        self.add_argument('--context', package)
+        self.add_argument('context', package)
         return self
 
 
-    def add_argument(self, argument, value):
-      found = False
-      for idx, arg in self.arguments:
-          if argument in arg:
-              found = True
-              self.arguments[idx] = f"{argument}={value}"
-              break
+    def add_argument(self, argument, param):
+        if not param:
+            return self
 
-      if not found:
-          self.arguments.append( f"{argument}={value}" )
+        arg_prefix = f"--{argument}="
+        arg_value = f"--{argument}={self._value_or_ref(param)}"
 
-      return self
+        found = False
+        for i in range(len(self.arguments)):
+            if arg_prefix in self.arguments[i]:
+                found = True
+                self.arguments[i] = arg_value
+                break
+
+        if not found:
+            self.arguments.append( arg_value )
+
+        return self
     
     def add_pull_secret(self, secret_name, filename='.dockerconfigjson'):
+        secret_name = self._value_or_ref(secret_name)
+        
         registrySecret = V1VolumeProjection(
             secret=V1SecretProjection(
                 name=secret_name, 
-                items=[V1KeyToPath(key='.dockerconfigjson', path='config.json')]
+                items=[V1KeyToPath(key=filename, path='config.json')]
             )
         )
         self.add_volume(
@@ -164,17 +174,20 @@ class KanikoOp(ContainerOp):
         except OSError:
             return 'default'
 
+    def _value_or_ref(self, v):
+        if isinstance(v, PipelineParam):
+            return f"{{workflow.parameters.{v.name}}}"
+        return v
 
-    def _update_secret(self, secret_name, **data):
+    def _update_secret(self, secret_name, secret_data):
         api = self.corev1
-        k = self.kube_client
         ns  = self._current_namespace()
-        b64_encoded = {k: self._encode_b64(v) for (k,v)in data.items()}
+        b64_encoded = {k: self._encode_b64(v) for (k,v) in secret_data.items()}
 
         try:
             secret = api.read_namespaced_secret(secret_name, ns)
-            secret.data[key] = value_b64
-            api.replace_namespaced_secret(self.secret_name, ns, secret)
+            secret.data.update(b64_encoded)
+            api.replace_namespaced_secret(secret_name, ns, secret)
         except ApiException:
             secret = kube_client.V1Secret(
                 metadata = V1ObjectMeta(name=secret_name),
@@ -184,6 +197,5 @@ class KanikoOp(ContainerOp):
             api.create_namespaced_secret(namespace=ns, body=secret)
 
 
-    def _encode_b64(value):
+    def _encode_b64(self, value):
         return b64encode( value.encode('utf-8') ).decode('ascii')
-
