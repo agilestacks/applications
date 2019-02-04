@@ -19,7 +19,7 @@ class KanikoOp(ContainerOp):
                  name, 
                  destination,
                  package,
-                 file_list=['**/*'],
+                 file_list=['**/*', '*'],
                  image='gcr.io/kaniko-project/executor:latest',
                  s3_client=boto3.client('s3'),
                  dockerfile='Dockerfile'):
@@ -104,7 +104,7 @@ class KanikoOp(ContainerOp):
         
     def add_build_package( self,
                            package,
-                           file_list=['**/*'],
+                           file_list=['**/*', '*'],
                            dockerfile='Dockerfile',
                            s3_client=boto3.client('s3')):
 
