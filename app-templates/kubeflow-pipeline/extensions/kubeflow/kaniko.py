@@ -149,30 +149,6 @@ class KanikoOp(ContainerOp):
 
         return self
     
-    def add_pull_secret(self, secret_name, filename='.dockerconfigjson'):
-        secret_name = self._value_or_ref(secret_name)
-
-        registrySecret = V1VolumeProjection(
-            secret=V1SecretProjection(
-                name=secret_name, 
-                items=[V1KeyToPath(key=filename, path='config.json')]
-            )
-        )
-        self.add_volume(
-            V1Volume(
-                name='registrycreds',
-                projected=V1ProjectedVolumeSource(sources=[registrySecret])
-            )
-        )
-        self.add_volume_mount(
-            V1VolumeMount(
-                name='registrycreds',
-                mount_path='/kaniko/.docker'
-            )
-        )
-        
-        return self
-    
     def _expand_globs(self, globs:list):
         l = [glob.glob(g) for g in globs]
         flatten = [item for sublist in l for item in sublist]
@@ -218,4 +194,33 @@ class KanikoOp(ContainerOp):
         return b64encode( value.encode('utf-8') ).decode('ascii')
 
 
+def pull_secret_projection(
+        secret_name, 
+        filename='.dockerconfigjson', 
+        project_to='/kaniko/.docker/config.json'):
+    def _pull_secret_projection(task):
+        from os.path import basename, dirname
+        from kubernetes import client as k8sc
 
+        return (
+            task.add_volume(
+                k8sc.V1Volume(
+                    name='registrycreds',
+                    projected=k8sc.V1ProjectedVolumeSource(sources=[
+                        k8sc.V1VolumeProjection(
+                            secret=k8sc.V1SecretProjection(
+                                name=secret_name, 
+                                items=[k8sc.V1KeyToPath(key=filename, path=basename(project_to))]
+                            )
+                        )
+                    ])
+                )
+            ).add_volume_mount(
+                k8sc.V1VolumeMount(
+                    name='registrycreds',
+                    mount_path=dirname(project_to)
+                )
+            )
+        )
+
+    return _pull_secret_projection
