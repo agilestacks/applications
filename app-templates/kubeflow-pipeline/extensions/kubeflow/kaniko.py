@@ -104,15 +104,19 @@ class KanikoOp(ContainerOp):
                            package_content=['Dockerfile'],
                            dockerfile='Dockerfile',
                            s3_client=boto3.client('s3')):
-        o = urlparse( package.value )
+
+        if not package:
+            raise ValueError( f"'package' should not be empty. Actual: {package}" )
+
+        o = urlparse( package )
         bucket = o.netloc
-        key = o.path
+        key = o.path.lstrip('/')
         
         with NamedTemporaryFile(suffix='.tar.gz') as tmpfile:
             with tarfile.open(tmpfile.name, 'w:gz') as tar:
                 for f in package_content:
                     tar.add(f, arcname=f)
-            s3_client.upload_file(tmpfile.name, bucket, key.lstrip('/'))
+            s3_client.upload_file(tmpfile.name, bucket, key)
 
         self.add_argument('context', package)
         return self
@@ -139,7 +143,7 @@ class KanikoOp(ContainerOp):
     
     def add_pull_secret(self, secret_name, filename='.dockerconfigjson'):
         secret_name = self._value_or_ref(secret_name)
-        
+
         registrySecret = V1VolumeProjection(
             secret=V1SecretProjection(
                 name=secret_name, 
@@ -199,3 +203,4 @@ class KanikoOp(ContainerOp):
 
     def _encode_b64(self, value):
         return b64encode( value.encode('utf-8') ).decode('ascii')
+
