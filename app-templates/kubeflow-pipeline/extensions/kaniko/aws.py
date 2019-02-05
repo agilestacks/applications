@@ -53,7 +53,7 @@ def aws_to_kube_secret(
     if creds.token:
         secret_data['aws_session_token'] = creds.token
 
-    b64_encoded = {k: self._encode_b64(v) for (k,v) in secret_data.items()}
+    b64_encoded = {k: _encode_b64(v) for (k,v) in secret_data.items()}
     try:
         secret = api.read_namespaced_secret(secret_name, namespace)
         secret.data.update(b64_encoded)
