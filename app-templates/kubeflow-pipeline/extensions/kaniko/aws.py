@@ -53,14 +53,15 @@ def aws_to_kube_secret(
     if creds.token:
         secret_data['aws_session_token'] = creds.token
 
+    b64_encoded = {k: self._encode_b64(v) for (k,v) in secret_data.items()}
     try:
         secret = api.read_namespaced_secret(secret_name, namespace)
-        secret.data.update(secret_data)
+        secret.data.update(b64_encoded)
         api.replace_namespaced_secret(secret_name, namespace, secret)
     except ApiException:
         secret = kube_client.V1Secret(
             metadata = kube_client.V1ObjectMeta(name=secret_name),
-            data = secret_data,
+            data = b64_encoded,
             type = 'Opaque'
         )
         api.create_namespaced_secret(namespace=namespace, body=secret)
@@ -72,12 +73,12 @@ def use_aws_credentials(
         update_kube_secret=False):
 
     def _use_aws_credentials(task):
-        region = region or session.region_name
+        region_name = region or session.region_name
         if region_name:
             task.add_env_variable(
-                V1EnvVar(
+                kube_client.V1EnvVar(
                     name='AWS_DEFAULT_REGION', 
-                    value=session.region_name
+                    value=region_name
                 )
             )
 
@@ -142,3 +143,4 @@ def _expand_globs(globs:list):
     l = [glob.glob(g) for g in globs]
     flatten = [item for sublist in l for item in sublist]
     return list(set(flatten))
+
