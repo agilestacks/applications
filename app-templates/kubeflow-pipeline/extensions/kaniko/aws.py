@@ -36,7 +36,7 @@ def upload_build_context_to_s3(
         s3_client.upload_file(tmpfile.name, bucket, key)
 
 def aws_to_kube_secret(
-        secret_name='aws-credentials', 
+        secret_name='jupyter-awscreds', 
         session=boto3.session.Session(), 
         namespace=None ):
     # KFP k8s helper applies incluster config setup if needed
@@ -67,7 +67,7 @@ def aws_to_kube_secret(
         api.create_namespaced_secret(namespace=namespace, body=secret)
 
 def use_aws_credentials(
-        secret_name='aws-credentials',
+        secret_name='jupyter-awscreds',
         session=boto3.session.Session(),
         region=None,
         update_kube_secret=False):
