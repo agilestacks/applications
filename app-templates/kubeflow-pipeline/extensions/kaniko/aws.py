@@ -69,14 +69,18 @@ def use_aws_credentials(
         secret_name='aws-credentials',
         session=boto3.session.Session(),
         region=None,
-        aws_access_key_id=None,
-        aws_secret_access_key=None,
-        aws_session_token=None,
         update_kube_secret=False):
 
     def _use_aws_credentials(task):
+        region = region or session.region_name
+        if region_name:
+            task.add_env_variable(
+                V1EnvVar(
+                    name='AWS_DEFAULT_REGION', 
+                    value=session.region_name
+                )
+            )
 
-        region_name = session.region_name
         creds = session.get_credentials()
         if creds.access_key:
             task.add_env_variable(
