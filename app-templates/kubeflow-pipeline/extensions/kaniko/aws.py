@@ -39,6 +39,7 @@ def aws_to_kube_secret(
         secret_name='aws-credentials', 
         session=boto3.session.Session(), 
         namespace=None ):
+    # KFP k8s helper applies incluster config setup if needed
     api = kube_client.CoreV1Api( K8sHelper()._api_client )
 
     namespace = namespace or _current_namespace()
