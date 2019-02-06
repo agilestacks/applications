@@ -72,7 +72,7 @@ def use_aws_credentials(
         region=None,
         update_kube_secret=False):
 
-    region_name = region or session.region_name or ec2_metadata_region(session)
+    region_name = region or session.region_name or ec2_metadata_region()
 
     def _use_aws_credentials(task):
         if region_name:
@@ -146,11 +146,11 @@ def _expand_globs(globs:list):
     return list(set(flatten))
 
 
-def ec2_metadata_region(sess=None):
+def ec2_metadata_region():
     from ec2_metadata import ec2_metadata
     from requests.exceptions import ConnectTimeout
 
     try:
-        return ec2_metadata(session).region
+        return ec2_metadata.region
     except ConnectTimeout:
         return None
