@@ -1,0 +1,57 @@
+---
+components:
+- name: pull-secret
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/pull-secret
+    dir: components/pull-secret
+    branch: APPLICATIONS_TAG
+    fromEnv: GITHUB_TOKEN
+
+lifecycle:
+  order:
+    - pull-secret
+
+parameters:
+- name: cloud.region
+- name: terraform.bucket
+  parameters:
+  - name: name
+  - name: region
+
+- name: application.docker-registry
+  parameters:
+  - name: url
+  - name: username
+    empty: allow
+  - name: password
+    empty: allow
+  - name: email
+    empty: allow
+  - name: image.url
+
+- name: component.docker.registry.kind
+  value: dockerregistry
+
+- name: component.docker
+  kind: link
+  parameters:
+  - name: image
+    value: ${application.docker-registry.image.url}
+  - name: registry.server
+    value: ${application.docker-registry.url}
+  - name: registry.username
+    value: ${application.docker-registry.username}
+  - name: registry.password
+    value: ${application.docker-registry.password}
+  - name: registry.email
+    value: ${application.docker-registry.email}
+    empty: allow
+
+- name: component.pullSecret
+  kind: link
+  parameters:
+  - name: name
+    value: ${application.name}-regcred
+  - name: namespace
+    value: ${application.namespace}
