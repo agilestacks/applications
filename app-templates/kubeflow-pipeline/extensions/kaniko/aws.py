@@ -72,8 +72,9 @@ def use_aws_credentials(
         region=None,
         update_kube_secret=False):
 
+    region_name = region or session.region_name or ec2_metadata_region(session)
+
     def _use_aws_credentials(task):
-        region_name = region or session.region_name
         if region_name:
             task.add_env_variable(
                 kube_client.V1EnvVar(
@@ -144,3 +145,12 @@ def _expand_globs(globs:list):
     flatten = [item for sublist in l for item in sublist]
     return list(set(flatten))
 
+
+def ec2_metadata_region(sess=None):
+    from ec2_metadata import ec2_metadata
+    from requests.exceptions import ConnectTimeout
+
+    try:
+        return ec2_metadata(session).region
+    except ConnectTimeout:
+        return None

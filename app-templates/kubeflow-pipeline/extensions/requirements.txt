@@ -4,5 +4,5 @@ pystache >= 0.5
 https://storage.googleapis.com/ml-pipeline/release/0.1.8/kfp.tar.gz
 boto3 >= 1.0
 kubernetes == 8.0.0
-keyring
-
+keyring > 0
+ec2-metadata >= 2.0.0
