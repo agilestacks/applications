@@ -16,6 +16,7 @@ const fs = require('fs');
 const glob = require("glob").sync;
 
 const manifestURL = process.env.APPLICATION_MANIFEST;
+const parametersURL = process.env.PARAMETERS_MANIFEST;
 const repoUrl = process.env.APP_GIT_REMOTE;
 const repoBranch = process.env.APP_GIT_BRANCH;
 
@@ -34,25 +35,25 @@ function fail(error) {
     process.exit(1);
 }
 
-function downloadManifest() {
-    logger.info(`Downloading manifest from ${manifestURL}`);
+function download(url) {
+    logger.info(`Downloading file from ${url}`);
     let res;
     try {
-        res = request('GET', manifestURL);
+        res = request('GET', url);
     } catch (err) {
-        logger.error('Cannot download the manifest', err);
+        logger.error('Cannot download the file', err);
         fail();
     }
-    logger.info('Downloaded manifest: ');
+    logger.info('Downloaded file: ');
     logger.info(res.body);
     const {
-        body: manifest
+        body: contents
     } = res;
-    if (manifest === undefined) {
-        logger.error('Manifest not found');
+    if (contents === undefined) {
+        logger.error('File not found');
         fail();
     }
-    return safeLoad(manifest);
+    return safeLoad(contents);
 }
 
 async function clean(directories) {
@@ -166,49 +167,36 @@ function deleteObsoleteProperties(manifest) {
     });
 }
 
+function copyParameters(parameters) {
+    const yaml = safeDump(parameters);
+    fs.writeFileSync([hubDir, 'managed.yaml'].join('/'), yaml);
+}
+
 function copyManifest(manifest) {
     deleteObsoleteProperties(manifest);
     const yaml = safeDump(manifest);
-    fs.writeFile([hubDir, manifest.meta.source.dir, 'hub.yaml'].join('/'), yaml, (err) => {
-        if (err) {
-            logger.error('Cannot write manifest file to disk', err);
-            fail();
-        }
-        logger
-            .info(`Application manifest and configuration has been created and placed to ${hubDir}`);
-    });
-}
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-async function callShellHooks(parameters) {
-    const formattedParams = parameters
-        .filter(parameter => parameter.value !== undefined)
-        .filter(parameter => !String(parameter.value).includes('$'))
-        .map(parameter => `${parameter.name}='${parameter.value}'`)
-        .join(' ');
-    logger.info(`Parameters eligible for substitution: ${formattedParams}`);
-    shelljs.cd([hubDir, 'init.d'].join('/'));
-    const scripts = glob('*.sh');
-    logger.info(`Calling shell hooks: ${scripts}`);
-    await forEach(scripts, async (script) => {
-        shelljs.exec(`sh -c "./${script} ${formattedParams}"`);
-    })
+    fs.writeFileSync([hubDir, manifest.meta.source.dir, 'hub.yaml'].join('/'), yaml);
 }
 
 async function perform() {
     try {
-        if (manifestURL) {
-            const manifest = downloadManifest();
+        if (manifestURL && parametersURL) {
+            const manifest = download(manifestURL);
+            const parameters = download(parametersURL);
             await prepareWorkspace(manifest);
             copyManifest(manifest);
-            await callShellHooks(manifest.parameters);
+            copyParameters(parameters);
         } else if (repoUrl) {
             const gitUrl = securedGitUrl({repoUrl, repoKind: process.env.APP_GIT_KIND});
-            shelljs.exec(`git clone --single-branch -b ${repoBranch} ${gitUrl}`);
-            shelljs.exec(`rsync -htrzai --progress $(basename ${gitUrl} .git)/ ${workspaceDir}`);
+            shelljs.exec(`git clone --single-branch -b ${repoBranch} ${gitUrl} ${workspaceDir}`);
+            if (parametersURL) {
+                const parameters = download(parametersURL);
+                copyParameters(parameters);
+                shelljs.cd(workspaceDir);
+                shelljs.exec(`git add .`);
+                shelljs.exec(`git commit -m "Parameters updated"`);
+                shelljs.exec(`git push`);
+            }
             logger.info('Application workspace initialized');
         } else {
             throw new Error('Cannot initialize application workspace');
