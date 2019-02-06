@@ -44,7 +44,7 @@ push:
 	$(git) config user.email "$(USER_EMAIL)"
 	-$(git) commit -am "Initial commit"
 	$(git) checkout --ours .
-	$(git) push $(REPO_NAME) master		
+	-$(git) push $(REPO_NAME) master		
 .PHONY: push
 
 delete: 

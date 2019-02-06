@@ -84,7 +84,7 @@ endif
 	$(git) config user.email "$(USER_EMAIL)"
 	- $(git) commit -am "Initial commit"
 	$(git) checkout --ours .
-	$(git) push $(REMOTE_NAME) master
+	-$(git) push $(REMOTE_NAME) master
 .PHONY: clone
 
 $(GITHUB_FILE):
