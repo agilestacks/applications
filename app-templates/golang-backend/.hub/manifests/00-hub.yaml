@@ -24,6 +24,7 @@ parameters:
     value: Golang webservice with Gorilla Mux
   - name: application.namespace
     value: applications
+    env: NAMESPACE
   - name: application.replicas
     value: 1
   - name: application.version
@@ -39,7 +40,7 @@ parameters:
   - name: application.environment.name
     value: ''
   - name: application.pipeline.name
-    value: main    
+    value: main
   - name: component.ingress.protocol
   - name: component.ingress.fqdn
   - name: component.docker.image
