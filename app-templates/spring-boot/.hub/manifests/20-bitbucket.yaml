@@ -26,7 +26,7 @@ parameters:
     - name: repository.name
       value: vo-new-go
     - name: project.key
-      value: CVF
+      value: ''
     - name: team.name
       value: agilestacks
     - name: token
