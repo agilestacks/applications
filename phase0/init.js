@@ -180,12 +180,14 @@ function copyManifest(manifest) {
 
 async function perform() {
     try {
-        if (manifestURL && parametersURL) {
+        if (manifestURL) {
             const manifest = download(manifestURL);
-            const parameters = download(parametersURL);
             await prepareWorkspace(manifest);
             copyManifest(manifest);
-            copyParameters(parameters);
+            if (parametersURL) {
+                const parameters = download(parametersURL);
+                copyParameters(parameters);
+            }
         } else if (repoUrl) {
             const gitUrl = securedGitUrl({repoUrl, repoKind: process.env.APP_GIT_KIND});
             shelljs.exec(`git clone --single-branch -b ${repoBranch} ${gitUrl} ${workspaceDir}`);
