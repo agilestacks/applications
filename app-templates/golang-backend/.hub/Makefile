@@ -6,13 +6,13 @@ jq  := jq -r
 PLATFORM_STATE_FILE   ?= should-come-from-env
 PLATFORM_STATE_BUCKET ?= $(firstword $(subst /, ,$(PLATFORM_STATE_FILE:s3://%=%)))
 PLATFORM_STATE_REGION ?= $(shell $(aws) s3api get-bucket-location --bucket $(PLATFORM_STATE_BUCKET) | $(jq) '.LocationConstraint//"us-east-1"')
-NAMESPACE 	          ?= jenkins
 DOMAIN_NAME           ?= should-be-set
 APP_STATE_FILE_LOCAL  ?= hub.state
 APP_STATE_FILE        ?= should-come-from-env
 APP_STATE 			  ?= $(APP_STATE_FILE_LOCAL),$(APP_STATE_FILE)
 APP_ELABORATE_FILE 	  ?= hub.elaborate
 
+NAMESPACE 	          := jenkins
 hub := hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credentials=false
 kubectl := kubectl --context="$(DOMAIN_NAME)" --namespace="$(NAMESPACE)"
 kubectlapp := kubectl --context="$(DOMAIN_NAME)"
