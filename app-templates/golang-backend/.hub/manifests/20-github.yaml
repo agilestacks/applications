@@ -30,8 +30,7 @@ parameters:
   - name: webhook.events.json
     value: '["push"]'
   - name: repository.description
-    value: >
-      Golang webservice with Gorilla Mux
+    value: ${application.description}
 
 - name: component.git
   parameters:

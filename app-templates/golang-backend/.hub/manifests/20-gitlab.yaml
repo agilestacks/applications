@@ -35,9 +35,7 @@ parameters:
   - name: project.visibility
     value: public
   - name: project.description
-    value: >
-      Worfklow application template backed with Argo.
-      Optimized to carry simulation and data science tasks
+    value: ${application.description}
 
 - name: component.git
   parameters:

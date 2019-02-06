@@ -21,14 +21,13 @@ parameters:
     - name: user.name
       value: voginskis
     - name: project.description
-      value: |
-        Golang webservice with Gorilla Mux
+      value: ${application.description}
     - name: repository.name
       value: vo-new-go
     - name: project.key
-      value: CVF
+      empty: allow
     - name: team.name
-      value: agilestacks
+      empty: allow
     - name: token
       fromEnv: COMPONENT_BITBUCKET_TOKEN
     - name: project.private
