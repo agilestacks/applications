@@ -28,7 +28,7 @@ undeploy:
 .PHONY: undeploy
 
 $(APP_ELABORATE_FILE):
-	$(hub) elaborate hub.yaml -s $(PLATFORM_STATE_FILE) -e application.state=$(APP_ELABORATE_FILE) -o $@
+	$(hub) elaborate hub.yaml managed.yaml -s $(PLATFORM_STATE_FILE) -e application.state=$(APP_ELABORATE_FILE) -o $@
 
 install: $(APP_ELABORATE_FILE)
 	$(hub) deploy $(lastword $^) -s $(APP_STATE)
