@@ -51,7 +51,7 @@ def s3_download(url, local_filename, s3_client=None):
   if not s3_client:
     s3_client = boto3.client('s3')
 
-  o = urlparse( package )
+  o = urlparse( url )
   bucket = o.netloc
   key = o.path.lstrip('/')
   with open(local_filename, 'wb') as data:
