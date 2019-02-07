@@ -55,7 +55,7 @@ def s3_download(url, local_filename, s3_client=None):
   bucket = o.netloc
   key = o.path.lstrip('/')
   with open(local_filename, 'wb') as data:
-    s3.download_fileobj(bucket, key, data)
+    s3_client.download_fileobj(bucket, key, data)
 
 def copy_local_directory_to_gcs(project, local_path, bucket_name, gcs_path):
   """Recursively copy a directory of files to GCS.
@@ -80,12 +80,17 @@ def copy_local_directory_to_s3(local_path, bucket_name, s3_path, s3_client=None)
   import boto3
   if not s3_client:
     s3_client = boto3.client('s3')
-  for root,dirs,files in os.walk(path):
+  for root,dirs,files in os.walk(local_path):
     for file in files:
       path_from = os.path.join(root,file)
       path_to = os.path.join(s3_path,file)
-      s3_client.upload_file(path_from, bucketname, path_to)
+      s3_client.upload_file(path_from, bucket_name, path_to)
 
+def s3_client(endpoint_url=None):
+  import boto3
+  if endpoint_url:
+    return boto3.client('s3', endpoint_url=endpoint_url)
+  return boto3.client('s3')
 
 def main(argv=None):
   parser = argparse.ArgumentParser(description='ML Trainer')
@@ -101,6 +106,10 @@ def main(argv=None):
       '--project',
       help='...',
       required=False)
+  parser.add_argument(
+      '--endpoint-url',
+      help='...',
+      required=False)
 
   args = parser.parse_args()
 
@@ -112,13 +121,14 @@ def main(argv=None):
 
   # with NamedTemporaryFile(prefix=local_data_dir, suffix='.csv') as tmpfile:
   print("Downloading: %s to %s" % (remote_data_file, local_data_file))
-  o = urlparse(remote_data_dir)
+  o = urlparse(remote_data_file)
   if o.scheme in ['http', 'https']:
     http_download(remote_data_file, local_data_file)
   elif o.scheme == 'gs':
     gcs_download(remote_data_file, local_data_file)
   elif o.scheme == 's3':
-    s3_download(remote_data_file, local_data_file)
+    client = s3_client( args.endpoint_url )
+    s3_download(remote_data_file, local_data_file, client)
   else:
     raise ValueError('Unsupported scheme: %s' % o.scheme)
 
@@ -137,7 +147,8 @@ def main(argv=None):
   if o.scheme == 'gs':
     copy_local_directory_to_gcs(args.project, local_data_dir, o.netloc, path)
   elif o.scheme == 's3':
-    copy_local_directory_to_s3(args.project, local_data_dir, o.netloc, path)
+    client = s3_client( args.endpoint_url )
+    copy_local_directory_to_s3(local_data_dir, o.netloc, path, client)
   else:
     raise ValueError('Unsupported scheme: %s' % o.scheme)
 
