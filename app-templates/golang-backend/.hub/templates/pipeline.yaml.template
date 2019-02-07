@@ -6,7 +6,8 @@ metadata:
 spec:
   repositoryUrl: ${component.git.remote}
   credentialsId: ${application.git.kind}-${component.git.organization}
-  folder: ${application.name}  
+  folder: ${application.name}
+  startBuild: true
   branchSpec: '*/master'
   pipeline: Jenkinsfile
   origin: 'SuperHub'
