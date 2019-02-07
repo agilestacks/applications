@@ -134,7 +134,7 @@ def main(argv=None):
   o = urlparse(remote_data_dir)
   path = re.sub('^/', '', o.path)
   print("using bucket: %s and path: %s" % (o.netloc, path))
-  if o.scheme == 'gcs':
+  if o.scheme == 'gs':
     copy_local_directory_to_gcs(args.project, local_data_dir, o.netloc, path)
   elif o.scheme == 's3':
     copy_local_directory_to_s3(args.project, local_data_dir, o.netloc, path)
