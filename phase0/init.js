@@ -194,10 +194,6 @@ async function perform() {
             if (parametersURL) {
                 const parameters = download(parametersURL);
                 copyParameters(parameters);
-                shelljs.cd(workspaceDir);
-                shelljs.exec(`git add .`);
-                shelljs.exec(`git commit -m "Parameters updated"`);
-                shelljs.exec(`git push`);
             }
             logger.info('Application workspace initialized');
         } else {
