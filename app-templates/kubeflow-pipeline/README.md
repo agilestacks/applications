@@ -15,6 +15,7 @@ git -C wip checkout master -- app-templates/kubeflow-pipeline
 Grant access to Jupyter keyring
 ```bash
 kubectl apply -f .hub/rbac.yaml
+kubectl -n harbor get secret $HARBOR_PULL_SECRET -o json| jq -rMc 'del(.metadata.namespace)' | kubectl apply -f -
 ```
 
 Run Jupyter notebook from: [wip/app-templates/kubeflow-pipeline/main.ipynb](main.ipynb)
