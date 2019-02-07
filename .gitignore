@@ -63,6 +63,6 @@ app-templates/kubeflow-pipeline/harbor.json
 app-templates/kubeflow-pipeline/kaniko.sh
 
 # python-flask
-app-templates/python-flask/.hub/*.yaml
+app-templates/python-flask/.hub/hub.yaml
 app-templates/python-flask/.hub/components
 app-templates/python-flask/.hub/templates/*.yaml
