@@ -66,3 +66,5 @@ app-templates/kubeflow-pipeline/kaniko.sh
 app-templates/python-flask/.hub/hub.yaml
 app-templates/python-flask/.hub/components
 app-templates/python-flask/.hub/templates/*.yaml
+app-templates/kubeflow-pipeline/*.csv
+Dockerfile.dataprep
