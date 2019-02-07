@@ -87,20 +87,7 @@ pipeline {
                 hub.render(template: '../kubernetes.yaml.template', state: params.APP_STATE_FILE)
             }
             echo readFile('kubernetes.yaml')
-            final exists = sh script: "${kubectl} get -f kubernetes.yaml", returnStatus: true
-            try {
-              if (exists == 0) {
-                sh script: "${kubectl} set image --record 'deployment/${outputs['application.name']}' 'application=${outputs['application.docker.image']}:${version}'"
-              } else {
-                sh script: "${kubectl} apply --force --record -f kubernetes.yaml"
-              }
-            } catch (err) {
-              echo "Rolling back"
-              sh script: "${kubectl} rollout undo 'deployment/${outputs['application.name']}"
-              sh script: "${kubectl} rollout status -w 'deployment/${outputs['application.name']}'"
-              echo "Done"
-              error "Failed to deploy ${outputs['application.name']}@${version}. Rolled back"
-            }
+            sh script: "${kubectl} apply --force --record -f kubernetes.yaml"
           }
         }
       }
