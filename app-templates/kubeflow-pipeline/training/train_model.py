@@ -123,12 +123,6 @@ def main(argv=None):
   else:
     raise ValueError('Unsupported scheme: %s' % o.scheme)
 
-  model_copy_command = ['gsutil', '-m', 'cp', '-r', model_startpoint, model_dir
-      ]
-  print(model_copy_command)
-  result1 = subprocess.call(model_copy_command)
-  print(result1)
-
   print('training steps (total): %s' % args.train_steps)
 
   # Then run the training for N steps from there.
