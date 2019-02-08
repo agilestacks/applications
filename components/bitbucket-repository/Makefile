@@ -42,7 +42,7 @@ push:
 	$(git) add -A
 	$(git) config user.name "$(USER_NAME)"
 	$(git) config user.email "$(USER_EMAIL)"
-	- $(git) commit -am "Automation: Repo created / updated"
+	-$(git) commit -am "Automation: Repo created / updated"
 	$(git) checkout --ours .
 	-$(git) push $(REPO_NAME) master		
 .PHONY: push

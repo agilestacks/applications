@@ -48,7 +48,7 @@ push:
 	$(git) add -A
 	$(git) config user.name "$(USER_NAME)"
 	$(git) config user.email "$(USER_EMAIL)"
-	-$(git) commit -am "Initial commit to $(BRANCH_NAME)"
+	-$(git) commit -am "Automation: Repo created / updated"
 	-$(git) push --set-upstream orphan-$(BRANCH_NAME) $(BRANCH_NAME)
 .PHONY: push
 
