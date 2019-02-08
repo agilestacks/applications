@@ -39,9 +39,10 @@ app-templates/react-es2018/.hub/components/*
 
 # nodejs-backend
 app-templates/nodejs-backend/package.json
-app-templates/nodejs-backend/.hub/*.yaml
+app-templates/nodejs-backend/.hub/hub.yaml
 app-templates/nodejs-backend/.hub/components
 app-templates/nodejs-backend/.hub/templates/*.yaml
+app-templates/nodejs-backend/.hub/templates/*.json
 
 # spring boot
 app-templates/spring-boot/.hub/hub.yaml
