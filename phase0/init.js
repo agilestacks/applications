@@ -184,25 +184,17 @@ async function perform() {
             const manifest = download(manifestURL);
             await prepareWorkspace(manifest);
             copyManifest(manifest);
-            if (parametersURL) {
-                const parameters = download(parametersURL);
-                copyParameters(parameters);
-            }
         } else if (repoUrl) {
             const gitUrl = securedGitUrl({repoUrl, repoKind: process.env.APP_GIT_KIND});
             shelljs.exec(`git clone --single-branch -b ${repoBranch} ${gitUrl} ${workspaceDir}`);
-            if (parametersURL) {
-                const parameters = download(parametersURL);
-                copyParameters(parameters);
-                shelljs.cd(workspaceDir);
-                shelljs.exec(`git add .`);
-                shelljs.exec(`git commit -m "Parameters updated"`);
-                shelljs.exec(`git push`);
-            }
-            logger.info('Application workspace initialized');
         } else {
             throw new Error('Cannot initialize application workspace');
         }
+        if (parametersURL) {
+            const parameters = download(parametersURL);
+            copyParameters(parameters);
+        }
+        logger.info('Application workspace initialized');
     } catch (error) {
         fail(error);
     }
