@@ -40,6 +40,20 @@ pipeline {
         checkout scm
       }
     }
+    stage('Prepare') {
+      steps {
+        container('toolbox') {
+          script {
+            dir ('.hub') {
+              hub.elaborate(state: params.APP_STATE_FILE)
+              hub.render(template: 'templates/package.json.template', state: params.APP_STATE_FILE)
+              sh script: 'cp templates/package.json ../'
+            }
+            echo readFile('package.json')
+          }
+        }
+      }
+    }
     stage('Build') {
       environment {
         CONTEXT_PATH = "${params.INGRESS_CONTEXT}"
@@ -50,7 +64,6 @@ pipeline {
         container('toolbox') {
           script {
             dir ('.hub') {
-              hub.elaborate(manifest: 'hub.yaml', state: params.APP_STATE_FILE)
               final outputs = hub.explain(manifest: 'hub.yaml', state: params.APP_STATE_FILE).stackOutputs
               appBucket = outputs['application.bucket'] as String
               appPath = outputs['application.path'] as String
