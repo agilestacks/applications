@@ -16,7 +16,11 @@ ifneq (,$(DOCKER_EMAIL))
 	KUBECTL_ARGS += --docker-email=$(DOCKER_EMAIL)
 endif
 
-deploy:
+namespace:
+	- $(kubectl) create namespace $(NAMESPACE)
+.PHONY: namespace
+
+deploy: namespace
 	- $(kubectl) create secret docker-registry $(COMPONENT_NAME) \
 		--docker-server=$(DOCKER_SERVER) $(KUBECTL_ARGS)
 
