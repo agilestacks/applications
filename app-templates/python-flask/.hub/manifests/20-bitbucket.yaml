@@ -19,7 +19,7 @@ parameters:
   - name: component.bitbucket
     parameters:
     - name: user.name
-      value: voginskis
+      value: asibot
     - name: project.description
       value: |
         Python Flask webservice

@@ -19,11 +19,11 @@ parameters:
   - name: component.bitbucket
     parameters:
     - name: user.name
-      value: voginskis
+      value: asibot
     - name: project.description
       value: ${application.description}
     - name: repository.name
-      value: vo-new-go
+      value: golang-backend
     - name: project.key
       empty: allow
     - name: team.name
