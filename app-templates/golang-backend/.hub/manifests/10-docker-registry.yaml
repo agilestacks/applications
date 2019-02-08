@@ -55,3 +55,9 @@ parameters:
     value: ${application.name}-regcred
   - name: namespace
     value: ${application.namespace}
+
+output:
+- name: application.pullSecret.name
+  value: '${component.pullSecret.name}'
+- name: application.pullSecret.namespace
+  value: '${component.pullSecret.name}'
