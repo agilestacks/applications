@@ -13,7 +13,6 @@
 # limitations under the License.
 
 """..."""
-
 import argparse
 import json
 import os
@@ -22,12 +21,53 @@ import time
 
 from tensorflow.python.lib.io import file_io
 
+try: 
+    from urlparse import urlparse 
+except ImportError: 
+    from urllib.parse import urlparse
+
+def s3_client(endpoint_url=None):
+    import boto3
+    if endpoint_url:
+        return boto3.client('s3', endpoint_url=endpoint_url)
+    return boto3.client('s3')
+
+
+def gcs_download(url, local_filename):
+    model_copy_command = ['gsutil', '-m', 'cp', '-r', model_startpoint, model_dir
+    ]
+    print(model_copy_command)
+    result1 = subprocess.call(model_copy_command)
+    print(result1)
+
+
+def download_s3(url, prefix, local='/tmp', client=boto3.client('s3')):
+    import botocore
+    import os
+
+    o = urlparse(url)
+    bucket = o.netloc
+    prefix = o.path.lstrip('/')
+    if not prefix.endswith('/'):
+        prefix += '/'
+
+    resp = client.list_objects_v2(Bucket=bucket, Prefix=prefix)
+    for obj in resp['Contents']:
+        key = obj['Key']
+        file = os.path.join(local, key[len(prefix):])
+        dirname = os.path.dirname(file)
+        if not os.path.exists(dirname):
+            os.makedirs(dirname)
+        print('Saving to', file)
+        client.download_file(bucket, key, file)
+
+
 def main(argv=None):
   parser = argparse.ArgumentParser(description='ML Trainer')
-  # parser.add_argument(
-  #     '--project',
-  #     help='The GCS project to use',
-  #     required=True)
+  parser.add_argument(
+      '--project',
+      help='The GCS project to use',
+      required=False)
   parser.add_argument(
       '--model-dir',
       help='...',
@@ -48,6 +88,10 @@ def main(argv=None):
       '--deploy-webapp',
       help='...',
       required=True)
+  parser.add_argument(
+      '--service-endpoint',
+      help='...',
+      required=False)
 
   args = parser.parse_args()
 
@@ -69,6 +113,16 @@ def main(argv=None):
   print("model_startpoint: %s" % model_startpoint)
   model_dir = args.model_dir
   print("model_dir: %s" % model_dir)
+
+  o = urlparse(model_startpoint)
+  if o.scheme == 'gs':
+    gcs_download(model_startpoint, model_dir)
+  elif o.scheme == 's3':
+    client = s3_client( args.endpoint_url )
+    s3_download(model_startpoint, local_data_file, model_dir)
+  else:
+    raise ValueError('Unsupported scheme: %s' % o.scheme)
+
   model_copy_command = ['gsutil', '-m', 'cp', '-r', model_startpoint, model_dir
       ]
   print(model_copy_command)
