@@ -60,4 +60,4 @@ outputs:
 - name: application.pullSecret.name
   value: '${component.pullSecret.name}'
 - name: application.pullSecret.namespace
-  value: '${component.pullSecret.name}'
+  value: '${component.pullSecret.namespace}'
