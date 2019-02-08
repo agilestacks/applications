@@ -56,7 +56,7 @@ parameters:
   - name: namespace
     value: ${application.namespace}
 
-output:
+outputs:
 - name: application.pullSecret.name
   value: '${component.pullSecret.name}'
 - name: application.pullSecret.namespace
