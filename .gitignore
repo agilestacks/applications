@@ -69,3 +69,4 @@ app-templates/python-flask/.hub/components
 app-templates/python-flask/.hub/templates/*.yaml
 app-templates/kubeflow-pipeline/*.csv
 Dockerfile.dataprep
+app-templates/kubeflow-pipeline/tmp

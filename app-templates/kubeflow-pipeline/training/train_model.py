@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 # Copyright 2018 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +15,7 @@
 # limitations under the License.
 
 """..."""
+
 import argparse
 import json
 import os
@@ -21,10 +24,11 @@ import time
 
 from tensorflow.python.lib.io import file_io
 
-try: 
-    from urlparse import urlparse 
-except ImportError: 
+try:
+    from urlparse import urlparse
+except ImportError:
     from urllib.parse import urlparse
+
 
 def s3_client(endpoint_url=None):
     import boto3
@@ -34,14 +38,25 @@ def s3_client(endpoint_url=None):
 
 
 def gcs_download(url, local_filename):
-    model_copy_command = ['gsutil', '-m', 'cp', '-r', model_startpoint, model_dir
-    ]
-    print(model_copy_command)
+    model_copy_command = [
+        'gsutil',
+        '-m',
+        'cp',
+        '-r',
+        model_startpoint,
+        model_dir,
+        ]
+    print model_copy_command
     result1 = subprocess.call(model_copy_command)
-    print(result1)
+    print result1
 
 
-def download_s3(url, prefix, local='/tmp', client=boto3.client('s3')):
+def download_s3(
+    url,
+    prefix,
+    local='/tmp',
+    client=boto3.client('s3'),
+    ):
     import botocore
     import os
 
@@ -58,95 +73,112 @@ def download_s3(url, prefix, local='/tmp', client=boto3.client('s3')):
         dirname = os.path.dirname(file)
         if not os.path.exists(dirname):
             os.makedirs(dirname)
-        print('Saving to', file)
+        print ('Saving to', file)
         client.download_file(bucket, key, file)
 
 
 def main(argv=None):
-  parser = argparse.ArgumentParser(description='ML Trainer')
-  parser.add_argument(
-      '--project',
-      help='The GCS project to use',
-      required=False)
-  parser.add_argument(
-      '--model-dir',
-      help='...',
-      required=True)
-  parser.add_argument(
-      '--data-dir',
-      help='...',
-      required=True)
-  parser.add_argument(
-      '--checkpoint-dir',
-      help='...',
-      required=True)
-  parser.add_argument(
-      '--train-steps',
-      help='...',
-      required=True)
-  parser.add_argument(
-      '--deploy-webapp',
-      help='...',
-      required=True)
-  parser.add_argument(
-      '--service-endpoint',
-      help='...',
-      required=False)
+    parser = argparse.ArgumentParser(description='ML Trainer')
+    parser.add_argument('--project', help='The GCS project to use',
+                        required=False)
+    parser.add_argument('--model-dir', help="""...""", required=True)
+    parser.add_argument('--data-dir', help="""...""", required=True)
+    parser.add_argument('--checkpoint-dir', help="""...""",
+                        required=True)
+    parser.add_argument('--train-steps', help="""...""", required=True)
+    parser.add_argument('--deploy-webapp', help="""...""",
+                        required=True)
+    parser.add_argument('--service-endpoint', help="""...""",
+                        required=False)
 
-  args = parser.parse_args()
+    args = parser.parse_args()
 
   # Create metadata.json file for visualization.
-  metadata = {
-    'outputs' : [{
-      'type': 'tensorboard',
-      'source': args.model_dir,
-    }]
-  }
-  with open('/mlpipeline-ui-metadata.json', 'w') as f:
-    json.dump(metadata, f)
 
-  problem = 'gh_problem'
-  data_dir = args.data_dir
-  print("data dir: %s" % data_dir)
+    metadata = {'outputs': [{'type': 'tensorboard',
+                'source': args.model_dir}]}
+
+    with open('/mlpipeline-ui-metadata.json', 'w') as f:
+        json.dump(metadata, f)
+
+    problem = 'gh_problem'
+    data_dir = args.data_dir
+    print 'data dir: %s' % data_dir
+
   # copy the model starting point
-  model_startpoint = args.checkpoint_dir
-  print("model_startpoint: %s" % model_startpoint)
-  model_dir = args.model_dir
-  print("model_dir: %s" % model_dir)
 
-  o = urlparse(model_startpoint)
-  if o.scheme == 'gs':
-    gcs_download(model_startpoint, model_dir)
-  elif o.scheme == 's3':
-    client = s3_client( args.endpoint_url )
-    s3_download(model_startpoint, local_data_file, model_dir)
-  else:
-    raise ValueError('Unsupported scheme: %s' % o.scheme)
+    model_startpoint = args.checkpoint_dir
+    print 'model_startpoint: %s' % model_startpoint
+    model_dir = args.model_dir
+    print 'model_dir: %s' % model_dir
 
-  print('training steps (total): %s' % args.train_steps)
+    o = urlparse(model_startpoint)
+    if o.scheme == 'gs':
+        gcs_download(model_startpoint, model_dir)
+    elif o.scheme == 's3':
+        client = s3_client(args.endpoint_url)
+        s3_download(model_startpoint, model_dir)
+    else:
+        raise ValueError('Unsupported scheme: %s' % o.scheme)
+
+    print 'training steps (total): %s' % args.train_steps
 
   # Then run the training for N steps from there.
-  model_train_command = ['t2t-trainer', '--data_dir', data_dir, '--t2t_usr_dir', '/ml/ghsumm/trainer', '--problem', problem,
-     '--model', 'transformer',  '--hparams_set', 'transformer_prepend',  '--output_dir', model_dir, '--job-dir', model_dir,
-     '--train_steps', args.train_steps, '--eval_throttle_seconds', '240',
+
+    model_train_command = [
+        't2t-trainer',
+        '--data_dir',
+        data_dir,
+        '--t2t_usr_dir',
+        '/ml/ghsumm/trainer',
+        '--problem',
+        problem,
+        '--model',
+        'transformer',
+        '--hparams_set',
+        'transformer_prepend',
+        '--output_dir',
+        model_dir,
+        '--job-dir',
+        model_dir,
+        '--train_steps',
+        args.train_steps,
+        '--eval_throttle_seconds',
+        '240',
+        ]
+
      # '--worker_gpu', '8'
-     ]
-  print(model_train_command)
-  result2 = subprocess.call(model_train_command)
-  print(result2)
+
+    print model_train_command
+    result2 = subprocess.call(model_train_command)
+    print result2
 
   # then export the model...
 
-  model_export_command = ['t2t-exporter', '--model', 'transformer', '--hparams_set', 'transformer_prepend','--problem', problem,
-      '--t2t_usr_dir', '/ml/ghsumm/trainer', '--data_dir', data_dir, '--output_dir', model_dir]
-  print(model_export_command)
-  result3 = subprocess.call(model_export_command)
-  print(result3)
+    model_export_command = [
+        't2t-exporter',
+        '--model',
+        'transformer',
+        '--hparams_set',
+        'transformer_prepend',
+        '--problem',
+        problem,
+        '--t2t_usr_dir',
+        '/ml/ghsumm/trainer',
+        '--data_dir',
+        data_dir,
+        '--output_dir',
+        model_dir,
+        ]
+    print model_export_command
+    result3 = subprocess.call(model_export_command)
+    print result3
 
-  print("deploy-webapp arg: %s" % args.deploy_webapp)
-  with open('/tmp/output', 'w') as f:
-    f.write(args.deploy_webapp)
+    print 'deploy-webapp arg: %s' % args.deploy_webapp
+    with open('/tmp/output', 'w') as f:
+        f.write(args.deploy_webapp)
 
-if __name__== "__main__":
-  main()
+
+if __name__ == '__main__':
+    main()
 
