@@ -89,7 +89,7 @@ def main(argv=None):
     parser.add_argument('--train-steps', help="""...""", required=True)
     parser.add_argument('--deploy-webapp', help="""...""",
                         required=True)
-    parser.add_argument('--service-endpoint', help="""...""",
+    parser.add_argument('--s3-endpoint', help="""...""",
                         required=False)
 
     args = parser.parse_args()
@@ -117,7 +117,7 @@ def main(argv=None):
     if o.scheme == 'gs':
         gcs_download(model_startpoint, model_dir)
     elif o.scheme == 's3':
-        client = s3_client(args.endpoint_url)
+        client = s3_client(args.s3_endpoint)
         s3_download(model_startpoint, model_dir)
     else:
         raise ValueError('Unsupported scheme: %s' % o.scheme)

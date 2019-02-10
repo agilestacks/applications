@@ -107,7 +107,7 @@ def main(argv=None):
       help='...',
       required=False)
   parser.add_argument(
-      '--service-endpoint',
+      '--s3-endpoint',
       help='...',
       required=False)
 
@@ -127,7 +127,7 @@ def main(argv=None):
   elif o.scheme == 'gs':
     gcs_download(remote_data_file, local_data_file)
   elif o.scheme == 's3':
-    client = s3_client( args.service_endpoint )
+    client = s3_client( args.s3_endpoint )
     s3_download(remote_data_file, local_data_file, client)
   else:
     raise ValueError('Unsupported scheme: %s' % o.scheme)
