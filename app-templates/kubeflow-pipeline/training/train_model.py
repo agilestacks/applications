@@ -55,10 +55,11 @@ def download_s3(
     url,
     prefix,
     local='/tmp',
-    client=boto3.client('s3'),
+    client=None,
     ):
-    import botocore
-    import os
+    import boto3
+    if not client:
+        client = boto3.client('s3')
 
     o = urlparse(url)
     bucket = o.netloc
