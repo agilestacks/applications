@@ -95,11 +95,11 @@ def s3_client(endpoint_url=None):
 def main(argv=None):
   parser = argparse.ArgumentParser(description='ML Trainer')
   parser.add_argument(
-      '--data-source-file',
+      '--data-set',
       help='...',
       required=True)
   parser.add_argument(
-      '--result-remote-dir',
+      '--data-gen',
       help='...',
       required=True)
   parser.add_argument(
@@ -114,8 +114,8 @@ def main(argv=None):
   args = parser.parse_args()
 
   problem = 'gh_problem'
-  remote_data_file = args.data_source_file
-  remote_data_dir = args.result_remote_dir
+  remote_data_file = args.data_set
+  remote_data_dir = args.data_gen
   local_data_dir = '/ml/t2t_gh_data/'
   local_data_file = '/ml/gh_data/github_issues.csv'
 

@@ -26,6 +26,9 @@ from tensorflow.python.lib.io import file_io
 import time
 import yaml
 
+def mask(s, offset=8):
+  l = len(s)
+  return s[:offset] + '*'*(l-offset*2) + s[l-offset:]
 
 def main(argv=None):
   parser = argparse.ArgumentParser(description='Serving webapp')
@@ -38,14 +41,16 @@ def main(argv=None):
       help='...',
       required=True)
 
-  parser.add_argument('--cluster', type=str,
-                      help='GKE cluster set up for kubeflow. If set, zone must be provided. ' +
-                           'If not set, assuming this runs in a GKE container and current ' +
-                           'cluster is used.')
-  parser.add_argument('--zone', type=str, help='zone of the kubeflow cluster.')
+  # parser.add_argument('--cluster', type=str,
+  #                     help='GKE cluster set up for kubeflow. If set, zone must be provided. ' +
+  #                          'If not set, assuming this runs in a GKE container and current ' +
+  #                          'cluster is used.')
+  # parser.add_argument('--zone', type=str, help='zone of the kubeflow cluster.')
   args = parser.parse_args()
 
   KUBEFLOW_NAMESPACE = 'kubeflow'
+
+  masked_token = mask( args.github_token )
 
   print("using model name: %s and namespace: %s" % (args.model_name, KUBEFLOW_NAMESPACE))
 
@@ -61,7 +66,7 @@ def main(argv=None):
       data = f.read()
       changed = data.replace('MODEL_NAME',args.model_name)
       changed1 = changed.replace('KUBEFLOW_NAMESPACE',KUBEFLOW_NAMESPACE).replace(
-        'GITHUB_TOKEN',args.github_token).replace(
+        'GITHUB_TOKEN',masked_token).replace(
         'DATA_DIR', 'gs://aju-dev-demos-codelabs/kubecon/t2t_data_gh_all/')
       target.write(changed1)
 

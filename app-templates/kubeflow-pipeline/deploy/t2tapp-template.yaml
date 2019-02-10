@@ -54,11 +54,6 @@ spec:
           value: GITHUB_TOKEN
         - name: DATADIR
           value: DATA_DIR
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /secret/gcp-credentials/user-gcp-sa.json
-        volumeMounts:
-        - name: gcp-credentials
-          mountPath: /secret/gcp-credentials
         ports:
         - name: http-server
           containerPort: 8080
@@ -69,7 +64,3 @@ spec:
           requests:
             cpu: "1"
             memory: 1Gi
-      volumes:
-        - name: gcp-credentials
-          secret:
-            secretName: user-gcp-sa
