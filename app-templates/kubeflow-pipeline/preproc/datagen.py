@@ -147,7 +147,7 @@ def main(argv=None):
   if o.scheme == 'gs':
     copy_local_directory_to_gcs(args.project, local_data_dir, o.netloc, path)
   elif o.scheme == 's3':
-    client = s3_client( args.service_endpoint )
+    client = s3_client( args.s3_endpoint )
     copy_local_directory_to_s3(local_data_dir, o.netloc, path, client)
   else:
     raise ValueError('Unsupported scheme: %s' % o.scheme)
