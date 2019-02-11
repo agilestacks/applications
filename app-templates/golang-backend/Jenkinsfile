@@ -58,11 +58,7 @@ pipeline {
       steps {
         container('toolbox') {
           script {
-            def image
-            dir ('.hub') {
-               hub.elaborate(state: params.APP_STATE_FILE)
-               image = hub.explain(state: params.APP_STATE_FILE).stackOutputs['application.docker.image'] as String
-            }
+            final image = hub.explain(state: params.APP_STATE_FILE).stackOutputs['application.docker.image'] as String
             sh script: "docker build --pull --rm -t ${image}:latest -t ${image}:${gitscm.shortCommit} ."
             withAWS(role:params.AWS_TRUST_ROLE) {
               sh script: ecrLogin()
@@ -81,18 +77,13 @@ pipeline {
         container('toolbox') {
           script {
             final version = "${gitscm.shortCommit}"
-            def outputs
-            dir ('.hub') {
-                outputs = hub.explain(state: params.APP_STATE_FILE).stackOutputs
-            }
+            final outputs = hub.explain(state: params.APP_STATE_FILE).stackOutputs
             final namespaceExists = sh script: "kubectl get namespace ${outputs['application.namespace']}", returnStatus: true
             if (namespaceExists != 0) {
               sh script: "kubectl create namespace ${outputs['application.namespace']}"
             }            
             final kubectl = "kubectl -n ${outputs['application.namespace']}"
-            dir ('.hub') {
-                hub.render(template: '../kubernetes.yaml.template', state: params.APP_STATE_FILE)
-            }
+            hub.render(template: 'kubernetes.yaml.template', state: params.APP_STATE_FILE)
             echo readFile('kubernetes.yaml')
             sh script: "${kubectl} apply --force --record -f kubernetes.yaml"
           }
@@ -103,10 +94,7 @@ pipeline {
       steps {
         container('toolbox') {
           script {
-            def appUrl
-            dir ('.hub') {
-                appUrl = hub.explain(state: params.APP_STATE_FILE).stackOutputs['application.url'] as String
-            }
+            final appUrl = hub.explain(state: params.APP_STATE_FILE).stackOutputs['application.url'] as String
             retry(30) {
               sleep time: 3, unit: 'SECONDS'
               final resp = httpRequest url: "${appUrl}"

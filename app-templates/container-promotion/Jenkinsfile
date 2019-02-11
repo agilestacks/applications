@@ -44,17 +44,11 @@ pipeline {
       steps {
         container('toolbox') {
           script {
-            final sourceImage
-            final targetImage
-            final targetAccountRole
-            final targetRegion
-            dir ('.hub') {
-               hub.elaborate(state: params.APP_STATE_FILE)
-               outputs = hub.explain(state: params.APP_STATE_FILE).stackOutputs
-               sourceImage = outputs['application.source.ecr'] as String
-               targetImage = outputs['application.target.ecr'] as String
-               targetAccountRole = outputs['application.target.roleArn'] as String
-               targetRegion = outputs['application.target.region'] as String
+            final outputs = hub.explain(state: params.APP_STATE_FILE).stackOutputs
+            final sourceImage = outputs['application.source.ecr'] as String
+            final targetImage = outputs['application.target.ecr'] as String
+            final targetAccountRole = outputs['application.target.roleArn'] as String
+            final targetRegion = outputs['application.target.region'] as String
             }
             withAWS() {
               sh script: ecrLogin()
@@ -79,23 +73,19 @@ pipeline {
         container('toolbox') {
           script {
             final version = "${gitscm.shortCommit}"
-            dir ('.hub') {
-                outputs = hub.explain(state: params.APP_STATE_FILE).stackOutputs
-                targetPlatformState = outputs['application.target.platform.state.file'] as String
-                targetAccountRole = outputs['application.target.roleArn'] as String
-                targetRegion = outputs['application.target.region'] as String
-                targetDomain = outputs['application.target.domain'] as String
-                applicationNamespace = outputs['application.namespace'] as String
-                applicationName = outputs['application.name'] as String
-                promotionEnv = outputs['promotion.environment'] as String
-                applicationImage = outputs['application.target.ecr'] as String
-                hub.render(template: '../kubernetes.yaml.template', state: params.APP_STATE_FILE)
-            }
+            final outputs = hub.explain(state: params.APP_STATE_FILE).stackOutputs
+            final targetPlatformState = outputs['application.target.platform.state.file'] as String
+            final targetAccountRole = outputs['application.target.roleArn'] as String
+            final targetRegion = outputs['application.target.region'] as String
+            final targetDomain = outputs['application.target.domain'] as String
+            final applicationNamespace = outputs['application.namespace'] as String
+            final applicationName = outputs['application.name'] as String
+            final promotionEnv = outputs['promotion.environment'] as String
+            final applicationImage = outputs['application.target.ecr'] as String
+            hub.render(template: 'kubernetes.yaml.template', state: params.APP_STATE_FILE)
             echo readFile('kubernetes.yaml')
             withAWS(role:targetAccountRole, region:targetRegion) {
-              dir ('.hub') {
-                hub.kubeconfig(state:targetPlatformState)
-              }
+              hub.kubeconfig(state:targetPlatformState)
               sh script: "kubectl config use-context ${targetDomain}"
               final namespaceExists = sh script: "kubectl get namespace ${applicationNamespace}", returnStatus: true
               if (namespaceExists != 0) {
@@ -125,10 +115,7 @@ pipeline {
       steps {
         container('toolbox') {
           script {
-            final appUrl
-            dir ('.hub') {
-                appUrl = hub.explain(state: params.APP_STATE_FILE).stackOutputs['application.target.url'] as String
-            }
+            final appUrl = hub.explain(state: params.APP_STATE_FILE).stackOutputs['application.target.url'] as String
             retry(30) {
               sleep time: 3, unit: 'SECONDS'
               final resp = httpRequest url: "${appUrl}"
