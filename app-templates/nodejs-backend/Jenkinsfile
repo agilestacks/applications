@@ -72,7 +72,6 @@ pipeline {
         container('toolbox') {
           script {
             final image = hub.explain(state: params.APP_STATE_FILE).stackOutputs['application.docker.image'] as String
-            }
             sh script: "docker build --pull --rm -t ${image}:latest -t ${image}:${gitscm.shortCommit} ."
             withAWS(role:params.AWS_TRUST_ROLE) {
               sh script: ecrLogin()
