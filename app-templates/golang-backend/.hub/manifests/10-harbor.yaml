@@ -1,0 +1,32 @@
+---
+parameters:
+- name: cloud.region
+- name: terraform.bucket
+  parameters:
+  - name: name
+  - name: region
+
+- name: application.docker-registry
+  parameters:
+  - name: image.url
+
+# - name: component.docker.registry.kind
+#   value: dockerregistry
+
+- name: component.docker
+  kind: link
+  parameters:
+  - name: image
+    value: ${application.docker-registry.image.url}
+  - name: registry.server
+    value: ${application.docker-registry.url}
+
+- name: application.pullSecret
+  parameters:
+  - name: namespace
+    value: harbor
+  - name: name
+
+outputs:
+- name: application.pullSecret.name
+- name: application.pullSecret.namespace

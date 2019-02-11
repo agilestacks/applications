@@ -3,7 +3,6 @@
 .hub/templates/*.json
 .hub/hub.elaborate
 .hub/hub.state
-.hub/manifests
 .terraform
 *.tfplan
 kubernetes.yaml
