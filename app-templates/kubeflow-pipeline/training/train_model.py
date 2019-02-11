@@ -37,7 +37,7 @@ def s3_client(endpoint_url=None):
     return boto3.client('s3')
 
 
-def gcs_download(url, local_filename):
+def download_gcs(url, local_filename):
     model_copy_command = [
         'gsutil',
         '-m',
@@ -53,13 +53,16 @@ def gcs_download(url, local_filename):
 
 def download_s3(
     url,
-    prefix,
-    local='/tmp',
+    local=None,
     client=None,
     ):
     import boto3
     if not client:
         client = boto3.client('s3')
+
+    if not local:
+        import tempfile
+        local = tempfile.mkdtemp()
 
     o = urlparse(url)
     bucket = o.netloc
@@ -71,11 +74,17 @@ def download_s3(
     for obj in resp['Contents']:
         key = obj['Key']
         file = os.path.join(local, key[len(prefix):])
+        if os.path.isdir(file):
+            continue
+
         dirname = os.path.dirname(file)
         if not os.path.exists(dirname):
             os.makedirs(dirname)
-        print ('Saving to', file)
+
+        print ('Downloading: s3://%s/%s to %s' % (bucket,key,file))
         client.download_file(bucket, key, file)
+        
+    return local
 
 
 def main(argv=None):
@@ -115,10 +124,10 @@ def main(argv=None):
 
     o = urlparse(model_startpoint)
     if o.scheme == 'gs':
-        gcs_download(model_startpoint, model_dir)
+        download_gcs(model_startpoint, model_dir)
     elif o.scheme == 's3':
         client = s3_client(args.s3_endpoint)
-        s3_download(model_startpoint, model_dir)
+        download_s3(model_startpoint, model_dir)
     else:
         raise ValueError('Unsupported scheme: %s' % o.scheme)
 
