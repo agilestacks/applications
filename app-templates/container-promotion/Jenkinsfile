@@ -49,7 +49,6 @@ pipeline {
             final targetImage = outputs['application.target.ecr'] as String
             final targetAccountRole = outputs['application.target.roleArn'] as String
             final targetRegion = outputs['application.target.region'] as String
-            }
             withAWS() {
               sh script: ecrLogin()
               sh script: "docker pull ${sourceImage}:latest"
