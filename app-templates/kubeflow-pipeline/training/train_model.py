@@ -21,6 +21,7 @@ import json
 import os
 import subprocess
 import time
+import sys
 
 from tensorflow.python.lib.io import file_io
 
@@ -31,20 +32,19 @@ except ImportError:
 
 
 def run_cmd(cmd, env=os.environ.copy()):
-    print cmd
-    proc = subprocess.Popen(
-            cmd, 
-            env=env,
-            stdout=subprocess.PIPE, 
-            stderr=subprocess.PIPE)
-    (stdout, stderr) = proc.communicate()
-    for line in stdout.strip().decode().splitlines():
-        print line
-    if proc.returncode:
-        print "Exited with %s" % proc.returncode
-        for line in stderr.strip().decode().splitlines():
-            print line
-    return proc.returncode
+    print('Running: %s' % ' '.join(str(v) for v in cmd))
+    p = subprocess.Popen(cmd, 
+                         stdout=subprocess.PIPE, 
+                         stderr=subprocess.STDOUT, 
+                         bufsize=1,
+                         env=envs)
+
+    for c in iter(lambda: p.stdout.read(1), b''):
+        sys.stdout.write(c.decode())
+    p.stdout.close()
+    code = p.wait()
+    print('Finished with: %s' % code)
+    return code
 
 
 def s3_client(endpoint_url=None):
@@ -61,8 +61,7 @@ def sync_gcs_buckets(url1, url2):
         'cp',
         '-r',
         url1,
-        url2,
-        ]
+        url2]
     return run_cmd(model_copy_command)
 
 def sync_s3_buckets(url1, url2, s3_endpoint=None):
@@ -162,7 +161,22 @@ def main(argv=None):
 
     print 'training steps (total): %s' % args.train_steps
 
-  # Then run the training for N steps from there.
+
+    # '--worker_gpu', '8'
+
+    envs = os.environ.copy()
+    if o2.scheme == 's3':
+        client = s3_client(args.s3_endpoint)
+        # override model s3 location region and endpoint
+        # so tensorflow could access it without troubles
+        r = client.get_bucket_location(
+                                Bucket=o2.netloc
+                            ).get('LocationConstraint', 'us-est-1')
+        envs['AWS_REGION'] = r
+        envs['AWS_DEFAULT_REGION'] = r
+        envs['S3_ENDPOINT'] = client._endpoint.host
+
+    # Then run the training for N steps from there.
     model_train_command = [
         't2t-trainer',
         '--data_dir',
@@ -182,24 +196,10 @@ def main(argv=None):
         '--train_steps',
         args.train_steps,
         '--eval_throttle_seconds',
-        '240',
-        ]
-
-     # '--worker_gpu', '8'
-
-    envs = os.environ.copy()
-    if o2.scheme == 's3':
-        client = s3_client(args.s3_endpoint)
-        # override model s3 location region and endpoint
-        # so tensorflow could access it without troubles
-        envs['AWS_REGION'] = client.get_bucket_location(
-                                Bucket=o2.netloc
-                            ).get('LocationConstraint', 'us-est-1')
-        envs['S3_ENDPOINT'] = client._endpoint.host
-
+        '240']
     run_cmd(model_train_command, envs)
-  # then export the model...
 
+    # then export the model...
     model_export_command = [
         't2t-exporter',
         '--model',
@@ -213,8 +213,7 @@ def main(argv=None):
         '--data_dir',
         data_dir,
         '--output_dir',
-        model_dir,
-        ]
+        model_dir]
     run_cmd(model_export_command, envs)
     
     print 'sleeping for 10 mins'
@@ -226,3 +225,4 @@ def main(argv=None):
 
 if __name__ == '__main__':
     main()
+
