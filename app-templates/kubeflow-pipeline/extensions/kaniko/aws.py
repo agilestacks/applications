@@ -78,7 +78,7 @@ def use_aws_credentials(
         if region_name:
             task.add_env_variable(
                 kube_client.V1EnvVar(
-                    name='AWS_DEFAULT_REGION', 
+                    name='AWS_REGION', 
                     value=region_name
                 )
             )
@@ -87,7 +87,7 @@ def use_aws_credentials(
         if creds.access_key:
             task.add_env_variable(
                 kube_client.V1EnvVar(
-                    name='AWS_SECRET_ACCESS_KEY', 
+                    name='AWS_ACCESS_KEY_ID', 
                     value_from=kube_client.V1EnvVarSource(
                         secret_key_ref=kube_client.V1SecretKeySelector(name=secret_name, key='aws_access_key_id')
                     )

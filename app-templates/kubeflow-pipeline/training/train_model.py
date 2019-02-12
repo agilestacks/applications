@@ -30,6 +30,23 @@ except ImportError:
     from urllib.parse import urlparse
 
 
+def run_cmd(cmd, env=os.environ.copy()):
+    print cmd
+    proc = subprocess.Popen(
+            cmd, 
+            env=env,
+            stdout=subprocess.PIPE, 
+            stderr=subprocess.PIPE)
+    (stdout, stderr) = proc.communicate()
+    for line in stdout.strip().decode().splitlines():
+        print line
+    if proc.returncode:
+        print "Exited with %s" % proc.returncode
+        for line in stderr.strip().decode().splitlines():
+            print line
+    return proc.returncode
+
+
 def s3_client(endpoint_url=None):
     import boto3
     if endpoint_url:
@@ -37,21 +54,30 @@ def s3_client(endpoint_url=None):
     return boto3.client('s3')
 
 
-def download_gcs(url, local_filename):
+def sync_gcs_buckets(url1, url2):
     model_copy_command = [
         'gsutil',
         '-m',
         'cp',
         '-r',
-        model_startpoint,
-        model_dir,
+        url1,
+        url2,
         ]
-    print model_copy_command
-    result1 = subprocess.call(model_copy_command)
-    print result1
+    return run_cmd(model_copy_command)
 
+def sync_s3_buckets(url1, url2, s3_endpoint=None):
+    model_copy_command = [
+            'aws',
+            's3',
+            'sync',
+            url1,
+            url2 ]
+    if s3_endpoint:
+        model_copy_command += ['--endpoint-url', s3_endpoint]
+        
+    return run_cmd(model_copy_command)
 
-def download_s3(
+def download_s3_locally(
     url,
     local=None,
     client=None,
@@ -122,19 +148,21 @@ def main(argv=None):
     model_dir = args.model_dir
     print 'model_dir: %s' % model_dir
 
-    o = urlparse(model_startpoint)
-    if o.scheme == 'gs':
-        download_gcs(model_startpoint, model_dir)
-    elif o.scheme == 's3':
+    o1 = urlparse(model_startpoint)
+    o2 = urlparse(model_dir)
+    if o1.scheme == 'gs':
+        sync_gcs_buckets(model_startpoint, model_dir)
+    elif o1.scheme == 's3' and o2.scheme == 's3':
+        sync_s3_buckets(model_startpoint, model_dir, args.s3_endpoint)
+    elif o1.scheme == 's3':
         client = s3_client(args.s3_endpoint)
-        download_s3(model_startpoint, model_dir)
+        download_s3_locally(model_startpoint, model_dir)
     else:
-        raise ValueError('Unsupported scheme: %s' % o.scheme)
+        raise ValueError('Unsupported scheme: %s' % o1.scheme)
 
     print 'training steps (total): %s' % args.train_steps
 
   # Then run the training for N steps from there.
-
     model_train_command = [
         't2t-trainer',
         '--data_dir',
@@ -159,10 +187,17 @@ def main(argv=None):
 
      # '--worker_gpu', '8'
 
-    print model_train_command
-    result2 = subprocess.call(model_train_command)
-    print result2
+    envs = os.environ.copy()
+    if o2.scheme == 's3':
+        client = s3_client(args.s3_endpoint)
+        # override model s3 location region and endpoint
+        # so tensorflow could access it without troubles
+        envs['AWS_REGION'] = client.get_bucket_location(
+                                Bucket=o2.netloc
+                            ).get('LocationConstraint', 'us-est-1')
+        envs['S3_ENDPOINT'] = client._endpoint.host
 
+    run_cmd(model_train_command, envs)
   # then export the model...
 
     model_export_command = [
@@ -180,9 +215,9 @@ def main(argv=None):
         '--output_dir',
         model_dir,
         ]
-    print model_export_command
-    result3 = subprocess.call(model_export_command)
-    print result3
+    run_cmd(model_export_command, envs)
+    
+    print 'sleeping for 10 mins'
 
     print 'deploy-webapp arg: %s' % args.deploy_webapp
     with open('/tmp/output', 'w') as f:
@@ -191,4 +226,3 @@ def main(argv=None):
 
 if __name__ == '__main__':
     main()
-
