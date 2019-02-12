@@ -177,8 +177,9 @@ def main(argv=None):
                                 Bucket=o2.netloc
                             ).get('LocationConstraint', 'us-est-1')
         envs['AWS_REGION'] = region
-        envs['S3_ENDPOINT'] = args.s3_endpoint or "https://s3.%s.amazonaws.com" % region
-        # client._endpoint.host
+
+    if args.s3_endpoint:
+        envs['S3_ENDPOINT'] = args.s3_endpoint
 
     # Then run the training for N steps from there.
     model_train_command = [
