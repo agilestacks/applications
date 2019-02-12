@@ -40,7 +40,7 @@ def run_cmd(cmd, envvars=os.environ.copy()):
                          env=envvars)
 
     for c in iter(lambda: p.stdout.read(1), b''):
-        sys.stdout.write(c.decode())
+        sys.stdout.write(c.decode('utf-8'))
     p.stdout.close()
     code = p.wait()
     print('Finished with: %s' % code)
@@ -64,7 +64,7 @@ def sync_gcs_buckets(url1, url2):
         url2]
     return run_cmd(model_copy_command)
 
-def sync_s3_buckets(url1, url2, s3_endpoint=None):
+def sync_s3_buckets(url1, url2, s3_endpoint=None, envvars=os.environ.copy()):
     model_copy_command = [
             'aws',
             's3',
@@ -74,7 +74,7 @@ def sync_s3_buckets(url1, url2, s3_endpoint=None):
     if s3_endpoint:
         model_copy_command += ['--endpoint-url', s3_endpoint]
         
-    return run_cmd(model_copy_command)
+    return run_cmd(model_copy_command, envvars)
 
 def download_s3_locally(
     url,
@@ -152,6 +152,10 @@ def main(argv=None):
     if o1.scheme == 'gs':
         sync_gcs_buckets(model_startpoint, model_dir)
     elif o1.scheme == 's3' and o2.scheme == 's3':
+        data_dir2 = "%s/t2t_data_gh_all" % model_dir
+        sync_s3_buckets(data_dir, data_dir2, args.s3_endpoint)
+        data_dir = data_dir2
+
         sync_s3_buckets(model_startpoint, model_dir, args.s3_endpoint)
     elif o1.scheme == 's3':
         client = s3_client(args.s3_endpoint)
@@ -169,12 +173,12 @@ def main(argv=None):
         client = s3_client(args.s3_endpoint)
         # override model s3 location region and endpoint
         # so tensorflow could access it without troubles
-        r = client.get_bucket_location(
+        region = client.get_bucket_location(
                                 Bucket=o2.netloc
                             ).get('LocationConstraint', 'us-est-1')
-        envs['AWS_REGION'] = r
-        envs['AWS_DEFAULT_REGION'] = r
-        envs['S3_ENDPOINT'] = client._endpoint.host
+        envs['AWS_REGION'] = region
+        envs['S3_ENDPOINT'] = args.s3_endpoint or "https://s3.%s.amazonaws.com" % region
+        # client._endpoint.host
 
     # Then run the training for N steps from there.
     model_train_command = [
