@@ -31,13 +31,13 @@ except ImportError:
     from urllib.parse import urlparse
 
 
-def run_cmd(cmd, env=os.environ.copy()):
+def run_cmd(cmd, envvars=os.environ.copy()):
     print('Running: %s' % ' '.join(str(v) for v in cmd))
     p = subprocess.Popen(cmd, 
                          stdout=subprocess.PIPE, 
                          stderr=subprocess.STDOUT, 
                          bufsize=1,
-                         env=envs)
+                         env=envvars)
 
     for c in iter(lambda: p.stdout.read(1), b''):
         sys.stdout.write(c.decode())
