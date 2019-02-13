@@ -118,6 +118,7 @@ def main(argv=None):
                         required=False)
     parser.add_argument('--model-dir', help="""...""", required=True)
     parser.add_argument('--data-dir', help="""...""", required=True)
+    parser.add_argument('--snapshot-dir', help="""...""", required=False)
     parser.add_argument('--checkpoint-dir', help="""...""",
                         required=True)
     parser.add_argument('--train-steps', help="""...""", required=True)
@@ -152,10 +153,6 @@ def main(argv=None):
     if o1.scheme == 'gs':
         sync_gcs_buckets(model_startpoint, model_dir)
     elif o1.scheme == 's3' and o2.scheme == 's3':
-        data_dir2 = "%s/t2t_data_gh_all" % model_dir
-        sync_s3_buckets(data_dir, data_dir2, args.s3_endpoint)
-        data_dir = data_dir2
-
         sync_s3_buckets(model_startpoint, model_dir, args.s3_endpoint)
     elif o1.scheme == 's3':
         client = s3_client(args.s3_endpoint)
@@ -165,9 +162,6 @@ def main(argv=None):
 
     print 'training steps (total): %s' % args.train_steps
 
-
-    # '--worker_gpu', '8'
-
     envs = os.environ.copy()
     if o2.scheme == 's3':
         client = s3_client(args.s3_endpoint)
@@ -175,11 +169,15 @@ def main(argv=None):
         # so tensorflow could access it without troubles
         region = client.get_bucket_location(
                                 Bucket=o2.netloc
-                            ).get('LocationConstraint', 'us-est-1')
+                            ).get('LocationConstraint', 'us-east-1')
         envs['AWS_REGION'] = region
 
     if args.s3_endpoint:
         envs['S3_ENDPOINT'] = args.s3_endpoint
+
+    if args.snapshot_dir:
+        sync_s3_buckets(data_dir, args.snapshot_dir, args.s3_endpoint)
+        data_dir = args.snapshot_dir
 
     # Then run the training for N steps from there.
     model_train_command = [
