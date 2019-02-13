@@ -59,12 +59,6 @@ spec:
           tcpSocket:
             port: 9000
         name: MODEL_NAME
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /secret/gcp-credentials/user-gcp-sa.json
-        volumeMounts:
-        - name: gcp-credentials
-          mountPath: /secret/gcp-credentials
         ports:
         - containerPort: 9000
         - containerPort: 8500
@@ -75,7 +69,3 @@ spec:
           requests:
             cpu: "1"
             memory: 1Gi
-    volumes:
-      - name: gcp-credentials
-        secret:
-          secretName: user-gcp-sa
