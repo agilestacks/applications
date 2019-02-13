@@ -40,6 +40,14 @@ def main(argv=None):
       '--github_token',
       help='...',
       required=True)
+  parser.add_argument(
+      '--data-dir',
+      help='...',
+      required=True)
+  parser.add_argument(
+      '--image',
+      help='...',
+      required=True)
 
   # parser.add_argument('--cluster', type=str,
   #                     help='GKE cluster set up for kubeflow. If set, zone must be provided. ' +
@@ -47,6 +55,8 @@ def main(argv=None):
   #                          'cluster is used.')
   # parser.add_argument('--zone', type=str, help='zone of the kubeflow cluster.')
   args = parser.parse_args()
+
+  data_dir = args.data_dir or 'gs://aju-dev-demos-codelabs/kubecon/t2t_data_gh_all/'
 
   KUBEFLOW_NAMESPACE = 'kubeflow'
 
@@ -65,9 +75,15 @@ def main(argv=None):
     with open( target_file, "w" ) as target:
       data = f.read()
       changed = data.replace('MODEL_NAME',args.model_name)
-      changed1 = changed.replace('KUBEFLOW_NAMESPACE',KUBEFLOW_NAMESPACE).replace(
-        'GITHUB_TOKEN',masked_token).replace(
-        'DATA_DIR', 'gs://aju-dev-demos-codelabs/kubecon/t2t_data_gh_all/')
+      changed1 = changed.replace(
+                    'KUBEFLOW_NAMESPACE',KUBEFLOW_NAMESPACE
+                  ).replace(
+                    'GITHUB_TOKEN',masked_token
+                  ).replace(
+                    'DATA_DIR', data_dir
+                  ).replace(
+                    'IMAGE', args.image
+                  )
       target.write(changed1)
 
 

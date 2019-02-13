@@ -40,7 +40,7 @@ spec:
     spec:
       containers:
       - name: MODEL_NAME-webapp
-        image: harbor.svc.dev4.demo10.superhub.io/ml-examples/ml-pipeline-t2tapp
+        image: IMAGE
         # resources:
         #   limits:
         #     nvidia.com/gpu: 1

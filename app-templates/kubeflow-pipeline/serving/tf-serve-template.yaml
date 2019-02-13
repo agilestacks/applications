@@ -51,6 +51,11 @@ spec:
         - --model_base_path=MODEL_PATH
         command:
         - /usr/bin/tensorflow_model_server
+        env:
+        - name: S3_USE_HTTPS
+          value: '1'
+        - name: S3_VERIFY_SSL
+          value: '1'
         image: tensorflow/serving
         imagePullPolicy: IfNotPresent
         livenessProbe:
