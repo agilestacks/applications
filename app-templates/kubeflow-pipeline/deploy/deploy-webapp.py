@@ -81,7 +81,7 @@ def main(argv=None):
 
   KUBEFLOW_NAMESPACE = 'kubeflow'
 
-  masked_token = mask( args.github_token )
+  # masked_token = mask( args.github_token )
 
   print("using model name: %s and namespace: %s" % (args.model_name, KUBEFLOW_NAMESPACE))
 
@@ -114,7 +114,8 @@ def main(argv=None):
       changed = changed.replace(
                     'KUBEFLOW_NAMESPACE',KUBEFLOW_NAMESPACE
                   ).replace(
-                    'GITHUB_TOKEN',masked_token
+                    'GITHUB_TOKEN',args.github_token
+                    # 'GITHUB_TOKEN',masked_token
                   ).replace(
                     'DATA_DIR', data_dir
                   ).replace(
