@@ -52,6 +52,8 @@ spec:
         command:
         - /usr/bin/tensorflow_model_server
         env:
+        - name: AWS_REGION
+          value: BUCKET_REGION
         - name: S3_USE_HTTPS
           value: '1'
         - name: S3_VERIFY_SSL

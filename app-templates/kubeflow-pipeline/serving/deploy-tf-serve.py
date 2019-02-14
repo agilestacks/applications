@@ -25,6 +25,17 @@ import six
 from tensorflow.python.lib.io import file_io
 import time
 import yaml
+import boto3
+
+try:
+    from urlparse import urlparse
+except ImportError:
+    from urllib.parse import urlparse
+
+def s3_client(endpoint_url=None):
+  if endpoint_url:
+    return boto3.client('s3', endpoint_url=endpoint_url)
+  return boto3.client('s3')
 
 
 def main(argv=None):
@@ -38,6 +49,16 @@ def main(argv=None):
       '--model_path',
       help='...',
       required=True)
+
+  parser.add_argument(
+      '--aws_secret',
+      help='...',
+      required=False)
+
+  parser.add_argument(
+      '--s3-endpoint', 
+      help="""...""",
+      required=False)
 
   parser.add_argument('--cluster', type=str,
                       help='GKE cluster set up for kubeflow. If set, zone must be provided. ' +
@@ -72,16 +93,33 @@ def main(argv=None):
 
   logging.info('Generating training template.')
 
-  template_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'tf-serve-template.yaml')
+  if args.aws_secret:
+    template_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'tf-serve-creds-template.yaml')
+  else:
+    template_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'tf-serve-template.yaml')
   target_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'tf-serve.yaml')
+
+  aws_region = os.environ.get('AWS_REGION', 'us-east-2')
+  
+  o = urlparse(args.model_path)
+  if o.scheme == 's3':
+    client = s3_client(args.s3_endpoint)
+    # override model s3 location region and endpoint
+    # so tensorflow could access it without troubles
+    aws_region = client.get_bucket_location(
+                            Bucket=o.netloc
+                        ).get('LocationConstraint', 'us-east-1')
 
   with open(template_file, 'r') as f:
     with open( target_file, "w" ) as target:
       data = f.read()
       changed = data.replace('MODEL_NAME',args.model_name)
-      changed1 = changed.replace('KUBEFLOW_NAMESPACE',KUBEFLOW_NAMESPACE)
-      changed2 = changed1.replace('MODEL_PATH', args.model_path)
-      target.write(changed2)
+      changed = changed.replace('KUBEFLOW_NAMESPACE',KUBEFLOW_NAMESPACE)
+      changed = changed.replace('MODEL_PATH', args.model_path)
+      changed = changed.replace('BUCKET_REGION', aws_region)
+      if args.aws_secret:
+        changed = changed.replace('AWS_SECRET_NAME', args.aws_secret)
+      target.write(changed)
 
 
   logging.info('deploying model serving.')

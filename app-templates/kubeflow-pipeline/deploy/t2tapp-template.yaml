@@ -13,7 +13,7 @@ metadata:
       service: MODEL_NAME-webappsvc.KUBEFLOW_NAMESPACE:80
   name: MODEL_NAME-webappsvc
   labels:
-    app: ghsumm
+    app: MODEL_NAME
     role: frontend
 spec:
   type: ClusterIP
@@ -21,7 +21,7 @@ spec:
   - port: 80
     targetPort: "http-server"
   selector:
-    app: ghsumm
+    app: MODEL_NAME
     role: frontend
 
 ---
@@ -35,7 +35,7 @@ spec:
   template:
     metadata:
       labels:
-        app: ghsumm
+        app: MODEL_NAME
         role: frontend
     spec:
       containers:
@@ -54,6 +54,12 @@ spec:
           value: GITHUB_TOKEN
         - name: DATADIR
           value: DATA_DIR
+        - name: AWS_REGION
+          value: BUCKET_REGION
+        - name: S3_USE_HTTPS
+          value: '1'
+        - name: S3_VERIFY_SSL
+          value: '1'
         ports:
         - name: http-server
           containerPort: 8080

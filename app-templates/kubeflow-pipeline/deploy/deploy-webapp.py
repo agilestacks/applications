@@ -25,6 +25,17 @@ import six
 from tensorflow.python.lib.io import file_io
 import time
 import yaml
+import boto3
+
+try:
+    from urlparse import urlparse
+except ImportError:
+    from urllib.parse import urlparse
+
+def s3_client(endpoint_url=None):
+  if endpoint_url:
+    return boto3.client('s3', endpoint_url=endpoint_url)
+  return boto3.client('s3')
 
 def mask(s, offset=8):
   l = len(s)
@@ -49,6 +60,16 @@ def main(argv=None):
       help='...',
       required=True)
 
+  parser.add_argument(
+      '--aws_secret',
+      help='...',
+      required=False)
+
+  parser.add_argument(
+      '--s3-endpoint', 
+      help="""...""",
+      required=False)
+
   # parser.add_argument('--cluster', type=str,
   #                     help='GKE cluster set up for kubeflow. If set, zone must be provided. ' +
   #                          'If not set, assuming this runs in a GKE container and current ' +
@@ -68,14 +89,29 @@ def main(argv=None):
   logging.info('Running deploy-webapp.py')
   logging.info("using model name: %s and namespace: %s" % (args.model_name, KUBEFLOW_NAMESPACE))
 
-  template_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 't2tapp-template.yaml')
+  if args.aws_secret:
+    template_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 't2tapp-creds-template.yaml')
+  else:
+    template_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 't2tapp-template.yaml')
+
   target_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 't2tapp.yaml')
+
+  aws_region = os.environ.get('AWS_REGION', 'us-east-2')
+  
+  o = urlparse(args.data_dir)
+  if o.scheme == 's3':
+    client = s3_client(args.s3_endpoint)
+    # override model s3 location region and endpoint
+    # so tensorflow could access it without troubles
+    aws_region = client.get_bucket_location(
+                            Bucket=o.netloc
+                        ).get('LocationConstraint', 'us-east-1')
 
   with open(template_file, 'r') as f:
     with open( target_file, "w" ) as target:
       data = f.read()
       changed = data.replace('MODEL_NAME',args.model_name)
-      changed1 = changed.replace(
+      changed = changed.replace(
                     'KUBEFLOW_NAMESPACE',KUBEFLOW_NAMESPACE
                   ).replace(
                     'GITHUB_TOKEN',masked_token
@@ -83,8 +119,14 @@ def main(argv=None):
                     'DATA_DIR', data_dir
                   ).replace(
                     'IMAGE', args.image
+                  ).replace(
+                    'BUCKET_REGION', aws_region
                   )
-      target.write(changed1)
+                  
+      if args.aws_secret:
+        changed = changed.replace('AWS_SECRET_NAME', args.aws_secret)
+
+      target.write(changed)
 
 
   logging.info('deploying web app.')
