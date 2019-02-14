@@ -61,7 +61,7 @@ print("using model servable name: %s" % servable_name)
 SAMPLE_ISSUES = './github_issues_sample.csv'
 
 # SERVER_URL = 'http://130.211.206.140:8500/v1/models/ghsumm:predict'
-SERVER_URL = 'https://' + server + '/v1/models/' + servable_name + ':predict'
+SERVER_URL = 'http://' + server + ':8500/v1/models/' + servable_name + ':predict'
 
 def get_issue_body(issue_url):
   issue_url = re.sub('.*github.com/', 'https://api.github.com/repos/',
