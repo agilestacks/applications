@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    getambassador.io/config: |-
+      ---
+      apiVersion: ambassador/v0
+      kind:  Mapping
+      name: webapp-MODEL_NAME
+      prefix: /webapp/
+      rewrite: /
+      timeout_ms: 1200000
+      service: MODEL_NAME-webappsvc.KUBEFLOW_NAMESPACE:80
+  name: MODEL_NAME-webappsvc
+  labels:
+    app: MODEL_NAME
+    role: frontend
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: "http-server"
+  selector:
+    app: MODEL_NAME
+    role: frontend
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: MODEL_NAME-webapp
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: MODEL_NAME
+        role: frontend
+    spec:
+      containers:
+      - name: MODEL_NAME-webapp
+        image: IMAGE
+        # resources:
+        #   limits:
+        #     nvidia.com/gpu: 1
+        imagePullPolicy: Always
+        env:
+        - name: TFSERVING_HOST
+          value: MODEL_NAME.KUBEFLOW_NAMESPACE
+        - name: TF_SERVABLE_NAME
+          value: MODEL_NAME
+        - name: GH_TOKEN
+          value: GITHUB_TOKEN
+        - name: DATADIR
+          value: DATA_DIR
+        - name: AWS_REGION
+          value: BUCKET_REGION
+        - name: S3_USE_HTTPS
+          value: '1'
+        - name: S3_VERIFY_SSL
+          value: '1'
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              key: aws_access_key_id
+              name: AWS_SECRET_NAME
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              key: aws_secret_access_key
+              name: AWS_SECRET_NAME
+        ports:
+        - name: http-server
+          containerPort: 8080
+        resources:
+          limits:
+            cpu: "1"
+            memory: 4Gi
+          requests:
+            cpu: "1"
+            memory: 1Gi

@@ -98,7 +98,7 @@ def main(argv=None):
 
   aws_region = os.environ.get('AWS_REGION', 'us-east-2')
   
-  o = urlparse(args.data_dir)
+  o = urlparse(data_dir)
   if o.scheme == 's3':
     client = s3_client(args.s3_endpoint)
     # override model s3 location region and endpoint
@@ -122,7 +122,7 @@ def main(argv=None):
                   ).replace(
                     'BUCKET_REGION', aws_region
                   )
-                  
+
       if args.aws_secret:
         changed = changed.replace('AWS_SECRET_NAME', args.aws_secret)
 
