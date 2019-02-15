@@ -218,8 +218,6 @@ def main(argv=None):
         '--output_dir',
         model_dir]
     run_cmd(model_export_command, envs)
-    
-    print 'sleeping for 10 mins'
 
     print 'deploy-webapp arg: %s' % args.deploy_webapp
     with open('/tmp/output', 'w') as f:
