@@ -76,6 +76,7 @@ outputs:
     value: '${component.jenkins-iam-role.roleArn}'
   - name: application.promotion.templates
     value: simple-promote,container-promotion
+  - name: component.docker.registry.kind
 
 templates:
   files:

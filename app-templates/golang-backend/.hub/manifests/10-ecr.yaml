@@ -17,3 +17,6 @@ parameters:
   parameters:
   - name: name
     value: '${dns.domain}/${application.name}'
+
+- name: component.docker.registry.kind
+  value: ecr

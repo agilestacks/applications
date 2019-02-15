@@ -55,13 +55,32 @@ pipeline {
       }
     }
     stage('Build and Push') {
+      environment {
+        DOCKER_CONFIG = "${WORKSPACE}/.docker"
+      }
       steps {
         container('toolbox') {
           script {
-            final image = hub.explain(state: params.APP_STATE_FILE).stackOutputs['application.docker.image'] as String
+            final stackOutputs = hub.explain(state: params.APP_STATE_FILE).stackOutputs;
+            final image = stackOutputs['application.docker.image'] as String
+            final registryKind = stackOutputs['component.docker.registry.kind'] as String
+
             sh script: "docker build --pull --rm -t ${image}:latest -t ${image}:${gitscm.shortCommit} ."
-            withAWS(role:params.AWS_TRUST_ROLE) {
-              sh script: ecrLogin()
+
+            if (registryKind == 'ecr') {
+              withAWS(role:params.AWS_TRUST_ROLE) {
+                sh script: ecrLogin()
+                sh script: "docker push ${image}:${gitscm.shortCommit}"
+                sh script: "docker push ${image}:latest"
+              }
+            } else {
+              final pullSecretName = stackOutputs['application.pullSecret.name'] as String
+              final pullSecretNamespace = stackOutputs['application.pullSecret.namespace'] as String
+
+              // creatr authorized docker config
+              sh script: "mkdir -p $DOCKER_CONFIG"
+              sh script: "kubectl --namespace=${pullSecretNamespace} get secret ${pullSecretName} -o=json | jq -r '.data.\".dockerconfigjson\" | @base64d | fromjson | .auths | [to_entries[] | {key: .key, value: {auth: \"\\(.value.username):\\(.value.password)\" | @base64}}] | from_entries | {auths: .}' > $DOCKER_CONFIG/config.json"
+
               sh script: "docker push ${image}:${gitscm.shortCommit}"
               sh script: "docker push ${image}:latest"
             }
@@ -81,7 +100,7 @@ pipeline {
             final namespaceExists = sh script: "kubectl get namespace ${outputs['application.namespace']}", returnStatus: true
             if (namespaceExists != 0) {
               sh script: "kubectl create namespace ${outputs['application.namespace']}"
-            }            
+            }
             final kubectl = "kubectl -n ${outputs['application.namespace']}"
             hub.render(template: 'kubernetes.yaml.template', state: params.APP_STATE_FILE)
             echo readFile('kubernetes.yaml')

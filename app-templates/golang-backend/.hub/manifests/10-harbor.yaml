@@ -10,8 +10,8 @@ parameters:
   parameters:
   - name: image.url
 
-# - name: component.docker.registry.kind
-#   value: dockerregistry
+- name: component.docker.registry.kind
+  value: harbor
 
 - name: component.docker
   kind: link
