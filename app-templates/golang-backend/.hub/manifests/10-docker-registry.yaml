@@ -7,10 +7,18 @@ components:
     dir: components/pull-secret
     branch: APPLICATIONS_TAG
     fromEnv: GITHUB_TOKEN
+- name: jenkins-credentials
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/jenkins-credentials
+    dir: components/jenkins-credentials
+    branch: APPLICATIONS_TAG
+    fromEnv: GITHUB_TOKEN
 
 lifecycle:
   order:
     - pull-secret
+    - jenkins-credentials
 
 parameters:
 - name: cloud.region
@@ -56,6 +64,14 @@ parameters:
   - name: namespace
     value: ${application.namespace}
 
+- name: component.jenkins-credentials
+  parameters:
+  - name: name
+    value: ${application.name}-credentials
+  - name: username
+    value: ${application.docker-registry.username}
+  - name: password
+    fromEnv: APPLICATION_DOCKER-REGISTRY_PASSWORD
 outputs:
 - name: application.pullSecret.name
   value: '${component.pullSecret.name}'
