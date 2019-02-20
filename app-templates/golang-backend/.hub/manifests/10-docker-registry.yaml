@@ -68,6 +68,8 @@ parameters:
   parameters:
   - name: name
     value: ${application.name}-credentials
+  - name: description
+    value: "Docker registry authorization for ${application.name}"
   - name: username
     value: ${application.docker-registry.username}
   - name: password

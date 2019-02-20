@@ -20,6 +20,8 @@ parameters:
 - name: component.jenkins-credentials
   parameters:
   - name: name
+  - name: description
+    empty: allow
   - name: namespace
     value: jenkins
     env: NAMESPACE
@@ -33,6 +35,10 @@ parameters:
     empty: allow
   - name: password
     empty: allow
+
+templates:
+  files:
+  - "templates/*.template"
 
 outputs:
 - name: component.jenkins-credentials.name
