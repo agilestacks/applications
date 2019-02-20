@@ -2,7 +2,7 @@
 
 kubectl := kubectl --context="$(DOMAIN_NAME)" --namespace="$(NAMESPACE)"
 
-deploy: namespace
+deploy:
 	- $(kubectl) apply -f templates/$(CREDENTIALS_KIND).yaml
 
 undeploy:
