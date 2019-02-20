@@ -9,7 +9,8 @@ meta:
 
 requires:
   - kubernetes
-  - jenkins
+  # Should it require Jenkins or how should it be provided
+  # - jenkins
 provides:
   - jenkins-credentials
 
