@@ -35,7 +35,7 @@ def upload_build_context_to_s3(
                     pass
         s3_client.upload_file(tmpfile.name, bucket, key)
 
-def aws_to_kube_secret(
+def boto_to_secret(
         secret_name='jupyter-awscreds', 
         session=boto3.session.Session(), 
         namespace=None ):
@@ -43,83 +43,82 @@ def aws_to_kube_secret(
     api = kube_client.CoreV1Api( K8sHelper()._api_client )
 
     namespace = namespace or _current_namespace()
-    creds = session.get_credentials()
+    creds = session.get_credentials().get_frozen_credentials()._asdict()
 
-    secret_data = dict()
-    if creds.access_key:
-        secret_data['aws_access_key_id'] = creds.access_key
-    if creds.secret_key:
-        secret_data['aws_secret_access_key'] = creds.secret_key
-    if creds.token:
-        secret_data['aws_session_token'] = creds.token
-
-    b64_encoded = {k: _encode_b64(v) for (k,v) in secret_data.items()}
+    # encode aws_secret data with boto3 keys
+    new_data = {k: _encode_b64(v) for k, v in creds.items() if v is not None}
     try:
         secret = api.read_namespaced_secret(secret_name, namespace)
-        secret.data.update(b64_encoded)
+        secret.data.update(new_data)
         api.replace_namespaced_secret(secret_name, namespace, secret)
     except ApiException:
         secret = kube_client.V1Secret(
             metadata = kube_client.V1ObjectMeta(name=secret_name),
-            data = b64_encoded,
+            data = new_data,
             type = 'Opaque'
         )
         api.create_namespaced_secret(namespace=namespace, body=secret)
 
-def use_aws_credentials(
+def use_aws_envvars_from_secret(
         secret_name='jupyter-awscreds',
-        session=boto3.session.Session(),
-        region=None,
-        update_kube_secret=False):
+        secret_namespace=None):
 
-    region_name = region or session.region_name or ec2_metadata_region()
+    def _use_aws_envvars_from_secret(task):
+        api = kube_client.CoreV1Api( K8sHelper()._api_client )
+        ns = secret_namespace or _current_namespace()
+        secret = api.read_namespaced_secret(secret_name, ns)
 
-    def _use_aws_credentials(task):
-        if region_name:
-            task.add_env_variable(
-                kube_client.V1EnvVar(
-                    name='AWS_REGION', 
-                    value=region_name
-                )
-            )
-
-        creds = session.get_credentials()
-        if creds.access_key:
+        if 'access_key' in secret.data:
             task.add_env_variable(
                 kube_client.V1EnvVar(
                     name='AWS_ACCESS_KEY_ID', 
                     value_from=kube_client.V1EnvVarSource(
-                        secret_key_ref=kube_client.V1SecretKeySelector(name=secret_name, key='aws_access_key_id')
+                        secret_key_ref=kube_client.V1SecretKeySelector(name=secret_name, key='access_key')
                     )
                 )
             )
 
-        if creds.secret_key:
+        if 'secret_key' in secret.data:
             task.add_env_variable(
                 kube_client.V1EnvVar(
                     name='AWS_SECRET_ACCESS_KEY', 
                     value_from=kube_client.V1EnvVarSource(
-                        secret_key_ref=kube_client.V1SecretKeySelector(name=secret_name, key='aws_secret_access_key')
+                        secret_key_ref=kube_client.V1SecretKeySelector(name=secret_name, key='secret_key')
                     )
                 )
             )
 
-        if creds.token:
+        if 'token' in secret.data:
             task.add_env_variable(
                 kube_client.V1EnvVar(
                     name='AWS_SESSION_TOKEN', 
                     value_from=kube_client.V1EnvVarSource(
-                        secret_key_ref=kube_client.V1SecretKeySelector(name=secret_name, key='aws_session_token')
+                        secret_key_ref=kube_client.V1SecretKeySelector(name=secret_name, key='token')
                     )
                 )
             )
 
-        if update_kube_secret:
-            aws_to_kube_secret(session=session)
+        return task
 
-        return task    
+    return _use_aws_envvars_from_secret
 
-    return _use_aws_credentials
+
+def use_aws_region_envvar(region=None):
+    if not region:
+        region = get_region_from_metadata()
+
+    def _use_aws_region_envvar(task):
+            
+        task.add_env_variable(
+            kube_client.V1EnvVar(
+                name='AWS_REGION', 
+                value=region
+            )
+        )
+
+        return task
+
+    return _use_aws_region_envvar
 
 
 def _encode_b64(value):
@@ -146,7 +145,7 @@ def _expand_globs(globs:list):
     return list(set(flatten))
 
 
-def ec2_metadata_region():
+def get_region_from_metadata():
     from ec2_metadata import ec2_metadata
     from requests.exceptions import ConnectTimeout
 

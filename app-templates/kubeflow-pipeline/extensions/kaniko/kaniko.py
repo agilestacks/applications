@@ -1,8 +1,8 @@
-def use_pull_secret(
+def use_pull_secret_projection(
         secret_name, 
         filename='.dockerconfigjson', 
         project_to='/kaniko/.docker/config.json'):
-    def _use_pull_secret(task):
+    def _use_pull_secret_projection(task):
         from os.path import basename, dirname
         from kubernetes import client as k8sc
 
@@ -27,4 +27,5 @@ def use_pull_secret(
             )
         )
 
-    return _use_pull_secret
+    return _use_pull_secret_projection
+
