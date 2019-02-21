@@ -26,9 +26,9 @@ parameters:
     - name: repository.name
       value: python-flask
     - name: project.key
-      value: CVF
+      empty: allow
     - name: team.name
-      value: agilestacks
+      empty: allow
     - name: token
       fromEnv: COMPONENT_BITBUCKET_TOKEN
     - name: project.private
