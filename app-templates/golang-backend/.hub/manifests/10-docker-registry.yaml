@@ -79,3 +79,4 @@ outputs:
   value: '${component.pullSecret.name}'
 - name: application.pullSecret.namespace
   value: '${component.pullSecret.namespace}'
+- name: component.jenkins-credentials.name

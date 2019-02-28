@@ -8,11 +8,12 @@ meta:
     dir: ../../components/jenkins-credentials
 
 requires:
-  - kubernetes
-  # Should it require Jenkins or how should it be provided
-  # - jenkins
+- kubernetes
+# Should it require Jenkins or how should it be provided
+# - jenkins
+
 provides:
-  - jenkins-credentials
+- jenkins-credentials
 
 parameters:
 - name: dns.domain
@@ -35,6 +36,16 @@ parameters:
     empty: allow
   - name: password
     empty: allow
+
+  - name: secretPull
+    empty: allow
+    parameters:
+    - name: server
+      env: SECRET_PULL_SERVER
+    - name: name
+      env: SECRET_PULL_NAME
+    - name: namespace
+      env: SECRET_PULL_NAMESPACE
 
 templates:
   files:

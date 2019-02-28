@@ -74,15 +74,14 @@ pipeline {
                 sh script: "docker push ${image}:latest"
               }
             } else {
-              final pullSecretName = stackOutputs['application.pullSecret.name'] as String
-              final pullSecretNamespace = stackOutputs['application.pullSecret.namespace'] as String
+              final registryServer = stackOutputs['application.docker-registry.url'] as String
+              final credentials = stackOutputs['component.jenkins-credentials.name'] as String
 
-              // creatr authorized docker config
-              sh script: "mkdir -p $DOCKER_CONFIG"
-              sh script: "kubectl --namespace=${pullSecretNamespace} get secret ${pullSecretName} -o=json | jq -r '.data.\".dockerconfigjson\" | @base64d | fromjson | .auths | [to_entries[] | {key: .key, value: {auth: \"\\(.value.username):\\(.value.password)\" | @base64}}] | from_entries | {auths: .}' > $DOCKER_CONFIG/config.json"
+              docker.withRegistry(registryServer, credentials) {
+                sh script: "docker push ${image}:${gitscm.shortCommit}"
+                sh script: "docker push ${image}:latest"
+              }
 
-              sh script: "docker push ${image}:${gitscm.shortCommit}"
-              sh script: "docker push ${image}:latest"
             }
           }
         }
