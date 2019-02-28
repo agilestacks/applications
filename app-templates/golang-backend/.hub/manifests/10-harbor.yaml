@@ -8,6 +8,10 @@ components:
     branch: APPLICATIONS_TAG
     fromEnv: GITHUB_TOKEN
 
+lifecycle:
+  order:
+    - jenkins-credentials
+
 parameters:
 - name: cloud.region
 - name: terraform.bucket
