@@ -22,6 +22,7 @@ parameters:
 - name: application.docker-registry
   parameters:
   - name: image.url
+  - name: serviceUrl
 
 - name: component.docker.registry.kind
   value: harbor
@@ -53,7 +54,7 @@ parameters:
     - name: namespace
       value: ${application.pullSecret.namespace}
     - name: server
-      value: ${application.docker-registry.url}
+      value: ${application.docker-registry.serviceUrl}
 
 outputs:
 - name: application.pullSecret.name
