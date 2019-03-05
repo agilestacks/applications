@@ -28,4 +28,3 @@ def use_pull_secret_projection(
         )
 
     return _use_pull_secret_projection
-

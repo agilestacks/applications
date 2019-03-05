@@ -35,18 +35,36 @@ def upload_build_context_to_s3(
                     pass
         s3_client.upload_file(tmpfile.name, bucket, key)
 
-def boto_to_secret(
+def create_secret_from_session(
         secret_name='jupyter-awscreds', 
         session=boto3.session.Session(), 
+        namespace=None ):
+    creds = session.get_credentials().get_frozen_credentials()
+    create_secret(
+        secret_name=secret_name,
+        access_key=creds.access_key,
+        secret_key=creds.secret_key,
+        token=creds.token,
+        namespace=namespace,
+    )
+
+def create_secret(
+        secret_name='jupyter-awscreds', 
+        access_key=None,
+        secret_key=None,
+        token=None,
         namespace=None ):
     # KFP k8s helper applies incluster config setup if needed
     api = kube_client.CoreV1Api( K8sHelper()._api_client )
 
     namespace = namespace or _current_namespace()
-    creds = session.get_credentials().get_frozen_credentials()._asdict()
+    new_data = {
+        'access_key': _encode_b64(access_key),
+        'secret_key': _encode_b64(secret_key),
+    }
+    if token:
+        new_data['token'] = _encode_b64(token)
 
-    # encode aws_secret data with boto3 keys
-    new_data = {k: _encode_b64(v) for k, v in creds.items() if v is not None}
     try:
         secret = api.read_namespaced_secret(secret_name, namespace)
         secret.data.update(new_data)
