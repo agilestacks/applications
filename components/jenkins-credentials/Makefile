@@ -8,7 +8,6 @@ deploy:
 ifneq ($(PULL_SECRET_NAME),)
 	hub render templates/$(CREDENTIALS_KIND).yaml $(SECRET_CREDENTIALS)
 endif
-	@cat templates/$(CREDENTIALS_KIND).yaml
 	- $(kubectl) apply -f templates/$(CREDENTIALS_KIND).yaml
 .PHONY: deploy
 
