@@ -40,8 +40,6 @@ parameters:
   - name: secretPull
     empty: allow
     parameters:
-    - name: server
-      env: SECRET_PULL_SERVER
     - name: name
       env: SECRET_PULL_NAME
     - name: namespace

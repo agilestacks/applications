@@ -53,8 +53,6 @@ parameters:
       value: ${application.pullSecret.name}
     - name: namespace
       value: ${application.pullSecret.namespace}
-    - name: server
-      value: ${application.docker-registry.serviceUrl}
 
 outputs:
 - name: application.pullSecret.name
