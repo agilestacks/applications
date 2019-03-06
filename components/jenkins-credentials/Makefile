@@ -2,10 +2,10 @@
 
 kubectl := kubectl --context="$(DOMAIN_NAME)" --namespace="$(NAMESPACE)"
 
-SECRET_CREDENTIALS := `$(kubectl) --namespace="$(SECRET_PULL_NAMESPACE)" get secret $(SECRET_PULL_NAME) -o=json | jq -r '.data.".dockerconfigjson" | @base64d | fromjson | .auths | to_entries | .[0].value | "-a component.jenkins-credentials.username=\(.username),component.jenkins-credentials.password=\(.password)"'`
+SECRET_CREDENTIALS := `$(kubectl) --namespace="$(PULL_SECRET_NAMESPACE)" get secret $(PULL_SECRET_NAME) -o=json | jq -r '.data.".dockerconfigjson" | @base64d | fromjson | .auths | to_entries | .[0].value | "-a component.jenkins-credentials.username=\(.username),component.jenkins-credentials.password=\(.password)"'`
 
 deploy:
-ifneq ($(SECRET_PULL_NAME),)
+ifneq ($(PULL_SECRET_NAME),)
 	hub render templates/$(CREDENTIALS_KIND).yaml $(SECRET_CREDENTIALS)
 endif
 	@cat templates/$(CREDENTIALS_KIND).yaml

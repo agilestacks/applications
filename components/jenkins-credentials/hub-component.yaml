@@ -37,13 +37,13 @@ parameters:
   - name: password
     empty: allow
 
-  - name: secretPull
+  - name: pullSecret
     empty: allow
     parameters:
     - name: name
-      env: SECRET_PULL_NAME
+      env: PULL_SECRET_NAME
     - name: namespace
-      env: SECRET_PULL_NAMESPACE
+      env: PULL_SECRET_NAMESPACE
 
 templates:
   files:

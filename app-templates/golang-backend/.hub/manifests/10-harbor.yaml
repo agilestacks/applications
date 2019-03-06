@@ -47,7 +47,7 @@ parameters:
     value: ${application.name}-credentials
   - name: description
     value: "Docker registry authorization for ${application.name}"
-  - name: secretPull
+  - name: pullSecret
     parameters:
     - name: name
       value: ${application.pullSecret.name}
