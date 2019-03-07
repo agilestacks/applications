@@ -57,7 +57,7 @@ def create_secret(
     # KFP k8s helper applies incluster config setup if needed
     api = kube_client.CoreV1Api( K8sHelper()._api_client )
 
-    namespace = namespace or _current_namespace()
+    namespace = namespace or current_namespace()
     new_data = {
         'access_key': _encode_b64(access_key),
         'secret_key': _encode_b64(secret_key),
@@ -83,7 +83,7 @@ def use_aws_envvars_from_secret(
 
     def _use_aws_envvars_from_secret(task):
         api = kube_client.CoreV1Api( K8sHelper()._api_client )
-        ns = secret_namespace or _current_namespace()
+        ns = secret_namespace or current_namespace()
         secret = api.read_namespaced_secret(secret_name, ns)
 
         if 'access_key' in secret.data:
@@ -143,7 +143,7 @@ def _encode_b64(value):
     return base64.b64encode( value.encode('utf-8') ).decode('ascii')
 
 
-def _current_namespace():
+def current_namespace():
     try:
         result = kube_config.list_kube_config_contexts()[1].get('context', {}).get('namespace')
         if result:

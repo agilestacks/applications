@@ -99,16 +99,16 @@ def main(argv=None):
     template_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'tf-serve-template.yaml')
   target_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'tf-serve.yaml')
 
-  aws_region = os.environ.get('AWS_REGION', 'us-east-2')
+  aws_region = os.environ.get('AWS_REGION', 'us-east-1')
   
-  o = urlparse(args.model_path)
-  if o.scheme == 's3':
-    client = s3_client(args.s3_endpoint)
+  # o = urlparse(args.model_path)
+  # if o.scheme == 's3':
+  #   client = s3_client(args.s3_endpoint)
     # override model s3 location region and endpoint
     # so tensorflow could access it without troubles
-    aws_region = client.get_bucket_location(
-                            Bucket=o.netloc
-                        ).get('LocationConstraint', 'us-east-1')
+    # aws_region = client.get_bucket_location(
+    #                         Bucket=o.netloc
+    #                     ).get('LocationConstraint', 'us-east-1')
 
   with open(template_file, 'r') as f:
     with open( target_file, "w" ) as target:

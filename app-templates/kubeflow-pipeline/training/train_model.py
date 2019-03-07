@@ -122,12 +122,14 @@ def main(argv=None):
     parser.add_argument('--checkpoint-dir', help="""...""",
                         required=True)
     parser.add_argument('--train-steps', help="""...""", required=True)
-    parser.add_argument('--deploy-webapp', help="""...""",
-                        required=True)
-    parser.add_argument('--s3-endpoint', help="""...""",
-                        required=False)
+    parser.add_argument('--deploy-webapp', help="""...""", default=True, required=False)
+    # parser.add_argument('--s3-endpoint', help="""...""",
+    #                     required=False)
 
     args = parser.parse_args()
+
+
+    s3_endpoint = os.environ['S3_ENDPOINT']
 
   # Create metadata.json file for visualization.
 
@@ -152,32 +154,31 @@ def main(argv=None):
     o2 = urlparse(model_dir)
     if o1.scheme == 'gs':
         sync_gcs_buckets(model_startpoint, model_dir)
-    elif o1.scheme == 's3' and o2.scheme == 's3':
-        sync_s3_buckets(model_startpoint, model_dir, args.s3_endpoint)
-    elif o1.scheme == 's3':
-        client = s3_client(args.s3_endpoint)
-        download_s3_locally(model_startpoint, model_dir)
-    else:
-        raise ValueError('Unsupported scheme: %s' % o1.scheme)
+    # elif o1.scheme == 's3' and o2.scheme == 's3':
+    #     sync_s3_buckets(model_startpoint, model_dir, s3_endpoint)
+    # elif o1.scheme == 's3':
+    #     client = s3_client("http://%s" % s3_endpoint)
+    #     download_s3_locally(model_startpoint, model_dir, client)
+    # else:
+    #     raise ValueError('Unsupported scheme: %s' % o1.scheme)
 
     print 'training steps (total): %s' % args.train_steps
 
     envs = os.environ.copy()
-    if o2.scheme == 's3':
-        client = s3_client(args.s3_endpoint)
-        # override model s3 location region and endpoint
-        # so tensorflow could access it without troubles
-        region = client.get_bucket_location(
-                                Bucket=o2.netloc
-                            ).get('LocationConstraint', 'us-east-1')
-        envs['AWS_REGION'] = region
+    # if o2.scheme == 's3':
+    #     client = s3_client(s3_endpoint)
+    #     # override model s3 location region and endpoint
+    #     # so tensorflow could access it without troubles
+    #     region = client.get_bucket_location(
+    #                             Bucket=o2.netloc
+    #                         ).get('LocationConstraint', 'us-east-1')
+    #     envs['AWS_REGION'] = region
 
-    if args.s3_endpoint:
-        envs['S3_ENDPOINT'] = args.s3_endpoint
-
-    if args.snapshot_dir:
-        sync_s3_buckets(data_dir, args.snapshot_dir, args.s3_endpoint)
-        data_dir = args.snapshot_dir
+    # if s3_endpoint:
+    #     envs['S3_ENDPOINT'] = s3_endpoint
+    # if args.snapshot_dir:
+    #     sync_s3_buckets(data_dir, args.snapshot_dir, s3_endpoint)
+    #     data_dir = args.snapshot_dir
 
     # Then run the training for N steps from there.
     model_train_command = [

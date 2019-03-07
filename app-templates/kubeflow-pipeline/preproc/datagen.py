@@ -46,16 +46,13 @@ def gcs_download(url, local_filename):
   print(result)
 
 
-def s3_download(url, local_filename, s3_client=None):
+def s3_download(url, local_filename, client=None):
   import boto3
-  if not s3_client:
-    s3_client = boto3.client('s3')
-
   o = urlparse( url )
   bucket = o.netloc
   key = o.path.lstrip('/')
   with open(local_filename, 'wb') as data:
-    s3_client.download_fileobj(bucket, key, data)
+    client.download_fileobj(bucket, key, data)
 
 def copy_local_directory_to_gcs(project, local_path, bucket_name, gcs_path):
   """Recursively copy a directory of files to GCS.
@@ -76,15 +73,13 @@ def copy_local_directory_to_gcs(project, local_path, bucket_name, gcs_path):
     blob = bucket.blob(remote_path)
     blob.upload_from_filename(local_file)
 
-def copy_local_directory_to_s3(local_path, bucket_name, s3_path, s3_client=None):
+def copy_local_directory_to_s3(local_path, bucket_name, s3_path, client):
   import boto3
-  if not s3_client:
-    s3_client = boto3.client('s3')
   for root,dirs,files in os.walk(local_path):
     for file in files:
       path_from = os.path.join(root,file)
       path_to = os.path.join(s3_path,file)
-      s3_client.upload_file(path_from, bucket_name, path_to)
+      client.upload_file(path_from, bucket_name, path_to)
 
 def s3_client(endpoint_url=None):
   import boto3

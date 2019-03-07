@@ -57,7 +57,7 @@ spec:
         - name: S3_USE_HTTPS
           value: '1'
         - name: S3_VERIFY_SSL
-          value: '1'
+          value: '0'
         image: tensorflow/serving
         imagePullPolicy: IfNotPresent
         livenessProbe:
