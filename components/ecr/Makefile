@@ -9,7 +9,7 @@ export TF_LOG             ?= debug
 export TF_LOG_PATH        ?= .terraform/$(DOMAIN_NAME).log
 export TF_OPTS            ?= -no-color
 export TF_UPDATE          ?= -update
-export TF_VAR_name        := $(COMPONENT_NAME)
+export TF_VAR_name        := $(shell echo '$(COMPONENT_NAME)' | tr '[:upper:]' '[:lower:]' | sed -e 's/^\s*//;s/\s*$$//;s/\s/_/g')
 
 terraform ?= terraform-v0.11
 TFPLAN ?= $(notdir $(COMPONENT_NAME)).tfplan
@@ -46,4 +46,3 @@ undeploy: init import
 import:
 	-$(terraform) import $(TF_OPTS) aws_ecr_repository.main $(TF_VAR_name)
 .PHONY: import
-	
