@@ -33,10 +33,19 @@ COPY entrypoint /
 RUN chmod +x /usr/bin/*
 
 RUN apt-get update -qq; DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
- fuse libcurl4 libxml2 \
+ fuse libcurl4 libxml2 openssl ca-certificates kmod \
+ nfs-kernel-server runit inotify-tools \
  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /data
 VOLUME /data
+
+COPY nfs.init /etc/sv/nfs/run
+COPY nfs.stop /etc/sv/nfs/finish
+COPY nfs_setup.sh /usr/bin/nfs_setup
+
+VOLUME /exports
+
+EXPOSE 111/udp 2049/tcp
 
 ENTRYPOINT ["tini", "--", "/entrypoint"]
