@@ -9,7 +9,7 @@ export TF_LOG             ?= debug
 export TF_LOG_PATH        ?= .terraform/$(DOMAIN_NAME).log
 export TF_OPTS            ?= -no-color
 export TF_UPDATE          ?= -update
-export TF_VAR_name        := $(shell echo '$(COMPONENT_NAME)' | tr '[:upper:]' '[:lower:]' | sed -e 's/^\s*//;s/\s*$$//;s/\s/_/g')
+export TF_VAR_name        := $(shell echo '$(COMPONENT_NAME)' | tr '[:upper:]' '[:lower:]' | sed -e 's/^[[:space:]]*//;s/[[:space:]]*$$//;s/[[:space:]]/_/g')
 
 terraform ?= terraform-v0.11
 TFPLAN ?= $(notdir $(COMPONENT_NAME)).tfplan
