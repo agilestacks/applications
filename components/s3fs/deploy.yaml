@@ -6,6 +6,7 @@ metadata:
     provider: agilestacks.com
     project:  kubeflow
     app:      s3fs
+    bucket:   default
 spec:
   replicas: 1
   strategy:
@@ -20,6 +21,7 @@ spec:
         provider: agilestacks.com
         project:  kubeflow
         app:      s3fs
+        bucket:   default
     spec:
       containers:
       - name: s3fs
@@ -106,6 +108,7 @@ metadata:
       service: nfs-bucket.kubeflow
 spec:
   type: ClusterIP
+  clusterIP: 10.3.171.111
   ports:
   - name: nfs
     port: 2049
@@ -117,3 +120,52 @@ spec:
     provider: agilestacks.com
     project:  kubeflow
     app:      s3fs
+    bucket:   default
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-bucket
+  labels:
+    provider: agilestacks.com
+    project:  kubeflow
+    app:      s3fs
+    bucket:   default
+    storage:  nfs
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+  - ReadWriteOnce
+  nfs:
+    server: 10.3.171.111
+    # server: nfs-bucket.kubeflow.svc.cluster.local
+    path: "/"
+  mountOptions:
+    - hard
+    - nfsvers=4.1
+  persistentVolumeReclaimPolicy: "Delete"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: nfs-bucket
+  labels:
+    provider: agilestacks.com
+    project:  kubeflow
+    app:      s3fs
+    bucket:   default
+spec:
+  storageClassName: ""
+  selector:
+    matchLabels:
+      provider: agilestacks.com
+      project:  kubeflow
+      app:      s3fs
+      bucket:   default
+      storage:  nfs
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
