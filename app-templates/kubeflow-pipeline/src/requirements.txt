@@ -1,0 +1,17 @@
+boto3
+awscli
+keras
+sklearn
+ktext
+tensorflow
+pandas
+google-cloud==0.19.0
+trainer
+numpy
+dill
+annoy
+tqdm
+nltk
+h5py
+matplotlib
+IPython
