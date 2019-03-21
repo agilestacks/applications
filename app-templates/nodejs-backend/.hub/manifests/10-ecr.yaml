@@ -13,7 +13,9 @@ lifecycle:
     - ecr
 
 parameters:
+- name: application.ecr.path
+  value: ${application.name}
 - name: component.ecr
   parameters:
   - name: name
-    value: '${dns.domain}/${application.name}'
+    value: '${dns.domain}/${application.ecr.path}'

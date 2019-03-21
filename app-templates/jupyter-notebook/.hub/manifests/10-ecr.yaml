@@ -13,6 +13,8 @@ lifecycle:
     - ecr
 
 parameters:
+- name: application.ecr.path
+  value: ${application.name}
 - name: dns.domain
   env: DOMAIN_NAME
 - name: cloud.region
@@ -21,3 +23,6 @@ parameters:
   - name: name
   - name: region
 - name: component.ecr
+  parameters:
+  - name: name
+    value: '${dns.domain}/${application.ecr.path}'
