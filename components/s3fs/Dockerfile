@@ -1,7 +1,6 @@
-FROM ubuntu:bionic as builder
+ARG FROM=ubuntu:bionic
 
-ARG S3FS_VERSION="1.85"
-
+FROM ${FROM} as builder
 RUN apt-get update -qq; DEBIAN_FRONTEND=noninteractive apt-get install -y \
  automake \
  curl \
@@ -15,37 +14,35 @@ RUN apt-get update -qq; DEBIAN_FRONTEND=noninteractive apt-get install -y \
  pkg-config \
  && rm -rf /var/lib/apt/lists/*
 
+ARG S3FS_VERSION="1.85"
 RUN curl -L https://github.com/s3fs-fuse/s3fs-fuse/archive/v${S3FS_VERSION}.tar.gz | tar zxv -C /usr/src
 RUN cd /usr/src/s3fs-fuse-${S3FS_VERSION} && ./autogen.sh && ./configure --prefix=/usr && make && make install
 
 ######
-FROM ubuntu:bionic
+FROM ${FROM}
 
 ARG TINI_VERSION="0.16.1"
-ARG GOSU_VERSION="1.10"
-
 ADD https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-static-amd64 /usr/bin/tini 
-ADD https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-amd64 /usr/bin/gosu 
+# ARG GOSU_VERSION="1.10"
+# ADD https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-amd64 /usr/bin/gosu 
 
 COPY --from=builder /usr/bin/s3fs /usr/bin/s3fs
-COPY entrypoint /
-
+COPY nfs-entrypoint.sh /usr/bin/nfs-entrypoint
+COPY entrypoint.sh /usr/bin/entrypoint
 RUN chmod +x /usr/bin/*
 
-RUN apt-get update -qq; DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
- fuse libcurl4 libxml2 openssl ca-certificates kmod \
- nfs-kernel-server runit inotify-tools \
- && rm -rf /var/lib/apt/lists/*
+ARG NFS_VERSION=1:1.3.4-2.1ubuntu5
+RUN set -x && \
+    apt-get update && apt-get install -qq -y --no-install-recommends \
+    nfs-kernel-server=${NFS_VERSION} \
+    fuse libcurl4 libxml2 openssl ca-certificates kmod && \
+    rm -rf /var/lib/apt/lists/* && \
+    mkdir /exports
 
 WORKDIR /data
 VOLUME /data
-
-COPY nfs.init /etc/sv/nfs/run
-COPY nfs.stop /etc/sv/nfs/finish
-COPY nfs_setup.sh /usr/bin/nfs_setup
-
 VOLUME /exports
 
 EXPOSE 111/udp 2049/tcp
 
-ENTRYPOINT ["tini", "--", "/entrypoint"]
+ENTRYPOINT ["tini", "--", "/usr/bin/entrypoint"]

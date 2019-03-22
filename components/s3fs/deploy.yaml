@@ -116,6 +116,7 @@ spec:
     port: 20048
   - name: rpcbind
     port: 111
+    protocol: UDP
   selector:
     provider: agilestacks.com
     project:  kubeflow

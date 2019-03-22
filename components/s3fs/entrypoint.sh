@@ -21,4 +21,4 @@ fi
 echo "Starting s3fs"
 set -x 
 s3fs "${S3_BUCKET}" "/data" -d -f -o ${OPTS} $@ &
-nfs_setup /data
+nfs-entrypoint "/data"
