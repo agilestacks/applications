@@ -45,4 +45,6 @@ VOLUME /exports
 
 EXPOSE 111/udp 2049/tcp
 
+ENV NFS_SERVER 1
+
 ENTRYPOINT ["tini", "--", "/usr/bin/entrypoint"]

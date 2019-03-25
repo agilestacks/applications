@@ -18,7 +18,22 @@ else
 	OPTS="${OPTS} -o iam_role=${IAM_ROLE}"
 fi
 
-echo "Starting s3fs"
-set -x 
-s3fs "${S3_BUCKET}" "/data" -d -f -o ${OPTS} $@ &
-nfs-entrypoint "/data"
+(
+	echo "Starting s3fs"
+	set -x 
+	s3fs "${S3_BUCKET}" "/data" -d -f -o ${OPTS} $@ &
+	set +x
+	echo "s3fs started"
+)
+
+if test "${NFS_SERVER}" -eq "1"; then
+	(
+		echo "Starting nfs"
+		set -x 
+		nfs-entrypoint "/data"
+		set +x
+		echo "nfs started"
+	)
+fi
+
+sleep infinity
