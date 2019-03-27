@@ -8,8 +8,10 @@ While work in progress here are some getting started instructions that shall be 
 
 ```bash
 export GITHUB_TOKEN=your-github-api-token
-git clone --depth 1 --no-checkout --filter=blob:none https://$GITHUB_TOKEN@github.com/agilestacks/applications wip
-git -C wip checkout master -- app-templates/kubeflow-pipeline
+git -C work init
+git -C work remote add origin https://$GITHUB_TOKEN@github.com/agilestacks/applications
+git -C work fetch origin/master
+git -C work checkout origin/master -- app-templates/kubeflow-pipeline
 ```
 
 Grant access to Jupyter keyring
