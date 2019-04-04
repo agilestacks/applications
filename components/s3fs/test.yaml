@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubuntu
+spec:
+  selector:
+    matchLabels:
+      app: ubuntu
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ubuntu
+    spec:
+      containers:
+      - name: ubuntu
+        image: ubuntu:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: data2
+          mountPath: /data2
+        command: [ "/bin/bash", "-c", "--" ]
+        args: [ "sleep infinity" ]
+      volumes:
+      - name: data2
+        flexVolume:
+          driver: "goofysflex"
+          options:
+            # Required
+            bucket: "default"
+            endpoint: "https://cluster-red-minio.app.cluster-red.antoncloud1.superhub.io"
+            access-key: "admin"
+            secret-key: "Admin12345"
+      # - name: data
+      #   nfs:
+      #     # URL for the NFS server
+      #     server: 10.3.171.111 # Change this!
+      #     path: /
+      # - name: data
+      #   persistentVolumeClaim:
+      #    claimName: nfs-bucket

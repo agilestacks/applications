@@ -26,14 +26,14 @@ fi
 	echo "s3fs started"
 )
 
-if test "${NFS_SERVER}" -eq "1"; then
-	(
-		echo "Starting nfs"
-		set -x 
-		nfs-entrypoint "/data"
-		set +x
-		echo "nfs started"
-	)
-fi
+# if test "${NFS_SERVER}" -eq "1"; then
+# 	(
+# 		echo "Starting nfs"
+# 		set -x 
+# 		nfs-entrypoint "/data"
+# 		set +x
+# 		echo "nfs started"
+# 	)
+# fi
 
 sleep infinity
