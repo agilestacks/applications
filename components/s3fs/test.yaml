@@ -1,3 +1,13 @@
+---
+apiVersion: v1
+kind: Secret
+type: goofysflex
+metadata:
+  name: minio-creds
+data:
+  accesskey: YWRtaW4=
+  secretkey: QWRtaW4xMjM0NQ==
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -26,12 +36,12 @@ spec:
       - name: data2
         flexVolume:
           driver: "goofysflex"
+          secretRef:
+            name: minio-creds
           options:
             # Required
             bucket: "default"
             endpoint: "https://cluster-red-minio.app.cluster-red.antoncloud1.superhub.io"
-            access-key: "admin"
-            secret-key: "Admin12345"
       # - name: data
       #   nfs:
       #     # URL for the NFS server

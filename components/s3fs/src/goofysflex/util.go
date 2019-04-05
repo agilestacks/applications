@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/sha1"
+	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -17,62 +18,17 @@ import (
 	// "github.com/go-errors/errors"
 )
 
-// Response is a canonical form of flex drive response
-type Response struct {
-	Status       string       `json:"status,omitempty"`
-	Message      string       `json:"message,omitempty"`
-	Device       string       `json:"device,omitempty"`
-	VolumeName   string       `json:"volumeName,omitempty"`
-	Attached     bool         `json:"attached,omitempty"`
-	Capabilities Capabilities `json:"capabilities,omitempty"`
-}
-
-// Capabilities is a canonical form of init capabilities
-type Capabilities struct {
-	Attach bool `json:"attach,omitempty"`
-}
-
-var logfile *os.File
-
-func printJSON(data interface{}) {
+func printJSON(data interface{}) error {
 	jsonBytes, err := json.Marshal(data)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Print(string(jsonBytes))
-}
-
-func respondError(err error) {
-	resp := Response{
-		Status:  "Failure",
-		Message: err.Error(),
+	resp := string(jsonBytes)
+	if !isInit() {
+		logrus.Infof("Response: %s", resp)
 	}
-	printJSON(resp)
-}
-
-func respondMessage(text string) {
-	resp := Response{
-		Status:  "Success",
-		Message: text,
-	}
-	printJSON(resp)
-}
-
-func respondSuccess() {
-	resp := Response{
-		Status: "Success",
-	}
-	printJSON(resp)
-}
-
-func respondCapabilities() {
-	resp := Response{
-		Status: "Success",
-		Capabilities: Capabilities{
-			Attach: false,
-		},
-	}
-	printJSON(resp)
+	_, err = fmt.Print(resp)
+	return err
 }
 
 //hash convers string into sha1
@@ -149,4 +105,12 @@ func init() {
 	if verbose {
 		logrus.SetLevel(logrus.DebugLevel)
 	}
+}
+
+func decodeBase64(encoded string) string {
+	bytes, err := base64.StdEncoding.DecodeString(encoded)
+	if err != nil {
+		logrus.Errorf(err.Error())
+	}
+	return string(bytes)
 }

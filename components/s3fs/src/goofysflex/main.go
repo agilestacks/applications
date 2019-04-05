@@ -14,20 +14,12 @@ import (
 
 var app = "goofysflex"
 var version = "development"
+var logfile *os.File
 
-// MountOptions structure encapsulates config options
-type MountOptions struct {
-	AccessKey string `json:"access-key,omitempty"`
-	Bucket    string `json:"bucket,omitempty"`
-	SecretKey string `json:"secret-key,omitempty"`
-	SubPath   string `json:"sub-path,omitempty"`
-	Region    string `json:"region,omitempty"`
-	Endpoint  string `json:"endpoint,omitempty"`
-	DirMode   string `json:"dir-mode,omitempty"`
-	FileMode  string `json:"file-mode,omitempty"`
-	GID       string `json:"gid,omitempty"`
-	UID       string `json:"uid,omitempty"`
-	ACL       string `json:"acl,omitempty"`
+// isInit returns true if "init" command has been called
+// works independently from cobra
+func isInit() bool {
+	return len(os.Args) >= 2 && os.Args[1] == "init"
 }
 
 func isMountPoint(path string) bool {
@@ -37,6 +29,14 @@ func isMountPoint(path string) bool {
 		return false
 	}
 	return true
+}
+
+// GetVolumeName returns name of the volume by getting it from PV name or generate one
+func GetVolumeName(opts MountOptions) string {
+	if opts.PVName != "" {
+		return opts.PVName
+	}
+	return opts.genVolumeName()
 }
 
 // Mount ... this function creates a new volume mount
@@ -63,14 +63,14 @@ func Mount(target string, opts MountOptions) error {
 	}
 
 	// to avoid collisions we generate synthetic
-	var bucket, mountPath string
+	var bucket string
 	if opts.SubPath != "" {
 		bucket = opts.Bucket + ":" + opts.SubPath
-		mountPath = path.Join(cwd(), "mnt", hash(opts.Bucket+"/"+opts.SubPath))
 	} else {
 		bucket = opts.Bucket
-		mountPath = path.Join(cwd(), "mnt", hash(opts.Bucket))
 	}
+
+	mountPath := path.Join(cwd(), "mnt", opts.genVolumeName())
 	args = append(args, bucket, mountPath)
 
 	if !isMountPoint(mountPath) {
@@ -82,11 +82,13 @@ func Mount(target string, opts MountOptions) error {
 		const bin = "goofys"
 		mountCmd := exec.Command(bin, args...)
 		mountCmd.Env = os.Environ()
-		if opts.AccessKey != "" {
-			mountCmd.Env = applyEnvVar(mountCmd.Env, "AWS_ACCESS_KEY_ID", opts.AccessKey)
+		if opts.AccessKeyB64 != "" {
+			s := decodeBase64(opts.AccessKeyB64)
+			mountCmd.Env = applyEnvVar(mountCmd.Env, "AWS_ACCESS_KEY_ID", s)
 		}
-		if opts.SecretKey != "" {
-			mountCmd.Env = applyEnvVar(mountCmd.Env, "AWS_SECRET_ACCESS_KEY", opts.SecretKey)
+		if opts.SecretKeyB64 != "" {
+			s := decodeBase64(opts.SecretKeyB64)
+			mountCmd.Env = applyEnvVar(mountCmd.Env, "AWS_SECRET_ACCESS_KEY", s)
 		}
 
 		var stderr bytes.Buffer
@@ -133,6 +135,22 @@ func Unmount(target string) error {
 	return err
 }
 
+// genVolumeName returns synthetic but consistent across nodes
+func (opts *MountOptions) genVolumeName() string {
+	data := []string{}
+	if opts.Endpoint != "" {
+		data = append(data, opts.Endpoint)
+	}
+	if opts.Bucket != "" {
+		data = append(data, opts.Bucket)
+	}
+	if opts.SubPath != "" {
+		data = append(data, opts.SubPath)
+	}
+	dataS := strings.Join(data, "/")
+	return hash(dataS)
+}
+
 func init() {
 	// put cwd to path
 	if os.Getenv("PATH") != "" {
@@ -143,6 +161,9 @@ func init() {
 }
 
 func main() {
+	if !isInit() {
+		logrus.Infof("Exec: %v", strings.Join(os.Args[1:], " "))
+	}
 	defer logfile.Close()
 	// logrus.Infof("Starting %s ver: %s", app, version)
 	err := rootCmd.Execute()
