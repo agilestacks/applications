@@ -10,7 +10,7 @@ While work in progress here are some getting started instructions that shall be 
 export GITHUB_TOKEN=your-github-api-token
 git -C work init
 git -C work remote add origin https://$GITHUB_TOKEN@github.com/agilestacks/applications
-git -C work fetch origin/master
+git -C work fetch
 git -C work checkout origin/master -- app-templates/kubeflow-pipeline
 ```
 
