@@ -21,8 +21,8 @@ spec:
         volumeMounts:
         - mountPath: /flexmnt
           name: flexvolume-plugindir
-        - mountPath: /opt/bin
-          name: optbin
+        # - mountPath: /opt/bin
+        #   name: optbin
       containers:
       - name: pause
         image: gcr.io/google-containers/pause
@@ -30,6 +30,6 @@ spec:
       - name: flexvolume-plugindir
         hostPath:
           path: /var/lib/kubelet/volumeplugins
-      - name: optbin
-        hostPath:
-          path: /opt/bin
+      # - name: optbin
+      #   hostPath:
+      #     path: /opt/bin

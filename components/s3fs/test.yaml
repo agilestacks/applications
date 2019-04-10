@@ -41,6 +41,7 @@ spec:
   resources:
     requests:
       storage: 40Gi
+  storageClassName: manual
   selector:
     matchLabels:
       type: fuse

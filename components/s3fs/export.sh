@@ -17,9 +17,9 @@ mkdir -p "${driver_dir}"
 rm -rf "${driver_dir}/goofysflex"
 # rm -rf "${driver_dir}/goofysflex.log"
 
-yes | cp -f "/usr/bin/goofys" "${driver_dir}"
+yes | cp -fn "/usr/bin/goofys" "${driver_dir}"
 yes | cp -f "/usr/bin/goofysflex" "${driver_dir}"
-yes | cp -f "/usr/bin/fusermount" "${driver_dir}"
-yes | cp -f "/usr/bin/tini" "${driver_dir}"
+yes | cp -fn "/usr/bin/fusermount" "${driver_dir}"
+yes | cp -fn "/usr/bin/tini" "${driver_dir}"
 
 # yes | cp -f "/usr/bin/dummy" "${EXPORT_TO}/dummy"
