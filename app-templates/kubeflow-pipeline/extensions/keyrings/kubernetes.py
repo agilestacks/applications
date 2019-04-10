@@ -21,61 +21,65 @@ class KubernetesKeyring(keyring.backend.KeyringBackend):
 
     def __init__(self, secret_name=None, namespace=None):
         self._configure_k8s()
-        self.namespace   = namespace or self._current_namespace()
-        self.api_client  = kube_client.ApiClient()
-        self.corev1      = kube_client.CoreV1Api(self.api_client)
-        self.secret_name = secret_name or environ.get('JUPYTER_KUBERNETES_SECRET', DEFAULT_KUBE_SECRET_NAME)
-
+        self.namespace = namespace or self._current_namespace()
+        self.api_client = kube_client.ApiClient()
+        self.corev1 = kube_client.CoreV1Api(self.api_client)
+        self.secret_name = secret_name or environ.get(
+            'JUPYTER_KUBERNETES_SECRET', DEFAULT_KUBE_SECRET_NAME)
 
     def set_password(self, servicename, username, password):
         api = self.corev1
-        b64 = b64encode( password.encode('utf-8') ).decode('ascii')
+        b64 = b64encode(password.encode('utf-8')).decode('ascii')
         try:
-            secret = api.read_namespaced_secret(self.secret_name, self.namespace)
+            secret = api.read_namespaced_secret(
+                self.secret_name, self.namespace)
             secret.data[servicename] = b64
-            api.replace_namespaced_secret(self.secret_name, self.namespace, secret)
+            api.replace_namespaced_secret(
+                self.secret_name, self.namespace, secret)
         except ApiException:
             secret = _empty_secret(self.secret_name)
             secret.data = {servicename: b64}
             api.create_namespaced_secret(namespace=self.namespace, body=secret)
 
-
     def get_password(self, servicename, username):
         api = self.corev1
         try:
-            secret = api.read_namespaced_secret(self.secret_name, self.namespace)
+            secret = api.read_namespaced_secret(
+                self.secret_name, self.namespace)
             if servicename in secret.data:
-                return b64decode( secret.data[servicename] ).decode('utf-8')
+                return b64decode(secret.data[servicename]).decode('utf-8')
         except ApiException:
             pass
         return None
 
-
     def delete_password(self, servicename, username, password):
         api = self.corev1
         try:
-            secret = api.read_namespaced_secret(self.secret_name, self.namespace)
+            secret = api.read_namespaced_secret(
+                self.secret_name, self.namespace)
             if servicename in secret.data:
                 val = secret.data.pop(servicename)
-                api.replace_namespaced_secret(self.secret_name, self.namespace, secret)
-                return b64decode( val ).encode('utf-8')
+                api.replace_namespaced_secret(
+                    self.secret_name, self.namespace, secret)
+                return b64decode(val).encode('utf-8')
         except ApiException:
             return None
-
 
     def _configure_k8s(self):
         try:
             config.load_kube_config()
-            logging.info('Found local kubernetes config. Initialized with kube_config.')
+            logging.info(
+                'Found local kubernetes config. Initialized with kube_config.')
         except:
-            logging.info('Cannot Find local kubernetes config. Trying in-cluster config.')
+            logging.info(
+                'Cannot Find local kubernetes config. Trying in-cluster config.')
             config.load_incluster_config()
             logging.info('Initialized with in-cluster config.')
 
-
     def _current_namespace(self):
         try:
-            result = config.list_kube_config_contexts()[1].get('context', {}).get('namespace')
+            result = config.list_kube_config_contexts()[1].get(
+                'context', {}).get('namespace')
             if result:
                 return result
         except (IndexError, FileNotFoundError):
@@ -90,6 +94,6 @@ class KubernetesKeyring(keyring.backend.KeyringBackend):
 def _empty_secret(secret_name):
     secret = kube_client.V1Secret()
     secret.metadata = kube_client.V1ObjectMeta(name=secret_name)
-    secret.type = 'Opaque'
+    secret.type = 'JupyterKeyring'
     secret.data = {}
     return secret

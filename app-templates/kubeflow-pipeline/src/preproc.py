@@ -1,7 +1,14 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-# usage example: ./preproc.py --input_traindf_csv=data-sample.csv --output_body_preprocessor_dpkl=body_preprocessor.dpkl --output_title_preprocessor_dpkl=title_preprocessor.dpkl --output_train_title_vecs_npy=train_title_vecs.npy --output_train_body_vecs_npy=train_body_vecs.npy
+'''
+Preprocess for deep learning
 
+usage example:
+    preproc.py \
+            --input_traindf_csv=data-sample.csv \
+            --output_body_preprocessor_dpkl=body_preprocessor.dpkl \
+            --output_title_preprocessor_dpkl=title_preprocessor.dpkl \
+            --output_train_title_vecs_npy=train_title_vecs.npy \
+            --output_train_body_vecs_npy=train_body_vecs.npy
+'''
 import os
 import logging
 import pandas as pd

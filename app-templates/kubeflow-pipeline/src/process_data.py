@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 
 '''
-usage example: 
+Generates the training and test set. Only processes "sample-size" rows.
+
+usage example:
 process_data.py \
   --input_csv=data-sample.csv \
   --sample_size=200 \
