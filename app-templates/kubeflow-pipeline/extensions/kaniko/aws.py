@@ -11,6 +11,7 @@ from kfp.compiler._k8s_helper import K8sHelper
 from kubernetes.client.rest import ApiException
 from tempfile import NamedTemporaryFile
 
+from os.path import relpath, join
 
 # https://github.com/heroku/kafka-helper/issues/6#issuecomment-365353974
 try:
@@ -36,30 +37,25 @@ def upload_to_s3(
         except FileNotFoundError:
             pass
 
-# def upload_tar_to_s3(
-#         package,
-#         ignorefile='.dockerignore',
-#         s3_client=boto3.client('s3')):
+def tar_and_upload_to_s3(
+        destination,
+        workspace='.',
+        ignorefile='.dockerignore',
+        s3_client=boto3.client('s3')):
 
-#     o = urlparse( package )
-#     bucket = o.netloc
-#     key = o.path.lstrip('/')
-#     file_list = _expand_globs(file_list)
+    o = urlparse(destination)
+    bucket = o.netloc
+    key = o.path.lstrip('/')
+    ignores = _file_to_list(ignorefile)
 
-#     include_files = _expand_globs(['**/*', '*'])
-#     exclude_globs = _file_to_list(ignorefile)
-#     exclude_files = _expand_globs(exclude_globs)
-
-#     with NamedTemporaryFile(suffix='.tar.gz') as tmpfile:
-#         with tarfile.open(tmpfile.name, 'w:gz') as tar:
-#             for f in file_list:
-#                 if f in exclude_files:
-#                     continue
-#                 try:
-#                     tar.add(f, arcname=f)
-#                 except FileNotFoundError:
-#                     pass
-#         s3_client.upload_file(tmpfile.name, bucket, key)
+    with NamedTemporaryFile(suffix='.tar.gz') as tmpfile:
+        with tarfile.open(tmpfile.name, 'w:gz') as tar:
+            for f in _file_list('.', ignores):
+                try:
+                    tar.add(f, arcname=f)
+                except FileNotFoundError:
+                    pass
+        s3_client.upload_file(tmpfile.name, bucket, key)
 
 def create_secret_from_session(
         secret_name='jupyter-awscreds',
@@ -203,10 +199,10 @@ def _match(filename, filters):
             return True
     return False
 
-def _file_list(dir, ignorelist):
+def _file_list(dir, ignorelist=[]):
     result = list()
     for root, d_names, f_names in os.walk(dir):
-        full_names = [os.path.join(root, f) for f in f_names]
+        full_names = [relpath(join(root, f)) for f in f_names]
         for n in full_names:
             if not _match(n, ignorelist):
                 result.append(n)

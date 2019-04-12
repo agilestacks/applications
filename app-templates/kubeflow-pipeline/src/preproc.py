@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 '''
 Preprocess for deep learning
 
@@ -66,4 +67,3 @@ with open(args.output_title_preprocessor_dpkl, 'wb') as f:
 # Save the processed data.
 np.save(args.output_train_title_vecs_npy, train_title_vecs)
 np.save(args.output_train_body_vecs_npy, train_body_vecs)
-

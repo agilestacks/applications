@@ -71,3 +71,4 @@ app-templates/kubeflow-pipeline/*.csv
 Dockerfile.dataprep
 app-templates/kubeflow-pipeline/tmp
 components/s3fs
+app-templates/kubeflow-pipeline/data

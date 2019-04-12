@@ -1,7 +1,5 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 '''
-usage example: 
+usage example:
 
 train.py --input_body_preprocessor_dpkl=body_preprocessor.dpkl \
   --input_title_preprocessor_dpkl=title_preprocessor.dpkl \
@@ -18,6 +16,8 @@ from keras.layers import Input, GRU, Dense, Embedding, BatchNormalization
 from keras.models import Model
 from keras import optimizers
 from seq2seq_utils import load_decoder_inputs, load_encoder_inputs, load_text_processor
+import shutil, tempfile
+
 
 # Parsing flags.
 parser = argparse.ArgumentParser()
@@ -27,6 +27,8 @@ parser.add_argument("--input_train_title_vecs_npy")
 parser.add_argument("--input_train_body_vecs_npy")
 parser.add_argument("--output_model_h5")
 parser.add_argument("--learning_rate", default="0.001")
+parser.add_argument("--script_name_base", default='seq2seq')
+parser.add_argument("--tempfile", default=True)
 args = parser.parse_args()
 print(args)
 
@@ -94,7 +96,7 @@ seq2seq_Model.compile(optimizer=optimizers.Nadam(lr=learning_rate),
 
 seq2seq_Model.summary()
 
-script_name_base = 'tutorial_seq2seq'
+script_name_base = args.script_name_base
 csv_logger = CSVLogger('{:}.log'.format(script_name_base))
 model_checkpoint = ModelCheckpoint(
     '{:}.epoch{{epoch:02d}}-val{{val_loss:.5f}}.hdf5'.format(script_name_base), save_best_only=True)
@@ -108,7 +110,21 @@ history = seq2seq_Model.fit([encoder_input_data, decoder_input_data],
                             validation_split=0.12,
                             callbacks=[csv_logger, model_checkpoint])
 
+print("Saving model...")
 #############
 # Save model.
 #############
-seq2seq_Model.save(args.output_model_h5)
+if args.tempfile:
+    # Workaround because of: at present goofys support only parallel write
+    # see: https://github.com/kahing/goofys/issues/298
+    # TODO configure h5py to write sequentially
+    # TODO consider other flex driver
+    _, fname = tempfile.mkstemp('.h5')
+    print(f"Saving to {fname}")
+    seq2seq_Model.save(fname)
+    print(f"Exporting to {args.output_model_h5}")
+    shutil.copy2(fname, args.output_model_h5)
+else:
+    print(f"Saving to {args.output_model_h5}")
+    seq2seq_Model.save(args.output_model_h5)
+print("Done!")

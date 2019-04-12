@@ -1,0 +1,46 @@
+apiVersion: "machinelearning.seldon.io/v1alpha1"
+kind: "SeldonDeployment"
+metadata:
+  labels:
+    app: "seldon"
+    name: "{{NAME}}"
+    namespace: "{{NAMESPACE}}"
+spec:
+  annotations:
+    deployment_version: "v1"
+    project_name: "{{NAME}}"
+  name: "{{NAME}}"
+  predictors:
+  - annotations:
+      predictor_version: "v1"
+    componentSpec:
+      spec:
+        containers:
+        - name: "{{NAME}}"
+          image: "{{SERVING_IMAGE}}"
+          imagePullPolicy: "Always"
+          env:
+          - name: MODEL_FILE
+            value: "{{MODEL_FILE}}"
+          - name: TITLE_PP_FILE
+            value: "{{TITLE_PP_FILE}}"
+          - name: BODY_PP_FILE
+            value: "{{BODY_PP_FILE}}"
+          # - name: MODEL_NAME
+          #   value: IssueSummarization
+          # - naem: API_TYPE
+          #   value: REST
+          # - name: SERVICE_TYPE
+          #   value: MODEL
+          # - name: PERSISTENCE
+          #   value: '0'
+        terminationGracePeriodSeconds: 1
+    graph:
+      children: []
+      name: "{{NAME}}"
+      type: "MODEL"
+      replicas: 2
+      endpoint:
+        type: "REST"
+      labels:
+        version : "v1"
