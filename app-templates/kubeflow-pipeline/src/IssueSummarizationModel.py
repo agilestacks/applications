@@ -13,15 +13,15 @@ from keras.models import load_model
 from seq2seq_utils import Seq2Seq_Inference
 
 
-class IssueSummarizationModel(object):
+class IssueSummarization(object):
 
   def __init__(self):
-    body_pp_file = os.getenv('BODY_PP_FILE', '/data/body_preprocessor.dpkl')
+    body_pp_file = os.getenv('BODY_PP_FILE', 'body_pp.dpkl')
     print('body_pp file {0}'.format(body_pp_file))
     with open(body_pp_file, 'rb') as body_file:
       body_pp = dpickle.load(body_file)
 
-    title_pp_file = os.getenv('TITLE_PP_FILE', '/data/output_model.h5')
+    title_pp_file = os.getenv('TITLE_PP_FILE', 'title_pp.dpkl')
     print('title_pp file {0}'.format(title_pp_file))
     with open(title_pp_file, 'rb') as title_file:
       title_pp = dpickle.load(title_file)

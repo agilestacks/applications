@@ -26,20 +26,20 @@ spec:
             value: "{{TITLE_PP_FILE}}"
           - name: BODY_PP_FILE
             value: "{{BODY_PP_FILE}}"
-          # - name: MODEL_NAME
-          #   value: IssueSummarization
-          # - naem: API_TYPE
-          #   value: REST
-          # - name: SERVICE_TYPE
-          #   value: MODEL
-          # - name: PERSISTENCE
-          #   value: '0'
+          volumeMounts:
+          - name: "{{PVC_NAME}}"
+            mountPath": "{{MOUNT_POINT}}"
         terminationGracePeriodSeconds: 1
+        volumes:
+        - name: "{{PVC_NAME}}"
+				  volumeSource:
+            persistentVolumeClaim":
+					    claimName: "{{PVC_NAME}}"
     graph:
       children: []
       name: "{{NAME}}"
       type: "MODEL"
-      replicas: 2
+      replicas: "{{REPLICAS}}"
       endpoint:
         type: "REST"
       labels:
