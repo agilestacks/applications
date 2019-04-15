@@ -30,12 +30,33 @@ def upload_to_s3(
     bucket = o.netloc
     prefix = o.path.lstrip('/')
     ignores = _file_to_list(ignorefile)
+    count = 0
     for f in _file_list('.', ignores):
         key = os.path.join(prefix, f)
         try:
             s3_client.upload_file(f, bucket, key)
+            count += 1
         except FileNotFoundError:
             pass
+
+    if _is_ipython():
+        import IPython
+        url = s3_client.generate_presigned_url(
+            ClientMethod='get_object',
+                Params={
+                    'Bucket': bucket,
+                    'Key': prefix
+                },
+                ExpiresIn=1800)
+
+        endpoint = s3_client.meta.endpoint_url.rstrip("/")
+        if _is_minio(s3_client, bucket):
+            url = f"{endpoint}/minio/{bucket}/{prefix}/"
+        else:
+            url = f"{s3_client.meta.endpoint_url}/{bucket}/{prefix}/"
+
+        html = f'Uploaded <a href="{url}" target="_blank" > {count} </a> files '
+        IPython.display.display(IPython.display.HTML(html))
 
 def tar_and_upload_to_s3(
         destination,
@@ -207,3 +228,21 @@ def _file_list(dir, ignorelist=[]):
             if not _match(n, ignorelist):
                 result.append(n)
     return result
+
+
+def _is_ipython():
+    """Returns whether we are running in notebook."""
+    try:
+      import IPython
+    except ImportError:
+      return False
+
+    return True
+
+
+def _is_minio(s3_client, bucket):
+    serv = s3_client.get_bucket_location(Bucket=bucket)\
+            .get('ResponseMetadata', {})\
+            .get('HTTPHeaders',{})\
+            .get('server', "")
+    return serv.lower().startswith("minio")
