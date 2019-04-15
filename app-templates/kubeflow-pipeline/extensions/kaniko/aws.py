@@ -31,10 +31,12 @@ def upload_to_s3(
     prefix = o.path.lstrip('/')
     ignores = _file_to_list(ignorefile)
     count = 0
+    total_size = 0
     for f in _file_list('.', ignores):
         key = os.path.join(prefix, f)
         try:
             s3_client.upload_file(f, bucket, key)
+            total_size += os.path.getsize(f)
             count += 1
         except FileNotFoundError:
             pass
@@ -53,9 +55,15 @@ def upload_to_s3(
         if _is_minio(s3_client, bucket):
             url = f"{endpoint}/minio/{bucket}/{prefix}/"
         else:
-            url = f"{s3_client.meta.endpoint_url}/{bucket}/{prefix}/"
+            url = f"{endpoint}/{bucket}/{prefix}/"
 
-        html = f'Uploaded <a href="{url}" target="_blank" > {count} </a> files '
+        total_sizeF = _format_bytes(total_size)
+        if count == 1:
+            countS = f"{count} file"
+        else:
+            countS = f"{count} files"
+
+        html = f'Uploaded <a href="{url}" target="_blank" > {countS}</a>, total: {total_sizeF}'
         IPython.display.display(IPython.display.HTML(html))
 
 def tar_and_upload_to_s3(
@@ -233,9 +241,9 @@ def _file_list(dir, ignorelist=[]):
 def _is_ipython():
     """Returns whether we are running in notebook."""
     try:
-      import IPython
+        import IPython
     except ImportError:
-      return False
+        return False
 
     return True
 
@@ -246,3 +254,16 @@ def _is_minio(s3_client, bucket):
             .get('HTTPHeaders',{})\
             .get('server', "")
     return serv.lower().startswith("minio")
+
+def _format_bytes(bytes_num):
+    sizes = [ "B", "KB", "MB", "GB", "TB" ]
+
+    i = 0
+    dblbyte = bytes_num
+
+    while (i < len(sizes) and  bytes_num >= 1024):
+            dblbyte = bytes_num / 1024.0
+            i = i + 1
+            bytes_num = bytes_num / 1024
+
+    return str(round(dblbyte, 2)) + " " + sizes[i]
