@@ -6,6 +6,7 @@ SECRET_CREDENTIALS := `$(kubectl) --namespace="$(PULL_SECRET_NAMESPACE)" get sec
 
 deploy:
 	@env | sort
+	sleep 10
 ifneq ($(PULL_SECRET_NAME),)
 	hub render templates/$(CREDENTIALS_KIND).yaml $(SECRET_CREDENTIALS)
 endif
