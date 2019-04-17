@@ -11,7 +11,8 @@ from kfp.compiler._k8s_helper import K8sHelper
 from kubernetes.client.rest import ApiException
 from tempfile import NamedTemporaryFile
 
-from os.path import relpath, join
+from os.path import relpath, join, getmtime, getsize
+from datetime import datetime
 
 # https://github.com/heroku/kafka-helper/issues/6#issuecomment-365353974
 try:
@@ -32,11 +33,32 @@ def upload_to_s3(
     ignores = _file_to_list(ignorefile)
     count = 0
     total_size = 0
-    for f in _file_list('.', ignores):
-        key = os.path.join(prefix, f)
+
+    bucket_keys = s3_client.list_objects(
+        Bucket=bucket,
+        Prefix=prefix
+    ).get('Contents', [])
+
+    bucket_mtimes = {}
+    for k in bucket_keys:
+        key = k['Key']
+        if key.startswith(prefix+'/'):
+            key = key[len(prefix)+1:]
+        bucket_mtimes[key] = k.get('LastModified', datetime.min).timestamp()
+
+    local_files = _file_list('.', ignores)
+
+    local_files = [
+        f for f in local_files \
+        if f not in bucket_mtimes
+        or bucket_mtimes[f] < getmtime(f)
+    ]
+
+    for f in local_files:
+        key = join(prefix, f)
         try:
             s3_client.upload_file(f, bucket, key)
-            total_size += os.path.getsize(f)
+            total_size += getsize(f)
             count += 1
         except FileNotFoundError:
             pass
@@ -63,7 +85,7 @@ def upload_to_s3(
         else:
             countS = f"{count} files"
 
-        html = f'Uploaded <a href="{url}" target="_blank" > {countS}</a>, total: {total_sizeF}'
+        html = f'Uploaded {total_sizeF}; total: <a href="{url}" target="_blank" >{countS}</a>'
         IPython.display.display(IPython.display.HTML(html))
 
 def tar_and_upload_to_s3(
