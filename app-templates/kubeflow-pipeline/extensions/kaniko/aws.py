@@ -79,13 +79,13 @@ def upload_to_s3(
         else:
             url = f"{endpoint}/{bucket}/{prefix}/"
 
-        total_sizeF = _format_bytes(total_size)
+        total_sizeS = _format_bytes(total_size)
         if count == 1:
             countS = f"{count} file"
         else:
             countS = f"{count} files"
 
-        html = f'Uploaded {total_sizeF}; total: <a href="{url}" target="_blank" >{countS}</a>'
+        html = f'Uploaded <a href="{url}" target="_blank" >{countS}</a>; transferred: {total_sizeS}'
         IPython.display.display(IPython.display.HTML(html))
 
 def tar_and_upload_to_s3(
@@ -108,6 +108,7 @@ def tar_and_upload_to_s3(
                     pass
         s3_client.upload_file(tmpfile.name, bucket, key)
 
+
 def create_secret_from_session(
         secret_name='jupyter-awscreds',
         session=boto3.session.Session(),
@@ -120,6 +121,7 @@ def create_secret_from_session(
         token=creds.token,
         namespace=namespace,
     )
+
 
 def create_secret(
         secret_name='jupyter-awscreds',
@@ -149,6 +151,7 @@ def create_secret(
             type = 'Opaque'
         )
         api.create_namespaced_secret(namespace=namespace, body=secret)
+
 
 def use_aws_envvars_from_secret(
         secret_name='jupyter-awscreds',
@@ -221,6 +224,7 @@ def _file_to_list(filename):
     with open(filename) as f:
         return f.read().splitlines()
 
+
 def current_namespace():
     try:
         result = kube_config.list_kube_config_contexts()[1].get('context', {}).get('namespace')
@@ -244,11 +248,13 @@ def get_region_from_metadata():
     except ConnectTimeout:
         return None
 
+
 def _match(filename, filters):
     for f in filters:
         if fnmatch.fnmatch(filename, f):
             return True
     return False
+
 
 def _file_list(dir, ignorelist=[]):
     result = list()
@@ -276,6 +282,7 @@ def _is_minio(s3_client, bucket):
             .get('HTTPHeaders',{})\
             .get('server', "")
     return serv.lower().startswith("minio")
+
 
 def _format_bytes(bytes_num):
     sizes = [ "B", "KB", "MB", "GB", "TB" ]
