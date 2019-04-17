@@ -1,46 +1,45 @@
-apiVersion: "machinelearning.seldon.io/v1alpha1"
+apiVersion: "machinelearning.seldon.io/v1alpha2"
 kind: "SeldonDeployment"
 metadata:
+  name: "anton-agilestacks-com"
+  namespace: "kubeflow"
   labels:
     app: "seldon"
-    name: "{{NAME}}"
-    namespace: "{{NAMESPACE}}"
 spec:
   annotations:
     deployment_version: "v1"
-    project_name: "{{NAME}}"
-  name: "{{NAME}}"
+    project_name: "anton-agilestacks-com"
+  name: "anton-agilestacks-com"
   predictors:
   - annotations:
       predictor_version: "v1"
-    componentSpec:
-      spec:
+    componentSpecs:
+    - spec:
         containers:
-        - name: "{{NAME}}"
-          image: "{{SERVING_IMAGE}}"
+        - name: "anton-agilestacks-com"
+          image: "kubeflow-harbor.svc.cluster-red.antoncloud.superhub.io/library/seldon:5"
           imagePullPolicy: "Always"
           env:
           - name: MODEL_FILE
-            value: "{{MODEL_FILE}}"
+            value: "/mnt/s3/training/training1.h5"
           - name: TITLE_PP_FILE
-            value: "{{TITLE_PP_FILE}}"
+            value: "/mnt/s3/training/title_preprocessor.dpkl"
           - name: BODY_PP_FILE
-            value: "{{BODY_PP_FILE}}"
+            value: "/mnt/s3/training/body_preprocessor.dpkl"
           volumeMounts:
-          - name: "{{PVC_NAME}}"
-            mountPath": "{{MOUNT_POINT}}"
+          - mountPath: ""
+            name: "persistent-storage"
         terminationGracePeriodSeconds: 1
         volumes:
-        - name: "{{PVC_NAME}}"
-				  volumeSource:
-            persistentVolumeClaim":
-					    claimName: "{{PVC_NAME}}"
+        - name: "persistent-storage"
+          volumeSource:
+            persistentVolumeClaim:
+              claimName: "anton-agilestacks-com-bucket"
     graph:
       children: []
-      name: "{{NAME}}"
-      type: "MODEL"
-      replicas: "{{REPLICAS}}"
       endpoint:
         type: "REST"
-      labels:
-        version : "v1"
+      name: "anton-agilestacks-com"
+      type: "MODEL"
+    name: "anton-agilestacks-com"
+    replicas: 1
