@@ -1,45 +1,54 @@
 apiVersion: "machinelearning.seldon.io/v1alpha2"
 kind: "SeldonDeployment"
 metadata:
-  name: "anton-agilestacks-com"
-  namespace: "kubeflow"
+  name: "{{NAME}}"
+  namespace: "{{NAMESPACE}}"
   labels:
     app: "seldon"
 spec:
   annotations:
-    deployment_version: "v1"
-    project_name: "anton-agilestacks-com"
-  name: "anton-agilestacks-com"
+    deployment_version: "{{VERSION}}"
+    project_name: "{{NAME}}"
+    seldon.io/ambassador-config: |-
+      ---
+      apiVersion: ambassador/v0
+      kind:  Mapping
+      name: "serving-{{NAME}}"
+      prefix: serving/models/{{NAME}}/
+      rewrite: /v1/models/{{NAME}}:predict
+      method: POST
+      service: "{{NAME}}.{{NAMESPACE}}:5000"
+  name: "{{NAME}}"
   predictors:
   - annotations:
-      predictor_version: "v1"
+      predictor_version: "{{VERSION}}"
     componentSpecs:
     - spec:
         containers:
-        - name: "anton-agilestacks-com"
-          image: "kubeflow-harbor.svc.cluster-red.antoncloud.superhub.io/library/seldon:5"
+        - name: "{{NAME}}"
+          image: "{{SERVING_IMAGE}}"
           imagePullPolicy: "Always"
           env:
           - name: MODEL_FILE
-            value: "/mnt/s3/training/training1.h5"
+            value: "{{MODEL_FILE}}"
           - name: TITLE_PP_FILE
-            value: "/mnt/s3/training/title_preprocessor.dpkl"
+            value: "{{TITLE_PP_FILE}}"
           - name: BODY_PP_FILE
-            value: "/mnt/s3/training/body_preprocessor.dpkl"
+            value: "{{BODY_PP_FILE}}"
           volumeMounts:
-          - mountPath: ""
+          - mountPath: "{{MOUNT_POINT}}"
             name: "persistent-storage"
         terminationGracePeriodSeconds: 1
         volumes:
         - name: "persistent-storage"
           volumeSource:
             persistentVolumeClaim:
-              claimName: "anton-agilestacks-com-bucket"
+              claimName: "{{PVC_NAME}}"
     graph:
       children: []
       endpoint:
         type: "REST"
-      name: "anton-agilestacks-com"
+      name: "{{NAME}}"
       type: "MODEL"
-    name: "anton-agilestacks-com"
-    replicas: 1
+    name: "{{NAME}}"
+    replicas: {{REPLICAS}}
