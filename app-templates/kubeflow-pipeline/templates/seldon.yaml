@@ -1,31 +1,31 @@
 apiVersion: "machinelearning.seldon.io/v1alpha2"
 kind: "SeldonDeployment"
 metadata:
-  name: "{{NAME}}"
+  name: "{{MODEL_NAME}}"
   namespace: "{{NAMESPACE}}"
   labels:
     app: "seldon"
 spec:
   annotations:
-    deployment_version: "{{VERSION}}"
-    project_name: "{{NAME}}"
-    seldon.io/ambassador-config: |-
-      ---
-      apiVersion: ambassador/v0
-      kind:  Mapping
-      name: "serving-{{NAME}}"
-      prefix: serving/models/{{NAME}}/
-      rewrite: /v1/models/{{NAME}}:predict
-      method: POST
-      service: "{{NAME}}.{{NAMESPACE}}:5000"
-  name: "{{NAME}}"
+    deployment_version: "{{MODEL_VERSION}}"
+    project_name: "{{MODEL_NAME}}"
+    # seldon.io/ambassador-config: |-
+    #   ---
+    #   apiVersion: ambassador/v0
+    #   kind:  Mapping
+    #   name: "serving-{{MODEL_NAME}}"
+    #   prefix: serving/models/{{MODEL_NAME}}/
+    #   rewrite: /v1/models/{{MODEL_NAME}}:predict
+    #   method: POST
+    #   service: "{{MODEL_NAME}}.{{NAMESPACE}}:5000"
+  name: "{{MODEL_NAME}}"
   predictors:
   - annotations:
-      predictor_version: "{{VERSION}}"
+      predictor_version: "{{MODEL_VERSION}}"
     componentSpecs:
     - spec:
         containers:
-        - name: "{{NAME}}"
+        - name: "{{MODEL_NAME}}"
           image: "{{SERVING_IMAGE}}"
           imagePullPolicy: "Always"
           env:
@@ -36,7 +36,7 @@ spec:
           - name: BODY_PP_FILE
             value: "{{BODY_PP_FILE}}"
           volumeMounts:
-          - mountPath: "{{MOUNT_POINT}}"
+          - mountPath: "{{MOUNT_PATH}}"
             name: "persistent-storage"
         terminationGracePeriodSeconds: 1
         volumes:
@@ -48,7 +48,7 @@ spec:
       children: []
       endpoint:
         type: "REST"
-      name: "{{NAME}}"
+      name: "{{MODEL_NAME}}"
       type: "MODEL"
-    name: "{{NAME}}"
+    name: "{{MODEL_NAME}}"
     replicas: {{REPLICAS}}
