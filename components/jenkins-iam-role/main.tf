@@ -20,7 +20,7 @@ resource "aws_iam_role" "jenkins" {
       "Sid": "",
       "Effect": "Allow",
       "Principal": {
-        "AWS": "${data.aws_caller_identity.current.account_id}"
+        "AWS": "*"
       },
       "Action": "sts:AssumeRole"
     }
