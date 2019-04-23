@@ -1,6 +1,6 @@
 terraform {
   required_version = ">= 0.11.3"
-  backend "s3" {}
+  backend          "s3"             {}
 }
 
 provider "aws" {
@@ -11,6 +11,7 @@ data "aws_caller_identity" "current" {}
 
 resource "aws_iam_role" "jenkins" {
   name = "${var.domain_name}-jenkins_iam_role"
+
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -19,7 +20,7 @@ resource "aws_iam_role" "jenkins" {
       "Sid": "",
       "Effect": "Allow",
       "Principal": {
-        "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.worker_role}"
+        "AWS": "${data.aws_caller_identity.current.account_id}"
       },
       "Action": "sts:AssumeRole"
     }
@@ -31,6 +32,7 @@ EOF
 resource "aws_iam_role_policy" "jenkins" {
   name = "jenkins_iam_role_policy"
   role = "${aws_iam_role.jenkins.id}"
+
   policy = <<EOF
 {
     "Version": "2012-10-17",
