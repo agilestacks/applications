@@ -89,6 +89,7 @@ pipeline {
       steps {
         container('toolbox') {
           script {
+            sh script: "hub kubeconfig ${params.APP_STATE_FILE} --switch-kube-context"
             final version = "${gitscm.shortCommit}"
             final outputs = hub.explain(state: params.APP_STATE_FILE).stackOutputs
             final namespaceExists = sh script: "kubectl get namespace ${outputs['application.namespace']}", returnStatus: true
