@@ -8,6 +8,7 @@ While work in progress here are some getting started instructions that shall be 
 
 ```bash
 export GITHUB_TOKEN=your-github-api-token
+mkdir -p work
 git -C work init
 git -C work remote add origin https://$GITHUB_TOKEN@github.com/agilestacks/applications
 git -C work fetch
