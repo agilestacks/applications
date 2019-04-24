@@ -94,6 +94,6 @@ class KubernetesKeyring(keyring.backend.KeyringBackend):
 def _empty_secret(secret_name):
     secret = kube_client.V1Secret()
     secret.metadata = kube_client.V1ObjectMeta(name=secret_name)
-    secret.type = 'JupyterKeyring'
+    secret.type = 'superhub.io/jupyter-keyring'
     secret.data = {}
     return secret
