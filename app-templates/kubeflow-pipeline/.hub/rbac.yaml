@@ -8,7 +8,7 @@ rules:
   - ""
   - "machinelearning.seldon.io"
   resources: [secrets, seldondeployments]
-  verbs: ['create', 'get', 'update', 'delete']
+  verbs: ['create', 'get', 'update', 'delete', 'patch']
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole

@@ -9,16 +9,9 @@ spec:
   annotations:
     deployment_version: "{{MODEL_VERSION}}"
     project_name: "{{MODEL_NAME}}"
-    # seldon.io/ambassador-config: |-
-    #   ---
-    #   apiVersion: ambassador/v0
-    #   kind:  Mapping
-    #   name: "serving-{{MODEL_NAME}}"
-    #   prefix: serving/models/{{MODEL_NAME}}/
-    #   rewrite: /v1/models/{{MODEL_NAME}}:predict
-    #   method: POST
-    #   service: "{{MODEL_NAME}}.{{NAMESPACE}}:5000"
-  name: "{{MODEL_NAME}}"
+  name: "{{SELDON_DEPLOYMENT}}"
+  oauth_key: "{{SELDON_OAUTH_KEY}}"
+  oauth_secret: "{{SELDON_OAUTH_SECRET}}"
   predictors:
   - annotations:
       predictor_version: "{{MODEL_VERSION}}"
