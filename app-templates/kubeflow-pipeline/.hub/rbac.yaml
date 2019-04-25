@@ -6,7 +6,8 @@ metadata:
 rules:
 - apiGroups:
   - ""
-  resources: [secrets]
+  - "machinelearning.seldon.io"
+  resources: [secrets, seldondeployments]
   verbs: ['create', 'get', 'update', 'delete']
 ---
 apiVersion: rbac.authorization.k8s.io/v1
