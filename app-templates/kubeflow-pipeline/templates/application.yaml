@@ -42,15 +42,15 @@ spec:
         imagePullPolicy: Always
         env:
         - name: SERVER_ADDR
-          value: "{{SERVER_ADDR}}"
+          value: "{{SELDON_APISERVER_ADDR}}"
         - name: SAMPLE_DATA
           value: /data/sample.csv
         - name: GITHUB_TOKEN
           value: "{{GITHUB_TOKEN}}"
         - name: OAUTH_KEY
-          value: "{{OAUTH_KEY}}"
+          value: "{{SELDON_OAUTH_KEY}}"
         - name: OAUTH_SECRET
-          value: "{{OAUTH_SECRET}}"
+          value: "{{SELDON_OAUTH_SECRET}}"
         volumeMounts:
         - mountPath: "{{MOUNT_PATH}}"
           name: "data-dir"
