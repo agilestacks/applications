@@ -11,14 +11,25 @@ import pandas as pd
 from flask import Flask, json, render_template, request, g, jsonify
 
 APP = Flask(__name__)
-GITHUB_TOKEN = os.environ['GITHUB_TOKEN']
+GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN', '')
 SAMPLE_DATA = os.environ.get('SAMPLE_DATA', '/data/sample.csv')
-SERVER_URL = os.environ.get('SERVER_URL')
+SERVER_ADDR = os.environ['SERVER_ADDR']
+
+OAUTH_KEY = os.environ.get('OAUTH_KEY', '')
+OAUTH_SECRET = os.environ.get('OAUTH_SECRET', '')
 
 def get_issue_body(issue_url):
     issue_url = re.sub('.*github.com/', 'https://api.github.com/repos/', issue_url)
     return requests.get(issue_url, headers={'Authorization': 'token {}'.format(GITHUB_TOKEN)}).json()['body']
 
+def get_token():
+    """returns bearer token for seldon deployment
+    """
+    response = requests.post(
+                f"http://{SERVER_ADDR}/oauth/token",
+                auth=HTTPBasicAuth(OAUTH_KEY, OAUTH_SECRET),
+                data={'grant_type': 'client_credentials'})
+    return response.json()["access_token"]
 
 @APP.route("/")
 def index():
@@ -39,8 +50,12 @@ def summary():
         issue_url = request.form["issue_url"]
         if issue_url:
                 issue_text = get_issue_body(issue_url)
-        url = "http://issue-summarization.kubeflow.svc.cluster.local:8000/api/v0.1/predictions"
-        headers = {'content-type': 'application/json'}
+        url = f"http://{SERVER_ADDR}/api/v0.1/predictions"
+        token = get_token()
+        headers = {
+            'content-type': 'application/json',
+            'Authorization': f"Bearer {token}"
+        }
         json_data = {"data": {"ndarray": [[issue_text]]}}
         response = requests.post(url=url, headers=headers, data=json.dumps(json_data))
         response_json = json.loads(response.text)
