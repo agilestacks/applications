@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    getambassador.io/config: |-
+      ---
+      apiVersion: ambassador/v0
+      kind:  Mapping
+      name: webapp-{{APPLICATION_NAME}}
+      prefix: /webapp-{{APPLICATION_NAME}}/
+      rewrite: /
+      timeout_ms: 1200000
+      service: {{APPLICATION_NAME}}-flask.{{NAMESPACE}}:80
+  name: "{{APPLICATION_NAME}}-flask"
+  labels:
+    app: "{{APPLICATION_NAME}}"
+    role: frontend
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: "http-server"
+  selector:
+    app: "{{APPLICATION_NAME}}"
+    role: frontend
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: "{{APPLICATION_NAME}}-flask"
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: "{{APPLICATION_NAME}}"
+        role: frontend
+    spec:
+      containers:
+      - name: "{{APPLICATION_NAME}}"
+        image: "{{APPLICATION_DOCKER_IMAGE}}"
+        imagePullPolicy: Always
+        env:
+        - name: SERVER_ADDR
+          value: "{{SERVER_ADDR}}"
+        - name: SAMPLE_DATA
+          value: /data/sample.csv
+        - name: GITHUB_TOKEN
+          value: "{{GITHUB_TOKEN}}"
+        - name: OAUTH_KEY
+          value: "{{OAUTH_KEY}}"
+        - name: OAUTH_SECRET
+          value: "{{OAUTH_SECRET}}"
+        volumeMounts:
+        - mountPath: "{{MOUNT_PATH}}"
+          name: "data-dir"
+        ports:
+        - name: http-server
+          containerPort: 8080
+        # resources:
+        #   limits:
+        #     cpu: "1"
+        #     memory: 4Gi
+        #   requests:
+        #     cpu: "1"
+        #     memory: 1Gi
+      volumes:
+      - name: "data-dir"
+        persistentVolumeClaim:
+          claimName: "{{PVC_NAME}}"
