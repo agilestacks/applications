@@ -1,7 +1,7 @@
 apiVersion: "machinelearning.seldon.io/v1alpha2"
 kind: "SeldonDeployment"
 metadata:
-  name: "{{MODEL_NAME}}"
+  name: "{{SELDON_DEPLOYMENT}}"
   namespace: "{{NAMESPACE}}"
   labels:
     app: "seldon"
@@ -9,7 +9,7 @@ spec:
   annotations:
     deployment_version: "{{MODEL_VERSION}}"
     project_name: "{{MODEL_NAME}}"
-  name: "{{SELDON_DEPLOYMENT}}"
+  name: "{{MODEL_NAME}}"
   oauth_key: "{{SELDON_OAUTH_KEY}}"
   oauth_secret: "{{SELDON_OAUTH_SECRET}}"
   predictors:
@@ -44,4 +44,4 @@ spec:
       name: "{{MODEL_NAME}}"
       type: "MODEL"
     name: "{{MODEL_NAME}}"
-    replicas: {{REPLICAS}}
+    replicas: {{SELDON_DEPLOYMENT_REPLICAS}}

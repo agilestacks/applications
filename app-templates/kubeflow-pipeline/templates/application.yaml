@@ -6,8 +6,8 @@ metadata:
       ---
       apiVersion: ambassador/v0
       kind:  Mapping
-      name: webapp-{{APPLICATION_NAME}}
-      prefix: /webapp-{{APPLICATION_NAME}}/
+      name: {{APPLICATION_NAME}}
+      prefix: /{{APPLICATION_NAME}}/
       rewrite: /
       timeout_ms: 1200000
       service: {{APPLICATION_NAME}}-flask.{{NAMESPACE}}:80
@@ -44,7 +44,7 @@ spec:
         - name: SERVER_ADDR
           value: "{{SELDON_APISERVER_ADDR}}"
         - name: SAMPLE_DATA
-          value: /data/sample.csv
+          value: "{{SAMPLE_DATA}}"
         - name: GITHUB_TOKEN
           value: "{{GITHUB_TOKEN}}"
         - name: OAUTH_KEY
