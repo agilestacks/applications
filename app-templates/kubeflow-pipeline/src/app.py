@@ -9,6 +9,7 @@ import random
 import requests
 import pandas as pd
 from flask import Flask, json, render_template, request, g, jsonify
+from requests.auth import HTTPBasicAuth
 
 APP = Flask(__name__)
 GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN', '')
@@ -69,7 +70,7 @@ def summary():
 def random_github_issue():
     github_issues = getattr(g, '_github_issues', None)
     if github_issues is None:
-        github_issues = g._github_issues = pd.read_csv(SAMPLE_DATA_URL).body.tolist()
+        github_issues = g._github_issues = pd.read_csv(SAMPLE_DATA).body.tolist()
     return jsonify({
         'body':
         github_issues[random.randint(0, len(github_issues) - 1)]

@@ -5,16 +5,17 @@ metadata:
     getambassador.io/config: |-
       ---
       apiVersion: ambassador/v0
-      kind:  Mapping
+      kind: Mapping
       name: {{APPLICATION_NAME}}
       prefix: /{{APPLICATION_NAME}}/
       rewrite: /
-      timeout_ms: 1200000
+      timeout_ms: 300000
       service: {{APPLICATION_NAME}}-flask.{{NAMESPACE}}:80
+      use_websocket: false
   name: "{{APPLICATION_NAME}}-flask"
   labels:
     app: "{{APPLICATION_NAME}}"
-    role: frontend
+    tier: "frontend"
 spec:
   type: ClusterIP
   ports:
@@ -22,19 +23,23 @@ spec:
     targetPort: "http-server"
   selector:
     app: "{{APPLICATION_NAME}}"
-    role: frontend
+    tier: "frontend"
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: "{{APPLICATION_NAME}}-flask"
 spec:
-  replicas: 1
+  selector:
+    matchLabels:
+      app: "{{APPLICATION_NAME}}"
+      tier: "frontend"
+  replicas: {{APPLICATION_REPLICAS}}
   template:
     metadata:
       labels:
         app: "{{APPLICATION_NAME}}"
-        role: frontend
+        tier: "frontend"
     spec:
       containers:
       - name: "{{APPLICATION_NAME}}"
@@ -43,8 +48,8 @@ spec:
         env:
         - name: SERVER_ADDR
           value: "{{SELDON_APISERVER_ADDR}}"
-        - name: SAMPLE_DATA
-          value: "{{SAMPLE_DATA}}"
+#         - name: SAMPLE_DATA
+#           value: "{{DATASET_FILE}}"
         - name: GITHUB_TOKEN
           value: "{{GITHUB_TOKEN}}"
         - name: OAUTH_KEY
@@ -56,7 +61,7 @@ spec:
           name: "data-dir"
         ports:
         - name: http-server
-          containerPort: 8080
+          containerPort: 80
         # resources:
         #   limits:
         #     cpu: "1"
