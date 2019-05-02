@@ -1,0 +1,12 @@
+---
+version: 1
+kind: application
+meta:
+  name: 'kubeflow-pipeline:1'
+  brief: 'Kubeflow Pipeline end-to-end applicaiton'
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/app-templates
+    dir: .
+    branch: APPLICATIONS_TAG
+    fromEnv: GITHUB_TOKEN

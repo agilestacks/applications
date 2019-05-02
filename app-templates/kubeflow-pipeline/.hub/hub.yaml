@@ -1,0 +1,48 @@
+---
+version: 1
+kind: application
+meta:
+  name: kubeflow-pieline:1
+  brief: >
+    End to end Kubeflow pipeline
+  source:
+    dir: .
+components:
+- name: github-repository
+  source:
+    dir: ../../../components/github-repository
+lifecycle:
+  bare: allow
+  verbs: [deploy, undeploy]
+  order:
+    - github-repository
+parameters:
+- name: dns.domain
+  env: DOMAIN_NAME
+- name: cloud.region
+  value: us-east-1
+- name: application
+  parameters:
+  - name: name
+    value: kubeflow
+    env: APPLICATION
+  - name: namespace
+    value: kubeflow
+    env: NAMESPACE
+  - name: git.kind
+    value: github
+  - name: description
+    value: End-to-end Kubeflow pipeline
+
+- name: component.github
+  parameters:
+  - name: token
+    fromEnv: GITHUB_TOKEN
+  - name: repository.organization
+    fromEnv: GITHUB_ORG
+  - name: repository.name
+    fromEnv: APPLICATION
+  - name: repository.description
+    value: ${application.description}
+  - name: workspace
+    fromEnv: APP_DIR
