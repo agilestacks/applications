@@ -2,7 +2,6 @@
 
 aws := aws
 jq := jq -r
-DEFAULT_INGRESS ?= traefik
 
 export KUBE_PROVIDER_STATE_FILE ?= must-be-set
 export KUBE_PROVIDER_ELABORATE_FILE ?= must-be-set
@@ -35,15 +34,15 @@ export AWS_SECRET_ACCESS_KEY := $(shell echo '$(TEMP_ROLE)' | $(jq) '.Credential
 hub := hub -d --aws_use_iam_role_credentials=false
 
 .$(COMPONENT_NAME).json:
-	sleep 10
+	@sleep 10
 	$(hub) explain $(KUBE_PROVIDER_ELABORATE_FILE) $(KUBE_PROVIDER_STATE_FILE) --json > $@
 
 output: .$(COMPONENT_NAME).json
-	$(eval fqdn := $(shell $(jq) '.stackOutputs."$(DEFAULT_INGRESS):component.ingress.fqdn"' < $<))
-	$(eval ssoFqdn := $(shell $(jq) '.stackOutputs."$(DEFAULT_INGRESS):component.ingress.ssoFqdn"' < $<))
-	$(eval protocol := $(shell $(jq) '.stackOutputs."$(DEFAULT_INGRESS):component.ingress.protocol"' < $<))
-	$(eval domain := $(shell $(jq) '.stackOutputs."stack-k8s-aws:dns.domain"' < $<))
-	$(eval region := $(shell $(jq) '.stackOutputs."cloud.region"' < $<))
+	$(eval fqdn := $(shell $(jq) '.stackOutputs|to_entries[]|select(.key | contains("component.ingress.fqdn"))|.value' < $<))
+	$(eval ssoFqdn := $(shell $(jq) '.stackOutputs|to_entries[]|select(.key | contains("component.ingress.ssoFqdn"))|.value' < $<))
+	$(eval protocol := $(shell $(jq) '.stackOutputs|to_entries[]|select(.key | contains("component.ingress.protocol"))|.value' < $<))
+	$(eval domain := $(shell $(jq) '.stackOutputs|to_entries[]|select(.key | contains("dns.domain"))|.value' < $<))
+	$(eval region := $(shell $(jq) '.stackOutputs|to_entries[]|select(.key | contains("cloud.region"))|.value' < $<))
 	@ echo
 	@ echo Outputs:
 	@ echo fqdn = $(fqdn)
