@@ -13,17 +13,17 @@ ASUME_ROLE := $(aws) sts assume-role --role-arn $(XACCOUNT_ROLE) --role-session-
 export TEMP_ROLE := $(shell $(ASUME_ROLE))
 
 ifeq ($(TEMP_ROLE),)
-$(shell sleep 5)
-export TEMP_ROLE := $(shell $(ASUME_ROLE))
-endif
-
-ifeq ($(TEMP_ROLE),)
 $(shell sleep 10)
 export TEMP_ROLE := $(shell $(ASUME_ROLE))
 endif
 
 ifeq ($(TEMP_ROLE),)
-$(shell sleep 15)
+$(shell sleep 20)
+export TEMP_ROLE := $(shell $(ASUME_ROLE))
+endif
+
+ifeq ($(TEMP_ROLE),)
+$(shell sleep 45)
 export TEMP_ROLE := $(shell $(ASUME_ROLE))
 endif
 
