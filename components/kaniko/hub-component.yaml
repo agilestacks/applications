@@ -18,7 +18,6 @@ parameters:
     env: NAMESPACE
   - name: image
     value: gcr.io/kaniko-project/executor:latest
-    # value: gcr.io/kaniko-project/executor:debug
   - name: destination
     brief: Target image name and destination for docker push
   - name: dockerfile

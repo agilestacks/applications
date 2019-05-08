@@ -38,7 +38,6 @@ spec:
       containers:
       - name: kaniko
         image: ${component.kaniko.image}
-        # command: [sleep, '600']
         args: [
           '--cache',
           '--destination', '${component.kaniko.destination}',
