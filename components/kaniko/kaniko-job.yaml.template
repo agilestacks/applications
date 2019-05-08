@@ -1,0 +1,64 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: ${component.kaniko.name}-
+  namespace: ${component.kaniko.namespace}
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      initContainers:
+      - name: git-clone
+        image: k8s.gcr.io/git-sync:v3.1.1
+        env:
+        - name: GIT_SYNC_REPO
+          valueFrom:
+            secretKeyRef:
+              name: ${component.kaniko.name}-git
+              key: clone_url
+        - name: GIT_SYNC_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: ${component.kaniko.name}-git
+              key: username
+        - name: GIT_SYNC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: ${component.kaniko.name}-git
+              key: password
+        args:
+        - --branch=master
+        - --wait=30
+        - -one-time
+        - --depth=1
+        - --dest=workspace
+        volumeMounts:
+          - name: build-context
+            mountPath: /tmp/git
+      containers:
+      - name: kaniko
+        image: ${component.kaniko.image}
+        # command: [sleep, '600']
+        args: [
+          '--cache',
+          '--destination', '${component.kaniko.destination}',
+          '--dockerfile', '${component.kaniko.dockerfile}',
+          '--context', '/build/workspace/${component.kaniko.contextDir}',
+        ]
+        volumeMounts:
+        - name: dockerconfigjson
+          mountPath: /kaniko/.docker
+        - name: build-context
+          mountPath: /build
+      restartPolicy: Never
+      volumes:
+      - name: build-context
+        emptyDir: {}
+      - name: dockerconfigjson
+        projected:
+          sources:
+          - secret:
+              name: ${component.docker.registry.pullSecret.name}
+              items:
+              - key: .dockerconfigjson
+                path: config.json

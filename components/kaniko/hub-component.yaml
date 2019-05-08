@@ -1,0 +1,73 @@
+---
+version: 1
+kind: component
+meta:
+  name: github
+  brief: Encapsulates operations with Github
+# requires: [ghub]
+parameters:
+- name: dns.domain
+  env: DOMAIN_NAME
+- name: component.kaniko
+  parameters:
+  - name: name
+    value: kaniko
+    env: COMPONENT_NAME
+  - name: namespace
+    value: default
+    env: NAMESPACE
+  - name: image
+    value: gcr.io/kaniko-project/executor:latest
+    # value: gcr.io/kaniko-project/executor:debug
+  - name: destination
+    brief: Target image name and destination for docker push
+  - name: dockerfile
+    value: Dockerfile
+  - name: contextDir
+    empty: allow
+- name: component.docker.registry
+  parameters:
+  - name: url
+    fromEnv: COMPONENT_HARBOR_URL
+  - name: pullSecret.name
+    env: PULL_SECRET_NAME
+    fromEnv: DOCKER_REGISTRY_PULLSECRET
+  - name: pullSecret.namespace
+    value: harbor
+    env: PULL_SECRET_NAMESPACE
+- name: component.git
+  parameters:
+  - name: remote
+  - name: branch
+    value: master
+  - name: username
+    empty: allow
+  - name: password
+    empty: allow
+  - name: kind
+    value: github
+    env: GIT_KIND
+
+outputs:
+- name: component.git.remote
+  fromTfVar: clone_url
+- name: component.git.branch
+  value: master
+- name: component.github.repository.cloneUrl
+  fromTfVar: clone_url
+- name: component.github.repository.gitUrl
+  fromTfVar: git_url
+- name: component.github.repository.htlmUrl
+  fromTfVar: html_url
+- name: component.github.repository.sshUrl
+  fromTfVar: ssh_url
+- name: component.github.repository.private
+  fromTfVar: private
+- name: component.github.repository.branch
+  value: master
+- name: component.github.repository.secretUrl
+  fromTfVar: secret_url
+
+templates:
+  files:
+  - "*.template"

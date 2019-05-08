@@ -50,6 +50,12 @@ parameters:
 outputs:
 - name: component.git.remote
   fromTfVar: clone_url
+- name: component.git.username
+  value: x-oauth-basic
+- name: component.git.password
+  value: ${component.github.token}
+- name: component.git.branch
+  value: master
 - name: component.github.repository.cloneUrl
   fromTfVar: clone_url
 - name: component.github.repository.gitUrl
@@ -60,3 +66,5 @@ outputs:
   fromTfVar: ssh_url
 - name: component.github.repository.private
   fromTfVar: private
+- name: component.github.repository.branch
+  value: master
