@@ -73,3 +73,6 @@ app-templates/kubeflow-pipeline/tmp
 components/s3fs
 app-templates/kubeflow-pipeline/data
 app-templates/kubeflow-pipeline/Dockerfile.flask
+
+components/kaniko/github-secret.yaml
+components/kaniko/kaniko-job.yaml
