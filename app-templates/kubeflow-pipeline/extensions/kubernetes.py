@@ -1,6 +1,6 @@
 from kubernetes import config
 
-def _current_namespace():
+def current_namespace():
     try:
         result = config.list_kube_config_contexts()[1].get(
             'context', {}).get('namespace')
