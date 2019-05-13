@@ -20,7 +20,7 @@ import argparse
 import dill as dpickle
 import numpy as np
 
-import utils
+from utils import textacy_cleaner
 
 logger = logging.getLogger()
 logger.setLevel(logging.WARNING)
@@ -38,7 +38,6 @@ args = parser.parse_args()
 traindf = pd.read_csv(
     args.input_traindf_csv,
     dtype={
-        "issue_url": "str",
         "issue_title": "str",
         "body": "str"
     }
@@ -51,7 +50,7 @@ train_title_raw = traindf.issue_title.tolist()
 # length = 70. Also, retain only the top 8,000 words in the vocabulary and set
 # the remaining words to 1 which will become common index for rare words.
 body_pp = processor(keep_n=8000, padding_maxlen=70)
-body_pp.set_cleaner(utils.textacy_cleaner)
+body_pp.set_cleaner(textacy_cleaner)
 train_body_vecs = body_pp.fit_transform(train_body_raw)
 
 print('Example original body:', train_body_raw[0])
@@ -60,7 +59,7 @@ print('Example body after pre-processing:', train_body_vecs[0])
 # Instantiate a text processor for the titles, with some different parameters.
 title_pp = processor(append_indicators=True, keep_n=4500,
                      padding_maxlen=12, padding='post')
-title_pp.set_cleaner(utils.textacy_cleaner)
+title_pp.set_cleaner(textacy_cleaner)
 
 # process the title data
 train_title_vecs = title_pp.fit_transform(train_title_raw)
