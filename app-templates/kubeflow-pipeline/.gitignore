@@ -4,8 +4,10 @@ tmp/
 Dockerfile.flask
 Dockerfile.seldon
 .pyenv/
-.ipynb_checkpoint/
+.ipynb_checkpoints/
 .vscode/
 .envrc
 hub.elaborate
 hub.state
+.hub/templates/*.yaml
+
