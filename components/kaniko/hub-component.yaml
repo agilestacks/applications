@@ -47,25 +47,7 @@ parameters:
     value: github
     env: GIT_KIND
 
-outputs:
-- name: component.git.remote
-  fromTfVar: clone_url
-- name: component.git.branch
-  value: master
-- name: component.github.repository.cloneUrl
-  fromTfVar: clone_url
-- name: component.github.repository.gitUrl
-  fromTfVar: git_url
-- name: component.github.repository.htlmUrl
-  fromTfVar: html_url
-- name: component.github.repository.sshUrl
-  fromTfVar: ssh_url
-- name: component.github.repository.private
-  fromTfVar: private
-- name: component.github.repository.branch
-  value: master
-- name: component.github.repository.secretUrl
-  fromTfVar: secret_url
+outputs: []
 
 templates:
   files:

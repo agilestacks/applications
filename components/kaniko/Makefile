@@ -17,8 +17,8 @@ pull-secret:
 ifneq ($(PULL_SECRET_NAMESPACE),)
 	$(eval args=-n $(PULL_SECRET_NAMESPACE))
 endif
-	- $(kubectl) $(args) get secret $(PULL_SECRET_NAME) -o json \
-	| $(jq) 'del($(strip_meta))' \
+	$(kubectl) $(args) get secret $(PULL_SECRET_NAME) -o json \
+	| $(jq) -c 'del($(strip_meta))' \
 	| $(kubectl) -n $(NAMESPACE) apply -f -
 
 namespce:
