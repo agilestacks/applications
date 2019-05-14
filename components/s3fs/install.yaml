@@ -13,7 +13,7 @@ spec:
     spec:
       initContainers:
       - name: install
-        image: agilestacks/s3fs:latest
+        image: docker.io/agilestacks/s3fs:latest
         imagePullPolicy: Always
         # securityContext:
         #   privileged: true
