@@ -30,7 +30,7 @@ pd.set_option('display.max_colwidth', 500)
 
 print(f"Reading {args.input_csv}")
 df = pd.read_csv(
-    args.input_csv,
+    args.input_csv, nrows=args.sample_size, error_bad_lines=False,
     converters={
         "issue_title": textacy_cleaner,
         "body": textacy_cleaner,
@@ -38,7 +38,7 @@ df = pd.read_csv(
 )
 
 if not args.all:
-    # Read in data sample 2M rows (for speed of tutorial)
+    # Limit sample size (for speed of tutorial)
     size = args.sample_size
     print(f"Preparing sample with size: {size}")
     df = df.sample(n=args.sample_size)
