@@ -84,6 +84,9 @@ parameters:
   - name: username
   - name: password
   - name: branch
+  - name: secretName
+    value: github
+    env: GIT_SECRET_NAME
 
 - name: component.github
   parameters:

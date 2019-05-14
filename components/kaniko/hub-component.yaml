@@ -46,6 +46,8 @@ parameters:
   - name: kind
     value: github
     env: GIT_KIND
+  - name: secretName
+    value: kaniko-git
 
 outputs: []
 
