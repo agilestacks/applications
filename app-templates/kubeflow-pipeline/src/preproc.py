@@ -20,7 +20,7 @@ import argparse
 import dill as dpickle
 import numpy as np
 
-from utils import textacy_cleaner
+from text_utils import textacy_cleaner
 
 logger = logging.getLogger()
 logger.setLevel(logging.WARNING)
