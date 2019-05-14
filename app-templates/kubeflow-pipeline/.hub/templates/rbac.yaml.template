@@ -2,7 +2,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: jupyter-keyring
-  namespace: kubeflow
+  namespace: ${application.namespace}
 rules:
 - apiGroups:
   - ""
@@ -26,7 +26,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: pvc-write
-  namespace: kubeflow
+  namespace: ${application.namespace}
 rules:
 - apiGroups:
   - ""
@@ -37,11 +37,11 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: allow-jupyter-keyring
-  namespace: kubeflow
+  namespace: ${application.namespace}
 subjects:
 - kind: ServiceAccount
   name: jupyter-notebook
-  namespace: kubeflow
+  namespace: ${application.namespace}
 roleRef:
   kind: Role
   name: jupyter-keyring
@@ -51,11 +51,11 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: allow-pvc
-  namespace: kubeflow
+  namespace: ${application.namespace}
 subjects:
 - kind: ServiceAccount
   name: jupyter-notebook
-  namespace: kubeflow
+  namespace: ${application.namespace}
 roleRef:
   kind: Role
   name: pvc-write
@@ -65,11 +65,11 @@ kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: allow-pv
-  namespace: "kubeflow"
+  namespace: ${application.namespace}
 subjects:
 - kind: ServiceAccount
   name: jupyter-notebook
-  namespace: kubeflow
+  namespace: ${application.namespace}
 roleRef:
   kind: ClusterRole
   name: pv-write

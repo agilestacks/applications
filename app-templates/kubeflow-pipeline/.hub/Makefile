@@ -11,22 +11,22 @@ APP_STATE_FILE_LOCAL  ?= hub.state
 APP_STATE_FILE        ?= $(error APP_STATE_FILE varialbe has not been defined!)
 APP_STATE 			  ?= $(APP_STATE_FILE_LOCAL),$(APP_STATE_FILE)
 
-kubectl       := kubectl --context="$(DOMAIN_NAME)" --namespace="$(NAMESPACE)"
 hub 	      := hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credentials=false
+kubectl       := kubectl --context="$(DOMAIN_NAME)" --namespace=$(NAMESPACE)
 
 deploy:
-	$(kubectl) apply -f rbac.yaml
+	$(kubectl) apply -f templates/rbac.yaml
 
 undeploy:
-	- $(kubectl) delete -f rbac.yaml
+	- $(kubectl) delete -f templates/rbac.yaml
 
-elaborate:
+$(APP_ELABORATE_FILE) elaborate:
 	$(hub) elaborate hub.yaml managed.yaml -s $(PLATFORM_STATE_FILE) -o $(APP_ELABORATE_FILE)
 
-install: elaborate
+install: $(APP_ELABORATE_FILE)
 	$(hub) deploy $(APP_ELABORATE_FILE) -s $(APP_STATE)
 
-uninstall: elaborate
+uninstall: $(APP_ELABORATE_FILE)
 	$(hub) undeploy $(APP_ELABORATE_FILE) -s $(APP_STATE)
 
 clean:

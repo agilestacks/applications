@@ -1,0 +1,48 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/aws-ebs
+  finalizers:
+  - kubernetes.io/pvc-protection
+  name: ${application.notebook.name}-workspace
+  namespace: ${application.namespace}
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: ${application.notebook.workspaceSize}
+  storageClassName: kubeflow-ebs-gp2
+  volumeMode: Filesystem
+  # volumeName: pvc-c4cb45e1-761d-11e9-93c7-0262ac73cdb2
+---
+apiVersion: kubeflow.org/v1alpha1
+kind: Notebook
+metadata:
+  labels:
+    app: notebook
+  name: ${application.notebook.name}
+  namespace: ${application.namespace}
+spec:
+  template:
+    spec:
+      containers:
+      - env: []
+        image: ${application.kernel.image}
+        name: ${application.notebook.name}
+        resources:
+          limits: {}
+          requests:
+            cpu: "0.5"
+            memory: 1.0Gi
+        volumeMounts:
+        - mountPath: /home/jovyan
+          name: workspace
+      serviceAccountName: default-editor
+      ttlSecondsAfterFinished: 300
+      volumes:
+      - name: workspace
+        persistentVolumeClaim:
+          claimName: ${application.notebook.name}-workspace
