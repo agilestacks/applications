@@ -37,11 +37,7 @@ args = parser.parse_args()
 # Read data.
 traindf = pd.read_csv(
     args.input_traindf_csv,
-    dtype={
-        "issue_url": str,
-        "issue_title": str,
-        "body": str,
-    },
+    dtype={"issue_url": str, "issue_title": str, "body": str},
     na_values=["", None, "nan", np.nan],
 )
 traindf.dropna(inplace=True)
