@@ -10,3 +10,4 @@ bernoulli
 h5py
 # git clone https://github.com/google/seq2seq.git \
 ./seq2seq/
+joblib

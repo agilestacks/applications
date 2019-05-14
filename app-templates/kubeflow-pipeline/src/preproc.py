@@ -38,10 +38,13 @@ args = parser.parse_args()
 traindf = pd.read_csv(
     args.input_traindf_csv,
     dtype={
-        "issue_title": "str",
-        "body": "str"
-    }
+        "issue_url": str,
+        "issue_title": str,
+        "body": str,
+    },
+    na_values=["", None, "nan", np.nan],
 )
+traindf.dropna(inplace=True)
 
 train_body_raw = traindf.body.tolist()
 train_title_raw = traindf.issue_title.tolist()
