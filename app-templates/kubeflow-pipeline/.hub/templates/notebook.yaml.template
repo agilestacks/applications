@@ -16,7 +16,6 @@ spec:
       storage: ${application.notebook.workspaceSize}
   storageClassName: kubeflow-ebs-gp2
   volumeMode: Filesystem
-  # volumeName: pvc-c4cb45e1-761d-11e9-93c7-0262ac73cdb2
 ---
 apiVersion: kubeflow.org/v1alpha1
 kind: Notebook

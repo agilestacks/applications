@@ -16,8 +16,10 @@ kubectl       := kubectl --context="$(DOMAIN_NAME)" --namespace=$(NAMESPACE)
 
 deploy:
 	$(kubectl) apply -f templates/rbac.yaml
+	$(kubectl) apply -f templates/notebook.yaml
 
 undeploy:
+	- $(kubectl) delete -f templates/notebook.yaml
 	- $(kubectl) delete -f templates/rbac.yaml
 
 $(APP_ELABORATE_FILE) elaborate:
