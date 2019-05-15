@@ -54,9 +54,13 @@ parameters:
     kind: link
     value: ${component.github.repository.cloneUrl}
     empty: allow
+  - name: docker.registry.url
+    kind: link
+    value: ${component.harbor.url}
   - name: docker.registry.pullSecret
+    kind: link
     env: PULL_SECRET
-    value: experiment-harbor-pull-secret
+    value: ${component.harbor.pullSecret}
     empty: allow
   - name: docker.registry.pullSecret.namespace
     value: harbor
@@ -64,6 +68,15 @@ parameters:
   - name: kernel.image
     value: ${component.harbor.url}/library/jupyter:latest
     kind: link
+  - name: s3.endpoint
+    kind: user
+    fromEnv: APPLICATION_S3_ENDPOINT
+  - name: s3.accessKey
+    kind: user
+    fromEnv: APPLICATION_S3_ACCESS_KEY
+  - name: s3.secretKey
+    kind: user
+    fromEnv: APPLICATION_S3_SECRET_KEY
 - name: component.s3fuse
   parameters:
   - name: namespace
@@ -80,7 +93,11 @@ parameters:
   - name: contextDir
     value: kernel
 - name: component.harbor.url
+  kind: user
   fromEnv: COMPONENT_HARBOR_URL
+- name: component.harbor.pullSecret
+  kind: user
+  fromEnv: DOCKER_REGISTRY_PULLSECRET
 
 - name: component.git
   parameters:
@@ -104,6 +121,10 @@ parameters:
     value: ${application.description}
   - name: workspace
     fromEnv: APP_DIR
+
+  - name: component.bucket.endpoint
+  - name: component.minio.accessKey
+  - name: component.minio.secretKey
 
 templates:
   files:
