@@ -37,8 +37,12 @@ parameters:
   - name: notebook.name
     kind: link
     value: ${application.name}-notebook
-  - name: notebook.workspaceSize
+  - name: workspace.size
     value: 10Gi
+  - name: workspace.uid
+    value: '1000'
+  - name: workspace.gid
+    value: '100'
   - name: namespace
     value: kubeflow
     env: NAMESPACE

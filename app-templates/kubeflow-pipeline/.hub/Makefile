@@ -19,7 +19,7 @@ deploy:
 	$(kubectl) apply -f templates/notebook.yaml
 
 undeploy:
-	- $(kubectl) delete -f templates/notebook.yaml
+	- $(kubectl) delete -f templates/notebook.yaml --wait
 	- $(kubectl) delete -f templates/rbac.yaml
 
 $(APP_ELABORATE_FILE) elaborate:

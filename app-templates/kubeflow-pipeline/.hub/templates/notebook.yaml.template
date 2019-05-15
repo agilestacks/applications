@@ -13,7 +13,7 @@ spec:
   - ReadWriteOnce
   resources:
     requests:
-      storage: ${application.notebook.workspaceSize}
+      storage: ${application.workspace.size}
   storageClassName: kubeflow-ebs-gp2
   volumeMode: Filesystem
 ---
@@ -25,10 +25,6 @@ metadata:
   name: ${application.notebook.name}
   namespace: ${application.namespace}
 spec:
-  securityContext:
-    # this is jovyan
-    runAsUser: 1000
-    runAsGroup: 1000
   template:
     spec:
       initContainers:
@@ -52,15 +48,27 @@ spec:
               key: password
         args:
         - --branch=master
+        - -rev=HEAD
         - --wait=30
         - -one-time
-        - --dest=workspace
+        - --root=/tmp/.git-sync
+        - --dest=current
         volumeMounts:
           - name: workspace
-            mountPath: /tmp/git
+            mountPath: /tmp
+      - name: update-workspace
+        image: alpine:latest
+        workingDir: /tmp
+        command: ["/bin/sh", "-c"]
+        args:
+        - >
+          ln -s .git-sync/current workspace;
+          chown -R ${application.workspace.uid}:${application.workspace.gid} workspace workspace/* workspace/ workspace/.[^.]*/;
+        volumeMounts:
+        - name: workspace
+          mountPath: /tmp
       containers:
-      - env: []
-        image: ${application.kernel.image}
+      - image: ${application.kernel.image}
         name: ${application.notebook.name}
         resources:
           limits: {}
