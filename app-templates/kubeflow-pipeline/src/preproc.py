@@ -19,8 +19,30 @@ import argparse
 
 import dill as dpickle
 import numpy as np
+from textacy.preprocess import preprocess_text
 
-from text_utils import textacy_cleaner
+def textacy_cleaner(text: str) -> str:
+    if isinstance(text, (int, long, float, complex)):
+        # workaround module not found error if inside model
+        import numpy, logging
+        if numpy.isnan(text):
+            logging.warning("Received nan instead of str")
+            return "nan"
+
+    return preprocess_text(
+        text,
+        fix_unicode=False,
+        lowercase=True,
+        transliterate=True,
+        no_urls=True,
+        no_emails=True,
+        no_phone_numbers=True,
+        no_numbers=True,
+        no_currency_symbols=True,
+        no_punct=True,
+        no_contractions=False,
+        no_accents=True)
+
 
 logger = logging.getLogger()
 logger.setLevel(logging.WARNING)
@@ -68,10 +90,10 @@ print('Example title after pre-processing:', train_title_vecs[0])
 
 # Save the preprocessor.
 with open(args.output_body_preprocessor_dpkl, 'wb') as f:
-  dpickle.dump(body_pp, f)
+    dpickle.dump(body_pp, f)
 
 with open(args.output_title_preprocessor_dpkl, 'wb') as f:
-  dpickle.dump(title_pp, f)
+    dpickle.dump(title_pp, f)
 
 # Save the processed data.
 np.save(args.output_train_title_vecs_npy, train_title_vecs)

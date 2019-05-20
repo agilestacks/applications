@@ -22,6 +22,10 @@ spec:
           image: "{{SERVING_IMAGE}}"
           imagePullPolicy: "Always"
           env:
+          - name: SERVICE_TYPE
+            value: "MODEL"
+          - name: PERSISTENCE
+            value: "0"
           - name: MODEL_FILE
             value: "{{MODEL_FILE}}"
           - name: TITLE_PP_FILE

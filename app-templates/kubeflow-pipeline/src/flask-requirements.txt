@@ -1,4 +1,0 @@
-numpy==1.16.2
-Flask>=0.12.3
-pandas
-requests

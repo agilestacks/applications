@@ -48,10 +48,13 @@ spec:
         env:
         - name: SERVER_ADDR
           value: "{{SELDON_APISERVER_ADDR}}"
-#         - name: SAMPLE_DATA
-#           value: "{{DATASET_FILE}}"
+        - name: SAMPLE_DATA
+          value: "{{DATASET_FILE}}"
         - name: GITHUB_TOKEN
-          value: "{{GITHUB_TOKEN}}"
+          valueFrom:
+            secretKeyRef:
+              name: jupyter-keyring
+              key: GITHUB_TOKEN
         - name: OAUTH_KEY
           value: "{{SELDON_OAUTH_KEY}}"
         - name: OAUTH_SECRET
