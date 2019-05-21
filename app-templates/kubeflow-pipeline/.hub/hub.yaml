@@ -122,9 +122,15 @@ parameters:
   - name: workspace
     fromEnv: APP_DIR
 
-  - name: component.bucket.endpoint
-  - name: component.minio.accessKey
-  - name: component.minio.secretKey
+- name: component.kubeflow.ambassador.protocolv
+- name: component.kubeflow.ambassador.urlPrefix
+- name: component.bucket.endpoint
+- name: component.minio.accessKey
+- name: component.minio.secretKey
+
+outputs:
+- name: application.notebook.url
+  value: "${component.kubeflow.url}_/notebooks"
 
 templates:
   files:
