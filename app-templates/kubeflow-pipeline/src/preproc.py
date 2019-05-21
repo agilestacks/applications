@@ -22,13 +22,14 @@ import numpy as np
 from textacy.preprocess import preprocess_text
 
 def textacy_cleaner(text: str) -> str:
-    if isinstance(text, (int, long, float, complex)):
+    if isinstance(text, (int, float, complex)):
         # workaround module not found error if inside model
         import numpy, logging
         if numpy.isnan(text):
             logging.warning("Received nan instead of str")
             return "nan"
 
+    from textacy.preprocess import preprocess_text
     return preprocess_text(
         text,
         fix_unicode=False,
