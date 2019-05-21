@@ -200,4 +200,9 @@ async function perform() {
     }
 }
 
-perform();
+if (module.parent == null) {
+    perform();
+}
+
+module.exports.deleteObsoleteProperties = deleteObsoleteProperties
+module.exports.logger = logger
