@@ -1,0 +1,41 @@
+---
+components:
+- name: pull-secret
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/pull-secret
+    dir: components/pull-secret
+    branch: APPLICATIONS_TAG
+    fromEnv: GITHUB_TOKEN
+
+lifecycle:
+  order:
+    - pull-secret
+
+parameters:
+- name: application.jupyter.kernel.docker
+  parameters:
+  - name: image
+  - name: registry
+  - name: username
+  - name: password
+  - name: kind
+
+- name: component.pullSecret
+  kind: link
+  parameters:
+  - name: name
+    value: ${application.name}-pullsecret
+  - name: namespace
+    value: ${application.namespace}
+- name: component.docker.registry
+  kind: link
+  parameters:
+  - name: kind
+    value: ${application.jupyter.kernel.docker.kind}
+  - name: server
+    value: ${application.jupyter.kernel.docker.registry}
+  - name: username
+    value: ${application.jupyter.kernel.docker.username}
+  - name: password
+    value: ${application.jupyter.kernel.docker.password}

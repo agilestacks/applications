@@ -6,7 +6,7 @@ metadata:
     volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/aws-ebs
   finalizers:
   - kubernetes.io/pvc-protection
-  name: ${application.notebook.name}-workspace
+  name: ${application.name}-workspace
   namespace: ${application.namespace}
 spec:
   accessModes:
@@ -22,7 +22,7 @@ kind: Notebook
 metadata:
   labels:
     app: notebook
-  name: ${application.notebook.name}
+  name: ${application.name}
   namespace: ${application.namespace}
 spec:
   template:
@@ -68,8 +68,8 @@ spec:
         - name: workspace
           mountPath: /tmp
       containers:
-      - image: ${application.kernel.image}
-        name: ${application.notebook.name}
+      - name: notebook
+        image: ${application.jupyter.kernel.docker.image}
         resources:
           limits: {}
           requests:
@@ -78,9 +78,14 @@ spec:
         volumeMounts:
         - mountPath: /home/jovyan
           name: workspace
+        - mountPath: /home/jovyan/bucket
+          name: bucket
       serviceAccountName: default-editor
       ttlSecondsAfterFinished: 300
       volumes:
       - name: workspace
         persistentVolumeClaim:
-          claimName: ${application.notebook.name}-workspace
+          claimName: ${application.name}-workspace
+      - name: bucket
+        persistentVolumeClaim:
+          claimName: ${application.name}-bucket

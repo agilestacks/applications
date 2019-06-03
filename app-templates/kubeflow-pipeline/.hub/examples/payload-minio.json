@@ -1,0 +1,95 @@
+{
+  "name": "anton-app",
+  "description": "Kubflow pipeline",
+  "platform": "1",
+  "requires": [
+    "kubeflow",
+    "minio",
+    "github",
+    "harbor"
+  ],
+  "application": "kubeflow-pipeline",
+  "parameters": [
+    {
+      "name": "application.name",
+      "value": "anton-kfp-1"
+    },
+    {
+      "name": "application.description",
+      "value": "Kubflow pipeline"
+    },
+    {
+      "name": "component.kubeflow.url",
+      "value": "kubeflow.svc.cluster-blue.antoncloud.dev.superhub.io"
+    },
+    {
+      "name": "component.kubeflow.namespace",
+      "value": "kubeflow"
+    },
+    {
+      "name": "application.kubeflow.customKernel",
+      "value": true
+    },
+    {
+      "name": "component.github.repository.name",
+      "value": "kube-s3-pet-01"
+    },
+    {
+      "name": "application.jupyter.kernel.docker.username",
+      "value": "admin"
+    },
+    {
+      "name": "application.jupyter.kernel.docker.password",
+      "kind": "secret",
+      "value": "ad300098-e520-4253-9952-ea7162177e72"
+    },
+    {
+      "name": "application.jupyter.kernel.docker.image",
+      "value": "experiment-harbor.svc.cluster-blue.antoncloud.dev.superhub.io/library/jupyter-kernel"
+    },
+    {
+      "name": "application.jupyter.kernel.docker.registry",
+      "value": "experiment-harbor.svc.cluster-blue.antoncloud.dev.superhub.io"
+    },
+    {
+      "name": "application.docker-registry.serviceUrl"
+    },
+    {
+      "name": "component.github.repository.organization",
+      "value": "akranga"
+    },
+    {
+      "kind": "secret",
+      "name": "component.github.token",
+      "value": "cc36d8c3-5108-4550-bae2-2f099ab4003b"
+    },
+    {
+      "value": "default",
+      "name": "application.bucket.name"
+    },
+    {
+      "value": "https://experiment-minio.app.cluster-blue.antoncloud.dev.superhub.io",
+      "component": "minio",
+      "messenger": "log",
+      "name": "application.bucket.endpoint"
+    },
+    {
+      "value": "accesskey",
+      "component": "minio",
+      "messenger": "log",
+      "kind": "secret",
+      "name": "application.bucket.accessKey"
+    },
+    {
+      "value": "secretkey",
+      "component": "minio",
+      "messenger": "log",
+      "kind": "secret",
+      "name": "application.bucket.secretKey"
+    },
+    {
+      "value": "us-east-1",
+      "name": "application.bucket.region"
+    }
+  ]
+}

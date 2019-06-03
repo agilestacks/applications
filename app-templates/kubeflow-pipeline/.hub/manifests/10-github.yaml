@@ -1,0 +1,41 @@
+---
+components:
+- name: github-repository
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/github-repository
+    dir: components/github-repository
+    branch: APPLICATIONS_TAG
+    fromEnv: GITHUB_TOKEN
+
+lifecycle:
+  order:
+    - github-repository
+
+parameters:
+- name: component.github
+  parameters:
+  - name: token
+    fromEnv: COMPONENT_GITHUB_TOKEN
+  - name: repository.organization
+  - name: repository.name
+  - name: repository.description
+    kind: link
+    value: ${application.description}
+  - name: workspace
+    kind: link
+    value: ${application.workspace.dir}
+
+- name: component.git
+  parameters:
+  - name: git.kind
+    value: github
+  - name: remote
+  - name: username
+  - name: password
+  - name: branch
+  - name: secretName
+    kind: link
+    value: ${application.name}-github
+
+outputs: []

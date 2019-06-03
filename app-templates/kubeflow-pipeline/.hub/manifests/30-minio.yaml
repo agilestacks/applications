@@ -1,0 +1,52 @@
+---
+components:
+- name: bucket
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/minio-bucket
+    dir: components/bucket
+    branch: APPLICATIONS_TAG
+    fromEnv: GITHUB_TOKEN
+- name: s3fuse
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/s3fs
+    dir: components/s3fs
+    branch: APPLICATIONS_TAG
+    fromEnv: GITHUB_TOKEN
+parameters:
+- name: application.bucket
+  kind: user
+  parameters:
+  - name: name
+  - name: endpoint
+  # not needed for minio
+  # - name: region
+  - name: accessKey
+  - name: secretKey
+  - name: capacity
+    value: 40Gi
+- name: component.ingress.protocol
+  value: https
+- name: component.bucket
+  kind: link
+  parameters:
+  - name: kind
+    kind: user
+    value: minio
+  - name: name
+    value: ${application.bucket.name}
+  - name: endpoint
+    value: ${application.bucket.endpoint}
+  - name: accessKey
+    value: ${application.bucket.accessKey}
+  - name: secretKey
+    value: ${application.bucket.secretKey}
+- name: component.s3fuse.namespace
+  kind: link
+  value: ${application.namespace}
+
+lifecycle:
+  order:
+  - s3fuse
+  - bucket

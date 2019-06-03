@@ -4,8 +4,5 @@ type: superhub.io/jupyter-keyring
 metadata:
   name: jupyter-keyring
 stringData:
-  DOCKER_REGISTRY: ${application.docker.registry.url}
-  DOCKER_REGISTRY_PULL_SECRET: ${application.docker.registry.pullSecret}
-  S3_ENDPOINT: ${application.s3.endpoint}
-  S3_ACCESS_KEY: ${application.s3.accessKey}
-  S3_SECRET_KEY: ${application.s3.secretKey}
+  S3_ACCESS_KEY: ${application.bucket.accessKey}
+  S3_SECRET_KEY: ${application.bucket.secretKey}

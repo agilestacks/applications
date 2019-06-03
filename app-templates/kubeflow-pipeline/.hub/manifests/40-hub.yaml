@@ -1,0 +1,31 @@
+---
+components:
+- name: kaniko
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/kaniko
+    dir: components/kaniko
+    branch: APPLICATIONS_TAG
+    fromEnv: GITHUB_TOKEN
+
+parameters:
+- name: component.kaniko
+  parameters:
+  - name: name
+    value: jupyter-kernel
+  - name: namespace
+    kind: link
+    value: ${application.namespace}
+  - name: destination
+    kind: link
+    value: ${application.jupyter.kernel.docker.image}:latest
+  - name: contextDir
+    value: kernel
+- name: component.kubeflow.url
+- name: component.kubeflow.namespace
+
+lifecycle:
+  bare: allow
+  verbs: [deploy, undeploy]
+  order:
+    - kaniko

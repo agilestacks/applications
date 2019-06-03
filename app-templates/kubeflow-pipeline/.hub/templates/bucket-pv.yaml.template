@@ -1,0 +1,49 @@
+---
+apiVersion: v1
+kind: Secret
+type: goofysflex
+metadata:
+  name: "${application.name}-bucket"
+stringData:
+  accesskey: ${application.bucket.accessKey}
+  secretkey: ${application.bucket.secretKey}
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: "${application.name}-bucket"
+  labels:
+    type: fuse
+    bucket: "${application.bucket.name}"
+spec:
+  storageClassName: goofys
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: "${application.bucket.capacity}"
+  volumeMode: Filesystem
+  flexVolume:
+    driver: "goofysflex"
+    secretRef:
+      name: "${application.name}-bucket"
+    options:
+      # Required
+      bucket: "${application.bucket.name}"
+      endpoint: "${application.bucket.endpoint}"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: "${application.name}-bucket"
+spec:
+  storageClassName: goofys
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: "${application.bucket.capacity}"
+  selector:
+    matchLabels:
+      type: fuse
+      bucket: "${application.name}-bucket"

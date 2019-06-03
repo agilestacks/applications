@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ${application.name}
+data:
+  NAME: "${application.name}"
+  NAMESPACE: "${application.namespace}"
+  DOCKER_REGISTRY: "${application.jupyter.kernel.docker.registry}"
+  BUCKET_ENDPOINT: ${application.bucket.endpoint}

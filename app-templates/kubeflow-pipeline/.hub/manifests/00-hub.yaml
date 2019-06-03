@@ -10,3 +10,42 @@ meta:
     dir: .
     branch: APPLICATIONS_TAG
     fromEnv: GITHUB_TOKEN
+requires:
+  - kubernetes
+
+parameters:
+- name: dns.domain
+  env: DOMAIN_NAME
+- name: cloud.region
+- name: application
+  parameters:
+  - name: name
+    env: APPLICATION
+  - name: description
+    value: End-to-end Kubeflow pipeline
+  - name: workspace.dir
+    default: ../../../
+    fromEnv: WORKSPACE
+  - name: workspace.size
+    value: 10Gi
+  - name: workspace.uid
+    brief: stands for jovyan user
+    value: '1000'
+  - name: workspace.gid
+    brief: stands for jovyan  user primary group
+    value: '100'
+  - name: namespace
+    kind: link
+    value: ${component.kubeflow.namespace}
+    env: NAMESPACE
+
+- name: component.kubeflow.url
+- name: component.kubeflow.namespace
+
+outputs:
+- name: application.notebook.url
+  value: "https://${component.kubeflow.url}/_/notebooks"
+
+templates:
+  files:
+  - "templates/*.template"
