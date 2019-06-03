@@ -23,6 +23,8 @@ parameters:
     env: NAMESPACE
 - name: component.docker.registry
   parameters:
+  - name: kind
+    value: harbor
   - name: server
     value: docker.io
     env: DOCKER_SERVER
