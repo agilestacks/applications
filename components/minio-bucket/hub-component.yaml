@@ -18,6 +18,7 @@ lifecycle:
 
 parameters:
 - name: component.ingress.protocol
+  value: https
   env: INGRESS_PORTOCOL
 - name: dns.domain
   brief: DNS domain
@@ -27,50 +28,22 @@ parameters:
   - name: name
     kind: user
     value: default
-    env: BUCKET
+    env: BUCKET_NAME
   - name: endpoint
     env: ENDPOINT
-  - name: secret.namespace
-    default: minio
-    env: NAMESPACE
-  - name: secret.name
-    default: minio
-    env: SECRET_NAME
-  - name: secret.accessKeyRef
-    value: accesskey
-    env: ACCESS_KEY_REF
-  - name: secret.secretKeyRef
-    value: secretkey
-    env: SECRET_KEY_REF
-  - name: event.arn
-    value:
-    empty: allow
-    env: EVENT_ARNS
-  - name: event.prefix
-    empty: allow
-    env: EVENT_PREFIX
-  - name: event.suffix
-    empty: allow
-    env: EVENT_SUFFIX
-  - name: event.name
-    value: put,delete,get
-    env: EVENT_NAME
-    empty: allow
+  - name: accessKey
+    env: AWS_ACCESS_KEY_ID
+  - name: secretKey
+    env: AWS_SECRET_ACCESS_KEY
+  - name: region
+    env: AWS_DEFAULT_REGION
+    value: us-east-1
+  - name: acl
+    value: private
+    env: BUCKET_ACL
 
 templates:
-  files:
-  - "*.template"
+  files: []
+  # - "*.template"
 
-outputs:
-- name: component.bucket.name
-  value: ${component.bucket.name}
-- name: component.bucket.endpoint
-  value: ${component.bucket.endpoint}
-- name: component.bucket.secret.namespace
-  value: ${component.bucket.secret.namespace}
-- name: component.bucket.secret.name
-  value: ${component.bucket.secret.name}
-- name: component.bucket.secret.accessKeyRef
-  value: ${component.bucket.secret.accessKeyRef}
-- name: component.bucket.secret.secretKeyRef
-  value: ${component.bucket.secret.secretKeyRef}
+outputs: []
