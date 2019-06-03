@@ -79,7 +79,7 @@ endif
 	- @ $(git) remote add $(REMOTE_NAME) "$(REMOTE)"
 	- @ $(git) remote set-url $(REMOTE_NAME) "$(REMOTE)"
 	$(git) fetch --tags --progress $(REMOTE_NAME)
-	$(git) add .gitignore
+	- $(git) add .gitignore
 	$(git) add -A
 	$(git) config user.name "$(USER_NAME)"
 	$(git) config user.email "$(USER_EMAIL)"
