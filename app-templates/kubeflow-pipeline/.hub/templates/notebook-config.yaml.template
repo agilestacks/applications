@@ -1,7 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: ${application.name}
+  name: ${application.name}-nb-config
+  labels:
+    app: "${application.name}"
+    bucket: "${application.bucket.name}"
 data:
   NAME: "${application.name}"
   NAMESPACE: "${application.namespace}"

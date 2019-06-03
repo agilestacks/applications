@@ -18,12 +18,14 @@ kubectl       := kubectl --context="$(DOMAIN_NAME)" --namespace=$(NAMESPACE)
 deploy:
 	$(kubectl) apply -f templates/rbac.yaml
 	$(kubectl) apply -f templates/notebook-keyring.yaml
+	$(kubectl) apply -f templates/notebook-config.yaml
 	$(kubectl) apply -f templates/bucket-pv.yaml
 	$(kubectl) apply -f templates/notebook.yaml
 
 undeploy:
 	- $(kubectl) delete -f templates/notebook.yaml --wait
 	- $(kubectl) delete -f templates/bucket-pv.yaml --wait
+	- $(kubectl) delete -f templates/notebook-config.yaml --wait
 	- $(kubectl) delete -f templates/notebook-keyring.yaml
 	- $(kubectl) delete -f templates/rbac.yaml
 
