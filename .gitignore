@@ -76,3 +76,6 @@ app-templates/kubeflow-pipeline/Dockerfile.flask
 
 components/kaniko/github-secret.yaml
 components/kaniko/kaniko-job.yaml
+app-templates/kubeflow-pipeline/.hub/components
+app-templates/kubeflow-pipeline/.hub/generated.yaml
+*.pem
