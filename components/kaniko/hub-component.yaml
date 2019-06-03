@@ -17,23 +17,22 @@ parameters:
     value: default
     env: NAMESPACE
   - name: image
-    value: gcr.io/kaniko-project/executor:latest
+    value: gcr.io/kaniko-project/executor:debug
   - name: destination
     brief: Target image name and destination for docker push
   - name: dockerfile
     value: Dockerfile
   - name: contextDir
     empty: allow
-- name: component.docker.registry
+- name: component.docker.registry.url
+  fromEnv: COMPONENT_HARBOR_URL
+- name: component.pullSecret
   parameters:
-  - name: url
-    fromEnv: COMPONENT_HARBOR_URL
-  - name: pullSecret.name
+  - name: name
     env: PULL_SECRET_NAME
-    fromEnv: DOCKER_REGISTRY_PULLSECRET
-  - name: pullSecret.namespace
-    value: harbor
+  - name: namespace
     env: PULL_SECRET_NAMESPACE
+    empty: allow
 - name: component.git
   parameters:
   - name: remote

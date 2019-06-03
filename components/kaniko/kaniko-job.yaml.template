@@ -26,6 +26,8 @@ spec:
             secretKeyRef:
               name: ${component.git.secretName}
               key: password
+        - name: GIT_SYNC_ROOT
+          value: /tmp/git
         args:
         - --branch=master
         - --wait=30
@@ -57,7 +59,7 @@ spec:
         projected:
           sources:
           - secret:
-              name: ${component.docker.registry.pullSecret.name}
+              name: ${component.pullSecret.name}
               items:
               - key: .dockerconfigjson
                 path: config.json

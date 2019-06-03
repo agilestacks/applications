@@ -5,26 +5,10 @@ NAMESPACE 	  ?= default
 kubectl       := kubectl --context="$(DOMAIN_NAME)"
 jq            := jq -M
 
-pull-secret:
-	$(eval strip_meta := .metadata.namespace,)
-	$(eval strip_meta += .status,)
-	$(eval strip_meta += .metadata.uid,)
-	$(eval strip_meta += .metadata.resourceVersion,)
-	$(eval strip_meta += .metadata.selfLink,)
-	$(eval strip_meta += .metadata.creationTimestamp,)
-	$(eval strip_meta += .metadata.annotations."kubectl.kubernetes.io/last-applied-configuration")
-
-ifneq ($(PULL_SECRET_NAMESPACE),)
-	$(eval args=-n $(PULL_SECRET_NAMESPACE))
-endif
-	$(kubectl) $(args) get secret $(PULL_SECRET_NAME) -o json \
-	| $(jq) -c 'del($(strip_meta))' \
-	| $(kubectl) -n $(NAMESPACE) apply -f -
-
 namespce:
 	- $(kubectl) create namespace $(NAMESPACE)
 
-deploy: namespce pull-secret
+deploy: namespce
 	$(kubectl) -n $(NAMESPACE) apply -f $(GIT_KIND)-secret.yaml
 	$(eval job_name=$(shell $(kubectl) -n $(NAMESPACE) create -f kaniko-job.yaml -o json | $(jq) -r '.metadata.labels."job-name"'))
 	$(MAKE) wait_complete JOB_NAME=$(job_name)
