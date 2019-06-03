@@ -81,6 +81,8 @@ if (module.parent == null) {
         file => path.join(slicesDir, file)
     ).sort().map(file =>
         readFile(file)
+    ).concat(
+        {parameters: doc.parameters.map(app.transformParameter)}
     )
 
     var man = app.createManifest(slices)
