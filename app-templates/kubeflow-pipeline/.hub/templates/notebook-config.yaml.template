@@ -8,5 +8,5 @@ metadata:
 data:
   APPLICATION_NAME: "${application.name}"
   DOCKER_REGISTRY: "${application.jupyter.kernel.docker.registry}/library"
-  BUCKET_ENDPOINT: ${application.bucket.endpoint}
-  BUCKET_NAME: "${applicaiton.bucket.name}"
+  BUCKET_ENDPOINT: "${application.bucket.endpoint}"
+  BUCKET_NAME: "${application.bucket.name}"
