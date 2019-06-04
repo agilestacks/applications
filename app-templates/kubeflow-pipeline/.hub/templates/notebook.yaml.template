@@ -93,4 +93,4 @@ spec:
           claimName: ${application.name}-workspace
       - name: bucket
         persistentVolumeClaim:
-          claimName: ${application.name}-bucket
+          claimName: ${application.name}-bucket-${application.bucket.name}
