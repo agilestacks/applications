@@ -40,7 +40,7 @@ spec:
         - name: "persistent-storage"
           volumeSource:
             persistentVolumeClaim:
-              claimName: "{{PVC_NAME}}"
+              claimName: "{{BUCKET_PVC}}"
     graph:
       children: []
       endpoint:

@@ -75,4 +75,4 @@ spec:
       volumes:
       - name: "data-dir"
         persistentVolumeClaim:
-          claimName: "{{PVC_NAME}}"
+          claimName: "{{BUCKET_PVC}}"
