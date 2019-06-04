@@ -14,7 +14,6 @@ import logging
 
 DEFAULT_KUBE_SECRET_NAME = "jupyter-keyring"
 
-
 class KubernetesKeyring(keyring.backend.KeyringBackend):
     """Simple keyring adapter that uses kubernetes secrets as storage backend
     """
@@ -24,8 +23,7 @@ class KubernetesKeyring(keyring.backend.KeyringBackend):
         self.namespace = namespace or self._current_namespace()
         self.api_client = kube_client.ApiClient()
         self.corev1 = kube_client.CoreV1Api(self.api_client)
-        self.secret_name = secret_name or environ.get(
-            'JUPYTER_KUBERNETES_SECRET', DEFAULT_KUBE_SECRET_NAME)
+        self.secret_name = secret_name or environ.get('NB_SECRET_VARS', DEFAULT_KUBE_SECRET_NAME)
 
     def set_password(self, servicename, username, password):
         api = self.corev1

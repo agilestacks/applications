@@ -31,9 +31,9 @@ spec:
       - name: git-clone
         image: k8s.gcr.io/git-sync:v3.1.1
         env:
-        - name: NB_CONFIG
+        - name: NB_VARS
           value: ${application.name}-nb-config
-        - name: NB_SECRETS
+        - name: NB_SECRET_VARS
           value: ${application.name}-nb-secret
         - name: GIT_SYNC_REPO
           valueFrom:
