@@ -7,8 +7,10 @@ from .setup import __version__
 from .magics import *
 from .keyrings import *
 from .pv import use_pvc
-import logging as log
-# from .kaniko import *
+
+import logging
+logger = logging.getLogger()
+logger.setLevel(getattr(logging, environ.get('LOG_LEVEL', 'INFO').upper()))
 
 def _is_ipython():
     """Returns whether we are running in notebook."""
@@ -39,14 +41,16 @@ def _configmap_to_ns(name, namespace=_current_namespace(), user_ns=None):
     from kubernetes import client as kube_client
     from kubernetes.client.rest import ApiException
     from IPython import get_ipython
-    user_ns = user_ns or get_ipython().user_ns
     api = kube_client.CoreV1Api(K8sHelper()._api_client)
     try:
         configmap = api.read_namespaced_config_map(name, namespace, exact=True)
-        return configmap.data or {}
+        user_ns = user_ns or get_ipython().user_ns
+        user_ns['NAMESPACE'] = user_ns.get('NAMESPACE', _current_namespace())
+        # raise ValueError(f'Expected error {configmap}a')
+        user_ns.update({k:v for k,v in configmap.data.items() if k not in user_ns})
     except ApiException as e:
-        log.error(e)
-        return {}
+        logging.error(e)
+        return
 
 if _is_ipython():
     from os import environ

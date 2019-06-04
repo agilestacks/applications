@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: ${application.name}-nb-config
+  name: ${application.name}-nb-vars
   labels:
     app: "${application.name}"
     bucket: "${application.bucket.name}"
 data:
-  NAME: "${application.name}"
-  NAMESPACE: "${application.namespace}"
-  DOCKER_REGISTRY: "${application.jupyter.kernel.docker.registry}"
+  APPLICATION_NAME: "${application.name}"
+  DOCKER_REGISTRY: "${application.jupyter.kernel.docker.registry}/library"
   BUCKET_ENDPOINT: ${application.bucket.endpoint}
+  BUCKET_NAME: "${applicaiton.bucket.name}"

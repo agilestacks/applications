@@ -31,10 +31,6 @@ spec:
       - name: git-clone
         image: k8s.gcr.io/git-sync:v3.1.1
         env:
-        - name: NB_VARS
-          value: ${application.name}-nb-config
-        - name: NB_SECRET_VARS
-          value: ${application.name}-nb-secret
         - name: GIT_SYNC_REPO
           valueFrom:
             secretKeyRef:
@@ -74,6 +70,11 @@ spec:
       containers:
       - name: notebook
         image: ${application.jupyter.kernel.docker.image}
+        env:
+        - name: NB_VARS
+          value: ${application.name}-nb-vars
+        - name: NB_SECRET_VARS
+          value: ${application.name}-nb-keyring
         resources:
           limits: {}
           requests:
