@@ -11,3 +11,5 @@ hub.elaborate
 hub.state
 .hub/templates/*.yaml
 seq2seq/
+*.pem
+
