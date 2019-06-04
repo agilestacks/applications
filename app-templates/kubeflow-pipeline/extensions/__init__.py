@@ -10,7 +10,7 @@ from .pv import use_pvc
 
 import logging
 logger = logging.getLogger()
-logger.setLevel(getattr(logging, environ.get('LOG_LEVEL', 'INFO').upper()))
+logger.setLevel(getattr(logging, environ.get('LOG_LEVEL', 'WARNING').upper()))
 
 def _is_ipython():
     """Returns whether we are running in notebook."""
