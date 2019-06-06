@@ -58,7 +58,7 @@ outputs:
   - name: application.git.remote
     value: '${component.git.remote}'
   - name: application.docker.image
-    value: '${component.docker.image}'
+    value: '${component.docker.registry.image}'
   - name: application.name
     value: '${application.name}'
   - name: application.namespace
