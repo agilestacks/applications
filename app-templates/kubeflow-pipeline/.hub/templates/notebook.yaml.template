@@ -28,7 +28,7 @@ spec:
   template:
     spec:
       initContainers:
-      - name: git-clone
+      - name: git-sync
         image: k8s.gcr.io/git-sync:v3.1.1
         env:
         - name: GIT_SYNC_REPO

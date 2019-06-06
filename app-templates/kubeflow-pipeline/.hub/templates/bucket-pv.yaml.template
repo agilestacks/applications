@@ -25,7 +25,7 @@ spec:
   flexVolume:
     driver: "goofysflex"
     secretRef:
-      name: "${application.name}-bucket-${application.bucket.name}"
+      name: "${application.name}-${application.bucket.name}-bucket"
     options:
       # Required
       bucket: "${application.bucket.name}"
