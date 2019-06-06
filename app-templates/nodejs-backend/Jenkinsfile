@@ -125,8 +125,5 @@ pipeline {
       junit testResults: './junit.xml', allowEmptyResults: true
       junit testResults: './eslint-junit.xml', allowEmptyResults: true
     }
-    changed {
-      slackSend color: slack.buildColor, message: slack.buildReport
-    }
   }
 }

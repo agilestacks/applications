@@ -118,8 +118,5 @@ pipeline {
               keepAll: true
       ])
     }
-    changed {
-      slackSend color: slack.buildColor, message: slack.buildReport(htmlReports: ['Allure'])
-    }
   }
 }
