@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: application
-        image: ${component.docker.image}
+        image: ${component.docker.registry.image}
         env:
         - name: ENVIRONMENT_NAME
           value: ${application.environment.name}
