@@ -11,7 +11,8 @@ namespce:
 deploy: namespce
 	$(kubectl) -n $(NAMESPACE) apply -f $(GIT_KIND)-secret.yaml
 	$(eval job_name=$(shell $(kubectl) -n $(NAMESPACE) create -f kaniko-job.yaml -o json | $(jq) -r '.metadata.labels."job-name"'))
-	$(MAKE) wait_complete JOB_NAME=$(job_name)
+	@ echo "Building $(DOCKER_IMAGE). This can take a while..."
+	@ $(MAKE) wait_complete JOB_NAME=$(job_name)
 
 undeploy:
 	- $(kubectl) -n $(NAMESPACE) delete -f kaniko-job.yaml

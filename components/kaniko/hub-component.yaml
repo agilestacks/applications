@@ -20,6 +20,7 @@ parameters:
     value: gcr.io/kaniko-project/executor:debug
   - name: destination
     brief: Target image name and destination for docker push
+    env: DOCKER_IMAGE
   - name: dockerfile
     value: Dockerfile
   - name: contextDir
