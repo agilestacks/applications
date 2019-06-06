@@ -34,7 +34,7 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: "${application.name}-bucket-${application.bucket.name}"
+  name: "${application.name}-${application.bucket.name}-bucket"
 spec:
   storageClassName: goofys
   accessModes:

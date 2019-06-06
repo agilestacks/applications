@@ -35,8 +35,10 @@ parameters:
     brief: stands for jovyan  user primary group
     value: '100'
   - name: namespace
-    kind: link
-    value: ${component.kubeflow.namespace}
+    kind: user
+    value: kubeflow
+    # kind: link
+    # value: ${component.kubeflow.namespace}
     env: NAMESPACE
 
 - name: component.kubeflow.url

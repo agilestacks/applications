@@ -18,7 +18,7 @@ parameters:
     value: ${application.namespace}
   - name: destination
     kind: link
-    value: ${application.jupyter.kernel.docker.image}:latest
+    value: ${application.jupyter.kernel.docker.registry.image}:latest
   - name: contextDir
     value: kernel
 - name: component.kubeflow.url

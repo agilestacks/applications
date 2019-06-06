@@ -69,7 +69,7 @@ spec:
           mountPath: /tmp
       containers:
       - name: notebook
-        image: ${application.jupyter.kernel.docker.image}
+        image: ${application.jupyter.kernel.docker.registry.image}
         env:
         - name: NB_VARS
           value: ${application.name}-nb-vars
@@ -93,4 +93,4 @@ spec:
           claimName: ${application.name}-workspace
       - name: bucket
         persistentVolumeClaim:
-          claimName: ${application.name}-bucket-${application.bucket.name}
+          claimName: "${application.name}-${application.bucket.name}-bucket"

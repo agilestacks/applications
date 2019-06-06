@@ -15,11 +15,12 @@ lifecycle:
 parameters:
 - name: application.jupyter.kernel.docker
   parameters:
-  - name: image
-  - name: registry
-  - name: username
-  - name: password
-  - name: kind
+  - name: registry.image
+  - name: registry.url
+  - name: auth.host
+  - name: auth.basic.username
+  - name: auth.basic.password
+  - name: registry.kind
 
 - name: component.pullSecret
   kind: link
@@ -32,10 +33,10 @@ parameters:
   kind: link
   parameters:
   - name: kind
-    value: ${application.jupyter.kernel.docker.kind}
+    value: ${application.jupyter.kernel.docker.registry.kind}
   - name: server
-    value: ${application.jupyter.kernel.docker.registry}
+    value: ${application.jupyter.kernel.docker.auth.host}
   - name: username
-    value: ${application.jupyter.kernel.docker.username}
+    value: ${application.jupyter.kernel.docker.auth.basic.username}
   - name: password
-    value: ${application.jupyter.kernel.docker.password}
+    value: ${application.jupyter.kernel.docker.auth.basic.password}
