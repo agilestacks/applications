@@ -33,10 +33,8 @@ def training_op(driver, image=None, arguments=[]):
 def http_download_op(url, download_to, md5sum):
     """ Download with curl and md5sum pre-check
     """
-    urlpath = urlparse(url).path
-    resource=os.path.basename(urlpath)
     return ContainerOp(
-        name=resource,
+        name='download artifact',
         image='appropriate/curl',
         command=['sh', '-c'],
         arguments=[f'''
@@ -45,3 +43,4 @@ def http_download_op(url, download_to, md5sum):
             || curl -#Lv --create-dirs -o {download_to} {url}
         ''']
     )
+

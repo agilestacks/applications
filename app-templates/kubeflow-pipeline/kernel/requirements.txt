@@ -7,3 +7,4 @@ keyring > 0
 ec2-metadata >= 2.0.0
 pandas
 jupyter_contrib_nbextensions
+ipdb
