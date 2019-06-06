@@ -43,7 +43,7 @@ parameters:
     value: main
   - name: component.ingress.protocol
   - name: component.ingress.fqdn
-  - name: component.docker.image
+  - name: component.docker.registry.image
   - name: component.git.remote
   - name: component.jenkins.url
   - name: dns.domain
