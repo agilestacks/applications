@@ -18,14 +18,22 @@ from keras import optimizers
 from seq2seq_utils import load_decoder_inputs, load_encoder_inputs, load_text_processor
 import shutil, tempfile
 
+from utils import is_ipython
+
+if is_ipython():
+    print("Jupyter notebook detected. Taking arguments from user space variables")
+    from IPython import get_ipython
+    defaults=get_ipython().user_ns
+else:
+    defaults={}
 
 # Parsing flags.
 parser = argparse.ArgumentParser()
-parser.add_argument("--input_body_preprocessor_dpkl")
-parser.add_argument("--input_title_preprocessor_dpkl")
-parser.add_argument("--input_train_title_vecs_npy")
-parser.add_argument("--input_train_body_vecs_npy")
-parser.add_argument("--output_model_h5")
+parser.add_argument("--input_body_preprocessor_dpkl", default=defaults.get('BODY_PP_FILE'))
+parser.add_argument("--input_title_preprocessor_dpkl", default=defaults.get('TITLE_PP_FILE'))
+parser.add_argument("--input_train_title_vecs_npy", default=defaults.get('TRAIN_TITLE_VECS'))
+parser.add_argument("--input_train_body_vecs_npy", default=defaults.get('TRAIN_BODY_VECS'))
+parser.add_argument("--output_model_h5", default=defaults.get('MODEL_FILE'))
 parser.add_argument("--learning_rate", default="0.001")
 parser.add_argument("--script_name_base", default='seq2seq')
 parser.add_argument("--tempfile", default=True)
@@ -128,3 +136,4 @@ else:
     print(f"Saving to {args.output_model_h5}")
     seq2seq_Model.save(args.output_model_h5)
 print("Done!")
+
