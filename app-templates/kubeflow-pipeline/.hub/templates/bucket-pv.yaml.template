@@ -30,6 +30,8 @@ spec:
       # Required
       bucket: "${application.bucket.name}"
       endpoint: "${application.bucket.endpoint}"
+      uid: "1000"
+      gid: "100"
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
