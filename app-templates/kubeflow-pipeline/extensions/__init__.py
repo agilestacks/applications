@@ -8,10 +8,6 @@ from .magics import *
 from .keyrings import *
 from .pv import use_pvc
 
-import logging
-logger = logging.getLogger()
-logger.setLevel(getattr(logging, environ.get('LOG_LEVEL', 'ERROR').upper()))
-
 def _is_ipython():
     """Returns whether we are running in notebook."""
     try:
