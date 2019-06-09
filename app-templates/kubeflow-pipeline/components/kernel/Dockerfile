@@ -12,7 +12,7 @@ RUN jupyter nbextensions_configurator enable --system
 USER ${nbUser}
 
 RUN jupyter nbextension enable codefolding/main
-COPY notebook.json $HOME/.jupyter/nbconfig/notebook.json
+COPY nbconfig/ $HOME/.jupyter/nbconfig
 
 RUN cd /tmp && git clone "https://github.com/google/seq2seq.git" && \
     pip3 install --no-cache-dir --upgrade --requirement '/requirements.txt' && \

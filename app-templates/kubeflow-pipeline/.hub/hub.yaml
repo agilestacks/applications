@@ -90,7 +90,7 @@ parameters:
     kind: link
     value: ${component.harbor.url}/library/jupyter
   - name: contextDir
-    value: kernel
+    value: components/kernel
 - name: component.harbor.url
   kind: user
   fromEnv: COMPONENT_HARBOR_URL
