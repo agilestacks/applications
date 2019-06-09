@@ -1,55 +1,142 @@
-from kubernetes import config
-import hashlib
-import os.path
+'''
+usage example:
 
-def sha1(*argv):
-    """returns sha1 encoded string. optionally supports salt
-    """
-    s = ':'.join(argv)
-    return hashlib.md5(s.encode()).hexdigest()
+train.py --input_body_preprocessor_dpkl=body_preprocessor.dpkl \
+  --input_title_preprocessor_dpkl=title_preprocessor.dpkl \
+  --input_train_title_vecs_npy=train_title_vecs.npy \
+  --input_train_body_vecs_npy=train_body_vecs.npy \
+  --output_model_h5=output_model.h5 \
+  --learning_rate=0.001
+'''
 
+import argparse
+import numpy as np
+from keras.callbacks import CSVLogger, ModelCheckpoint
+from keras.layers import Input, GRU, Dense, Embedding, BatchNormalization
+from keras.models import Model
+from keras import optimizers
+from seq2seq_utils import load_decoder_inputs, load_encoder_inputs, load_text_processor
+import shutil, tempfile
 
-def current_namespace():
-    try:
-        result = config.list_kube_config_contexts()[1].get(
-            'context', {}).get('namespace')
-        if result:
-            return result
-    except (IndexError, FileNotFoundError):
-        pass
+from utils import is_ipython
 
-    try:
-        return open('/var/run/secrets/kubernetes.io/serviceaccount/namespace').read()
-    except OSError:
-        return 'default'
+default={}
+if is_ipython():
+    print("Jupyter notebook detected. Taking arguments from user space variables")
+    from IPython import get_ipython
+    if get_ipython():
+        default=get_ipython().user_ns
 
+# Parsing flags.
+parser = argparse.ArgumentParser()
+parser.add_argument("--input_body_preprocessor_dpkl", default=default.get('BODY_PP_FILE'))
+parser.add_argument("--input_title_preprocessor_dpkl", default=default.get('TITLE_PP_FILE'))
+parser.add_argument("--input_train_title_vecs_npy", default=default.get('TRAIN_TITLE_VECS'))
+parser.add_argument("--input_train_body_vecs_npy", default=default.get('TRAIN_BODY_VECS'))
+parser.add_argument("--output_model_h5", default=default.get('MODEL_FILE'))
+parser.add_argument("--learning_rate", default="0.001")
+parser.add_argument("--script_name_base", default='seq2seq')
+parser.add_argument("--tempfile", default=True)
+args = parser.parse_args()
+print(args)
 
-def md5sum(fname):
-    """Returns md5 sum"""
-    hash_md5 = hashlib.md5()
-    with open(fname, "rb") as f:
-        for chunk in iter(lambda: f.read(4096), b""):
-            hash_md5.update(chunk)
-    return hash_md5.hexdigest()
+learning_rate = float(args.learning_rate)
 
-def download_file(url, download_to, md5checksum=None):
-    """Downloads file from remote url"""
-    # NOTE the stream=True parameter below
-    if md5checksum:
-        if os.path.isfile(download_to):
-            md5 = md5sum(download_to)
-            if md5checksum == md5:
-                print(f"It seems {download_to} has been already downloaded")
-                return
-            else:
-                print(f"File {download_to} exists, however it's checksum ({md5}) is different")
+encoder_input_data, doc_length = load_encoder_inputs(args.input_train_body_vecs_npy)
+decoder_input_data, decoder_target_data = load_decoder_inputs(args.input_train_title_vecs_npy)
 
+num_encoder_tokens, body_pp = load_text_processor(args.input_body_preprocessor_dpkl)
+num_decoder_tokens, title_pp = load_text_processor(args.input_title_preprocessor_dpkl)
 
-    print(f"Downloading to {download_to}")
-    with requests.get(url, stream=True) as r:
-        r.raise_for_status()
-        with open(download_to, 'wb+') as f:
-            for chunk in r.iter_content(chunk_size=8192):
-                if chunk: # filter out keep-alive new chunks
-                    f.write(chunk)
-    print('Done!')
+# Arbitrarly set latent dimension for embedding and hidden units
+latent_dim = 300
+
+###############
+# Encoder Model.
+###############
+encoder_inputs = Input(shape=(doc_length,), name='Encoder-Input')
+
+# Word embeding for encoder (ex: Issue Body)
+x = Embedding(num_encoder_tokens,
+              latent_dim,
+              name='Body-Word-Embedding',
+              mask_zero=False)(encoder_inputs)
+x = BatchNormalization(name='Encoder-Batchnorm-1')(x)
+
+# We do not need the `encoder_output` just the hidden state.
+_, state_h = GRU(latent_dim, return_state=True, name='Encoder-Last-GRU')(x)
+
+# Encapsulate the encoder as a separate entity so we can just
+# encode without decoding if we want to.
+encoder_model = Model(inputs=encoder_inputs, outputs=state_h, name='Encoder-Model')
+
+seq2seq_encoder_out = encoder_model(encoder_inputs)
+
+################
+# Decoder Model.
+################
+decoder_inputs = Input(shape=(None,), name='Decoder-Input')  # for teacher forcing
+
+# Word Embedding For Decoder (ex: Issue Titles)
+dec_emb = Embedding(num_decoder_tokens,
+                    latent_dim,
+                    name='Decoder-Word-Embedding',
+                    mask_zero=False)(decoder_inputs)
+dec_bn = BatchNormalization(name='Decoder-Batchnorm-1')(dec_emb)
+
+# Set up the decoder, using `decoder_state_input` as initial state.
+decoder_gru = GRU(latent_dim, return_state=True, return_sequences=True, name='Decoder-GRU')
+decoder_gru_output, _ = decoder_gru(dec_bn, initial_state=seq2seq_encoder_out)
+x = BatchNormalization(name='Decoder-Batchnorm-2')(decoder_gru_output)
+
+# Dense layer for prediction
+decoder_dense = Dense(num_decoder_tokens, activation='softmax', name='Final-Output-Dense')
+decoder_outputs = decoder_dense(x)
+
+################
+# Seq2Seq Model.
+################
+
+seq2seq_Model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
+
+seq2seq_Model.compile(optimizer=optimizers.Nadam(lr=learning_rate),
+                      loss='sparse_categorical_crossentropy')
+
+seq2seq_Model.summary()
+
+script_name_base = args.script_name_base
+csv_logger = CSVLogger('{:}.log'.format(script_name_base))
+model_checkpoint = ModelCheckpoint(
+    '{:}.epoch{{epoch:02d}}-val{{val_loss:.5f}}.hdf5'.format(script_name_base), save_best_only=True)
+
+batch_size = 1200
+epochs = 7
+history = seq2seq_Model.fit([encoder_input_data, decoder_input_data],
+                            np.expand_dims(decoder_target_data, -1),
+                            batch_size=batch_size,
+                            epochs=epochs,
+                            validation_split=0.12,
+                            callbacks=[csv_logger, model_checkpoint])
+
+print("Saving model...")
+#############
+# Save model.
+#############
+if args.tempfile:
+    # Workaround because of: at present goofys support only parallel write
+    # see: https://github.com/kahing/goofys/issues/298
+    # TODO configure h5py to write sequentially
+    # TODO consider other flex driver
+    _, fname = tempfile.mkstemp('.h5')
+    print(f"Saving to {fname}")
+    seq2seq_Model.save(fname)
+    print(f"Exporting to {args.output_model_h5}")
+    shutil.copy2(fname, args.output_model_h5)
+else:
+    print(f"Saving to {args.output_model_h5}")
+    seq2seq_Model.save(args.output_model_h5)
+print("Done!")
+
+import os, glob
+for p in glob.iglob('**', recursive=True):
+    print(os.path.abspath(p))

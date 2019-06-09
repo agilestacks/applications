@@ -1,7 +1,7 @@
 FROM python:3.6
 
 COPY requirements.txt /requirements.txt
-COPY src /src
+
 WORKDIR /tmp
 RUN apt-get update \
     && apt-get install -y --no-install-recommends python-pandas git \
@@ -11,4 +11,5 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
     /usr/share/man /usr/share/doc /usr/share/doc-base /root/.cache
 
+COPY src /src
 WORKDIR /src
