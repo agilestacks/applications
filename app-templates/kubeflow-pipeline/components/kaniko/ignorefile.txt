@@ -12,3 +12,6 @@
 jupyter_notebook_config.py
 bucket-volume.yaml
 profile_default/*
+*.hdf5
+*.dpkl
+*.log
