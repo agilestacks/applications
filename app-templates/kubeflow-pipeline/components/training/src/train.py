@@ -9,7 +9,7 @@ train.py --input_body_preprocessor_dpkl=body_preprocessor.dpkl \
   --learning_rate=0.001
 '''
 
-import argparse
+import argparse, os
 import numpy as np
 from keras.callbacks import CSVLogger, ModelCheckpoint
 from keras.layers import Input, GRU, Dense, Embedding, BatchNormalization
@@ -18,25 +18,21 @@ from keras import optimizers
 from seq2seq_utils import load_decoder_inputs, load_encoder_inputs, load_text_processor
 import shutil, tempfile
 
-from utils import is_ipython
-
-default={}
-if is_ipython():
-    print("Jupyter notebook detected. Taking arguments from user space variables")
-    from IPython import get_ipython
-    if get_ipython():
-        default=get_ipython().user_ns
+from utils import (get_value, get_value_as_int, get_value_as_float, copy)
 
 # Parsing flags.
 parser = argparse.ArgumentParser()
-parser.add_argument("--input_body_preprocessor_dpkl", default=default.get('BODY_PP_FILE'))
-parser.add_argument("--input_title_preprocessor_dpkl", default=default.get('TITLE_PP_FILE'))
-parser.add_argument("--input_train_title_vecs_npy", default=default.get('TRAIN_TITLE_VECS'))
-parser.add_argument("--input_train_body_vecs_npy", default=default.get('TRAIN_BODY_VECS'))
-parser.add_argument("--output_model_h5", default=default.get('MODEL_FILE'))
+parser.add_argument("--input_body_preprocessor_dpkl", default=get_value('BODY_PP_FILE'))
+parser.add_argument("--input_title_preprocessor_dpkl", default=get_value('TITLE_PP_FILE'))
+parser.add_argument("--input_train_title_vecs_npy", default=get_value('TRAIN_TITLE_VECS'))
+parser.add_argument("--input_train_body_vecs_npy", default=get_value('TRAIN_BODY_VECS'))
+parser.add_argument("--output_model_h5", default=get_value('MODEL_FILE'))
 parser.add_argument("--learning_rate", default="0.001")
 parser.add_argument("--script_name_base", default='seq2seq')
 parser.add_argument("--tempfile", default=True)
+parser.add_argument("--epochs", type=int, default=get_value_as_int('TRAIN_EPOCHS', 7))
+parser.add_argument("--batch_size", type=int, default=get_value_as_int('BATCH_SIZE', 1200))
+parser.add_argument("--validation_split", type=float, default=get_value_as_float('BATCH_SIZE', 0.12))
 args = parser.parse_args()
 print(args)
 
@@ -109,13 +105,11 @@ csv_logger = CSVLogger('{:}.log'.format(script_name_base))
 model_checkpoint = ModelCheckpoint(
     '{:}.epoch{{epoch:02d}}-val{{val_loss:.5f}}.hdf5'.format(script_name_base), save_best_only=True)
 
-batch_size = 1200
-epochs = 7
 history = seq2seq_Model.fit([encoder_input_data, decoder_input_data],
                             np.expand_dims(decoder_target_data, -1),
-                            batch_size=batch_size,
-                            epochs=epochs,
-                            validation_split=0.12,
+                            batch_size=args.batch_size,
+                            epochs=args.epochs,
+                            validation_split=args.validation_split),
                             callbacks=[csv_logger, model_checkpoint])
 
 print("Saving model...")
@@ -130,13 +124,11 @@ if args.tempfile:
     _, fname = tempfile.mkstemp('.h5')
     print(f"Saving to {fname}")
     seq2seq_Model.save(fname)
-    print(f"Exporting to {args.output_model_h5}")
-    shutil.copy2(fname, args.output_model_h5)
+    copy(fname, args.output_model_h5)
+    to_dir = dirname = os.path.dirname(args.output_model_h5)
+    print("Saving weights...")
+    copy('/tmp/*.hdf5', to_dir)
 else:
     print(f"Saving to {args.output_model_h5}")
     seq2seq_Model.save(args.output_model_h5)
 print("Done!")
-
-import os, glob
-for p in glob.iglob('**', recursive=True):
-    print(os.path.abspath(p))
