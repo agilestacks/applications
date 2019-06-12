@@ -1,6 +1,7 @@
 import os
 from IPython import get_ipython
 from shutil import shutil
+from numpy import savetxt
 
 def is_ipython():
     """Returns whether we are running in notebook.
@@ -17,16 +18,31 @@ def get_value(key, default=None):
         result=get_ipython().user_ns.get(ref)
     return result or os.environ.get(ref, default)
 
-def get_value_as_int(key, default=0:int):
+def get_value_as_int(key, default:int=0):
     return int( get_value(key) or 0 )
 
-
-def get_value_as_float(key, default=0.0:float):
+def get_value_as_float(key, default:float=0.0):
     return float( get_value(key) or 0.0 )
 
 def copy(src, dest):
+    mkdirs_f(dest)
     print(f"Copy to {dest}")
+    copy2(src, dest)
+
+def save_list(fname, list):
+    mkdirs_f(dest)
+    print(f"Saving {fname}")
+    with open(fname, 'w') as f:
+        for item in list:
+            f.write("%s " % item)
+
+def save_text(fname, text):
+    mkdirs_f(dest)
+    print(f"Saving {fname}")
+    with open(fname, "w") as f:
+        f.write(text)
+
+def mkdirs_f(fname):
     dirname = os.path.dirname(dest)
     dirname = os.path.abspath(dirname)
     os.makedirs(dirname, exist_ok=True)
-    copy2(src, dest)

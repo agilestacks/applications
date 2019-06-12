@@ -21,6 +21,8 @@ import dill as dpickle
 import numpy as np
 from textacy.preprocess import preprocess_text
 
+from utils import (save_text, save_list)
+
 def textacy_cleaner(text: str) -> str:
     if isinstance(text, (int, float, complex)):
         # workaround module not found error if inside model
@@ -88,6 +90,11 @@ train_title_vecs = title_pp.fit_transform(train_title_raw)
 
 print('Example original title:', train_title_raw[0])
 print('Example title after pre-processing:', train_title_vecs[0])
+
+save_text("/tmp/train_title_raw.txt", train_title_raw[0])
+save_text("/tmp/train_body_raw.txt", train_body_raw[0])
+save_list("/tmp/train_title_vecs.txt", train_title_vecs[0])
+save_list("/tmp/train_body_vecs.txt", train_body_vecs[0])
 
 # Save the preprocessor.
 with open(args.output_body_preprocessor_dpkl, 'wb') as f:
