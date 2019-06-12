@@ -17,6 +17,8 @@ parameters:
 - name: dns.domain
   env: DOMAIN_NAME
 - name: cloud.region
+- name: terraform.bucket.name
+- name: terraform.bucket.region
 - name: application
   parameters:
   - name: name
