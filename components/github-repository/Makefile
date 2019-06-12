@@ -3,7 +3,7 @@
 export HUB_CONFIG := $(realpath .)/.hubconfig
 export HUB_PROTOCOL ?= https
 
-ORG ?= asibot
+ORG ?= please-define-hub-parameter
 REPO ?= mysuperapp
 PRIVATE ?= true
 DESCRIPTION ?=

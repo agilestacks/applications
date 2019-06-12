@@ -22,7 +22,7 @@ parameters:
     fromEnv: COMPONENT_GITHUB_TOKEN
     default: token
   - name: repository.organization
-    value: asibot
+    kind: user
   - name: repository.name
     value: python-flask
   - name: webhook.name

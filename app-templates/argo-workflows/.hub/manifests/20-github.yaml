@@ -34,7 +34,7 @@ parameters:
   - name: token
     fromEnv: COMPONENT_GITHUB_TOKEN
   - name: repository.organization
-    value: asibot
+    kind: user
   - name: repository.name
     value: antonargo1
   - name: webhook.name
