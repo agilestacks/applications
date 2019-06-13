@@ -33,7 +33,7 @@ undeploy:
 $(APP_ELABORATE_FILE) elaborate:
 	$(hub) elaborate hub.yaml managed.yaml -s $(PLATFORM_STATE_FILE) -o $(APP_ELABORATE_FILE)
 
-install: $(APP_ELABORATE_FILE)
+install: sleep $(APP_ELABORATE_FILE)
 	$(hub) deploy $(APP_ELABORATE_FILE) -s $(APP_STATE) -e WORKSPACE=$(WORKSPACE)
 
 uninstall: $(APP_ELABORATE_FILE)
@@ -41,5 +41,8 @@ uninstall: $(APP_ELABORATE_FILE)
 
 clean:
 	rm -rf $(APP_ELABORATE_FILE) $(APP_STATE_FILE_LOCAL) ../.git
+
+sleep:
+	sleep 600
 
 .PHONY: deploy undeploy install uninstall clean elaborate
