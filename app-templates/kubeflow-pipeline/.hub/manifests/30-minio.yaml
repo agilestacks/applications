@@ -16,14 +16,15 @@ components:
     fromEnv: GITHUB_TOKEN
 parameters:
 - name: application.bucket
-  kind: user
   parameters:
   - name: name
   - name: endpoint
   # not needed for minio
   # - name: region
   - name: accessKey
+    value: admin
   - name: secretKey
+    value: Admin12345
   - name: capacity
     value: 40Gi
 - name: component.ingress.protocol
