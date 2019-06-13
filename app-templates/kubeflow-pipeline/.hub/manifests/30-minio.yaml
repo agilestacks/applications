@@ -18,7 +18,6 @@ parameters:
 - name: application.bucket
   parameters:
   - name: name
-  - name: endpoint
   # not needed for minio
   # - name: region
   - name: accessKey
