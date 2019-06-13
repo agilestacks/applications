@@ -5,7 +5,7 @@ DOMAIN_NAME   ?= $(shell kubectl config current-context)
 
 PLATFORM_STATE_FILE   ?= $(error PLATFORM_STATE_FILE varialbe has not been defined!)
 PLATFORM_STATE_BUCKET ?= $(firstword $(subst /, ,$(PLATFORM_STATE_FILE:s3://%=%)))
-PLATFORM_STATE_REGION ?= $(shell $(aws) s3api get-bucket-location --bucket $(PLATFORM_STATE_BUCKET) | $(jq) '.LocationConstraint//"us-east-1"')
+PLATFORM_STATE_REGION ?= $(shell aws s3api get-bucket-location --bucket $(PLATFORM_STATE_BUCKET) | jq -r '.LocationConstraint//"us-east-1"')
 
 APP_ELABORATE_FILE    ?= hub.elaborate
 APP_STATE_FILE_LOCAL  ?= hub.state
