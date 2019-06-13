@@ -13,7 +13,6 @@ APP_STATE_FILE        ?= $(error APP_STATE_FILE varialbe has not been defined!)
 APP_STATE 			  ?= $(APP_STATE_FILE_LOCAL),$(APP_STATE_FILE)
 WORKSPACE             := $(abspath $(dir $(lastword $(MAKEFILE_LIST)))/..)
 
-hub.yaml      := hub.yaml
 hub 	      := hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credentials=false
 kubectl       := kubectl --context="$(DOMAIN_NAME)" --namespace=$(NAMESPACE)
 
@@ -32,10 +31,9 @@ undeploy:
 	- $(kubectl) delete -f templates/rbac.yaml
 
 $(APP_ELABORATE_FILE) elaborate:
-	$(hub) elaborate $(hub.yaml) managed.yaml -s $(PLATFORM_STATE_FILE) -o $(APP_ELABORATE_FILE)
+	$(hub) elaborate hub.yaml managed.yaml -s $(PLATFORM_STATE_FILE) -o $(APP_ELABORATE_FILE)
 
 install: $(APP_ELABORATE_FILE)
-	find $(WORKSPACE)
 	$(hub) deploy $(APP_ELABORATE_FILE) -s $(APP_STATE) -e WORKSPACE=$(WORKSPACE)
 
 uninstall: $(APP_ELABORATE_FILE)
