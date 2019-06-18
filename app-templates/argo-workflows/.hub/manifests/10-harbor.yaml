@@ -39,15 +39,12 @@ parameters:
   parameters:
   - name: image
     value: ${application.docker-registry.image.url}
-  - name: registry.server
+  - name: registry.auth.host
     value: ${application.docker-registry.url}
-  - name: registry.username
-    value: ${application.docker-registry.username}    
-  - name: registry.password
-    value: ${application.docker-registry.password}  
-  - name: registry.email
-    value: ${application.docker-registry.email}
-    empty: allow
+  - name: registry.auth.basic.username
+    value: ${application.docker-registry.username}
+  - name: registry.auth.basic.password
+    value: ${application.docker-registry.password}
 
 - name: component.pullSecret
   kind: link
