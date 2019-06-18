@@ -20,6 +20,7 @@ parameters:
   - name: auth.host
   - name: auth.basic.username
   - name: auth.basic.password
+    value: Harbor12345
   - name: registry.kind
 
 - name: component.pullSecret
