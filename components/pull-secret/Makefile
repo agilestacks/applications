@@ -13,7 +13,7 @@ namespace:
 .PHONY: namespace
 
 deploy: namespace
-	- $(kubectl) create secret docker-registry $(COMPONENT_NAME) \
+	- @ $(kubectl) create secret docker-registry $(COMPONENT_NAME) \
 		--docker-server=$(DOCKER_HOST) \
 		--docker-username=$(DOCKER_USERNAME) \
 		--docker-password=$(DOCKER_PASSWORD) $(KUBECTL_ARGS)
