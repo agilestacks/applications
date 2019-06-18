@@ -30,7 +30,7 @@ parameters:
   - name: basic.username
     env: DOCKER_USERNAME
     empty: allow
-  - name: password
+  - name: basic.password
     env: DOCKER_PASSWORD
     empty: allow
   - name: email
