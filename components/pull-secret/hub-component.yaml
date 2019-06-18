@@ -21,22 +21,21 @@ parameters:
     env: COMPONENT_NAME
   - name: namespace
     env: NAMESPACE
-- name: component.docker.registry
+- name: component.docker.registry.kind
+  value: harbor
+- name: component.docker.auth
   parameters:
-  - name: kind
-    value: harbor
-  - name: server
-    value: docker.io
-    env: DOCKER_SERVER
-  - name: username
-    empty: allow
+  - name: host
+    env: DOCKER_HOST
+  - name: basic.username
     env: DOCKER_USERNAME
+    empty: allow
   - name: password
-    empty: allow
     env: DOCKER_PASSWORD
-  - name: email
     empty: allow
+  - name: email
     env: DOCKER_EMAIL
+    empty: allow
 
 outputs:
 - name: component.pullSecret.name

@@ -30,14 +30,14 @@ parameters:
     value: ${application.name}-pullsecret
   - name: namespace
     value: ${application.namespace}
-- name: component.docker.registry
+- name: component.docker
   kind: link
   parameters:
-  - name: kind
+  - name: registry.kind
     value: ${application.jupyter.kernel.docker.registry.kind}
-  - name: server
+  - name: auth.host
     value: ${application.jupyter.kernel.docker.auth.host}
-  - name: username
+  - name: auth.basic.username
     value: ${application.jupyter.kernel.docker.auth.basic.username}
-  - name: password
+  - name: auth.basic.password
     value: ${application.jupyter.kernel.docker.auth.basic.password}
