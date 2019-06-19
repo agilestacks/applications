@@ -7,6 +7,8 @@
 .envrc
 .DS_STORE
 
+**.pid
+
 phase0/.dist
 
 # applications components
