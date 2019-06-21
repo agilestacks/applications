@@ -9,7 +9,7 @@ train.py --input_body_preprocessor_dpkl=body_preprocessor.dpkl \
   --learning_rate=0.001
 '''
 
-import argparse, os
+import argparse, os, glob
 import numpy as np
 from keras.callbacks import CSVLogger, ModelCheckpoint
 from keras.layers import Input, GRU, Dense, Embedding, BatchNormalization
@@ -103,14 +103,17 @@ seq2seq_Model.summary()
 script_name_base = args.script_name_base
 csv_logger = CSVLogger('{:}.log'.format(script_name_base))
 model_checkpoint = ModelCheckpoint(
-    '{:}.epoch{{epoch:02d}}-val{{val_loss:.5f}}.hdf5'.format(script_name_base), save_best_only=True)
+    '{:}.epoch{{epoch:02d}}-val{{val_loss:.5f}}.hdf5'.format(script_name_base),
+    save_best_only=True
+)
 
-history = seq2seq_Model.fit([encoder_input_data, decoder_input_data],
-                            np.expand_dims(decoder_target_data, -1),
-                            batch_size=args.batch_size,
-                            epochs=args.epochs,
-                            validation_split=args.validation_split),
-                            callbacks=[csv_logger, model_checkpoint])
+history = seq2seq_Model.fit(
+    [encoder_input_data, decoder_input_data],
+    np.expand_dims(decoder_target_data, -1),
+    callbacks=[csv_logger, model_checkpoint],
+    batch_size=args.batch_size,
+    epochs=args.epochs,
+    validation_split=args.validation_split)
 
 print("Saving model...")
 #############
@@ -127,7 +130,8 @@ if args.tempfile:
     copy(fname, args.output_model_h5)
     to_dir = dirname = os.path.dirname(args.output_model_h5)
     print("Saving weights...")
-    copy('/tmp/*.hdf5', to_dir)
+    for f in glob.iglob('/tmp/*.hdf5'):
+        copy(f, to_dir)
 else:
     print(f"Saving to {args.output_model_h5}")
     seq2seq_Model.save(args.output_model_h5)

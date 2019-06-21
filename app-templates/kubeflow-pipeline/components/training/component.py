@@ -1,6 +1,6 @@
 from kfp.dsl import ContainerOp
 from urllib.parse import urlparse
-import os
+import os, re
 
 def _is_ipython():
     """Returns whether we are running in notebook."""
@@ -10,7 +10,7 @@ def _is_ipython():
         return False
     return True
 
-def training_op(driver, image=None, arguments=[]):
+def training_op(script, image=None, arguments=[], file_outputs={}):
     """ A template function to encapsulate similar container ops
     """
 
@@ -23,18 +23,20 @@ def training_op(driver, image=None, arguments=[]):
             `image` parameter is missing.
             If you run in Jupyter Notebook you can also define a global var TRAINING_IMAGE
         """)
+
     return ContainerOp(
-        name=os.path.splitext(driver)[0],
+        name=re.sub(r'[\W_]+', '-', os.path.splitext(script.lower())[0]),
         image=image,
-        command=['/usr/local/bin/python', driver],
-        arguments=arguments
+        command=['/usr/local/bin/python', script],
+        arguments=arguments,
+        file_outputs=file_outputs,
     )
 
 def http_download_op(url, download_to, md5sum):
     """ Download with curl and md5sum pre-check
     """
     return ContainerOp(
-        name='download artifact',
+        name='download-artifact',
         image='appropriate/curl',
         command=['sh', '-c'],
         arguments=[f'''

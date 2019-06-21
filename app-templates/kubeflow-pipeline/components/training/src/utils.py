@@ -1,6 +1,6 @@
 import os
 from IPython import get_ipython
-from shutil import shutil
+from shutil import copy2
 from numpy import savetxt
 
 def is_ipython():
@@ -15,8 +15,8 @@ def is_ipython():
 def get_value(key, default=None):
     result = None
     if is_ipython():
-        result=get_ipython().user_ns.get(ref)
-    return result or os.environ.get(ref, default)
+        result=get_ipython().user_ns.get(key)
+    return result or os.environ.get(key, default)
 
 def get_value_as_int(key, default:int=0):
     return int( get_value(key) or 0 )
@@ -30,19 +30,19 @@ def copy(src, dest):
     copy2(src, dest)
 
 def save_list(fname, list):
-    mkdirs_f(dest)
+    mkdirs_f(fname)
     print(f"Saving {fname}")
     with open(fname, 'w') as f:
         for item in list:
             f.write("%s " % item)
 
 def save_text(fname, text):
-    mkdirs_f(dest)
+    mkdirs_f(fname)
     print(f"Saving {fname}")
     with open(fname, "w") as f:
         f.write(text)
 
 def mkdirs_f(fname):
-    dirname = os.path.dirname(dest)
+    dirname = os.path.dirname(fname)
     dirname = os.path.abspath(dirname)
     os.makedirs(dirname, exist_ok=True)
