@@ -13,9 +13,5 @@ def unload_ipython_extension(ipython):
     global _loaded
     if _loaded:
         magic = ipython.magics_manager.registry.pop('TemplateMagics')
-        magic.TemplateMagics.stop()
-
         magic = ipython.magics_manager.registry.pop('ArgoMagics')
-        magic.ArgoMagics.stop()
-
         _loaded = False

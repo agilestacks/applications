@@ -7,6 +7,7 @@ from .setup import __version__
 from .magics import *
 from .keyrings import *
 from .pv import use_pvc
+import pandas as pd
 
 def _is_ipython():
     """Returns whether we are running in notebook."""
@@ -41,13 +42,24 @@ def _configmap_to_ns(name, namespace=_current_namespace(), user_ns=None):
     try:
         configmap = api.read_namespaced_config_map(name, namespace, exact=True)
         user_ns = user_ns or get_ipython().user_ns
-        user_ns['NAMESPACE'] = user_ns.get('NAMESPACE', _current_namespace())
         # raise ValueError(f'Expected error {configmap}a')
-        user_ns.update({k:v for k,v in configmap.data.items() if k not in user_ns})
+        data = dict(configmap.data)
+        if 'NAMESPACE' not in user_ns:
+            data['NAMESPACE'] = _current_namespace()
+        df = pd.DataFrame.from_dict({
+                'variable': list(data.keys()),
+                'value': list(data.values()),
+            })
+        display(HTML(f"<i>Implicit variables found in configmap: <b>{name}</b></i><br>{df.to_html(index=False)}"))
+        items = {k:v for k,v in data.items() if k not in user_ns}
+        if items:
+            user_ns.update(items)
     except ApiException as e:
+        display(e)
         logging.error(e)
         return
 
 if _is_ipython():
     from os import environ
+    from IPython.display import display, HTML
     _configmap_to_ns(environ.get('NB_VARS', 'jupyter-vars'))
