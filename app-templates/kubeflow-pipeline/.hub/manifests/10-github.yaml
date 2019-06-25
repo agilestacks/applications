@@ -28,7 +28,7 @@ parameters:
 
 - name: component.git
   parameters:
-  - name: git.kind
+  - name: kind
     value: github
   - name: remote
   - name: username
