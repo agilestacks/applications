@@ -37,5 +37,10 @@ parameters:
   - name: secretName
     kind: link
     value: ${application.name}-github
-
-outputs: []
+outputs:
+- name: application.git.kind
+  value: ${component.git.kind}
+- name: application.git.remote
+  value: ${component.git.remote}
+- name: application.git.branch
+  value: ${component.git.branch}

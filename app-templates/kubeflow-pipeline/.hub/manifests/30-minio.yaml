@@ -51,3 +51,7 @@ lifecycle:
   order:
   - s3fuse
   - bucket
+
+outputs:
+- name: application.bucket.url
+  value: ${application.bucket.endpoint}/minio/${application.bucket.name}
