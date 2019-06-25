@@ -43,7 +43,7 @@ spec:
     spec:
       containers:
       - name: "{{APPLICATION_NAME}}"
-        image: "{{APPLICATION_DOCKER_IMAGE}}"
+        image: "{{APPLICATION_IMAGE}}"
         imagePullPolicy: Always
         env:
         - name: SERVER_ADDR

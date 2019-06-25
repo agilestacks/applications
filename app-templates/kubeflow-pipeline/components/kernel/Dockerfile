@@ -19,7 +19,3 @@ COPY nbconfig $JUPYTER_CONFIG_DIR
 RUN cd /tmp && git clone "https://github.com/google/seq2seq.git" && \
     pip3 install --no-cache-dir --upgrade --requirement '/requirements.txt' && \
     rm -rf /tmp/*
-
-# USER root
-# RUN jupyter contrib nbextension install
-# USER jovyan
