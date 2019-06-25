@@ -13,8 +13,10 @@ USER ${nbUser}
 
 ENV JUPYTER_CONFIG_DIR /usr/local/etc/jupyter/nbconfig
 
-RUN jupyter nbextension enable codefolding/main
 COPY nbconfig $JUPYTER_CONFIG_DIR
+
+RUN jupyter nbextension enable codefolding/main
+RUN jupyter nbextension enable varInspector/main
 
 RUN cd /tmp && git clone "https://github.com/google/seq2seq.git" && \
     pip3 install --no-cache-dir --upgrade --requirement '/requirements.txt' && \
