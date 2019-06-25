@@ -40,7 +40,10 @@ parameters:
 outputs:
 - name: application.git.kind
   value: ${component.git.kind}
+  brief: Reference that application uses Github
 - name: application.git.remote
   value: ${component.git.remote}
+  brief: URL to the git repository
 - name: application.git.branch
   value: ${component.git.branch}
+  brief: Git branch that current application stack is using

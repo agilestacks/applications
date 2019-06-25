@@ -55,3 +55,4 @@ lifecycle:
 outputs:
 - name: application.bucket.url
   value: ${application.bucket.endpoint}/minio/${application.bucket.name}
+  brief: URL of a bucket that has been used to store application artifacts

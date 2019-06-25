@@ -49,6 +49,7 @@ parameters:
 outputs:
 - name: application.notebook.url
   value: "${component.kubeflow.url}_/notebooks"
+  brief: URL to the application jupyter notebook
 
 templates:
   files:
