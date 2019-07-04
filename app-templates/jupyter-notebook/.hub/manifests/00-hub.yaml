@@ -17,6 +17,8 @@ requires:
 components: []
 
 parameters:
+  - name: dns.domain
+    env: DOMAIN_NAME
   - name: component.ingress.protocol
   - name: application.name
     value: viktors-notebook
