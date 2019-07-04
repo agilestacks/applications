@@ -52,14 +52,14 @@ first-commit: $(WORKSPACE) $(TEMPDIR)
 	$(git) add .
 	$(git) commit -m "Initial commit"
 
-application: first-commit
+gitrepo: init first-commit
 	$(call add_remote,$(SOURCECODE_REPO),extensions)
 	$(call fetch_dir,extensions,nbextensions,nbextensions,nbextensions)
 	$(call fetch_dir,extensions,kernel,jupyter-kernels/tensorflow-ktext-seq2seq,components/kernel)
 	$(call fetch_dir,extensions,s3fs,storage/s3fs,.hub/components/s3fs)
 	$(git) push origin master
 
-deploy: init application
+deploy:
 	$(kubectl) apply -f templates/rbac.yaml
 	$(kubectl) apply -f templates/notebook-keyring.yaml
 	$(kubectl) apply -f templates/notebook-config.yaml
@@ -73,10 +73,10 @@ undeploy:
 	- $(kubectl) delete -f templates/notebook-keyring.yaml
 	- $(kubectl) delete -f templates/rbac.yaml
 
-$(APP_ELABORATE_FILE) elaborate:
+$(APP_ELABORATE_FILE) elaborate
 	$(hub) elaborate $(HUB_YAML) managed.yaml -s $(PLATFORM_STATE_FILE) -o $(APP_ELABORATE_FILE)
 
-install: $(APP_ELABORATE_FILE)
+install: $(APP_ELABORATE_FILE) gitrepo
 	$(hub) deploy $(APP_ELABORATE_FILE) -s $(APP_STATE) -e WORKSPACE=$(WORKSPACE)
 
 uninstall: $(APP_ELABORATE_FILE)
