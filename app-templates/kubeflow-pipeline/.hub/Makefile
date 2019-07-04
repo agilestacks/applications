@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := deploy
 
 NAMESPACE 	  ?= kubeflow
-KUBECONTEXT   ?= $(shell kubectl config current-context)
+KUBECONTEXT   ?= set-me-please
 
 PLATFORM_STATE_FILE   ?= $(error PLATFORM_STATE_FILE varialbe has not been defined!)
 PLATFORM_STATE_BUCKET ?= $(firstword $(subst /, ,$(PLATFORM_STATE_FILE:s3://%=%)))
