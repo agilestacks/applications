@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := deploy
 
 NAMESPACE 	  ?= kubeflow
-DOMAIN_NAME   ?= $(shell kubectl config current-context)
+DOMAIN_NAME   ?= $(error DOMAIN_NAME variable has not been defined)
 
 PLATFORM_STATE_FILE   ?= $(error PLATFORM_STATE_FILE varialbe has not been defined!)
 PLATFORM_STATE_BUCKET ?= $(firstword $(subst /, ,$(PLATFORM_STATE_FILE:s3://%=%)))
@@ -12,11 +12,53 @@ APP_STATE_FILE_LOCAL  ?= hub.state
 APP_STATE_FILE        ?= $(error APP_STATE_FILE varialbe has not been defined!)
 APP_STATE 			  ?= $(APP_STATE_FILE_LOCAL),$(APP_STATE_FILE)
 WORKSPACE             := $(abspath $(dir $(lastword $(MAKEFILE_LIST)))/..)
+TEMPDIR 			  := $(shell pwd)/.tmp
+HUB_YAML              := hub.yaml
+SOURCECODE_REPO       := https://github.com/agilestacks/kubeflow-extensions.git
+SORUCECODE_PATH       := applications/keras-seq2seq/
 
-hub 	      := hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credentials=false
-kubectl       := kubectl --context="$(DOMAIN_NAME)" --namespace=$(NAMESPACE)
+hub 	:= hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credentials=false
+kubectl := kubectl --context="$(DOMAIN_NAME)" --namespace=$(NAMESPACE)
 
-deploy:
+git := git -C "$(WORKSPACE)"
+rsync := rsync -auv
+
+define add_remote
+	$(git) remote add -f -t master --no-tags $(2) $(1)
+endef
+
+define fetch_dir
+	$(git) checkout -b upstream/$(2) $(1)/master
+	$(git) subtree split -q --squash --prefix=$(3) --annotate="[$(2)] " --rejoin -b merging/$(2)
+	$(git) checkout master
+	$(git) subtree add --prefix=$(4) --squash merging/$(2)
+	$(git) branch -D merging/$(2)
+endef
+
+$(WORKSPACE) $(TEMPDIR):
+	mkdir -p $@
+
+init: $(WORKSPACE)
+	$(git) init
+
+first-commit: $(WORKSPACE) $(TEMPDIR)
+	git -C "$(TEMPDIR)" init
+	git -C "$(TEMPDIR)" remote add app $(SOURCECODE_REPO)
+	git -C "$(TEMPDIR)" fetch -q --depth 1 app
+	git -C "$(TEMPDIR)" checkout -q FETCH_HEAD
+	$(rsync) $(TEMPDIR)/$(SORUCECODE_PATH) $(WORKSPACE)
+	@ rm -rf $(TEMPDIR)
+	$(git) add .
+	$(git) commit -m "Initial commit"
+
+application: first-commit
+	$(call add_remote,$(SOURCECODE_REPO),extensions)
+	$(call fetch_dir,extensions,nbextensions,nbextensions,nbextensions)
+	$(call fetch_dir,extensions,kernel,jupyter-kernels/tensorflow-ktext-seq2seq,components/kernel)
+	$(call fetch_dir,extensions,s3fs,storage/s3fs,.hub/components/s3fs)
+	$(git) push origin master
+
+deploy: init application
 	$(kubectl) apply -f templates/rbac.yaml
 	$(kubectl) apply -f templates/notebook-keyring.yaml
 	$(kubectl) apply -f templates/notebook-config.yaml
@@ -31,7 +73,7 @@ undeploy:
 	- $(kubectl) delete -f templates/rbac.yaml
 
 $(APP_ELABORATE_FILE) elaborate:
-	$(hub) elaborate hub.yaml managed.yaml -s $(PLATFORM_STATE_FILE) -o $(APP_ELABORATE_FILE)
+	$(hub) elaborate $(HUB_YAML) managed.yaml -s $(PLATFORM_STATE_FILE) -o $(APP_ELABORATE_FILE)
 
 install: $(APP_ELABORATE_FILE)
 	$(hub) deploy $(APP_ELABORATE_FILE) -s $(APP_STATE) -e WORKSPACE=$(WORKSPACE)
