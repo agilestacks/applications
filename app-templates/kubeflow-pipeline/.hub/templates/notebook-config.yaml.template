@@ -12,3 +12,4 @@ data:
   BUCKET_ENDPOINT: "${application.bucket.endpoint}"
   BUCKET_NAME: "${application.bucket.name}"
   BUCKET_PVC: "${application.name}-${application.bucket.name}-bucket"
+  MOUNT_PATH: "/mnt/s3"
