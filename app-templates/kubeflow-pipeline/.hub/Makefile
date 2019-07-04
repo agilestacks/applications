@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := deploy
 
 NAMESPACE 	  ?= kubeflow
-DOMAIN_NAME   ?= $(error DOMAIN_NAME variable has not been defined)
+KUBECONTEXT   ?= $(shell kubectl config current-context)
 
 PLATFORM_STATE_FILE   ?= $(error PLATFORM_STATE_FILE varialbe has not been defined!)
 PLATFORM_STATE_BUCKET ?= $(firstword $(subst /, ,$(PLATFORM_STATE_FILE:s3://%=%)))
@@ -18,7 +18,7 @@ SOURCECODE_REPO       := https://github.com/agilestacks/kubeflow-extensions.git
 SORUCECODE_PATH       := applications/keras-seq2seq/
 
 hub 	:= hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credentials=false
-kubectl := kubectl --context="$(DOMAIN_NAME)" --namespace=$(NAMESPACE)
+kubectl := kubectl --context="$(KUBECONTEXT)" --namespace=$(NAMESPACE)
 
 git := git -C "$(WORKSPACE)"
 rsync := rsync -auvhtrzi --progress

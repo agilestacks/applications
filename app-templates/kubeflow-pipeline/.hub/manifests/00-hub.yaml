@@ -15,7 +15,7 @@ requires:
 
 parameters:
 - name: dns.domain
-  env: DOMAIN_NAME
+  env: KUBECONTEXT
 - name: cloud.region
 - name: terraform.bucket.name
 - name: terraform.bucket.region
