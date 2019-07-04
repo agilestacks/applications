@@ -17,6 +17,13 @@ HUB_YAML              := hub.yaml
 SOURCECODE_REPO       := https://github.com/agilestacks/kubeflow-extensions.git
 SORUCECODE_PATH       := applications/keras-seq2seq/
 
+ifeq ($(GIT_USER_NAME),)
+	GIT_USER_NAME  := SuperHub
+endif
+ifeq ($(GIT_USER_EMAIL),)
+	GIT_USER_EMAIL := support@agilestacks.com
+endif
+
 hub 	:= hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credentials=false
 kubectl := kubectl --context="$(KUBECONTEXT)" --namespace=$(NAMESPACE)
 
@@ -40,6 +47,8 @@ $(WORKSPACE) $(TEMPDIR):
 
 init: $(WORKSPACE)
 	$(git) init
+	$(git) config user.name "$(GIT_USER_NAME)"
+	$(git) config user.email "$(GIT_USER_EMAIL)"
 
 first-commit: $(WORKSPACE) $(TEMPDIR)
 	git -C "$(TEMPDIR)" init
