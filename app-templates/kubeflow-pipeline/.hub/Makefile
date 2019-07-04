@@ -65,7 +65,6 @@ gitrepo: init first-commit
 	$(call add_remote,$(SOURCECODE_REPO),extensions)
 	$(call fetch_dir,extensions,nbextensions,nbextensions,nbextensions)
 	$(call fetch_dir,extensions,kernel,jupyter-kernels/tensorflow-ktext-seq2seq,components/kernel)
-	$(call fetch_dir,extensions,s3fs,storage/s3fs,.hub/components/s3fs)
 	$(git) push origin master
 
 deploy:

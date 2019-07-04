@@ -9,8 +9,8 @@ components:
     fromEnv: GITHUB_TOKEN
 - name: s3fuse
   source:
-    repoUrl: https://github.com/agilestacks/applications.git
-    repoPath: applications/components/s3fs
+    repoUrl: https://github.com/agilestacks/kubeflow-extensions.git
+    repoPath: storage/s3fs
     dir: components/s3fs
     branch: APPLICATIONS_TAG
     fromEnv: GITHUB_TOKEN
