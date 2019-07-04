@@ -73,7 +73,7 @@ undeploy:
 	- $(kubectl) delete -f templates/notebook-keyring.yaml
 	- $(kubectl) delete -f templates/rbac.yaml
 
-$(APP_ELABORATE_FILE) elaborate
+$(APP_ELABORATE_FILE) elaborate:
 	$(hub) elaborate $(HUB_YAML) managed.yaml -s $(PLATFORM_STATE_FILE) -o $(APP_ELABORATE_FILE)
 
 install: $(APP_ELABORATE_FILE) gitrepo
