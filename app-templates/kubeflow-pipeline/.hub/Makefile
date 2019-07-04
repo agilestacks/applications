@@ -21,7 +21,7 @@ hub 	:= hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credenti
 kubectl := kubectl --context="$(DOMAIN_NAME)" --namespace=$(NAMESPACE)
 
 git := git -C "$(WORKSPACE)"
-rsync := rsync -auv
+rsync := rsync -auvhtrzi --progress
 
 define add_remote
 	$(git) remote add -f -t master --no-tags $(2) $(1)
@@ -46,7 +46,8 @@ first-commit: $(WORKSPACE) $(TEMPDIR)
 	git -C "$(TEMPDIR)" remote add app $(SOURCECODE_REPO)
 	git -C "$(TEMPDIR)" fetch -q --depth 1 app
 	git -C "$(TEMPDIR)" checkout -q FETCH_HEAD
-	$(rsync) $(TEMPDIR)/$(SORUCECODE_PATH) $(WORKSPACE)
+	@ touch $(TEMPDIR)/.cpignore
+	$(rsync) --exclude-from $(TEMPDIR)/.cpignore $(TEMPDIR)/$(SORUCECODE_PATH) $(WORKSPACE)
 	@ rm -rf $(TEMPDIR)
 	$(git) add .
 	$(git) commit -m "Initial commit"
