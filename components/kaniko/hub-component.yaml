@@ -25,6 +25,9 @@ parameters:
     value: Dockerfile
   - name: contextDir
     empty: allow
+  - name: build.timeout
+    value: 900
+    env: TIMEOUT
 - name: component.pullSecret
   parameters:
   - name: name
