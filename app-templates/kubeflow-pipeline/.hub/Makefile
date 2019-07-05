@@ -72,7 +72,8 @@ deploy:
 	$(kubectl) apply -f templates/notebook-config.yaml
 	$(kubectl) apply -f templates/bucket-pv.yaml
 	$(kubectl) apply -f templates/notebook-pvc.yaml --wait
-	$(kubectl) replace -f templates/notebook.yaml --wait
+	$(kubectl) create -f templates/notebook.yaml --wait \
+	|| $(kubectl) replace -f templates/notebook.yaml --wait
 
 undeploy:
 	- $(kubectl) delete -f templates/notebook.yaml --wait
