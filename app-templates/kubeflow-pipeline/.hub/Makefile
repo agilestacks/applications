@@ -71,10 +71,12 @@ deploy:
 	$(kubectl) apply -f templates/notebook-keyring.yaml
 	$(kubectl) apply -f templates/notebook-config.yaml
 	$(kubectl) apply -f templates/bucket-pv.yaml
-	$(kubectl) apply -f templates/notebook.yaml
+	$(kubectl) apply -f templates/notebook-pvc.yaml --wait
+	$(kubectl) replace -f templates/notebook.yaml --wait
 
 undeploy:
 	- $(kubectl) delete -f templates/notebook.yaml --wait
+	- $(kubectl) delete -f templates/notebook-pvc.yaml --wait
 	- $(kubectl) delete -f templates/bucket-pv.yaml --wait
 	- $(kubectl) delete -f templates/notebook-config.yaml --wait
 	- $(kubectl) delete -f templates/notebook-keyring.yaml
