@@ -12,7 +12,7 @@ components:
     repoUrl: https://github.com/agilestacks/kubeflow-extensions.git
     repoPath: kubeflow-extensions/storage/s3fs
     dir: components/s3fs
-    branch: APPLICATIONS_TAG
+    branch: master
     fromEnv: GITHUB_TOKEN
 parameters:
 - name: application.bucket
