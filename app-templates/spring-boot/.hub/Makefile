@@ -31,6 +31,7 @@ $(APP_ELABORATE_FILE):
 	$(hub) elaborate hub.yaml managed.yaml -s $(PLATFORM_STATE_FILE) -e application.state=$(APP_ELABORATE_FILE) -o $@
 
 install: $(APP_ELABORATE_FILE)
+	sleep 30m
 	$(hub) deploy $(lastword $^) -s $(APP_STATE)
 .PHONY: install
 
