@@ -1,6 +1,6 @@
 /Makefile
 /.attic
 hub.yaml
-/.cpignore
+.cpignore
 /.hub/examples
 /.hub/manifests
