@@ -64,7 +64,7 @@ spec:
         volumeMounts:
         - mountPath: /home/jovyan
           name: workspace
-        - mountPath: /home/jovyan/bucket
+        - mountPath: /home/jovyan/data
           name: bucket
       serviceAccountName: default-editor
       ttlSecondsAfterFinished: 300
@@ -74,4 +74,4 @@ spec:
           claimName: ${application.name}-workspace
       - name: bucket
         persistentVolumeClaim:
-          claimName: "${application.name}-${application.bucket.name}-bucket"
+          claimName: "${application.name}-${application.bucket.name}-data"
