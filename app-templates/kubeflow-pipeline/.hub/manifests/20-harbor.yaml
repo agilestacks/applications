@@ -14,12 +14,14 @@ lifecycle:
 
 parameters:
 - name: application.jupyter.kernel.docker
+  kind: user
   parameters:
   - name: registry.image
   - name: registry.url
   - name: auth.host
   - name: auth.basic.username
   - name: auth.basic.password
+    fromEnv: APPLICATION_JUPYTER_KERNEL_DOCKER_AUTH_BASIC_PASSWORD
   - name: registry.kind
 
 - name: component.pullSecret
