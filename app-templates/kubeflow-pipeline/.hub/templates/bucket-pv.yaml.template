@@ -18,7 +18,7 @@ metadata:
 spec:
   storageClassName: goofys
   accessModes:
-  - ReadWriteOnce
+  - ReadWriteMany
   capacity:
     storage: "${application.bucket.capacity}"
   volumeMode: Filesystem
@@ -40,7 +40,7 @@ metadata:
 spec:
   storageClassName: goofys
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   volumeMode: Filesystem
   resources:
     requests:
