@@ -1,7 +1,15 @@
 /Makefile
 /.attic
-hub.yaml
 .cpignore
 /.hub/examples
 /.hub/manifests
 *.state
+/.tmp
+/.ipynb_checkpoints
+/.pyenv
+.envrc
+/.python-version
+/versions
+/.vscode
+.git
+.DS_Store

@@ -61,7 +61,7 @@ first-commit: $(WORKSPACE) $(TEMPDIR)
 	$(rsync) --exclude-from $(TEMPDIR)/.cpignore $(TEMPDIR)/$(SORUCECODE_PATH) $(WORKSPACE)
 	@ rm -rf $(TEMPDIR)
 	$(git) add .
-	test -z "$(shell $(git) status -uno --porcelain)" \
+	test -z "$$($(git) status -uno --porcelain)" \
 	|| $(git) commit -m "Initial commit"
 
 gitrepo: init first-commit
@@ -98,12 +98,6 @@ uninstall: $(APP_ELABORATE_FILE)
 clean:
 	rm -rf $(APP_ELABORATE_FILE) \
 		   $(APP_STATE_FILE_LOCAL) \
-		   $(WORKSPACE)/.git \
-		   $(WORKSPACE)/components \
-		   $(WORKSPACE)/nbextensions \
-		   $(WORKSPACE)/*.ipynb \
-		   $(WORKSPACE)/profile_default \
-		   $(WORKSPACE)/README.md \
 		   $(TEMPDIR)
 
 sleep:
