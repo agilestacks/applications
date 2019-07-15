@@ -1,0 +1,158 @@
+def stackOutputs
+def podTemplate = """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    author: asi
+spec:
+  containers:
+  - name: toolbox
+    image: agilestacks/toolbox:stable
+    command:
+    - cat
+    tty: true
+  - name: buildbox
+    image: node:10
+    command:
+    - cat
+    tty: true
+  - name: kaniko
+    image: gcr.io/kaniko-project/executor:debug-539ddefcae3fd6b411a95982a830d987f4214251
+    imagePullPolicy: Always
+    command:
+    - /busybox/cat
+    tty: true
+    volumeMounts:
+      - name: jenkins-docker-cfg
+        mountPath: /root
+  volumes:
+  - name: jenkins-docker-cfg
+    projected:
+      sources:
+      - secret:
+          name: ${params.DOCKER_CONFIG_REF}
+          items:
+            - key: .dockerconfigjson
+              path: .docker/config.json
+"""
+
+pipeline {
+  triggers {
+    githubPush()
+    pollSCM('H/15 * * * *')
+  }
+  parameters {
+    booleanParam(
+        name: 'CLEAN_WORKSPACE',
+        defaultValue: false,
+        description: 'Start with empty workspace'
+    )
+  }
+  agent {
+    kubernetes {
+      label 'pod'
+      defaultContainer 'toolbox'
+      yaml podTemplate
+    }
+  }
+  stages {
+    stage('Init') {
+      steps {
+        script {
+          if (params.CLEAN_WORKSPACE) {
+            echo "Wiping out workspace"
+            deleteDir()
+          } else {
+            echo 'Skipping cleanup due to user setting'
+          }
+        }
+      }
+    }
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+    stage('Prepare') {
+      steps {
+        container('toolbox') {
+          script {
+            dir ('.hub') {
+              hub.render(template: "templates/package.json.template", state: params.APP_STATE_FILE)
+              hub.render(template: "templates/kubernetes-harbor.yaml.template", state: params.APP_STATE_FILE)
+              sh script: "cp templates/package.json templates/kubernetes-harbor.yaml ../"
+            }
+            stackOutputs = hub.explain(state: params.APP_STATE_FILE).stackOutputs
+          }
+        }
+      }
+    }
+    stage('Compile') {
+      steps {
+        container('buildbox') {
+          sh script: 'npm install'
+        }
+      }
+    }
+    stage('Test') {
+      steps {
+        container('buildbox') {
+          sh script: 'npm run junit'
+        }
+      }
+    }
+    stage('Image') {
+      steps {
+        container(name: 'kaniko', shell: '/busybox/sh') {
+          withEnv(['PATH+EXTRA=/busybox:/kaniko']) {
+            script {
+              sh """#!/busybox/sh
+              /kaniko/executor -f `pwd`/Dockerfile -c `pwd` --cache=true --destination=${stackOutputs['application.docker.image']}
+              """
+            }
+          }
+        }
+      }
+    }
+    stage('Deploy') {
+      environment {
+        HUB_COMPONENT = 'nodejs-backend'
+      }
+      steps {
+        container('toolbox') {
+          script {
+            sh script: "hub kubeconfig ${params.APP_STATE_FILE} --switch-kube-context"
+            final namespaceExists = sh script: "kubectl get namespace ${stackOutputs['application.namespace']}", returnStatus: true
+            if (namespaceExists != 0) {
+              sh script: "kubectl create namespace ${stackOutputs['application.namespace']}"
+            }
+            final kubectl = "kubectl -n ${stackOutputs['application.namespace']}"
+            sh script: "${kubectl} apply --force --record -f kubernetes-harbor.yaml"
+          }
+        }
+      }
+    }
+    stage('Validate') {
+      steps {
+        container('toolbox') {
+          script {
+            final appUrl = stackOutputs['application.url'] as String
+            retry(30) {
+              sleep time: 5, unit: 'SECONDS'
+              final resp = httpRequest url: "${appUrl}"
+              echo resp.content
+              assert resp.status == 200
+            }
+          }
+        }
+      }
+    }
+  }
+  post {
+    always {
+      junit testResults: './junit.xml', allowEmptyResults: true
+      junit testResults: './eslint-junit.xml', allowEmptyResults: true
+    }
+  }
+}
