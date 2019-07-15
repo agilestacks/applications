@@ -14,11 +14,19 @@ components:
     dir: components/ecr-config
     branch: COMPONENTS_TAG
     fromEnv: GITHUB_TOKEN
+- name: jenkins-iam-role
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/jenkins-iam-role
+    dir: components/jenkins-iam-role
+    branch: APPLICATIONS_TAG
+    fromEnv: GITHUB_TOKEN
 
 lifecycle:
   order:
     - ecr
     - ecr-config
+    - jenkins-iam-role
 
 parameters:
 - name: application.ecr.path
@@ -38,3 +46,12 @@ parameters:
 - name: docker.config.reference
   kind: link
   value: ${component.ecr-config.configMapName}
+
+- name: cloud.role.worker
+- name: component.jenkins-iam-role.name
+  value: '${dns.domain}/${application.name}'
+- name: component.jenkins-iam-role.roleArn
+
+outputs:
+- name: application.cloud.role
+  value: '${component.jenkins-iam-role.roleArn}'
