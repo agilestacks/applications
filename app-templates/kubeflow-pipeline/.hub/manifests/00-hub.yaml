@@ -54,3 +54,7 @@ outputs:
 templates:
   files:
   - "templates/*.template"
+
+lifecycle:
+  bare: allow
+  verbs: [deploy, undeploy]

@@ -1,9 +1,10 @@
 {
-  "name": "anton-app",
+  "name": "anton",
   "description": "Kubflow pipeline",
-  "platform": "1",
+  "platform": "3",
   "requires": [
     "kubeflow",
+    "jupyter-kernel-prebuilt",
     "s3-bucket",
     "github",
     "harbor"
@@ -12,89 +13,71 @@
   "parameters": [
     {
       "name": "application.name",
-      "value": ""
+      "value": "anton"
     },
     {
       "name": "application.description",
       "value": "Kubflow pipeline"
     },
     {
-      "value": "agilestacks.c0foh01artem.dev.superhub.io",
-      "name": "application.bucket.name"
+      "name": "application.bucket.region",
+      "value": "eu-central-1"
     },
     {
-      "value": "https://s3.us-east-2.amazonaws.com/",
-      "name": "application.bucket.endpoint"
+      "name": "application.bucket.endpoint",
+      "value": "https://s3.eu-central-1.amazonaws.com/"
     },
     {
-      "value": "us-east-2",
-      "name": "application.bucket.region"
+      "name": "application.bucket.name",
+      "value": "anton543212345"
     },
     {
-      "name": "application.kubeflow.customKernel",
-      "value": true
+      "name": "application.jupyter.kernel.docker.registry.kind",
+      "value": "harbor"
     },
     {
-      "name": "component.github.repository.name",
-      "value": "kube-s3-pet-01"
+      "name": "application.jupyter.kernel.docker.registry.url",
+      "value": "experiment-harbor.svc.blue.antoncloud.dev.superhub.io/library"
     },
     {
-      "name": "application.docker-registry.username",
+      "name": "application.jupyter.kernel.docker.auth.host",
+      "value": "experiment-harbor.svc.blue.antoncloud.dev.superhub.io"
+    },
+    {
+      "name": "application.jupyter.kernel.docker.auth.basic.username",
       "value": "admin"
     },
     {
-      "name": "application.docker-registry.image.repo",
-      "value": "library"
+      "name": "application.jupyter.kernel.docker.auth.basic.password",
+      "value": {
+        "kind": "password",
+        "password": "Harbor12345"
+      },
+      "kind": "secret"
     },
     {
-      "name": "application.docker-registry.storage",
-      "value": "local"
+      "name": "application.jupyter.kernel.docker.registry.url",
+      "value": "experiment-harbor.svc.blue.antoncloud.dev.superhub.io/library"
     },
     {
-      "name": "application.docker-registry.password",
-      "kind": "secret",
-      "value": "ad300098-e520-4253-9952-ea7162177e72"
-    },
-    {
-      "name": "application.docker-registry.image.name",
-      "value": "kube-s-3-pet-01"
-    },
-    {
-      "name": "application.docker-registry.image.url",
-      "value": "experiment-harbor.svc.cluster.antoncloud.superhub.io/library/kube-s-3-pet-01"
-    },
-    {
-      "name": "application.pullSecret.name",
-      "value": "experiment-harbor-pull-secret"
-    },
-    {
-      "name": "application.docker-registry.url",
-      "value": "https://experiment-harbor.svc.cluster.antoncloud.superhub.io"
-    },
-    {
-      "name": "application.docker-registry.serviceUrl"
-    },
-    {
-      "name": "component.bucket.name",
-      "value": "agilestacks.c0foh01artem.dev.superhub.io"
-    },
-    {
-      "name": "component.bucket.endpoint",
-      "value": "https://s3.us-east-2.amazonaws.com/"
-    },
-    {
-      "name": "component.bucket.region",
-      "value": "us-east-2"
+      "name": "application.jupyter.kernel.docker.registry.image",
+      "value": "experiment-harbor.svc.blue.antoncloud.dev.superhub.io/library/anton"
     },
     {
       "name": "component.github.repository.organization",
-      "value": "asibot"
+      "value": "akranga"
     },
     {
-      "kind": "secret",
       "name": "component.github.token",
-      "value": "cc36d8c3-5108-4550-bae2-2f099ab4003b"
+      "value": {
+        "kind": "token",
+        "token": "dd6bcd52460e499e120ab87215edeeea1122d6f6"
+      },
+      "kind": "secret"
+    },
+    {
+      "name": "component.github.repository.name",
+      "value": "anton"
     }
   ]
 }
-

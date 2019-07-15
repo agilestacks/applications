@@ -1,0 +1,33 @@
+---
+version: 1
+kind: component
+meta:
+  name: aws-creds
+  brief: Setup aws credentials
+  source:
+    dir: components/aws-creds
+
+parameters:
+- name: dns.domain
+  env:  DOMAIN_NAME
+- name: cloud
+  parameters:
+  - name: region
+    env: AWS_DEFAULT_REGION
+    empty: allow
+  - name: accessKey
+    env: AWS_ACCESS_KEY_ID
+    empty: allow
+  - name: secretKey
+    env: AWS_SECRET_ACCESS_KEY
+    empty: allow
+  - name: sessionToken
+    env: AWS_SECRET_ACCESS_KEY
+    empty: allow
+  - name: profile
+    value: default
+    env: AWS_DEFAULT_PROFILE
+  - name: kind
+    value: aws
+
+outputs: []

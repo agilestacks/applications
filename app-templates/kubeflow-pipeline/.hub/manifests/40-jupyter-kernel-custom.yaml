@@ -27,7 +27,5 @@ parameters:
 - name: component.kubeflow.namespace
 
 lifecycle:
-  bare: allow
-  verbs: [deploy, undeploy]
   order:
     - kaniko

@@ -28,7 +28,7 @@ hub 	:= hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credenti
 kubectl := kubectl --context="$(KUBECONTEXT)" --namespace=$(NAMESPACE)
 
 git := git -C "$(WORKSPACE)"
-rsync := rsync -auvhtrzi --progress
+rsync := rsync -auvhtrzi --progress --ignore-existing
 
 define add_remote
 	- $(git) remote add -f -t master --no-tags "$(2)" "$(1)" \
@@ -103,6 +103,8 @@ clean:
 		   $(WORKSPACE)/nbextensions \
 		   $(WORKSPACE)/*.ipynb \
 		   $(WORKSPACE)/profile_default \
+		   $(WORKSPACE)/.gitignore \
+		   $(WORKSPACE)/README.md \
 		   $(TEMPDIR)
 
 sleep:
