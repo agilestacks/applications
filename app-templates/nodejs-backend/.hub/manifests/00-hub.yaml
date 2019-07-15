@@ -20,6 +20,7 @@ components: []
 parameters:
   - name: application.name
     value: node-backend
+    env: APPLICATION_NAME
   - name: application.description
     value: NodeJS microservice with Express web framework
   - name: application.namespace

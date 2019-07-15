@@ -8,6 +8,7 @@ PLATFORM_STATE_BUCKET ?= $(firstword $(subst /, ,$(PLATFORM_STATE_FILE:s3://%=%)
 PLATFORM_STATE_REGION ?= $(shell $(aws) s3api get-bucket-location --bucket $(PLATFORM_STATE_BUCKET) | $(jq) '.LocationConstraint//"us-east-1"')
 NAMESPACE 	          ?= jenkins
 DOMAIN_NAME           ?= should-be-set
+APPLICATION_NAME 			?= should-be-set
 APP_STATE_FILE_LOCAL  ?= hub.state
 APP_STATE_FILE        ?= should-come-from-env
 APP_STATE 			  ?= $(APP_STATE_FILE_LOCAL),$(APP_STATE_FILE)
@@ -19,6 +20,7 @@ kubectl := kubectl --context="$(DOMAIN_NAME)" --namespace="$(NAMESPACE)"
 kubectlapp := kubectl --context="$(DOMAIN_NAME)"
 
 deploy:
+	$(kubectl) create configmap $(APPLICATION_NAME)-state --from-file $(APP_STATE_FILE_LOCAL) -o yaml --dry-run | kubectl replace -f -
 	$(kubectl) apply -f templates/credentials.yaml
 	$(kubectl) apply -f templates/pipeline.yaml
 .PHONY: deploy
@@ -26,6 +28,7 @@ deploy:
 undeploy:
 	- $(kubectl) delete -f templates/pipeline.yaml
 	- $(kubectlapp) delete -f templates/kubernetes-$(DOCKER_REGISTRY_KIND).yaml
+	- $(kubectl) delete configmap $(APPLICATION_NAME)-state
 .PHONY: undeploy
 
 $(APP_ELABORATE_FILE):

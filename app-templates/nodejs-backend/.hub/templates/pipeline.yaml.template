@@ -11,10 +11,11 @@ spec:
   pipeline: Jenkinsfile-${component.docker.registry.kind}
   origin: 'SuperHub'
   parameters:
-    - name: APP_STATE_FILE
+    - name: APPLICATION_NAME
       type: string
-      defaultValue: ${application.state.file}
-      description: 'State file of the application stack'
+      defaultValue: ${application.name}
+      description: 'Application name'
     - name: DOCKER_CONFIG_REF
       type: string
       defaultValue: ${docker.config.reference}
+      description: 'Jenkins Pod Template configuration reference'

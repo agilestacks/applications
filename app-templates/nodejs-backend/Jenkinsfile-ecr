@@ -12,6 +12,9 @@ spec:
     command:
     - cat
     tty: true
+    volumeMounts:
+      - name: hub-state
+        mountPath: /tmp/.hub/
   - name: buildbox
     image: node:10
     command:
@@ -30,6 +33,9 @@ spec:
     - name: credconfig
       configMap:
         name: ${params.DOCKER_CONFIG_REF}
+    - name: hub-state
+      configMap:
+        name: ${params.APPLICATION_NAME}-state
 """
 
 pipeline {
@@ -74,11 +80,11 @@ pipeline {
         container('toolbox') {
           script {
             dir ('.hub') {
-              hub.render(template: "templates/package.json.template", state: params.APP_STATE_FILE)
-              hub.render(template: "templates/kubernetes-ecr.yaml.template", state: params.APP_STATE_FILE)
+              hub.render(template: "templates/package.json.template", state: "/tmp/.hub/hub.state")
+              hub.render(template: "templates/kubernetes-ecr.yaml.template", state: "/tmp/.hub/hub.state")
               sh script: "cp templates/package.json templates/kubernetes-ecr.yaml ../"
             }
-            stackOutputs = hub.explain(state: params.APP_STATE_FILE).stackOutputs
+            stackOutputs = hub.explain(state: "/tmp/.hub/hub.state").stackOutputs
           }
         }
       }
@@ -119,7 +125,7 @@ pipeline {
       steps {
         container('toolbox') {
           script {
-            sh script: "hub kubeconfig ${params.APP_STATE_FILE} --switch-kube-context"
+            sh script: "hub kubeconfig /tmp/.hub/hub.state --switch-kube-context"
             final namespaceExists = sh script: "kubectl get namespace ${stackOutputs['application.namespace']}", returnStatus: true
             if (namespaceExists != 0) {
               sh script: "kubectl create namespace ${stackOutputs['application.namespace']}"
