@@ -6,16 +6,15 @@ metadata:
 spec:
   repositoryUrl: ${component.git.remote}
   credentialsId: ${application.git.kind}-${component.git.organization}
-  folder: ${application.name}  
+  folder: ${application.name}
   branchSpec: '*/master'
-  pipeline: Jenkinsfile
+  pipeline: Jenkinsfile-${component.docker.registry.kind}
   origin: 'SuperHub'
   parameters:
     - name: APP_STATE_FILE
       type: string
       defaultValue: ${application.state.file}
       description: 'State file of the application stack'
-    - name: AWS_TRUST_ROLE
+    - name: DOCKER_CONFIG_REF
       type: string
-      defaultValue: ${component.jenkins-iam-role.roleArn}
-      description: 'Role to assume for to deploy application'
+      defaultValue: ${docker.config.reference}

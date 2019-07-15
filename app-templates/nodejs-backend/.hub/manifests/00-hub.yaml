@@ -71,8 +71,6 @@ outputs:
     value: '${component.ingress.protocol}://${application.ingress.host}${application.path}'
   - name: application.jenkins.pipeline.url
     value: '${component.jenkins.url}/job/${application.name}/job/${application.pipeline.name}-${application.name}'
-  - name: application.cloud.role
-    value: '${component.jenkins-iam-role.roleArn}'
   - name: application.promotion.templates
     value: simple-promote,container-promotion
 

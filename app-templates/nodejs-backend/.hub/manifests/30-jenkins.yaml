@@ -17,3 +17,7 @@ parameters:
 - name: component.jenkins-iam-role.name
   value: '${dns.domain}/${application.name}'
 - name: component.jenkins-iam-role.roleArn
+
+outputs:
+- name: application.cloud.role
+  value: '${component.jenkins-iam-role.roleArn}'
