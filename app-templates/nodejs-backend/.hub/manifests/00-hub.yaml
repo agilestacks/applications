@@ -43,6 +43,8 @@ parameters:
   - name: component.ingress.protocol
   - name: component.ingress.fqdn
   - name: component.docker.registry.image
+  - name: component.docker.registry.kind
+    env: DOCKER_REGISTRY_KIND
   - name: component.git.remote
   - name: component.jenkins.url
   - name: component.jenkins.namespace
