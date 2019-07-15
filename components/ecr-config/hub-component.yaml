@@ -1,0 +1,30 @@
+---
+version: 1
+kind: component
+meta:
+  name: ecr-config
+  brief: Provisions a config map with ECR configuration
+  source:
+    dir: ../../components/ecr-config
+
+requires:
+- kubernetes
+
+parameters:
+- name: dns.domain
+  env: DOMAIN_NAME
+- name: component.docker.auth.host
+- name: component.ecr-config
+  parameters:
+  - name: namespace
+    env: NAMESPACE
+  - name: configMapName
+    env: CONFIGMAP_NAME
+
+outputs:
+- name: component.ecr-config.configMapName
+- name: component.ecr-config.namespace
+
+templates:
+  files:
+    - "*.template"
