@@ -1,5 +1,6 @@
 FROM node:10.16
 
+ENV HOME=/tmp
 RUN mkdir -p /application
 WORKDIR /application
 
