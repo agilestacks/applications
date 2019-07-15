@@ -31,15 +31,17 @@ git := git -C "$(WORKSPACE)"
 rsync := rsync -auvhtrzi --progress
 
 define add_remote
-	$(git) remote add -f -t master --no-tags $(2) $(1)
+	- $(git) remote add -f -t master --no-tags "$(2)" "$(1)" \
+	|| $(git) remote set-url "$(2)" "$(1)"
 endef
 
 define fetch_dir
 	$(git) checkout -b upstream/$(2) $(1)/master
 	$(git) subtree split -q --squash --prefix=$(3) --annotate="[$(2)] " --rejoin -b merging/$(2)
 	$(git) checkout master
-	$(git) subtree add --prefix=$(4) --squash merging/$(2)
-	$(git) branch -D merging/$(2)
+	test -d "$(WORKSPACE)/$(4)" \
+	|| ($(git) subtree add --prefix=$(4) --squash "merging/$(2)"; \
+	    $(git) branch -D "merging/$(2)")
 endef
 
 $(WORKSPACE) $(TEMPDIR):
@@ -59,7 +61,8 @@ first-commit: $(WORKSPACE) $(TEMPDIR)
 	$(rsync) --exclude-from $(TEMPDIR)/.cpignore $(TEMPDIR)/$(SORUCECODE_PATH) $(WORKSPACE)
 	@ rm -rf $(TEMPDIR)
 	$(git) add .
-	$(git) commit -m "Initial commit"
+	test -z "$(shell $(git) status -uno --porcelain)" \
+	|| $(git) commit -m "Initial commit"
 
 gitrepo: init first-commit
 	$(call add_remote,$(SOURCECODE_REPO),extensions)
@@ -93,7 +96,14 @@ uninstall: $(APP_ELABORATE_FILE)
 	$(hub) undeploy $(APP_ELABORATE_FILE) -s $(APP_STATE) -e WORKSPACE=$(WORKSPACE)
 
 clean:
-	rm -rf $(APP_ELABORATE_FILE) $(APP_STATE_FILE_LOCAL) ../.git
+	rm -rf $(APP_ELABORATE_FILE) \
+		   $(APP_STATE_FILE_LOCAL) \
+		   $(WORKSPACE)/.git \
+		   $(WORKSPACE)/components \
+		   $(WORKSPACE)/nbextensions \
+		   $(WORKSPACE)/*.ipynb \
+		   $(WORKSPACE)/profile_default \
+		   $(TEMPDIR)
 
 sleep:
 	sleep 600

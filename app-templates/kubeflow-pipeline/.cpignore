@@ -4,3 +4,4 @@ hub.yaml
 .cpignore
 /.hub/examples
 /.hub/manifests
+*.state
