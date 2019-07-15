@@ -55,3 +55,4 @@ parameters:
 outputs:
 - name: application.cloud.role
   value: '${component.jenkins-iam-role.roleArn}'
+  

@@ -16,7 +16,7 @@ spec:
       - name: hub-state
         mountPath: /tmp/.hub/
   - name: buildbox
-    image: node:10
+    image: golang:1.11
     command:
     - cat
     tty: true
@@ -27,17 +27,12 @@ spec:
     - /busybox/cat
     tty: true
     volumeMounts:
-      - name: jenkins-docker-cfg
-        mountPath: /root
+      - name: credconfig
+        mountPath: /kaniko/.docker/
   volumes:
-    - name: jenkins-docker-cfg
-      projected:
-        sources:
-        - secret:
-            name: ${params.DOCKER_CONFIG_REF}
-            items:
-              - key: .dockerconfigjson
-                path: .docker/config.json
+    - name: credconfig
+      configMap:
+        name: ${params.DOCKER_CONFIG_REF}
     - name: hub-state
       configMap:
         name: ${params.APPLICATION_NAME}-state
@@ -85,37 +80,38 @@ pipeline {
         container('toolbox') {
           script {
             dir ('.hub') {
-              hub.render(template: "templates/package.json.template", state: "/tmp/.hub/hub.state")
-              hub.render(template: "templates/kubernetes-harbor.yaml.template", state: "/tmp/.hub/hub.state")
-              sh script: "cp templates/package.json templates/kubernetes-harbor.yaml ../"
+              hub.render(template: "templates/kubernetes-ecr.yaml.template", state: "/tmp/.hub/hub.state")
+              sh script: "cp templates/kubernetes-ecr.yaml ../"
             }
             stackOutputs = hub.explain(state: "/tmp/.hub/hub.state").stackOutputs
           }
         }
       }
     }
-    stage('Compile') {
+    stage('Make') {
       steps {
         container('buildbox') {
-          sh script: 'npm install'
+          sh script: 'make init'
         }
       }
     }
     stage('Test') {
       steps {
         container('buildbox') {
-          sh script: 'npm run junit'
+          sh script: 'make test-junit'
         }
       }
     }
     stage('Image') {
       steps {
         container(name: 'kaniko', shell: '/busybox/sh') {
-          withEnv(['PATH+EXTRA=/busybox:/kaniko']) {
-            script {
-              sh """#!/busybox/sh
-              /kaniko/executor -f `pwd`/Dockerfile -c `pwd` --cache=true --destination=${stackOutputs['application.docker.image']}
-              """
+          withAWS(role:stackOutputs['application.cloud.role']) {
+            withEnv(['PATH+EXTRA=/busybox:/kaniko']) {
+              script {
+                sh """#!/busybox/sh
+                /kaniko/executor -f `pwd`/Dockerfile -c `pwd` --cache=false --destination=${stackOutputs['application.docker.image']}
+                """
+              }
             }
           }
         }
@@ -123,7 +119,7 @@ pipeline {
     }
     stage('Deploy') {
       environment {
-        HUB_COMPONENT = 'nodejs-backend'
+        HUB_COMPONENT = 'golang-backend'
       }
       steps {
         container('toolbox') {
@@ -134,7 +130,9 @@ pipeline {
               sh script: "kubectl create namespace ${stackOutputs['application.namespace']}"
             }
             final kubectl = "kubectl -n ${stackOutputs['application.namespace']}"
-            sh script: "${kubectl} apply --force --record -f kubernetes-harbor.yaml"
+            withAWS(role:stackOutputs['application.cloud.role']) {
+              sh script: "${kubectl} apply --force --record -f kubernetes-ecr.yaml"
+            }
           }
         }
       }
@@ -158,7 +156,6 @@ pipeline {
   post {
     always {
       junit testResults: './junit.xml', allowEmptyResults: true
-      junit testResults: './eslint-junit.xml', allowEmptyResults: true
     }
   }
 }

@@ -1,5 +1,6 @@
 FROM golang:1.11-alpine as builder
 
+ENV GOCACHE=/tmp/.cache
 WORKDIR /golang-backend
 COPY . /golang-backend
 RUN CGO_ENABLED=0 go build -v -mod=vendor -o golang-backend-app

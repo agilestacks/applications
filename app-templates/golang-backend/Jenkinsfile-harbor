@@ -16,7 +16,7 @@ spec:
       - name: hub-state
         mountPath: /tmp/.hub/
   - name: buildbox
-    image: node:10
+    image: golang:1.11
     command:
     - cat
     tty: true
@@ -85,26 +85,25 @@ pipeline {
         container('toolbox') {
           script {
             dir ('.hub') {
-              hub.render(template: "templates/package.json.template", state: "/tmp/.hub/hub.state")
               hub.render(template: "templates/kubernetes-harbor.yaml.template", state: "/tmp/.hub/hub.state")
-              sh script: "cp templates/package.json templates/kubernetes-harbor.yaml ../"
+              sh script: "cp templates/kubernetes-harbor.yaml ../"
             }
             stackOutputs = hub.explain(state: "/tmp/.hub/hub.state").stackOutputs
           }
         }
       }
     }
-    stage('Compile') {
+    stage('Make') {
       steps {
         container('buildbox') {
-          sh script: 'npm install'
+          sh script: 'make init'
         }
       }
     }
     stage('Test') {
       steps {
         container('buildbox') {
-          sh script: 'npm run junit'
+          sh script: 'make test-junit'
         }
       }
     }
@@ -158,7 +157,6 @@ pipeline {
   post {
     always {
       junit testResults: './junit.xml', allowEmptyResults: true
-      junit testResults: './eslint-junit.xml', allowEmptyResults: true
     }
   }
 }

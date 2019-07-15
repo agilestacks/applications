@@ -20,10 +20,11 @@ components: []
 parameters:
   - name: application.name
     value: springboot-app
+    env: APPLICATION_NAME
   - name: application.description
     value: Java application
   - name: application.namespace
-    value: cool
+    value: applications
   - name: application.replicas
     value: 1
   - name: application.version
@@ -43,8 +44,12 @@ parameters:
   - name: component.ingress.protocol
   - name: component.ingress.fqdn
   - name: component.docker.registry.image
+  - name: component.docker.registry.kind
+    env: DOCKER_REGISTRY_KIND
   - name: component.git.remote
   - name: component.jenkins.url
+  - name: component.jenkins.namespace
+    value: jenkins
   - name: dns.domain
     env: DOMAIN_NAME
   - name: cloud.region
@@ -62,6 +67,8 @@ outputs:
     value: '${application.name}'
   - name: application.namespace
     value: '${application.namespace}'
+  - name: application.jenkins.namespace
+    value: '${component.jenkins.namespace}'
   - name: application.fqdn
     value: '${application.ingress.host}'
   - name: application.path
@@ -71,13 +78,9 @@ outputs:
     value: '${component.ingress.protocol}://${application.ingress.host}${application.path}'
   - name: application.jenkins.pipeline.url
     value: '${component.jenkins.url}/job/${application.name}/job/${application.pipeline.name}-${application.name}'
-  - name: application.cloud.role
-    value: '${component.jenkins-iam-role.roleArn}'
   - name: application.promotion.templates
     value: simple-promote,container-promotion
 
 templates:
   files:
     - templates/*.template
-    - ../kubernetes.yaml.template
-
