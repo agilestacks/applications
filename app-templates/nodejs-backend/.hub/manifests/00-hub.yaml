@@ -79,5 +79,4 @@ outputs:
 templates:
   files:
     - templates/*.template
-    - ../kubernetes.yaml.template
 
