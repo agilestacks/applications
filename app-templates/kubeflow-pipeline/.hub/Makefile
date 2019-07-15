@@ -103,7 +103,6 @@ clean:
 		   $(WORKSPACE)/nbextensions \
 		   $(WORKSPACE)/*.ipynb \
 		   $(WORKSPACE)/profile_default \
-		   $(WORKSPACE)/.gitignore \
 		   $(WORKSPACE)/README.md \
 		   $(TEMPDIR)
 
