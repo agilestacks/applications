@@ -45,6 +45,8 @@ parameters:
   - name: component.docker.registry.image
   - name: component.git.remote
   - name: component.jenkins.url
+  - name: component.jenkins.namespace
+    value: jenkins
   - name: dns.domain
     env: DOMAIN_NAME
   - name: cloud.region
