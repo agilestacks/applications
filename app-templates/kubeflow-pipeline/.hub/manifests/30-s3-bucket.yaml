@@ -27,14 +27,16 @@ parameters:
     value: 600Gi
 - name: component.ingress.protocol
   value: https
-- name: component.bucket
-  kind: link
+- name: component.s3
+  kind: user
   parameters:
   - name: kind
-    kind: user
     value: s3
   - name: name
+    kind: link
     value: ${application.bucket.name}
+  - name: acl
+    value: private
 - name: component.s3fuse.namespace
   kind: link
   value: ${application.namespace}
