@@ -100,7 +100,8 @@ clean:
 		   $(APP_STATE_FILE_LOCAL) \
 		   $(TEMPDIR)
 
-sleep:
-	sleep 600
+explain:
+	$(hub) explain $(APP_ELABORATE_FILE) $(APP_STATE_FILE_LOCAL) --color -r | less
+.PHONY: explain
 
 .PHONY: deploy undeploy install uninstall clean elaborate

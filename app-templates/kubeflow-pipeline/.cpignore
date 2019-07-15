@@ -3,7 +3,6 @@
 .cpignore
 /.hub/examples
 /.hub/manifests
-*.state
 /.tmp
 /.ipynb_checkpoints
 /.pyenv
@@ -13,3 +12,5 @@
 /.vscode
 .git
 .DS_Store
+*.state
+*.elaborate
