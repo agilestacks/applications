@@ -15,19 +15,31 @@ parameters:
   - name: region
     env: AWS_DEFAULT_REGION
     empty: allow
-  - name: accessKey
+  - name: credential.accessKey
     env: AWS_ACCESS_KEY_ID
     empty: allow
-  - name: secretKey
+  - name: credential.secretKey
     env: AWS_SECRET_ACCESS_KEY
     empty: allow
-  - name: sessionToken
+  - name: credential.sessionToken
     env: AWS_SECRET_ACCESS_KEY
     empty: allow
-  - name: profile
-    value: default
-    env: AWS_DEFAULT_PROFILE
+  - name: credential.roleArn
+    env: ROLE_ARN
+    empty: allow
+  - name: credential.source
+    env: CREDENTIAL_SOURCE
+    value: Ec2InstanceMetadata
+  - name: credential.profile
+    value: application
+    env: PROFILE
   - name: kind
     value: aws
+  - name: credential.kubernetes.secret.name
+    value: aws-creds
+    env: SECRET_NAME
+  - name: credential.kubernetes.secret.namespace
+    value: kube-system
+    env: NAMESPACE
 
 outputs: []
