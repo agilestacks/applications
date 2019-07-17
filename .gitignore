@@ -78,7 +78,6 @@ app-templates/kubeflow-pipeline/Dockerfile.flask
 
 components/kaniko/github-secret.yaml
 components/kaniko/kaniko-job.yaml
-app-templates/kubeflow-pipeline/.hub/components
 app-templates/kubeflow-pipeline/.hub/generated.yaml
 *.pem
 app-templates/kubeflow-pipeline/.hub/templates/bucket-pv.yaml
@@ -86,3 +85,12 @@ app-templates/kubeflow-pipeline/.hub/templates/notebook-config.yaml
 app-templates/kubeflow-pipeline/.hub/templates/notebook-keyring.yaml
 app-templates/kubeflow-pipeline/.hub/templates/notebook.yaml
 app-templates/kubeflow-pipeline/.hub/templates/rbac.yaml
+app-templates/kubeflow-pipeline/.hub/components/s3fs
+app-templates/kubeflow-pipeline/.hub/components/s3-bucket
+app-templates/kubeflow-pipeline/.hub/components/pull-secret
+app-templates/kubeflow-pipeline/.hub/components/minio-bucket
+!app-templates/kubeflow-pipeline/.hub/components/iam-role
+app-templates/kubeflow-pipeline/.hub/components/aws-creds
+app-templates/kubeflow-pipeline/.hub/components/github-repository
+app-templates/kubeflow-pipeline/.hub/components/harbor
+app-templates/kubeflow-pipeline/.hub/components/kaniko
