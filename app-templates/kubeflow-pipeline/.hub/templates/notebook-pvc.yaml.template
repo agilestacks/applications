@@ -3,15 +3,15 @@ kind: PersistentVolumeClaim
 metadata:
   annotations:
     volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/aws-ebs
-  # finalizers:
-  # - kubernetes.io/pvc-protection
+  finalizers:
+  - kubernetes.io/pvc-protection
   name: ${application.name}-workspace
   namespace: ${application.namespace}
 spec:
   accessModes:
-  - ReadWriteMany
+  - ${application.workspace.accessMode}
   resources:
     requests:
       storage: ${application.workspace.size}
-  storageClassName: kubeflow-ebs-gp2
+  storageClassName: ${application.workspace.storageClass}
   volumeMode: Filesystem

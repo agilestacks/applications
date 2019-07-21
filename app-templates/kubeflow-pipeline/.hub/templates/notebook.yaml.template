@@ -35,8 +35,8 @@ spec:
         - --root=/tmp/.git-sync
         - --dest=current
         volumeMounts:
-          - name: workspace
-            mountPath: /tmp
+        - name: workspace
+          mountPath: /tmp
       - name: update-workspace
         image: alpine:latest
         workingDir: /tmp
@@ -50,12 +50,16 @@ spec:
           mountPath: /tmp
       containers:
       - name: notebook
-        image: ${application.jupyter.kernel.docker.registry.image}:latest
+        image: ${application.jupyter.kernel.docker.registry.image}
         env:
         - name: NB_VARS
           value: ${application.name}-nb-vars
         - name: NB_SECRET_VARS
           value: ${application.name}-nb-keyring
+        - name: AWS_PROFILE
+          value: "${cloud.credential.profile}"
+        - name: AWS_REGION
+          value: "${application.bucket.region}"
         resources:
           limits: {}
           requests:
@@ -65,13 +69,19 @@ spec:
         - mountPath: /home/jovyan
           name: workspace
         - mountPath: /home/jovyan/data
-          name: bucket
+          name: data
+        - mountPath: "/home/jovyan/.aws"
+          name: aws-creds
+          readOnly: true
       serviceAccountName: default-editor
       ttlSecondsAfterFinished: 300
       volumes:
       - name: workspace
         persistentVolumeClaim:
           claimName: ${application.name}-workspace
-      - name: bucket
+      - name: data
         persistentVolumeClaim:
           claimName: "${application.name}-${application.bucket.name}-data"
+      - name: aws-creds
+        secret:
+          secretName: "${application.name}-${application.bucket.name}-creds"

@@ -35,6 +35,12 @@ parameters:
   - name: workspace.gid
     brief: stands for jovyan  user primary group
     value: '100'
+  - name: workspace.storageClass
+    value: default
+  - name: workspace.accessMode
+    # kubernetes.io/aws-ebs provisioner supports ReadWriteOnce
+    # differnet provisioner may support other access modes
+    value: ReadWriteOnce
   - name: namespace
     kind: user
     value: kubeflow

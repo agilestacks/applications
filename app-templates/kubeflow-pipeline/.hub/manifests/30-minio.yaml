@@ -1,5 +1,12 @@
 ---
 components:
+- name: aws-creds
+  source:
+    repoUrl: https://github.com/agilestacks/components.git
+    repoPath: components/aws-creds
+    dir: components/aws-creds
+    branch: APPLICTIONS_TAG
+    fromEnv: GITHUB_TOKEN
 - name: minio-bucket
   source:
     repoUrl: https://github.com/agilestacks/applications.git
@@ -51,9 +58,26 @@ parameters:
 - name: component.s3fuse.namespace
   kind: link
   value: ${application.namespace}
+- name: cloud.credential
+  parameters:
+  - name: kubernetes.secret.name
+    value: ${application.name}-${application.bucket.name}-creds
+  - name: kubernetes.secret.namespace
+    value: ${application.namespace}
+  - name: accessKey
+    kind: link
+    value: ${application.bucket.accessKey}
+  - name: secretKey
+    kind: link
+    value: ${application.bucket.secretKey}
+  - name: profile
+    value: default
+  - name: region
+    empty: allow
 
 lifecycle:
   order:
+  - aws-creds
   - s3fuse
   - minio-bucket
 

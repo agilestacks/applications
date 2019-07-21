@@ -50,7 +50,7 @@ parameters:
     value: default
   - name: credential.kubernetes.secret.name
     kind: link
-    value: ${application.name}-s3-${application.bucket.name}
+    value: ${application.name}-${application.bucket.name}-creds
   - name: credential.kubernetes.secret.namespace
     kind: link
     value: ${application.namespace}
