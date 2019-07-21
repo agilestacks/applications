@@ -56,10 +56,6 @@ parameters:
     value: ${application.namespace}
 - name: component.ingress.protocol
   value: https
-- name: credential.kubernetes.secret.name
-  value: ${application.name}-${application.bucket.name}
-- name: credential.kubernetes.secret.namespace
-  value: ${application.namespace}
 - name: component.bucket
   parameters:
   - name: kind

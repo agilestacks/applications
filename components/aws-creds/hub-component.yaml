@@ -22,7 +22,7 @@ parameters:
     env: AWS_SECRET_ACCESS_KEY
     empty: allow
   - name: credential.sessionToken
-    env: AWS_SECRET_ACCESS_KEY
+    env: AWS_SESSION_TOKEN
     empty: allow
   - name: credential.roleArn
     env: ROLE_ARN
