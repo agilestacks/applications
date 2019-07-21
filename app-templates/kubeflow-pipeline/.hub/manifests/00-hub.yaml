@@ -16,7 +16,6 @@ requires:
 parameters:
 - name: dns.domain
   env: KUBECONTEXT
-- name: cloud.region
 - name: terraform.bucket.name
 - name: terraform.bucket.region
 - name: application
@@ -53,7 +52,9 @@ outputs:
 
 templates:
   files:
-  - "templates/*.template"
+  - "templates/notebook-config.yaml.template"
+  - "templates/notebook-pvc.yaml.template"
+  - "templates/notebook.yaml.template"
 
 lifecycle:
   bare: allow

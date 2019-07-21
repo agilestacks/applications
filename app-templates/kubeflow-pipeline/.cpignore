@@ -1,6 +1,7 @@
 /Makefile
 /.attic
 .cpignore
+/.hub/manifests/components/aws-iam
 /.hub/examples
 /.hub/manifests
 /.tmp

@@ -9,7 +9,7 @@ metadata:
   namespace: ${application.namespace}
 spec:
   accessModes:
-  - ReadWriteOnce
+  - ReadWriteMany
   resources:
     requests:
       storage: ${application.workspace.size}

@@ -1,14 +1,21 @@
 ---
 components:
-- name: aws-iam
+# - name: aws-iam
+#   source:
+#     dir: components/aws-iam
+- name: aws-creds
   source:
-    dir: components/aws-iam
+    repoUrl: https://github.com/agilestacks/components.git
+    repoPath: components/aws-creds
+    dir: components/aws-creds
+    branch: APPLICTIONS_TAG
+    fromEnv: GITHUB_TOKEN
 - name: s3-bucket
   source:
     repoUrl: https://github.com/agilestacks/components.git
     repoPath: components/s3-bucket
     dir: components/s3-bucket
-    branch: COMPONENTS_TAG
+    branch: APPLICTIONS_TAG
     fromEnv: GITHUB_TOKEN
 - name: s3fuse
   source:
@@ -18,36 +25,73 @@ components:
     branch: master
     fromEnv: GITHUB_TOKEN
 parameters:
-- name: application.bucket
+- name: application
   kind: user
   parameters:
-  - name: name
-  - name: region
-  - name: pvc.capacity
+  - name: iam.role
+    kind: link
+    value: app-${application.name}-${dns.domain}
+  - name: bucket.name
+  - name: bucket.region
+  - name: bucket.pv.capacity
     value: 600Gi
+
+- name: cloud
+  parameters:
+  - name: region
+  - name: kind
+  - name: credential.source
+    value: Ec2InstanceMetadata
+  - name: credential.accessKey
+    empty: allow
+  - name: credential.secretKey
+    empty: allow
+  - name: credential.profile
+    value: default
+  - name: credential.kubernetes.secret.name
+    kind: link
+    value: ${application.name}-s3-${application.bucket.name}
+  - name: credential.kubernetes.secret.namespace
+    kind: link
+    value: ${application.namespace}
 - name: component.ingress.protocol
   value: https
-- name: component.s3
-  kind: user
+- name: credential.kubernetes.secret.name
+  value: ${application.name}-${application.bucket.name}
+- name: credential.kubernetes.secret.namespace
+  value: ${application.namespace}
+- name: component.bucket
   parameters:
   - name: kind
     value: s3
+    env: BUCKET_KIND
   - name: name
     kind: link
     value: ${application.bucket.name}
   - name: acl
     value: private
+  - name: region
+    value: ${application.bucket.region}
+- name: component.s3.url
 - name: component.s3fuse.namespace
   kind: link
   value: ${application.namespace}
-
+output:
+- name: application.bucket.pv.capacity
+  value: ${application.bucket.pv.capacity}
 lifecycle:
   order:
   - s3-bucket
-  - aws-iam
+  # - aws-iam
+  - aws-creds
   - s3fuse
 
 outputs:
 - name: application.bucket.url
-  value: ${application.bucket.endpoint}/minio/${application.bucket.name}
+  value: ${component.s3.url}
   brief: URL of a bucket that has been used to store application artifacts
+
+templates:
+  files:
+  - "templates/bucket-pv-s3.yaml.template"
+  - "templates/notebook-keyring-s3.yaml.template"

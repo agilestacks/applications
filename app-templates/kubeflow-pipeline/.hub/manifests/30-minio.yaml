@@ -20,13 +20,16 @@ parameters:
   parameters:
   - name: name
   - name: endpoint
-  # not needed for minio
-  # - name: region
+  - name: region
+    brief: >-
+      region not used for minio;
+      declared for compatibility with s3
+    empty: allow
   - name: accessKey
     fromEnv: APPLICATION_BUCKET_ACCESSKEY
   - name: secretKey
     fromEnv: APPLICATION_BUCKET_SECRETKEY
-  - name: capacity
+  - name: pv.capacity
     value: 600Gi
 - name: component.ingress.protocol
   value: https
@@ -36,6 +39,7 @@ parameters:
   - name: kind
     kind: user
     value: minio
+    env: BUCKET_KIND
   - name: name
     value: ${application.bucket.name}
   - name: endpoint
@@ -54,6 +58,13 @@ lifecycle:
   - minio-bucket
 
 outputs:
+- name: application.bucket.pv.capacity
+  value: ${application.bucket.pv.capacity}
 - name: application.bucket.url
   value: ${application.bucket.endpoint}/minio/${application.bucket.name}
   brief: URL of a bucket that has been used to store application artifacts
+
+templates:
+  files:
+  - "templates/bucket-pv-minio.yaml.template"
+  - "templates/notebook-keyring-minio.yaml.template"

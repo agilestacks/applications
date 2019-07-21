@@ -26,7 +26,6 @@ parameters:
   - name: bucket.name
     env: TF_VAR_bucket
   - name: iam.role
-    value: application-${application.name}-${dns.domain}-trust
     env: TF_VAR_role
   - name: iam.allowEcr
     value: true

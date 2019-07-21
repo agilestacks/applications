@@ -1,8 +1,8 @@
 .DEFAULT_GOAL := deploy
 
-NAMESPACE 	  ?= kubeflow
-KUBECONTEXT   ?= set-me-please
-
+NAMESPACE 	  		  ?= kubeflow
+KUBECONTEXT   		  ?= set-me-please
+BUCKET_KIND   		  ?= undefined
 PLATFORM_STATE_FILE   ?= $(error PLATFORM_STATE_FILE varialbe has not been defined!)
 PLATFORM_STATE_BUCKET ?= $(firstword $(subst /, ,$(PLATFORM_STATE_FILE:s3://%=%)))
 PLATFORM_STATE_REGION ?= $(shell aws s3api get-bucket-location --bucket $(PLATFORM_STATE_BUCKET) | jq -r '.LocationConstraint//"us-east-1"')
@@ -71,9 +71,9 @@ gitrepo: init first-commit
 
 deploy:
 	$(kubectl) apply -f templates/rbac.yaml
-	$(kubectl) apply -f templates/notebook-keyring.yaml
+	$(kubectl) apply -f templates/notebook-keyring-$(BUCKET_KIND).yaml
 	$(kubectl) apply -f templates/notebook-config.yaml
-	$(kubectl) apply -f templates/bucket-pv.yaml
+	$(kubectl) apply -f templates/bucket-pv-$(BUCKET_KIND).yaml
 	$(kubectl) apply -f templates/notebook-pvc.yaml --wait
 	$(kubectl) create -f templates/notebook.yaml \
 	|| $(kubectl) replace -f templates/notebook.yaml --wait
@@ -81,9 +81,9 @@ deploy:
 undeploy:
 	- $(kubectl) delete -f templates/notebook.yaml --wait
 	- $(kubectl) delete -f templates/notebook-pvc.yaml --wait
-	- $(kubectl) delete -f templates/bucket-pv.yaml --wait
+	- $(kubectl) delete -f templates/bucket-pv-$(BUCKET_KIND).yaml --wait
 	- $(kubectl) delete -f templates/notebook-config.yaml --wait
-	- $(kubectl) delete -f templates/notebook-keyring.yaml
+	- $(kubectl) delete -f templates/notebook-keyring-$(BUCKET_KIND).yaml
 	- $(kubectl) delete -f templates/rbac.yaml
 
 $(APP_ELABORATE_FILE) elaborate:

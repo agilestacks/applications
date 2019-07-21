@@ -16,7 +16,6 @@ parameters:
 - name: application.jupyter.kernel.docker
   kind: user
   parameters:
-  - name: registry.image
   - name: registry.url
   - name: auth.host
   - name: auth.basic.username

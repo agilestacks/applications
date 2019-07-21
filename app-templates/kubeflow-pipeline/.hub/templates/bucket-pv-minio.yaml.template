@@ -20,7 +20,7 @@ spec:
   accessModes:
   - ReadWriteMany
   capacity:
-    storage: "${application.bucket.capacity}"
+    storage: "${application.bucket.pv.capacity}"
   volumeMode: Filesystem
   flexVolume:
     driver: "goofysflex"
@@ -44,7 +44,7 @@ spec:
   volumeMode: Filesystem
   resources:
     requests:
-      storage: "${application.bucket.capacity}"
+      storage: "${application.bucket.pv.capacity}"
   selector:
     matchLabels:
       app: "${application.name}"

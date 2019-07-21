@@ -9,6 +9,8 @@ components:
     fromEnv: GITHUB_TOKEN
 
 parameters:
+- name: application.jupyter.kernel.docker.registry.image
+  kind: user
 - name: component.kaniko
   parameters:
   - name: name
