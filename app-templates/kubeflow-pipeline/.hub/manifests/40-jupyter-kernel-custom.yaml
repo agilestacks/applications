@@ -11,6 +11,9 @@ components:
 parameters:
 - name: application.jupyter.kernel.docker.registry.image
   kind: user
+- name: application.jupyter.kernel.image
+  kind: link
+  value: ${application.jupyter.kernel.docker.registry.image}:latest
 - name: component.kaniko
   parameters:
   - name: name

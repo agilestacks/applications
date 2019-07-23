@@ -2,12 +2,12 @@
 components: []
 
 parameters:
-- name: application.jupyter.kernel.docker.registry.image
+- name: application.jupyter.kernel.image
   value: docker.io/agilestacks/jupyter-tensorflow-ktext-seq2seq:latest
 
 outputs:
-- name: application.jupyter.kernel.docker.registry.image
-  value: docker.io/agilestacks/jupyter-tensorflow-ktext-seq2seq:latest
+- name: application.jupyter.kernel.image
+  value: ${application.jupyter.kernel.image}
 
 lifecycle:
   order: []
