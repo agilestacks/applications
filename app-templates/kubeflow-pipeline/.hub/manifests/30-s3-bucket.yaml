@@ -6,7 +6,7 @@ components:
 - name: aws-creds
   source:
     repoUrl: https://github.com/agilestacks/applications.git
-    repoPath: components/aws-creds
+    repoPath: applications/components/aws-creds
     dir: components/aws-creds
     branch: APPLICTIONS_TAG
     fromEnv: GITHUB_TOKEN
