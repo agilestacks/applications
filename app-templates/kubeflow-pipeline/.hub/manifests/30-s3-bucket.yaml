@@ -28,9 +28,9 @@ parameters:
 - name: application
   kind: user
   parameters:
-  - name: iam.role
-    kind: link
-    value: app-${application.name}-${dns.domain}
+  # - name: iam.role
+  #   kind: link
+  #   value: app-${application.name}-${dns.domain}
   - name: bucket.name
   - name: bucket.region
   - name: bucket.pv.capacity

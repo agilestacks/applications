@@ -12,6 +12,7 @@ data:
   BUCKET_ENDPOINT: "${application.bucket.endpoint}"
   BUCKET_NAME: "${application.bucket.name}"
   BUCKET_PVC: "${application.name}-${application.bucket.name}-data"
+  CLOUD_KIND: "${cloud.kind}"
   INGRESS_URL: "${component.kubeflow.url}"
   KEYRING_SECRET: "${application.name}-nb-keyring"
   NAMESPACE: "${application.namespace}"
