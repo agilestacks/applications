@@ -62,6 +62,7 @@ templates:
   - "templates/notebook-config.yaml.template"
   - "templates/notebook-pvc.yaml.template"
   - "templates/notebook.yaml.template"
+  - "templates/rbac.yaml.template"
 
 lifecycle:
   bare: allow
