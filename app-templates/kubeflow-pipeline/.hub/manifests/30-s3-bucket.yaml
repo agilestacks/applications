@@ -5,7 +5,7 @@ components:
 #     dir: components/aws-iam
 - name: aws-creds
   source:
-    repoUrl: https://github.com/agilestacks/components.git
+    repoUrl: https://github.com/agilestacks/applications.git
     repoPath: components/aws-creds
     dir: components/aws-creds
     branch: APPLICTIONS_TAG
@@ -15,7 +15,7 @@ components:
     repoUrl: https://github.com/agilestacks/components.git
     repoPath: components/s3-bucket
     dir: components/s3-bucket
-    branch: APPLICTIONS_TAG
+    branch: COMPONENTS_TAG
     fromEnv: GITHUB_TOKEN
 - name: s3fuse
   source:
