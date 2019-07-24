@@ -6,6 +6,8 @@ kubectl       := kubectl --context="$(DOMAIN_NAME)"
 jq            := jq -M
 stern         := stern --context "$(DOMAIN_NAME)" --namespace "$(NAMESPACE)" --color "never" --template "{{ .ContainerName }} {{ .Message}}"
 
+TIMEOUT       ?= 900
+
 namespce:
 	- $(kubectl) create namespace $(NAMESPACE)
 
@@ -20,7 +22,6 @@ undeploy:
 	- $(kubectl) -n $(NAMESPACE) delete -f $(GIT_KIND)-secret.yaml
 
 wait_complete:
-	$(eval TIMEOUT ?= 900)
 	$(eval timeout:=$(shell echo "`date +%s` + $(TIMEOUT)" | bc ))
 	$(eval get_job=$(kubectl) -n $(NAMESPACE) get job/$(JOB_NAME) -o json )
 	$(stern) --selector "job-name=$(JOB_NAME)" & echo $$! > $(JOB_NAME).pid

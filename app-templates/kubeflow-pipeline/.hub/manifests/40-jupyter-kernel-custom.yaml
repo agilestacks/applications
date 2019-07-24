@@ -31,6 +31,10 @@ parameters:
 - name: component.kubeflow.url
 - name: component.kubeflow.namespace
 
+ouptuts:
+- name: component.kaniko.build.timeout
+  value: "${component.kaniko.build.timeout}"
+
 lifecycle:
   order:
     - kaniko
