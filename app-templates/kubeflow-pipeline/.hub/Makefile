@@ -73,6 +73,7 @@ deploy:
 	$(kubectl) apply -f templates/rbac.yaml
 	$(kubectl) apply -f templates/notebook-keyring-$(BUCKET_KIND).yaml
 	$(kubectl) apply -f templates/notebook-config.yaml
+	$(kubectl) apply -f templates/git-secret.yaml
 	$(kubectl) apply -f templates/bucket-pv-$(BUCKET_KIND).yaml
 	$(kubectl) apply -f templates/notebook-pvc.yaml --wait
 	$(kubectl) create -f templates/notebook.yaml \
@@ -83,6 +84,7 @@ undeploy:
 	- $(kubectl) delete -f templates/notebook-pvc.yaml --wait
 	- $(kubectl) delete -f templates/bucket-pv-$(BUCKET_KIND).yaml --wait
 	- $(kubectl) delete -f templates/notebook-config.yaml --wait
+	- $(kubectl) delete -f templates/git-secret.yaml
 	- $(kubectl) delete -f templates/notebook-keyring-$(BUCKET_KIND).yaml
 	- $(kubectl) delete -f templates/rbac.yaml
 

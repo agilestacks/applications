@@ -47,3 +47,6 @@ outputs:
 - name: application.git.branch
   value: ${component.git.branch}
   brief: Git branch that current application stack is using
+templates:
+  files:
+  - "templates/git-secret.yaml.template"
