@@ -111,8 +111,5 @@ pipeline {
     always {
       junit testResults: './tests-*.xml', allowEmptyResults: true
     }
-    changed {
-      slackSend color: slack.buildColor, message: slack.buildReport
-    }
   }
 }
