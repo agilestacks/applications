@@ -40,9 +40,9 @@ hubundeploy: $(APP_ELABORATE_FILE)
 .PHONY: hubundeploy
 
 params:
-	$(eval APPLICATION_NAME=$(shell $(hub) explain $(APP_STATE_FILE) \
+	$(eval APPLICATION_NAME=$(shell $(hub) explain $(APP_STATE_FILE_LOCAL) \
 		--json | $(jq) '.stackOutputs | to_entries[] | select(.key == "application.name") | .value' ))
-	$(eval JENKINS_NAMESPACE=$(shell $(hub) explain $(APP_STATE_FILE) \
+	$(eval JENKINS_NAMESPACE=$(shell $(hub) explain $(APP_STATE_FILE_LOCAL) \
 		--json | $(jq) '.stackOutputs | to_entries[] | select(.key == "application.jenkins.namespace") | .value' ))
 .PHONY: params
 
