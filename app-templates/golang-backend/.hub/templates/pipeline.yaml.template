@@ -8,7 +8,7 @@ spec:
   credentialsId: ${application.git.kind}-${component.git.organization}
   folder: ${application.name}
   branchSpec: '*/master'
-  pipeline: Jenkinsfile-${component.docker.registry.kind}
+  pipeline: ${component.docker.registry.kind}/Jenkinsfile
   origin: 'SuperHub'
   parameters:
     - name: APPLICATION_NAME

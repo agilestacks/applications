@@ -16,7 +16,7 @@ spec:
       - name: hub-state
         mountPath: /tmp/.hub/
   - name: buildbox
-    image: python:3.7
+    image: openjdk:8-jdk
     command:
     - cat
     tty: true
@@ -85,32 +85,18 @@ pipeline {
         container('toolbox') {
           script {
             dir ('.hub') {
-              hub.render(template: "templates/kubernetes-harbor.yaml.template", state: "/tmp/.hub/hub.state")
-              sh script: "cp templates/kubernetes-harbor.yaml ../"
+              hub.render(template: "templates/harbor/kubernetes.yaml.template", state: "/tmp/.hub/hub.state")
+              sh script: "cp templates/harbor/kubernetes.yaml ../"
             }
             stackOutputs = hub.explain(state: "/tmp/.hub/hub.state").stackOutputs
           }
         }
       }
     }
-    stage('Install') {
+    stage('Compile') {
       steps {
         container('buildbox') {
-          sh script: 'make install'
-        }
-      }
-    }
-    stage('Lint') {
-      steps {
-        container('buildbox') {
-          sh script: 'make lint'
-        }
-      }
-    }
-    stage('Test') {
-      steps {
-        container('buildbox') {
-          sh script: 'make pytest'
+          sh script: './gradlew clean build allureReport'
         }
       }
     }
@@ -129,7 +115,7 @@ pipeline {
     }
     stage('Deploy') {
       environment {
-        HUB_COMPONENT = 'nodejs-backend'
+        HUB_COMPONENT = 'spring-boot'
       }
       steps {
         container('toolbox') {
@@ -163,8 +149,21 @@ pipeline {
   }
   post {
     always {
-      junit testResults: './junit.xml', allowEmptyResults: true
-      junit testResults: './eslint-junit.xml', allowEmptyResults: true
+      junit(
+        testResults: './tests-*.xml',
+        allowEmptyResults: true
+      )
+      archiveArtifacts(
+        artifacts: 'build/libs/*.jar',
+        allowEmptyArchive: true,
+        fingerprint: true
+      )
+      publishHTML(target: [
+              reportDir: 'build/reports/allure-report',
+              reportFiles: 'index.html',
+              reportName: 'Allure',
+              keepAll: true
+      ])
     }
   }
 }

@@ -1,4 +1,4 @@
-def stackOutputs
+]def stackOutputs
 def podTemplate = """
 apiVersion: v1
 kind: Pod
@@ -16,7 +16,7 @@ spec:
       - name: hub-state
         mountPath: /tmp/.hub/
   - name: buildbox
-    image: node:10
+    image: openjdk:8-jdk
     command:
     - cat
     tty: true
@@ -80,9 +80,8 @@ pipeline {
         container('toolbox') {
           script {
             dir ('.hub') {
-              hub.render(template: "templates/package.json.template", state: "/tmp/.hub/hub.state")
-              hub.render(template: "templates/kubernetes-ecr.yaml.template", state: "/tmp/.hub/hub.state")
-              sh script: "cp templates/package.json templates/kubernetes-ecr.yaml ../"
+              hub.render(template: "templates/ecr/kubernetes.yaml.template", state: "/tmp/.hub/hub.state")
+              sh script: "cp templates/ecr/kubernetes.yaml ../"
             }
             stackOutputs = hub.explain(state: "/tmp/.hub/hub.state").stackOutputs
           }
@@ -92,14 +91,7 @@ pipeline {
     stage('Compile') {
       steps {
         container('buildbox') {
-          sh script: 'npm install'
-        }
-      }
-    }
-    stage('Test') {
-      steps {
-        container('buildbox') {
-          sh script: 'npm run junit'
+          sh script: './gradlew clean build allureReport'
         }
       }
     }
@@ -120,7 +112,7 @@ pipeline {
     }
     stage('Deploy') {
       environment {
-        HUB_COMPONENT = 'nodejs-backend'
+        HUB_COMPONENT = 'spring-boot'
       }
       steps {
         container('toolbox') {
@@ -156,8 +148,21 @@ pipeline {
   }
   post {
     always {
-      junit testResults: './junit.xml', allowEmptyResults: true
-      junit testResults: './eslint-junit.xml', allowEmptyResults: true
+      junit(
+        testResults: './tests-*.xml',
+        allowEmptyResults: true
+      )
+      archiveArtifacts(
+        artifacts: 'build/libs/*.jar',
+        allowEmptyArchive: true,
+        fingerprint: true
+      )
+      publishHTML(target: [
+              reportDir: 'build/reports/allure-report',
+              reportFiles: 'index.html',
+              reportName: 'Allure',
+              keepAll: true
+      ])
     }
   }
 }

@@ -84,3 +84,5 @@ outputs:
 templates:
   files:
     - templates/*.template
+    - templates/ecr/*.template
+    - templates/harbor/*.template

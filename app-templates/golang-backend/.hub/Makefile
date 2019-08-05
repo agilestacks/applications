@@ -40,21 +40,21 @@ hubundeploy: $(APP_ELABORATE_FILE)
 .PHONY: hubundeploy
 
 params:
-	$(eval APPLICATION_NAME=$(shell $(hub) explain $(APP_STATE_FILE) \
+	$(eval APPLICATION_NAME=$(shell $(hub) explain $(APP_STATE) \
 		--json | $(jq) '.stackOutputs | to_entries[] | select(.key == "application.name") | .value' ))
-	$(eval JENKINS_NAMESPACE=$(shell $(hub) explain $(APP_STATE_FILE) \
+	$(eval JENKINS_NAMESPACE=$(shell $(hub) explain $(APP_STATE) \
 		--json | $(jq) '.stackOutputs | to_entries[] | select(.key == "application.jenkins.namespace") | .value' ))
 .PHONY: params
 
 statemap:
-	$(hub) kubeconfig $(APP_STATE_FILE) --switch-kube-context
+	$(hub) kubeconfig $(APP_STATE) --switch-kube-context
 	kubectl --namespace="$(JENKINS_NAMESPACE)" create configmap $(APPLICATION_NAME)-state \
-		--from-file /workspace/repo/.hub/$(APP_STATE_FILE_LOCAL) || kubectl --namespace="$(JENKINS_NAMESPACE)" create configmap $(APPLICATION_NAME)-state  \
-		--from-file /workspace/repo/.hub/$(APP_STATE_FILE_LOCAL) -o yaml --dry-run | kubectl --namespace="$(JENKINS_NAMESPACE)" replace -f -
+		--from-file $(APP_STATE_FILE_LOCAL) || kubectl --namespace="$(JENKINS_NAMESPACE)" create configmap $(APPLICATION_NAME)-state  \
+		--from-file $(APP_STATE_FILE_LOCAL) -o yaml --dry-run | kubectl --namespace="$(JENKINS_NAMESPACE)" replace -f -
 .PHONY: statemap
 
 rmstatemap:
-	$(hub) kubeconfig $(APP_STATE_FILE) --switch-kube-context
+	$(hub) kubeconfig $(APP_STATE) --switch-kube-context
 	kubectl --namespace="$(JENKINS_NAMESPACE)" delete configmap $(APPLICATION_NAME)-state
 .PHONY: rmstatemap
 

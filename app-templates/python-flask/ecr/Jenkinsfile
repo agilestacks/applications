@@ -80,8 +80,8 @@ pipeline {
         container('toolbox') {
           script {
             dir ('.hub') {
-              hub.render(template: "templates/kubernetes-ecr.yaml.template", state: "/tmp/.hub/hub.state")
-              sh script: "cp templates/kubernetes-ecr.yaml ../"
+              hub.render(template: "templates/ecr/kubernetes.yaml.template", state: "/tmp/.hub/hub.state")
+              sh script: "cp templates/ecr/kubernetes.yaml ../"
             }
             stackOutputs = hub.explain(state: "/tmp/.hub/hub.state").stackOutputs
           }
