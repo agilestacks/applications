@@ -133,7 +133,7 @@ pipeline {
               sh script: "kubectl create namespace ${stackOutputs['application.namespace']}"
             }
             final kubectl = "kubectl -n ${stackOutputs['application.namespace']}"
-            sh script: "${kubectl} apply --force --record -f kubernetes-harbor.yaml"
+            sh script: "${kubectl} apply --force --record -f kubernetes.yaml"
           }
         }
       }

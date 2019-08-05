@@ -1,4 +1,4 @@
-]def stackOutputs
+def stackOutputs
 def podTemplate = """
 apiVersion: v1
 kind: Pod
@@ -124,7 +124,7 @@ pipeline {
             }
             final kubectl = "kubectl -n ${stackOutputs['application.namespace']}"
             withAWS(role:stackOutputs['application.cloud.role']) {
-              sh script: "${kubectl} apply --force --record -f kubernetes-ecr.yaml"
+              sh script: "${kubectl} apply --force --record -f kubernetes.yaml"
             }
           }
         }
