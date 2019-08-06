@@ -122,7 +122,7 @@ pipeline {
     }
     stage('Deploy') {
       environment {
-        HUB_COMPONENT = 'nodejs-backend'
+        HUB_COMPONENT = 'golang-backend'
       }
       steps {
         container('toolbox') {

@@ -16,7 +16,7 @@ spec:
       - name: hub-state
         mountPath: /tmp/.hub/
   - name: buildbox
-    image: golang:1.11
+    image: python:3.7
     command:
     - cat
     tty: true
@@ -85,25 +85,32 @@ pipeline {
         container('toolbox') {
           script {
             dir ('.hub') {
-              hub.render(template: "templates/acr/kubernetes.yaml.template", state: "/tmp/.hub/hub.state")
-              sh script: "cp templates/acr/kubernetes.yaml ../"
+              hub.render(template: "templates/azurecr/kubernetes.yaml.template", state: "/tmp/.hub/hub.state")
+              sh script: "cp templates/azurecr/kubernetes.yaml ../"
             }
             stackOutputs = hub.explain(state: "/tmp/.hub/hub.state").stackOutputs
           }
         }
       }
     }
-    stage('Make') {
+    stage('Install') {
       steps {
         container('buildbox') {
-          sh script: 'make init'
+          sh script: 'make install'
+        }
+      }
+    }
+    stage('Lint') {
+      steps {
+        container('buildbox') {
+          sh script: 'make lint'
         }
       }
     }
     stage('Test') {
       steps {
         container('buildbox') {
-          sh script: 'make test-junit'
+          sh script: 'make pytest'
         }
       }
     }
@@ -122,7 +129,7 @@ pipeline {
     }
     stage('Deploy') {
       environment {
-        HUB_COMPONENT = 'nodejs-backend'
+        HUB_COMPONENT = 'python-flask'
       }
       steps {
         container('toolbox') {
@@ -157,6 +164,7 @@ pipeline {
   post {
     always {
       junit testResults: './junit.xml', allowEmptyResults: true
+      junit testResults: './eslint-junit.xml', allowEmptyResults: true
     }
   }
 }

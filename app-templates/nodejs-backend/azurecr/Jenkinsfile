@@ -16,7 +16,7 @@ spec:
       - name: hub-state
         mountPath: /tmp/.hub/
   - name: buildbox
-    image: python:3.7
+    image: node:10
     command:
     - cat
     tty: true
@@ -85,32 +85,26 @@ pipeline {
         container('toolbox') {
           script {
             dir ('.hub') {
-              hub.render(template: "templates/harbor/kubernetes.yaml.template", state: "/tmp/.hub/hub.state")
-              sh script: "cp templates/harbor/kubernetes.yaml ../"
+              hub.render(template: "templates/package.json.template", state: "/tmp/.hub/hub.state")
+              hub.render(template: "templates/azurecr/kubernetes.yaml.template", state: "/tmp/.hub/hub.state")
+              sh script: "cp templates/package.json templates/azurecr/kubernetes.yaml ../"
             }
             stackOutputs = hub.explain(state: "/tmp/.hub/hub.state").stackOutputs
           }
         }
       }
     }
-    stage('Install') {
+    stage('Compile') {
       steps {
         container('buildbox') {
-          sh script: 'make install'
-        }
-      }
-    }
-    stage('Lint') {
-      steps {
-        container('buildbox') {
-          sh script: 'make lint'
+          sh script: 'npm install'
         }
       }
     }
     stage('Test') {
       steps {
         container('buildbox') {
-          sh script: 'make pytest'
+          sh script: 'npm run junit'
         }
       }
     }
@@ -129,7 +123,7 @@ pipeline {
     }
     stage('Deploy') {
       environment {
-        HUB_COMPONENT = 'python-flask'
+        HUB_COMPONENT = 'nodejs-backend'
       }
       steps {
         container('toolbox') {
