@@ -34,6 +34,8 @@ parameters:
 ouptuts:
 - name: component.kaniko.build.timeout
   value: "${component.kaniko.build.timeout}"
+- name: application.training.docker.registry.image
+  value: "${application.training.docker.registry.image}"
 
 lifecycle:
   order:

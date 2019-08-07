@@ -6,8 +6,8 @@ parameters:
   value: docker.io/agilestacks/jupyter-tensorflow-ktext-seq2seq:latest
 
 outputs:
-- name: application.training.kernel.image
-  value: ${application.training.kernel.image}
+- name: application.jupyter.kernel.image
+  value: ${application.jupyter.kernel.image}
 
 lifecycle:
   order: []
