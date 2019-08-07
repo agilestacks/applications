@@ -9,11 +9,11 @@ components:
     fromEnv: GITHUB_TOKEN
 
 parameters:
-- name: application.jupyter.kernel.docker.registry.image
+- name: application.training.docker.registry.image
   kind: user
-- name: application.jupyter.kernel.image
+- name: application.training.image
   kind: link
-  value: ${application.jupyter.kernel.docker.registry.image}:latest
+  value: ${application.training.docker.registry.image}:latest
 - name: component.kaniko
   parameters:
   - name: name
@@ -23,7 +23,7 @@ parameters:
     value: ${application.namespace}
   - name: destination
     kind: link
-    value: ${application.jupyter.kernel.docker.registry.image}:latest
+    value: ${application.training.docker.registry.image}:latest
   - name: contextDir
     value: components/kernel
   - name: build.timeout

@@ -13,14 +13,14 @@ lifecycle:
     - pull-secret
 
 parameters:
-- name: application.jupyter.kernel.docker
+- name: application.training.docker
   kind: user
   parameters:
   - name: registry.url
   - name: auth.host
   - name: auth.basic.username
   - name: auth.basic.password
-    fromEnv: APPLICATION_JUPYTER_KERNEL_DOCKER_AUTH_BASIC_PASSWORD
+    fromEnv: APPLICATION_TRAINING_DOCKER_AUTH_BASIC_PASSWORD
   - name: registry.kind
 
 - name: component.pullSecret
@@ -34,10 +34,10 @@ parameters:
   kind: link
   parameters:
   - name: registry.kind
-    value: ${application.jupyter.kernel.docker.registry.kind}
+    value: ${application.training.docker.registry.kind}
   - name: auth.host
-    value: ${application.jupyter.kernel.docker.auth.host}
+    value: ${application.training.docker.auth.host}
   - name: auth.basic.username
-    value: ${application.jupyter.kernel.docker.auth.basic.username}
+    value: ${application.training.docker.auth.basic.username}
   - name: auth.basic.password
-    value: ${application.jupyter.kernel.docker.auth.basic.password}
+    value: ${application.training.docker.auth.basic.password}

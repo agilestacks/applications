@@ -7,7 +7,7 @@ metadata:
     bucket: "${application.bucket.name}"
 data:
   APPLICATION_NAME: "${application.name}"
-  DOCKER_REGISTRY: "${application.jupyter.kernel.docker.registry.url}"
+  DOCKER_REGISTRY: "${application.training.docker.registry.url}"
   DOCKER_REGISTRY_PULL_SECRET: "${component.pullSecret.name}"
   BUCKET_ENDPOINT: "${application.bucket.endpoint}"
   BUCKET_NAME: "${application.bucket.name}"
