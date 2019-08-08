@@ -20,12 +20,12 @@ kubectlapp := kubectl --context="$(DOMAIN_NAME)"
 
 deploy:
 	$(kubectl) apply -f templates/credentials.yaml
-	$(kubectl) apply -f templates/pipeline.yaml
+	$(kubectl) apply -f templates/$(DOCKER_REGISTRY_KIND)/pipeline.yaml
 .PHONY: deploy
 
 undeploy:
-	- $(kubectl) delete -f templates/pipeline.yaml
-	- $(kubectlapp) delete -f templates/kubernetes-$(DOCKER_REGISTRY_KIND).yaml
+	- $(kubectl) delete -f templates/$(DOCKER_REGISTRY_KIND)/pipeline.yaml
+	- $(kubectlapp) delete -f templates/$(DOCKER_REGISTRY_KIND)/kubernetes.yaml
 .PHONY: undeploy
 
 $(APP_ELABORATE_FILE):

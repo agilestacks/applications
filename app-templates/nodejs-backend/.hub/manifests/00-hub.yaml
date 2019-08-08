@@ -50,6 +50,8 @@ parameters:
   - name: component.jenkins.url
   - name: component.jenkins.namespace
     value: jenkins
+  - name: docker.config.reference
+    empty: allow
   - name: dns.domain
     env: DOMAIN_NAME
   - name: cloud.region
@@ -86,4 +88,6 @@ templates:
     - templates/*.template
     - templates/ecr/*.template
     - templates/harbor/*.template
+    - templates/azurecr/*.template
+    - templates/gcr/*.template
 
