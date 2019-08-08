@@ -52,6 +52,8 @@ parameters:
     value: jenkins
   - name: dns.domain
     env: DOMAIN_NAME
+  - name: docker.config.reference
+    empty: allow
   - name: cloud.region
   - name: terraform.bucket
     parameters:
@@ -86,3 +88,5 @@ templates:
     - templates/*.template
     - templates/harbor/*.template
     - templates/ecr/*.template
+    - templates/azurecr/*.template
+    - templates/gcr/*.template
