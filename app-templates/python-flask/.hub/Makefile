@@ -54,8 +54,8 @@ statemap:
 .PHONY: statemap
 
 rmstatemap:
-	$(hub) kubeconfig $(APP_STATE) --switch-kube-context
-	kubectl --namespace="$(JENKINS_NAMESPACE)" delete configmap $(APPLICATION_NAME)-state
+	- $(hub) kubeconfig $(APP_STATE) --switch-kube-context
+	- kubectl --namespace="$(JENKINS_NAMESPACE)" delete configmap $(APPLICATION_NAME)-state
 .PHONY: rmstatemap
 
 install: hubdeploy params statemap
