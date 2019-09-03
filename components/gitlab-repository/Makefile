@@ -44,9 +44,9 @@ init:
 
 create-group: check-gitlab-api
 	echo Creating gitlab group: $(GITLAB_NAMESPACE)
-	$(curl) --request POST \
-	--form "name=$(PROJECT_NAME)" \
-	--form "path=$(PROJECT_NAME)" \
+	$(curlx') --request POST \
+	--form "name=$(GITLAB_NAMESPACE)" \
+	--form "path=$(GITLAB_NAMESPACE)" \
 	--form "visibility=$(PROJECT_VISIBILITY)" \
 	"$(BASE_URL)/groups"
 .PHONY: create-group
