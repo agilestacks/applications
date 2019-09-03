@@ -36,13 +36,22 @@ check-gitlab-api:
 	$(eval orgdata=$(shell $(curl) -I $(BASE_URL)/projects))
 PHONY: check-gitlab-api
 
-deploy: create push output
+deploy: create-group create-project push output
 
 init:
 	$(git) init
 .PHONY: init
 
-create: check-gitlab-api
+create-group: check-gitlab-api
+	echo Creating gitlab group: $(GITLAB_NAMESPACE)
+	$(curl) --request POST \
+	--form "name=$(PROJECT_NAME)" \
+	--form "path=$(PROJECT_NAME)" \
+	--form "visibility=$(PROJECT_VISIBILITY)" \
+	"$(BASE_URL)/groups"
+.PHONY: create-group
+
+create-project: 
 	$(eval NID=$(shell $(curl) $(BASE_URL)/namespaces/$(GITLAB_NAMESPACE) | $(jq) '.id'))
 	echo Creating gitlab project: $(PROJECT_PATH) in namespace: $(NID)
 	$(curl) --request POST \
@@ -52,7 +61,7 @@ create: check-gitlab-api
 	--form "visibility=$(PROJECT_VISIBILITY)" \
 	"$(BASE_URL)/projects"
 
-.PHONY: create
+.PHONY: create-project
 
 $(HUB_CONFIG):
 	touch $@
