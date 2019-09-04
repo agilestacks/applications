@@ -68,6 +68,8 @@ parameters:
     value: private
   - name: region
     value: ${application.bucket.region}
+  - name: reclaim
+    value: retain
 - name: component.s3.url
 - name: component.s3fuse.namespace
   kind: link
