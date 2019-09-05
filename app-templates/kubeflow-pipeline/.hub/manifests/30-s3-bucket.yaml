@@ -69,7 +69,7 @@ parameters:
   - name: region
     value: ${application.bucket.region}
   - name: reclaim
-    value: retain
+    value: retainstern -n automation-hub . --tail 20 --exclude /ping --template '{{ .PodName }} {{ .Message}}'
 - name: component.s3.url
 - name: component.s3fuse.namespace
   kind: link
