@@ -1,0 +1,4 @@
+export AWS_PROFILE=agilestacks-demo01
+
+export PLATFORM_STATE_FILE=s3://agilestacks.vo3304.dev.superhub.io/base.vo3304.dev.superhub.io/hub/cool-new-istio-cool-new/hub.state
+export APP_STATE_FILE=s3://agilestacks.vo3304.dev.superhub.io/base.vo3304.dev.superhub.io/app/cool-new-istio-cool-new/app.state

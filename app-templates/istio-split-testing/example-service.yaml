@@ -1,0 +1,127 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: echo
+  labels:
+    app: echo
+    service: echo
+spec:
+  ports:
+  - port: 9080
+    name: http
+  selector:
+    app: echo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: another-cool-service
+  labels:
+    app: another-cool-service
+    service: another-cool-service
+spec:
+  ports:
+  - port: 9080
+    name: http
+  selector:
+    app: another-cool-service
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo-v1
+  labels:
+    app: echo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echo
+  template:
+    metadata:
+      labels:
+        app: echo
+        version: red
+    spec:
+      containers:
+      - name: echo
+        image: hashicorp/http-echo
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9080
+        args: ["-text", "red", "-listen", ":9080"]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo-v2
+  labels:
+    app: echo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echo
+  template:
+    metadata:
+      labels:
+        app: echo
+        version: green
+    spec:
+      containers:
+      - name: echo
+        image: hashicorp/http-echo
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9080
+        args: ["-text", "green", "-listen", ":9080"]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo-v3
+  labels:
+    app: echo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echo
+  template:
+    metadata:
+      labels:
+        app: echo
+        version: blue
+    spec:
+      containers:
+      - name: echo
+        image: hashicorp/http-echo
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9080
+        args: ["-text", "blue", "-listen", ":9080"]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: another-cool-service-v1
+  labels:
+    app: another-cool-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: another-cool-service
+  template:
+    metadata:
+      labels:
+        app: another-cool-service
+        version: blue
+    spec:
+      containers:
+      - name: echo
+        image: hashicorp/http-echo
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9080
+        args: ["-text", "blue", "-listen", ":9080"]

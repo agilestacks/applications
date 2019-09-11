@@ -1,0 +1,20 @@
+---
+version: 1
+kind: application
+meta:
+  name: 'istio-split-testing:1'
+  source:
+    dir: .
+
+requires:
+  - kubernetes
+
+components:
+  - name: istio-route-by-header
+    source:
+      dir: ../../components/istio-route-by-header
+
+lifecycle:
+  order:
+    - istio-route-by-header
+

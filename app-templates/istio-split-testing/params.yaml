@@ -1,0 +1,19 @@
+---
+parameters:
+- name: dns.domain
+- name: component.istio.ingressGateway.default.name
+- name: component.istio.ingressGateway.default.fqdn
+- name: component.istio-route-by-header
+  parameters:
+  - name: k8s
+    parameters:
+    - name: service.namespace
+      value: zeeto
+    - name: service.name
+      value: echo
+  - name: header
+    parameters:
+    - name: name
+      value: "X-Test-Variation-Id"
+    - name: default.value
+      value: green

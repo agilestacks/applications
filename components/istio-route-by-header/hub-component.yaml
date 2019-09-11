@@ -1,0 +1,33 @@
+---
+version: 1
+kind: component
+meta:
+  name: istio-route-by-header
+  brief: Split testing example using Istio
+
+requires:
+  - kubernetes
+
+parameters:
+- name: dns.domain
+  env: DOMAIN_NAME
+- name: component.istio.ingressGateway.default.name
+  env: GATEWAY_NAME
+- name: component.istio.ingressGateway.default.fqdn
+  env: INGRESS_GATEWAY_FQDN
+- name: component.istio-route-by-header
+  parameters:
+  - name: k8s
+    parameters:
+    - name: service.namespace
+      env: NAMESPACE
+    - name: service.name
+      env: SERVICE_NAME
+  - name: header
+    parameters:
+    - name: name
+      value: "X-Test-Variation-Id"
+      env: HEADER_NAME
+    - name: default.value
+      env: DEFAULT_VERSION
+
