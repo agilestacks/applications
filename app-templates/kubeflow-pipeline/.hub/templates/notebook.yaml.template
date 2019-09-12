@@ -10,6 +10,16 @@ spec:
     spec:
       initContainers:
       - name: git-sync
+        image: agilestacks/git-credentials
+        command: ["/bin/sh", "-c"]
+        args:
+        - >
+          mkdir -p /tmp/.git;
+          cp -f /usr/local/bin/asi-* /tmp/.git;
+        volumeMounts:
+        - name: workspace
+          mountPath: /tmp
+      - name: git-sync
         image: k8s.gcr.io/git-sync:v3.1.2
         env:
         - name: GIT_SYNC_REPO
@@ -45,7 +55,7 @@ spec:
         - >
           ln -s .git-sync/current workspace;
           chown -R ${application.workspace.uid}:${application.workspace.gid} workspace workspace/* workspace/ workspace/.[^.]*/;
-          git remote set-url --add --push origin some-URL/MyDestinationRepo
+          # git remote set-url --add --push origin some-URL/MyDestinationRepo
         volumeMounts:
         - name: workspace
           mountPath: /tmp
