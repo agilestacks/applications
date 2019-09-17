@@ -53,10 +53,6 @@ outputs:
 - name: component.git.password
   value: ${component.github.token}
   kind: secret
-- name: component.git.credentials
-  # TODO this should be taken from file
-  fromTfVar: git_credentials
-  kind: secret
 - name: component.git.branch
   value: master
 - name: component.github.repository.cloneUrl

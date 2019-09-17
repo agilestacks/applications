@@ -17,6 +17,11 @@ components/minio-bucket/job-mb.yaml
 components/argo-sensor-artifact/sensor.yaml
 components/github-webhook/payload.json
 components/github-webhook/ingress.yaml
+components/git-credentials-k8s/pkg
+components/git-credentials-k8s/bin
+components/istio-route-by-header/destination-rule.yaml
+components/istio-route-by-header/virtual-service-route-by-header.yaml
+
 
 # argo-workflows
 app-templates/argo-workflows/argo-exec.yaml
