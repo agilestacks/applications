@@ -1,0 +1,21 @@
+---
+version: 1
+kind: application
+meta:
+  name: 'istio-configuration:1'
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/app-templates
+    dir: .
+    branch: APPLICATIONS_TAG
+    fromEnv: GITHUB_TOKEN
+
+requires:
+  - kubernetes
+
+components: []
+
+parameters:
+  - name: dns.domain
+  - name: component.istio.ingressGateway.default.name
+  - name: component.istio.ingressGateway.default.fqdn

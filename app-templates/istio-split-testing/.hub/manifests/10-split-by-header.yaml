@@ -1,0 +1,25 @@
+---
+components:
+- name: istio-route-by-header
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/istio-route-by-header
+    dir: components/istio-route-by-header
+    branch: COMPONENTS_TAG
+    fromEnv: GITHUB_TOKEN
+
+lifecycle:
+  order:
+    - istio-route-by-header
+
+parameters:
+  - name: component.istio-route-by-header
+    parameters:
+    - name: k8s
+      parameters:
+      - name: service.namespace
+      - name: service.name
+    - name: header
+      parameters:
+      - name: name
+      - name: default.value
