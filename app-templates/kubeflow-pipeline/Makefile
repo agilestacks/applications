@@ -6,7 +6,7 @@ export APPLICATION ?= kfp-app1
 WORKSPACE    := .tmp
 HUB_YAML     := $(WORKSPACE)/.hub/hub.yaml
 # PAYLOAD_FILE := .hub/examples/payload-s3.json
-PAYLOAD_FILE := .hub/examples/payload-minio2.json
+PAYLOAD_FILE := .hub/examples/payload-minio.json
 
 rsync := rsync -auvhtrzi --progress --ignore-existing --exclude-from .cpignore
 
@@ -17,15 +17,22 @@ $(HUB_YAML):
 
 $(WORKSPACE):
 	mkdir -p $@
-	$(rsync) . $(WORKSPACE)
+	$(rsync) . $@
+
+init:
+	ln -s $(HOME)/dev/applications/components/github-repository .hub/components/github-repository
+	ln -s $(HOME)/dev/applications/components/pull-secret .hub/components/pull-secret
+	ln -s $(HOME)/dev/applications/components/aws-creds .hub/components/aws-creds
+	ln -s $(HOME)/dev/applications/components/minio-bucket .hub/components/minio-bucket
+	ln -s $(HOME)/dev/applications/components/s3fs .hub/components/s3fs
+
+
+uninstall elaborate explain install:
+	$(MAKE) -C "$(WORKSPACE)/.hub" $@
 
 install: clean $(WORKSPACE) $(HUB_YAML)
-	$(MAKE) -C "$(WORKSPACE)/.hub" $@
-
-uninstall elaborate explain:
-	$(MAKE) -C "$(WORKSPACE)/.hub" $@
 
 clean:
-	rm -rf $(WORKSPACE)
+	rm -rf $(WORKSPACE) $(HUB_YAML)
 
 .PHONY: deploy undeploy $(HUB_YAML) gen $(WORKSPACE)

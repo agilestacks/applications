@@ -9,15 +9,12 @@ spec:
   template:
     spec:
       initContainers:
-      - name: git-sync
+      - name: export-git-creds
         image: agilestacks/git-credentials
         command: ["/bin/sh", "-c"]
-        args:
-        - >
-          mkdir -p /tmp/.git;
-          cp -f /usr/local/bin/asi-* /tmp/.git;
+        args: [cp --verbose -pf /usr/local/bin/asi-* /tmp; true;]
         volumeMounts:
-        - name: workspace
+        - name: usr-local-bin
           mountPath: /tmp
       - name: git-sync
         image: k8s.gcr.io/git-sync:v3.1.2
@@ -47,18 +44,28 @@ spec:
         volumeMounts:
         - name: workspace
           mountPath: /tmp
-      - name: update-workspace
-        image: k8s.gcr.io/git-sync:v3.1.2
-        workingDir: /tmp
+      - name: init-notebook
+        image: ${application.jupyter.kernel.image}
         command: ["/bin/sh", "-c"]
+        workingDir: /home/jovyan
         args:
         - >
+          cp --verbose -pf /usr/local/bin/* /binaries;
           ln -s .git-sync/current workspace;
           chown -R ${application.workspace.uid}:${application.workspace.gid} workspace workspace/* workspace/ workspace/.[^.]*/;
-          # git remote set-url --add --push origin some-URL/MyDestinationRepo
+          mkdir -p ".git-sync/.git/bin";
+          rm -f ".git-sync/.git/bin/credentials-helper";
+          printf '#!/bin/bash\nasi-git-credentials-k8s -n ${application.namespace} -l ${application.name} $@' > .git-sync/.git/bin/credentials-helper;
+          chmod +x .git-sync/.git/bin/credentials-helper;
+          git -C ".git-sync" config user.name  "${author.name}";
+          git -C ".git-sync" config user.email "${author.email}";
+          git -C ".git-sync" config credential.https://github.com.helper "/home/jovyan/.git-sync/.git/bin/credentials-helper"
+          true;
         volumeMounts:
         - name: workspace
-          mountPath: /tmp
+          mountPath: /home/jovyan
+        - name: usr-local-bin
+          mountPath: /binaries
       containers:
       - name: notebook
         image: ${application.jupyter.kernel.image}
@@ -67,10 +74,11 @@ spec:
           value: ${application.name}-nb-vars
         - name: NB_SECRET_VARS
           value: ${application.name}-nb-keyring
+        - name: AWS_DEFAULT_PROFILE
+          value: "${cloud.credential.profile}"
         - name: AWS_PROFILE
           value: "${cloud.credential.profile}"
         - name: AWS_REGION
-          value: "${application.bucket.region}"
         resources:
           limits: {}
           requests:
@@ -82,8 +90,10 @@ spec:
         - mountPath: /home/jovyan/data
           name: data
         - mountPath: "/home/jovyan/.aws"
-          name: aws-creds
+          name: aws
           readOnly: true
+        - mountPath: "/usr/local/bin"
+          name: usr-local-bin
       serviceAccountName: default-editor
       ttlSecondsAfterFinished: 300
       volumes:
@@ -93,6 +103,8 @@ spec:
       - name: data
         persistentVolumeClaim:
           claimName: "${application.name}-${application.bucket.name}-data"
-      - name: aws-creds
+      - name: aws
         secret:
           secretName: "${application.name}-${application.bucket.name}-creds"
+      - name: usr-local-bin
+        emptyDir: {}
