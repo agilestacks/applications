@@ -46,20 +46,26 @@ spec:
           mountPath: /tmp
       - name: init-notebook
         image: ${application.jupyter.kernel.image}
-        command: ["/bin/sh", "-c"]
+        command: ["/bin/sh", "-xc"]
         workingDir: /home/jovyan
         args:
         - >
           cp --verbose -pf /usr/local/bin/* /binaries;
-          ln -s .git-sync/current workspace;
-          chown -R ${application.workspace.uid}:${application.workspace.gid} workspace workspace/* workspace/ workspace/.[^.]*/;
           mkdir -p ".git-sync/.git/bin";
           rm -f ".git-sync/.git/bin/credentials-helper";
           printf '#!/bin/bash\nasi-git-credentials-k8s -n ${application.namespace} -l ${application.name} $@' > .git-sync/.git/bin/credentials-helper;
           chmod +x .git-sync/.git/bin/credentials-helper;
-          git -C ".git-sync" config user.name  "${author.name}";
-          git -C ".git-sync" config user.email "${author.email}";
-          git -C ".git-sync" config credential.https://github.com.helper "/home/jovyan/.git-sync/.git/bin/credentials-helper"
+          ln -s .git-sync/current workspace;
+          git -C workspace config user.name  "${author.name}";
+          git -C workspace config user.email "${author.email}";
+          git -C workspace config credential.https://github.com.helper "/home/jovyan/.git-sync/.git/bin/credentials-helper";
+          git -C workspace rev-parse refs/heads/master;
+          git -C workspace rev-parse HEAD;
+          git -C workspace checkout -b reattach;
+          git -C workspace checkout -B master reattach;
+          git -C workspace branch -d reattach;
+          git -C workspace branch -u origin/${component.git.branch};
+          chown -R ${application.workspace.uid}:${application.workspace.gid} workspace workspace/* workspace/ workspace/.[^.]*/;
           true;
         volumeMounts:
         - name: workspace
