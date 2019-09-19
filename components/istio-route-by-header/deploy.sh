@@ -24,7 +24,7 @@ fi
 
 for DEPLOYMENT in $DEPLOYMENTS
 do
-  $kubectl get deployment $DEPLOYMENT -o yaml | istioctl kube-inject -f - | kubectl apply -f -
+  $kubectl get deployment $DEPLOYMENT -o yaml | $istioctl kube-inject -f - | kubectl apply -f -
 done
 
 jsonnet destination-rule.jsonnet \
