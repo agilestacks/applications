@@ -4,6 +4,7 @@ SERVICE_LABEL_NAME=app
 VERSION_LABEL_NAME=version
 
 kubectl="kubectl --context=$DOMAIN_NAME --namespace=$NAMESPACE"
+istioctl="istioctl --context=$DOMAIN_NAME"
 
 export DEPLOYMENTS="`$kubectl get deployments --selector=$SERVICE_LABEL_NAME=$SERVICE_NAME \
   -o json | jq -rM '.items[].metadata.name' | xargs`"
