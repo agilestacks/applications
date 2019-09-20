@@ -13,6 +13,7 @@ lifecycle:
     - istio-route-by-header
 
 parameters:
+  - name: component.istio.ingressGateway.default.fqdn
   - name: component.istio-route-by-header
     parameters:
     - name: k8s
@@ -23,3 +24,7 @@ parameters:
       parameters:
       - name: name
       - name: default.value
+
+outputs:
+  - name: component.istio-route-by-header.service.url
+    value: http://${component.istio-route-by-header.service.name}.${component.istio.ingressGateway.default.fqdn}
