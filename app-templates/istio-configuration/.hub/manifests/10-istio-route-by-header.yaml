@@ -27,4 +27,4 @@ parameters:
 
 outputs:
   - name: component.istio-route-by-header.service.url
-    value: http://${component.istio-route-by-header.service.name}.${component.istio.ingressGateway.default.fqdn}
+    value: http://${component.istio-route-by-header.k8s.service.name}.${component.istio.ingressGateway.default.fqdn}
