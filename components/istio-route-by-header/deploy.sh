@@ -22,7 +22,7 @@ if [ -z "$VERSIONS" ]; then
   exit 1
 fi
 
-for DEPLOYMENT in $DEPLOYMENTS
+for DEPLOYMENT in "$DEPLOYMENTS"
 do
   $kubectl get deployment $DEPLOYMENT -o yaml | $istioctl kube-inject -f - | $kubectl apply -f -
 done
