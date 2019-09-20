@@ -8,9 +8,10 @@ module.exports = {
       uptime: process.uptime(),
     };
     if (process.env.ENVIRONMENT_NAME) {
-      res.json(Object.assign({}, body, {
+      res.json({
+        ...body,
         environment: process.env.ENVIRONMENT_NAME,
-      }));
+      });
     } else {
       res.json(body);
     }

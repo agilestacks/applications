@@ -1,10 +1,10 @@
 {
-  "extends": "airbnb-base",
+  "extends": [
+    "airbnb-base"
+  ],
   "env": {
-    "node": true
-  },
-  "parserOptions": {
-    "ecmaVersion": 2018
+    "node": true,
+    "es6": true
   },
   "globals": {
     "jest": false,
