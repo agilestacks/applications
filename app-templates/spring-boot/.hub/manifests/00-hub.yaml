@@ -33,7 +33,7 @@ parameters:
     value: 8080
   - name: application.state.file
     fromEnv: APP_STATE_FILE
-  - name: application.ingress.host
+  - name: application.ingress
     value: '${application.name}.${component.ingress.fqdn}'
   - name: application.path
     value: /
@@ -72,12 +72,12 @@ outputs:
   - name: application.jenkins.namespace
     value: '${component.jenkins.namespace}'
   - name: application.fqdn
-    value: '${application.ingress.host}'
+    value: '${application.ingress}'
   - name: application.path
     value: '${application.path}'
   - name: application.port
   - name: application.url
-    value: '${component.ingress.protocol}://${application.ingress.host}${application.path}'
+    value: '${component.ingress.protocol}://${application.ingress}${application.path}'
   - name: application.jenkins.pipeline.url
     value: '${component.jenkins.url}/job/${application.name}/job/${application.pipeline.name}-${application.name}'
   - name: application.promotion.templates
