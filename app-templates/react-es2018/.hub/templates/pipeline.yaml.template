@@ -6,7 +6,7 @@ metadata:
 spec:
   repositoryUrl: ${component.git.remote}
   credentialsId: ${application.git.kind}-${component.git.organization}
-  folder: ${application.name}  
+  folder: ${application.name}
   branchSpec: '*/master'
   pipeline: Jenkinsfile
   origin: 'SuperHub'
@@ -22,4 +22,4 @@ spec:
     - name: INGRESS_CONTEXT
       type: string
       defaultValue: '${component.s3website.path}'
-      description: 'Path to host application within ${application.ingress.host}'
+      description: 'Path to host application within ${application.ingress}'
