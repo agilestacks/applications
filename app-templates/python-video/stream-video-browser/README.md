@@ -25,7 +25,7 @@ View the webcam feed from the web browser:
 http://127.0.0.1:8000/
 
 After implementing the background subtractor, we combined it with the Flask web framework, enabling us to:
-Access frames from RPi camera module/USB webcam.
-Apply background subtraction/motion detection to each frame.
-Stream the results to a web page/web browser.
-This implementation supports multiple clients, browsers, or tabs.
+* Access frames from RPi camera module/USB webcam.
+* Apply background subtraction/motion detection to each frame.
+* Stream the results to a web page/web browser.
+* Support multiple clients, browsers, or tabs.
