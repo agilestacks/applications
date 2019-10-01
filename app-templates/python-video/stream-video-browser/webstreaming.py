@@ -54,6 +54,8 @@ def detect_motion(frameCount):
 		frame = vs.read()
 		time.sleep(0.05)
 		if frame is None:
+			vs = FileVideoStream("video/test_video.mp4").start()
+			frame = vs.read()
 			continue
 		frame = imutils.resize(frame, width=400)
 		gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
