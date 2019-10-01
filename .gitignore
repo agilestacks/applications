@@ -99,3 +99,4 @@ app-templates/kubeflow-pipeline/.hub/components/aws-creds
 app-templates/kubeflow-pipeline/.hub/components/github-repository
 app-templates/kubeflow-pipeline/.hub/components/harbor
 app-templates/kubeflow-pipeline/.hub/components/kaniko
+app-templates/python-video/stream-video-browser/__pycache__
