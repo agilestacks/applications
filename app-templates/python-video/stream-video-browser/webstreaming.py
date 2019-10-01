@@ -13,6 +13,7 @@ import datetime
 import imutils
 import time
 import cv2
+from imutils.video import FileVideoStream
 
 # initialize the output frame and a lock used to ensure thread-safe
 # exchanges of the output frames (useful for multiple browsers/tabs
@@ -23,14 +24,12 @@ lock = threading.Lock()
 # initialize a flask object
 app = Flask(__name__)
 
-# initialize the video stream and allow the camera sensor to
-# warmup
+# initialize the webcam video stream and allow the camera sensor to warmup
 #vs = VideoStream(usePiCamera=1).start()
 
-#vs = cv2.VideoCapture("video/jurassic_park_intro.mp4")
-#vs = FileVideoStream("video/jurassic_park_intro.mp4").start()
+# initialize the video file stream 
+vs = FileVideoStream("video/test_video.mp4").start()
 
-vs = VideoStream(src=0).start()
 time.sleep(2.0)
 
 @app.route("/")
@@ -53,6 +52,9 @@ def detect_motion(frameCount):
 		# read the next frame from the video stream, resize it,
 		# convert the frame to grayscale, and blur it
 		frame = vs.read()
+		time.sleep(0.05)
+		if frame is None:
+			continue
 		frame = imutils.resize(frame, width=400)
 		gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 		gray = cv2.GaussianBlur(gray, (7, 7), 0)
