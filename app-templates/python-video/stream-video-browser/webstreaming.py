@@ -25,10 +25,12 @@ lock = threading.Lock()
 app = Flask(__name__)
 
 # initialize the webcam video stream and allow the camera sensor to warmup
-#vs = VideoStream(usePiCamera=1).start()
+vs = VideoStream(src=0).start()
 
 # initialize the video file stream 
-vs = FileVideoStream("video/test_video.mp4").start()
+if not vs.grabbed:
+	print("INFO: unable to connect to a webcam, using file stream instead")
+	vs = FileVideoStream("video/test_video.mp4").start()
 
 time.sleep(2.0)
 
@@ -54,6 +56,7 @@ def detect_motion(frameCount):
 		frame = vs.read()
 		time.sleep(0.05)
 		if frame is None:
+			print("INFO: unable to connect to a webcam, using file stream instead")			
 			vs = FileVideoStream("video/test_video.mp4").start()
 			frame = vs.read()
 			continue
