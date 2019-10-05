@@ -5,8 +5,7 @@ WORKDIR /opt/webstream
 RUN pip3 install flask numpy opencv-contrib-python imutils
 
 COPY ./ ./
-#COPY video video/
-#COPY pyimagesearch pyimagesearch/
-#COPY templates templates/
-#COPY webstreaming.py ./
 
+EXPOSE 8000/tcp
+
+CMD python3 webstreaming.py --source video/test_video.mp4

@@ -3,8 +3,5 @@
 Dockerfile
 README.md
 
-pyimagesearch/*.pyc
-pyimagesearch/__pycache__
-
-pyimagesearch/motion_detection/*.pyc
-pyimagesearch/motion_detection/__pycache__
+**/*.pyc
+**/__pycache__
