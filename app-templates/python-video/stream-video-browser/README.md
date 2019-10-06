@@ -23,6 +23,15 @@ Start the app using the following command:
 python webstreaming.py --ip 127.0.0.1 --port 8000
 ```
 
+The `object_detection.py` file will use OpenCV to access our web camera, apply object detection to each frame, and then serve the output frames to our web browser via the Flask web framework.
+
+Start the app using the following command:
+
+```
+python object_detection.py --ip 127.0.0.1 --port 8000 --prototxt MobileNetSSD_deploy.prototxt.txt --model MobileNetSSD_deploy.caffemodel --source http://131.173.8.23/mjpg/video.mjpg
+```
+
+
 ## Docker Deployment
 
 This application can be run from Docker with the following steps:
