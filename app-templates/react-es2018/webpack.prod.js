@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies,no-console */
 const webpack = require('webpack');
 const merge = require('webpack-merge');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const {common} = require('./webpack.common.js');
 
 module.exports = merge(common, {
@@ -16,14 +16,11 @@ module.exports = merge(common, {
     ],
     optimization: {
         minimizer: [
-            new UglifyJSPlugin({
+            new TerserPlugin({
                 parallel: true,
                 sourceMap: true,
-                uglifyOptions: {
-                    ecma: 5,
-                    output: {
-                        beautify: false
-                    }
+                terserOptions: {
+                    ecma: 6
                 }
             })
         ],

@@ -76,10 +76,12 @@ module.exports = {
                         {
                             loader: 'sass-loader', // compiles Sass to CSS,
                             options: {
-                                includePaths: [
-                                    path.resolve(__dirname, 'src/themes', theme),
-                                    path.resolve(__dirname, 'src')
-                                ]
+                                sassOptions: {
+                                    includePaths: [
+                                        path.resolve(__dirname, 'src/themes', theme),
+                                        path.resolve(__dirname, 'src')
+                                    ]
+                                }
                             }
                         }
                     ]
