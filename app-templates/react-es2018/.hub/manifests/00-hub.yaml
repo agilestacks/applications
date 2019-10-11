@@ -17,33 +17,28 @@ requires:
 components: []
 
 parameters:
-  - name: application.name
-    value: react-app-next
-  - name: application.description
-    value: React application
-  - name: application.namespace
-    value: cool
-  - name: application.replicas
-    value: 1
-  - name: application.version
-    value: latest
-  - name: application.state.file
-    fromEnv: APP_STATE_FILE
-  - name: application.protocol
-    value: http
-  - name: application.ingress
-    value: '${component.s3website.name}.${dns.domain}'
-  - name: application.bucket
-    value: '${component.s3website.bucket}'
-  - name: application.theme
-  - name: application.pipeline.name
-    value: main
-  - name: component.ingress.protocol
-  - name: component.ingress.fqdn
+  - name: application
+    parameters:
+    - name: name
+      value: react-app-next
+    - name: description
+      value: React application
+    - name: version
+      value: latest
+    - name: state.file
+      fromEnv: APP_STATE_FILE
+    - name: protocol
+      value: http
+    - name: ingress
+      value: '${component.s3website.name}.${dns.domain}'
+    - name: theme
+    - name: pipeline.name
+      value: main
   - name: component.git.remote
   - name: component.jenkins.url
   - name: component.s3website.name
     value: ${application.name}
+  - name: component.s3website.path
   - name: dns.domain
     env: DOMAIN_NAME
   - name: cloud.region
@@ -57,11 +52,7 @@ outputs:
     value: '${component.git.remote}'
   - name: application.name
     value: '${application.name}'
-  - name: application.namespace
-    value: '${application.namespace}'
   - name: application.theme
-  - name: application.fqdn
-    value: '${application.ingress}'
   - name: application.path
     value: '${component.s3website.path}'
   - name: application.url
