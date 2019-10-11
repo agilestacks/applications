@@ -1,0 +1,50 @@
+{
+  "name": "iglyreact1",
+  "humanName": "iglyreact1",
+  "description": "HTML5/JavaScript application that has been deployed to AWS S3 hosted website with Jenkins CI server",
+  "platform": "2",
+  "requires": [
+    "github",
+    "jenkins",
+    "s3-bucket"
+  ],
+  "application": "react-es2018",
+  "parameters": [
+    {
+      "name": "application.name",
+      "value": "iglyreact1"
+    },
+    {
+      "name": "application.humanName",
+      "value": "iglyreact1"
+    },
+    {
+      "name": "application.description",
+      "value": "HTML5/JavaScript application that has been deployed to AWS S3 hosted website with Jenkins CI server"
+    },
+    {
+      "name": "component.github.repository.organization",
+      "value": "igorlysak"
+    },
+    {
+      "name": "component.github.token",
+      "value": {
+        "kind": "token",
+        "token": "place_your_github_token_here"
+      },
+      "kind": "secret"
+    },
+    {
+      "name": "component.github.repository.name",
+      "value": "iglyreact1"
+    },
+    {
+      "name": "component.s3website.name",
+      "value": "igly"
+    },
+    {
+      "name": "component.s3website.path",
+      "value": "bindpath"
+    }
+  ]
+}
