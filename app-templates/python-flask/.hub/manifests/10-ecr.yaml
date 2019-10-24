@@ -21,12 +21,20 @@ components:
     dir: components/jenkins-iam-role
     branch: APPLICATIONS_TAG
     fromEnv: GITHUB_TOKEN
+- name: container-app-workspace
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/container-app-workspace
+    dir: components/container-app-workspace
+    branch: COMPONENTS_TAG
+    fromEnv: GITHUB_TOKEN
 
 lifecycle:
   order:
     - ecr
     - ecr-config
     - jenkins-iam-role
+    - container-app-workspace
 
 parameters:
 - name: application.ecr.path
@@ -51,6 +59,10 @@ parameters:
 - name: component.jenkins-iam-role.name
   value: '${dns.domain}/${application.name}'
 - name: component.jenkins-iam-role.roleArn
+
+- name: component.docker.auth.kind
+  value: ecr
+  env: DOCKER_AUTH_KIND
 
 outputs:
 - name: application.cloud.role

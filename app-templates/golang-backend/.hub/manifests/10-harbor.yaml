@@ -14,11 +14,20 @@ components:
     dir: components/pull-secret
     branch: COMPONENTS_TAG
     fromEnv: GITHUB_TOKEN
+- name: container-app-workspace
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/container-app-workspace
+    dir: components/container-app-workspace
+    branch: COMPONENTS_TAG
+    fromEnv: GITHUB_TOKEN
 
 lifecycle:
   order:
     - pull-secret-jenkins
     - pull-secret-apps
+    - container-app-workspace
+
 
 parameters:
   - name: component.pullSecret.name
@@ -40,3 +49,7 @@ parameters:
   - name: docker.config.reference
     kind: link
     value: ${pull-secret-apps:component.pullSecret.name}
+
+  - name: component.docker.auth.kind
+    value: basic
+    env: DOCKER_AUTH_KIND

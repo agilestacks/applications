@@ -12,7 +12,7 @@ APP_STATE_FILE_LOCAL  ?= hub.state
 APP_STATE_FILE        ?= should-come-from-env
 APP_STATE 			  ?= $(APP_STATE_FILE_LOCAL),$(APP_STATE_FILE)
 APP_ELABORATE_FILE 	  ?= hub.elaborate
-DOCKER_REGISTRY_KIND ?= ecr
+DOCKER_AUTH_KIND ?= unknown
 
 hub := hub -d --aws_region=$(PLATFORM_STATE_REGION) --aws_use_iam_role_credentials=false
 kubectl := kubectl --context="$(DOMAIN_NAME)" --namespace="$(NAMESPACE)"
@@ -20,12 +20,12 @@ kubectlapp := kubectl --context="$(DOMAIN_NAME)"
 
 deploy:
 	$(kubectl) apply -f templates/credentials.yaml
-	$(kubectl) apply -f templates/$(DOCKER_REGISTRY_KIND)/pipeline.yaml
+	$(kubectl) apply -f templates/$(DOCKER_AUTH_KIND)/pipeline.yaml
 .PHONY: deploy
 
 undeploy:
-	- $(kubectl) delete -f templates/$(DOCKER_REGISTRY_KIND)/pipeline.yaml
-	- $(kubectlapp) delete -f templates/$(DOCKER_REGISTRY_KIND)/kubernetes.yaml
+	- $(kubectl) delete -f templates/$(DOCKER_AUTH_KIND)/pipeline.yaml
+	- $(kubectlapp) delete -f templates/$(DOCKER_AUTH_KIND)/kubernetes.yaml
 .PHONY: undeploy
 
 $(APP_ELABORATE_FILE):
