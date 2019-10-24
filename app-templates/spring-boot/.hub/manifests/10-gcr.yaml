@@ -1,0 +1,17 @@
+---
+components:
+- name: container-app-workspace
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/container-app-workspace
+    dir: components/container-app-workspace
+    branch: COMPONENTS_TAG
+    fromEnv: GITHUB_TOKEN
+lifecycle:
+  order:
+    - container-app-workspace
+
+parameters:
+- name: component.docker.auth.kind
+  value: gcr
+  env: DOCKER_AUTH_KIND

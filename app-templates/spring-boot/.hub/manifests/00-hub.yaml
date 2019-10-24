@@ -86,7 +86,6 @@ outputs:
 templates:
   files:
     - templates/*.template
-    - templates/harbor/*.template
+    - templates/basic/*.template
     - templates/ecr/*.template
-    - templates/azurecr/*.template
     - templates/gcr/*.template

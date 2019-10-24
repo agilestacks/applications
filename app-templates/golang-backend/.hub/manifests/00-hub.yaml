@@ -87,6 +87,5 @@ templates:
   files:
     - templates/*.template
     - templates/ecr/*.template
-    - templates/harbor/*.template
-    - templates/azurecr/*.template
+    - templates/basic/*.template
     - templates/gcr/*.template
