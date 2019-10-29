@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ${application.name}
@@ -7,6 +7,10 @@ metadata:
     app: ${application.name}
 spec:
   replicas: ${application.replicas}
+  selector:
+    matchLabels:      
+        app: ${application.name}
+        version: ${application.version}
   template:
     metadata:
       name: ${application.name}
