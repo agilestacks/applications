@@ -3,9 +3,14 @@ BUCKET_ACL ?= private
 
 aws := aws --endpoint=$(ENDPOINT)
 
-# for minio we rely only on AWS_ACCESS_KEY_ID and AWS_SECRET_KEY_ID
-unexport AWS_PROFILE
+# for minio we rely only on AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
+export AWS_ACCESS_KEY_ID     ?= $(error Missing AWS_ACCESS_KEY_ID)
+export AWS_SECRET_ACCESS_KEY ?= $(error Missing AWS_SECRET_ACCESS_KEY)
+unexport AWS_CA_BUNDLE
 unexport AWS_DEFAULT_PROFILE
+unexport AWS_PROFILE
+unexport AWS_ROLE_SESSION_NAME
+unexport AWS_SESSION_TOKEN
 
 test-connect:
 	@ echo "Checking connectivity to: $(ENDPOINT)"
