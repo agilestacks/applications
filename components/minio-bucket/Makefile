@@ -8,6 +8,9 @@ unexport AWS_PROFILE
 unexport AWS_DEFAULT_PROFILE
 
 test-connect:
+	echo $(aws) s3 ls
+	env | sort
+	sleep 300
 	@ echo "Checking connectivity to: $(ENDPOINT)"
 	$(aws) s3 ls
 
