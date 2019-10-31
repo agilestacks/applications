@@ -22,7 +22,7 @@ data "aws_caller_identity" "current" {}
 
 resource "aws_iam_role_policy" "application" {
   provider = "aws.target"
-  name     = "${var.name}_policy"
+  name     = "policy_${substr(var.name, 0, min(length(var.name), 31))}"
   role     = "${aws_iam_role.application.id}"
 
   policy = "${var.policy}"
@@ -30,7 +30,7 @@ resource "aws_iam_role_policy" "application" {
 
 resource "aws_iam_role" "application" {
   provider             = "aws.target"
-  name                 = "${var.name}_role"
+  name                 = "role_${substr(var.name, 0, min(length(var.name), 31))}"
   max_session_duration = 7200
 
   assume_role_policy = <<EOF

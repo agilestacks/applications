@@ -48,12 +48,11 @@ undeploy: init import
 clean:
 	rm *.tfplan
 	rm -rf .terraform
-.PHONY: clean		
+.PHONY: clean
 
 import:
-	$(eval SHORTENED_ROLE_NAME=$(shell echo $(TF_VAR_name)_role | cut -c 0-63))
+	$(eval SHORTENED_ROLE_NAME=$(shell echo role_$(TF_VAR_name) | cut -c 0-31))
 	-$(terraform) import $(TF_OPTS) aws_iam_role.application $(SHORTENED_ROLE_NAME)
-	$(eval SHORTENED_POLICY_NAME=$(shell echo $(TF_VAR_name)_policy | cut -c 0-63))
+	$(eval SHORTENED_POLICY_NAME=$(shell echo policy_$(TF_VAR_name) | cut -c 0-31))
 	-$(terraform) import $(TF_OPTS) aws_iam_role_policy.application $(SHORTENED_ROLE_NAME):$(SHORTENED_POLICY_NAME)
 .PHONY: import
-	
