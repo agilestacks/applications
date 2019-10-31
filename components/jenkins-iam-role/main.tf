@@ -10,8 +10,7 @@ provider "aws" {
 data "aws_caller_identity" "current" {}
 
 resource "aws_iam_role" "jenkins" {
-  name = "${substr("role_"+var.name, 0, min(length(var.name), 31))}"
-
+  name = "${substr(format("%s/%s","role_",var.name), 0, min(length(var.name), 31))}"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -30,7 +29,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "jenkins" {
-  name = "${substr("policy_"+var.name, 0, min(length(var.name), 31))}"
+  name = "${substr(format("%s/%s","policy_",var.name), 0, min(length(var.name), 31))}"
   role = "${aws_iam_role.jenkins.id}"
 
   policy = <<EOF
