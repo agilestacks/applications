@@ -1,10 +1,9 @@
 .DEFAULT_GOAL := deploy
 
-COMPONENT_NAME    ?= jenkins-iam-role
+COMPONENT_NAME    ?= jenkins-iam
 DOMAIN_NAME       ?= dev.stacks.delivery
 STATE_BUCKET      ?= terraform.agilestacks.com
 STATE_REGION      ?= us-east-1
-CLOUD_WORKER_ROLE ?= undefined
 
 export AWS_DEFAULT_REGION ?= us-east-2
 export TF_LOG             ?= debug
@@ -12,12 +11,10 @@ export TF_LOG_PATH        ?= $(shell pwd)/.terraform/$(DOMAIN_NAME).log
 export TF_OPTS            ?= -no-color
 export TF_UPDATE          ?= -update
 
-export TF_VAR_name        := $(COMPONENT_NAME)
-export TF_VAR_domain_name := $(DOMAIN_NAME)
-export TF_VAR_worker_role := $(CLOUD_WORKER_ROLE)
+export TF_VAR_name := $(COMPONENT_NAME).$(DOMAIN_NAME)
 
 terraform ?= terraform-v0.11
-TFPLAN ?= $(notdir $(COMPONENT_NAME)).tfplan
+TFPLAN ?= $(notdir $(TF_VAR_name)).tfplan
 
 deploy: init import plan apply
 
@@ -27,7 +24,7 @@ init:
 		-backend=true -input=false \
 		-backend-config="bucket=$(STATE_BUCKET)" \
 		-backend-config="region=$(STATE_REGION)" \
-		-backend-config="key=$(DOMAIN_NAME)/jenkins-iam-role/$(notdir $(COMPONENT_NAME))/terraform.tfstate" \
+		-backend-config="key=$(DOMAIN_NAME)/jenkins-iam-role/$(notdir $(DOMAIN_NAME))/terraform.tfstate" \
 		-backend-config="profile=$(AWS_PROFILE)"
 .PHONY: init
 
@@ -49,7 +46,8 @@ undeploy: init
 .PHONY: undeploy
 
 import:
-	-$(terraform) import $(TF_OPTS) aws_iam_role.jenkins $(DOMAIN_NAME)-jenkins_iam_role && \
-	-$(terraform) import $(TF_OPTS) aws_iam_role_policy.jenkins $(DOMAIN_NAME)-jenkins_iam_role:jenkins_iam_role_policy \
-		2>/dev/null
+	$(eval SHORTENED_ROLE_NAME=$(shell echo role_$(TF_VAR_name) | cut -c 0-31))
+	-$(terraform) import $(TF_OPTS) aws_iam_role.jenkins $(SHORTENED_ROLE_NAME)
+	$(eval SHORTENED_POLICY_NAME=$(shell echo policy_$(TF_VAR_name) | cut -c 0-31))
+	-$(terraform) import $(TF_OPTS) aws_iam_role_policy.jenkins $(SHORTENED_ROLE_NAME):$(SHORTENED_POLICY_NAME)
 .PHONY: import

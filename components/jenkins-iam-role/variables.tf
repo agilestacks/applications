@@ -1,9 +1,4 @@
-variable "domain_name" {
-  type = "string"
-  description = "domain name of the stack"
-}
-
-variable "worker_role" {
+variable "name" {
   type = "string"
   description = "worker role name"
 }
