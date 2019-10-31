@@ -8,6 +8,8 @@ meta:
     dir: ../../components/jenkins-iam-role
 
 parameters:
+- name: component.jenkins-iam-role.name
+  env: ROLE_NAME
 - name: dns.domain
   env: DOMAIN_NAME
 - name: cloud.region

@@ -56,6 +56,9 @@ parameters:
   kind: link
   value: ${component.ecr-config.configMapName}
 
+- name: component.jenkins-iam-role.name
+  value: ${application.name}
+
 - name: cloud.role.worker
 - name: component.jenkins-iam-role.name
   value: '${dns.domain}/${application.name}'
