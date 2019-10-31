@@ -11,7 +11,7 @@ export TF_LOG_PATH        ?= $(shell pwd)/.terraform/$(DOMAIN_NAME).log
 export TF_OPTS            ?= -no-color
 export TF_UPDATE          ?= -update
 
-export TF_VAR_name := $(ROLE_NAME).$(DOMAIN_NAME)
+export TF_VAR_name := $(ROLE_NAME)
 
 terraform ?= terraform-v0.11
 TFPLAN ?= $(TF_VAR_name).tfplan
