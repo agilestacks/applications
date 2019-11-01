@@ -23,6 +23,10 @@ spec:
       - name: application
         image: ${component.docker.registry.image}
         env:
+        - name: APPLICATION_NAME
+          value: ${application.name}
+        - name: APPLICATION_VERSION
+          value: ${application.version}
         - name: ENVIRONMENT_NAME
           value: ${application.environment.name}
         ports:

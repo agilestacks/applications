@@ -38,7 +38,7 @@ parameters:
   - name: application.path
     value: /
   - name: application.environment.name
-    value: ''
+    value: 'dev'
   - name: application.pipeline.name
     value: main
   - name: component.ingress.protocol
