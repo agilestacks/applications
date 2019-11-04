@@ -12,7 +12,7 @@ WORKDIR /script
 ENV GITHUB_TOKEN supersecret
 ENV WORKSPACE_DIR /workspace/repo
 
-COPY ["package.json", "package-lock.json", "init.js", "/script/"]
+COPY ["package.json", "package-lock.json", "init.js", "template/Makefile", "/script/"]
 RUN npm -q install --only=prod && npm -q cache clean --force
 
 ENTRYPOINT [ "node", "init.js" ]

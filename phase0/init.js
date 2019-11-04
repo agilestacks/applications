@@ -186,7 +186,12 @@ async function perform() {
             copyManifest(manifest);
         } else if (repoUrl) {
             const gitUrl = securedGitUrl({repoUrl, repoKind: process.env.APP_GIT_KIND});
-            shelljs.exec(`git clone --single-branch -b ${repoBranch} ${gitUrl} ${workspaceDir}`);
+            const {code} = shelljs.exec(`git clone --single-branch -b ${repoBranch} ${gitUrl} ${workspaceDir}`);
+            if (code !== 0) {
+                shelljs.mkdir('-p', hubDir);
+                shelljs.sed('-i', '#repo_url#', repoUrl, 'Makefile');
+                shelljs.cp('Makefile', hubDir);
+            }
         } else {
             throw new Error('Cannot initialize application workspace');
         }
