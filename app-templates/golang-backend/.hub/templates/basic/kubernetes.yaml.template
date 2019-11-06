@@ -8,13 +8,15 @@ metadata:
 spec:
   replicas: ${application.replicas}
   selector:
-    matchLabels:      
+    matchLabels:
         app: ${application.name}
         version: ${application.version}
   template:
     metadata:
       name: ${application.name}
       namespace: ${application.namespace}
+      annotations:
+        jenkinsDeployTimestamp: ${annotation.timestamp}
       labels:
         app: ${application.name}
         version: ${application.version}
