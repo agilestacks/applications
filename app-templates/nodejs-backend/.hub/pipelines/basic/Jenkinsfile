@@ -88,7 +88,8 @@ pipeline {
                 hub.render(template: "templates/package.json.template", state: "/tmp/.hub/hub.state")
                 sh script: "mv templates/package.json ../"
             }
-            hub.render(template: "kubernetes.yaml.template", state: "/tmp/.hub/hub.state")
+            mytimestamp = new Date().time
+            hub.render([template: "kubernetes.yaml.template", state: "/tmp/.hub/hub.state", additional: ['annotation.timestamp': mytimestamp]])
             stackOutputs = hub.explain(state: "/tmp/.hub/hub.state").stackOutputs
           }
         }
