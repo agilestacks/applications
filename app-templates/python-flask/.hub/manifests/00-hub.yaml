@@ -86,6 +86,6 @@ outputs:
 templates:
   files:
     - templates/*.template
-    - templates/ecr/*.template
-    - templates/basic/*.template
-    - templates/gcr/*.template
+    - templates/ecr/pipeline.yaml.template
+    - templates/basic/pipeline.yaml.template
+    - templates/gcr/pipeline.yaml.template
