@@ -16,7 +16,7 @@ spec:
       name: ${application.name}
       namespace: ${application.namespace}
       annotations:
-        jenkinsDeployTimestamp: ${annotation.timestamp}
+        jenkinsDeployTimestamp: "${annotation.timestamp}"
       labels:
         app: ${application.name}
         version: ${application.version}
