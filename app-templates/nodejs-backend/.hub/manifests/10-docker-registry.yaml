@@ -1,0 +1,54 @@
+---
+components:
+- name: pull-secret-jenkins
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/pull-secret
+    dir: components/pull-secret
+    branch: COMPONENTS_TAG
+    fromEnv: GITHUB_TOKEN
+- name: pull-secret-apps
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/pull-secret
+    dir: components/pull-secret
+    branch: COMPONENTS_TAG
+    fromEnv: GITHUB_TOKEN
+- name: container-app-workspace
+  source:
+    repoUrl: https://github.com/agilestacks/applications.git
+    repoPath: applications/components/container-app-workspace
+    dir: components/container-app-workspace
+    branch: COMPONENTS_TAG
+    fromEnv: GITHUB_TOKEN
+
+lifecycle:
+  order:
+    - pull-secret-jenkins
+    - pull-secret-apps
+    - container-app-workspace
+
+parameters:
+  - name: component.pullSecret.name
+    component: pull-secret-jenkins
+    value: ${application.name}-pullsecret
+  - name: component.pullSecret.namespace
+    component: pull-secret-jenkins
+    value: ${component.jenkins.namespace}
+  - name: component.pullSecret.name
+    component: pull-secret-apps
+    value: ${application.name}-pullsecret
+  - name: component.pullSecret.namespace
+    component: pull-secret-apps
+    value: ${application.namespace}
+
+  - name: component.docker.auth.basic.password
+    fromEnv: COMPONENT_DOCKER_AUTH_BASIC_PASSWORD
+
+  - name: docker.config.reference
+    kind: link
+    value: ${pull-secret-apps:component.pullSecret.name}
+
+  - name: component.docker.auth.kind
+    value: basic
+    env: DOCKER_AUTH_KIND
