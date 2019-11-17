@@ -1,7 +1,0 @@
-.*
-
-Dockerfile
-README.md
-
-**/*.pyc
-**/__pycache__
