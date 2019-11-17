@@ -1,0 +1,8 @@
+.gititnore
+.dockerignore
+.envrc
+.cp
+Makefile
+.hub/
+!env/docker.py
+.DS_STORE
