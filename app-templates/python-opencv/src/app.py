@@ -22,10 +22,10 @@ outputFrame = None
 lock = threading.Lock()
 source = application.config["SOURCE"]
 application.logger.info(f"Starting vieo streaming from: {source}!")
-time.sleep(5)
+time.sleep(0.5)
 # #vs = VideoStream(usePiCamera=1).start()
 vs = VideoStream(src=source).start()
-time.sleep(5)
+time.sleep(0.5)
 
 def detect_motion(frameCount):
     # grab global references to the video stream, output frame, and
@@ -44,10 +44,23 @@ def detect_motion(frameCount):
         frame = vs.read()
         time.sleep(0.05)
         if frame is None:
-            file = application.config['FALLBACK_SOURCE']
-            application.logger.warn(f"Unable to connect to video source {source}! Falling back to streaming: {file}")
-            vs = FileVideoStream(file).start()
-            frame = vs.read()
+            source = application.config['SOURCE']
+            application.logger.info(f"Reconnecting to: {source}")
+            vs2 = VideoStream(src=source).start()
+            time.sleep(0.25)
+            application.logger.info(f"Trying to read a frame from {source}...")
+            frame = vs2.read()
+            # still nothing falling back
+            if frame is None:
+              file = application.config['FALLBACK_SOURCE']
+              application.logger.warn(f"Unable to connect to video source {source}! Falling back to streaming: {file}")
+              vs = FileVideoStream(file).start()
+              time.sleep(0.25)
+              application.logger.info(f"Trying to read a frame from {file}...")
+              frame = vs.read()
+            else:
+              vs = vs2
+
             continue
         frame = imutils.resize(frame, width=400)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)

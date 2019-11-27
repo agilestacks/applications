@@ -2,7 +2,10 @@
 .dockerignore
 .envrc
 .cp
+__pycache__
+.pyc
 Makefile
 .hub/
-!env/docker.py
 .DS_STORE
+!conf/docker.py
+src/Makefile

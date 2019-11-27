@@ -1,9 +1,17 @@
 <html>
   <head>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    
     <title>SuperHub Webcam with Motion Detection</title>
   </head>
   <body>
-    <h1>SuperHub Webcam with Motion Detection</h1>
-    <img src="{{ url_for('video_feed') }}">
+    <div class="as-video">
+      <div class="as-video-title">
+        <img class="asi-logo" src="{{ url_for('static', filename='agilestacks.png') }}" />
+        <h1>SuperHub Webcam with Motion Detection</h1>
+      </div>
+      <img class="as-video-feed" src="{{ url_for('video_feed') }}">
+    </div>
   </body>
 </html>

@@ -1,20 +1,9 @@
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: opencv
-spec:
-  ports:
-  - port: 80
-  type: ClusterIP
-  selector:
-    app: opencv
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: opencv
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: opencv
@@ -36,9 +25,12 @@ spec:
           value: v
         - name: OPENCV_VIDEOIO_DEBUG
           value: "1"
-          # value: http://131.173.8.23/mjpg/video.mjpg
         ports:
         - containerPort: 80
-      
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "8"
+
       # imagePullSecrets:
       # - name: harbor-pullsecret

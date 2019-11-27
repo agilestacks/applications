@@ -13,17 +13,19 @@ build:
       - src: 'src/static/**'
         dest: .
         strip: src/
+deploy:
+  kubectl:
+    manifests:
+    - gen/*.yaml
+    - k8s/*
     # kaniko:
       # image: gcr.io/kaniko-project/executor:debug
     #   image: agilestacks/sleepy 
     #   # buildArgs:{}
 profiles:
-- name: nucs1
+- name: local
   activation:
-  - kubeContext: nucs1.kubeflex.dev.superhub.io
-- name: anton1
-  activation:
-  - kubeContext: anton1.antondemo0101.dev.superhub.io
+  - env: KUBECONFIG=!
 - name: incluster
   build:
     tagPolicy:
@@ -31,7 +33,3 @@ profiles:
     cluster:
       dockerConfig: 
         secretName: dockerconfig
-deploy:
-  kubectl:
-    manifests:
-      - k8s/*
