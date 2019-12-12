@@ -28,6 +28,7 @@ parameters:
 - name: application.cloud.role
 - name: component.s3website
   parameters:
+  - name: domain
   - name: name
   - name: baseDomain
     value: ${dns.domain}
