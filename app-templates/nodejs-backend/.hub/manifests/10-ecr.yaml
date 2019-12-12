@@ -58,11 +58,8 @@ parameters:
 
 - name: cloud.role.worker
 - name: component.jenkins-iam-role.name
-  value: '${dns.domain}/${application.name}'
+  value: '${dns.domain}-${application.name}'
 - name: component.jenkins-iam-role.roleArn
-
-- name: component.jenkins-iam-role.name
-  value: ${application.name}
 
 - name: component.docker.auth.kind
   value: ecr
