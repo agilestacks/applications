@@ -18,6 +18,7 @@ parameters:
 - name: component.s3website
   parameters:
   - name: name
+  - name: domain
   - name: baseDomain
     value: ${dns.domain}
   - name: bucket
