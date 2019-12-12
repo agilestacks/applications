@@ -55,8 +55,6 @@ outputs:
   - name: application.theme
   - name: application.path
     value: '${component.s3website.path}'
-  - name: application.url
-    value: '${component.s3website.domain}'
   - name: application.bucket
     value: '${component.s3website.bucket}'
   - name: application.jenkins.pipeline.url
