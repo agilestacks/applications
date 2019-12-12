@@ -28,3 +28,5 @@ outputs:
   value: ${component.s3website.bucket}
 - name: application.endpoint
   value: ${component.s3website.endpoint}
+- name: application.url
+  value: ${component.s3website.domain}
