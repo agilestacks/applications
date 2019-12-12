@@ -1,5 +1,12 @@
 ---
 components:
+- name: s3
+  source:
+    repoUrl: https://github.com/agilestacks/components.git
+    repoPath: applications/components/s3-website
+    dir: components/s3-website
+    branch: COMPONENTS_TAG
+    fromEnv: GITHUB_TOKEN
 - name: jenkins-iam-role
   source:
     repoUrl: https://github.com/agilestacks/applications.git
@@ -10,6 +17,7 @@ components:
 
 lifecycle:
   order:
+    - s3
     - jenkins-iam-role
 
 parameters:
@@ -18,3 +26,16 @@ parameters:
   value: '${dns.domain}-${application.name}'
 - name: component.jenkins-iam-role.roleArn
 - name: application.cloud.role
+- name: component.s3website
+  parameters:
+  - name: name
+  - name: baseDomain
+    value: ${dns.domain}
+  - name: bucket
+  - name: endpoint
+
+outputs:
+- name: application.bucket
+  value: ${component.s3website.bucket}
+- name: application.endpoint
+  value: ${component.s3website.endpoint}
