@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { CubeEx } from '../CubeEx';
-import {sampleSize, sample, difference, debounce, random, uniq} from 'lodash';
+import { sampleSize, sample, difference, debounce, random } from 'lodash';
 
 const tags = [
     'helm', 'kustomize', 'kubernetes', 'aws', 'gcp', 'azure', 'terraform', 'docker', 'shell', 'vault', 'istio'

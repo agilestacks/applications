@@ -1,5 +1,5 @@
 import React from 'react';
-import {range} from 'lodash';
+import { range } from 'lodash';
 import classNames from 'classnames';
 
 export const Layer = ({className, name, height = 1, colors = {}, onToggleKeyword}) => (

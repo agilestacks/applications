@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-import {Layer} from '../Layer';
+import { Layer } from '../Layer';
 
 const COLOR_RED = '#dc2422';
 const COLOR_ORANGE = '#fbb73a';
 const COLOR_GREEN = '#a7cb50';
 const COLOR_BLUE = '#183765';
-const COLOR_WHITE = '#fff';
 
 export const CubeEx = ({onToggleKeyword}) => {
 
