@@ -1,0 +1,13 @@
+@import '../variables.scss';
+
+.asi-pan {
+    transform-style: preserve-3d;
+    transform: rotateY(-45deg) rotateX(90deg);
+
+    margin-bottom: -$side * 2;
+    margin-top: -$side * 2;
+
+    &-margin {
+        margin-top: $side / 3;
+    }
+}

@@ -1,0 +1,48 @@
+@import '../variables.scss';
+
+$margin:  $side / 20;
+
+.asi-tile {
+    width: $side - $margin * 2;
+    height: $side - $margin * 2;
+    border: $border solid white;
+    box-shadow: 0 0 $side / 3 white;
+    box-sizing: border-box;
+    display: inline-block;
+    margin: $margin;
+    border-radius: $side / 15;
+    opacity: .97;
+
+    transition: transform 1.2s;
+
+    &:hover {
+        transform: scale(.85);
+        transition: transform .3s;
+    }
+}
+
+.asi-layer {
+    position: relative;
+    transform-style: preserve-3d;
+    transform: translateZ($side * 1.5) rotateY(-45deg) translateX(-$side * 1.5);
+    width: $side * 3;
+    margin: auto;
+
+    &-face {
+        line-height: 0;
+    }
+
+    &-face-top {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translateY(-$side * 1.5) rotateX(90deg) translateY(-$side * 1.5);
+    }
+
+    &-face-right {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform:  translateZ(-$side * 1.5) rotateY(90deg) translateZ($side * 1.5);
+    }
+}

@@ -1,0 +1,31 @@
+@import '../variables.scss';
+
+.asi-cube {
+    position: relative;
+    width: $side;
+    height: $side;
+    transform-style: preserve-3d;
+    // margin-right: -$border / 2;
+    // margin-bottom: -$border;
+    display: inline-block;
+
+    * {
+        background: transparent;
+        position: absolute;
+        width: 95%;
+        height: 95%;
+        border: $border solid white;
+        border-radius: $side / 20;
+        box-sizing: border-box;
+        box-shadow: 0 0  $side / 5 white;
+        color: transparent;
+
+    }
+
+    &-front  { transform: rotateY(  0deg) translateZ($side / 2); visibility: visible;}
+    &-right  { transform: rotateY( 90deg) translateZ($side / 2); visibility: visible;}
+    &-back   { transform: rotateY(180deg) translateZ($side / 2); visibility: visible;}
+    &-left   { transform: rotateY(-90deg) translateZ($side / 2); visibility: visible;}
+    &-top    { transform: rotateX( 90deg) translateZ($side / 2); visibility: visible;}
+    &-bottom { transform: rotateX(-90deg) translateZ($side / 2); visibility: visible;}
+}

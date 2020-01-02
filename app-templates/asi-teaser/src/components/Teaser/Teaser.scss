@@ -1,0 +1,28 @@
+.asi-teaser {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    perspective: 100vmin;
+
+    &-stacks {
+        color: burlywood;
+    }
+
+    &-keywords {
+        display: flex;
+    }
+
+    &-keyword {
+        flex: 1;
+        position: relative;
+        padding: 0 .7em;
+
+        &:not(:last-child):after {
+            content: '+';
+            position: absolute;
+            right: 0;
+            transform: translateX(50%);
+        }
+    }
+}

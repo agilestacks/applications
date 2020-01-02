@@ -1,0 +1,53 @@
+
+@import '../variables.scss';
+
+$cycle-value: 10deg;
+$cycle-value-small: $cycle-value / 3;
+
+.asi-cube-ex {
+    transform: translateY(15%) rotateX(-30deg);
+    transform-style: preserve-3d;
+    padding: $side;
+    flex: 1 1 auto;
+
+    &-part {
+        transform-style: preserve-3d;
+    }
+
+    &-roof {
+        animation: cycle 30s infinite;
+    }
+    &-base {
+        margin-top: $side * .6;
+        animation: cycle 16s infinite;
+    }
+
+    &-parts {
+        transform-style: preserve-3d;
+        animation: cycle-x 25s infinite;
+    }
+}
+
+@keyframes cycle-x {
+    0% {
+        transform: rotateX(-$cycle-value-small);
+    }
+    50% {
+        transform: rotateX($cycle-value-small);
+    }
+    100% {
+        transform:  rotateX(-$cycle-value-small);
+    }
+}
+
+@keyframes cycle {
+    0% {
+        transform: rotateY(-$cycle-value);
+    }
+    50% {
+        transform: rotateY($cycle-value);
+    }
+    100% {
+        transform:  rotateY(-$cycle-value);
+    }
+}
