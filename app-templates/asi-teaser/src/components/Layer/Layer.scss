@@ -2,11 +2,12 @@
 
 $margin:  $side / 20;
 
+// linear-gradient(44deg, rgb(255, 223, 164) 0%, #f7a136 100%)
 .asi-tile {
     width: $side - $margin * 2;
     height: $side - $margin * 2;
     border: $border solid white;
-    box-shadow: 0 0 $side / 3 white;
+    box-shadow: 0 0 $side / 4 $side / 25 white;
     box-sizing: border-box;
     display: inline-block;
     margin: $margin;
@@ -19,6 +20,28 @@ $margin:  $side / 20;
         transform: scale(.85);
         transition: transform .3s;
     }
+
+    &-orange {
+        background-color: #fbb73a;
+        background: linear-gradient(211deg, #f69934 0%, #fdca43 75%)
+    }
+
+    &-red {
+        background-color: #dc2422;
+        background: linear-gradient(238deg, #be1a20 0%, #eb2c23 57%)
+    }
+
+    &-blue {
+        background-color: #183765;
+        background: linear-gradient(323deg, #10213f 0%, #164789 57%)
+    }
+
+    &-green {
+        background-color: #a7cb50;
+        background: linear-gradient(211deg, #84b450 0%, #c9df4f 75%)
+    }
+
+
 }
 
 .asi-layer {

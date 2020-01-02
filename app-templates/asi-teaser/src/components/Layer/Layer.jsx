@@ -2,6 +2,21 @@ import React from 'react';
 import { range } from 'lodash';
 import classNames from 'classnames';
 
+
+const Tile = ({color, ...props}) => (
+    <div
+        className={
+            classNames(
+                'asi-tile',
+                {
+                    [`asi-tile-${color}`]: color
+                }
+            )
+        }
+        {...props}
+    />
+)
+
 export const Layer = ({className, name, height = 1, colors = {}, onToggleKeyword}) => (
     <div
         className={classNames(
@@ -16,12 +31,9 @@ export const Layer = ({className, name, height = 1, colors = {}, onToggleKeyword
             {
                 range(0, 9)
                     .map(i => (
-                        <div
+                        <Tile
                             key={`tile-${i}`}
-                            className="asi-tile"
-                            style={{
-                                backgroundColor: colors.top
-                            }}
+                            color={colors.top}
                             onMouseEnter={onToggleKeyword}
                         />
                     ))
@@ -31,12 +43,9 @@ export const Layer = ({className, name, height = 1, colors = {}, onToggleKeyword
             {
                 range(0, 3 * height)
                     .map(i => (
-                        <div
+                        <Tile
                             key={`tile-${i}`}
-                            className="asi-tile"
-                            style={{
-                                backgroundColor: colors.right
-                            }}
+                            color={colors.right}
                             onMouseEnter={onToggleKeyword}
                         />
                     ))
@@ -46,12 +55,9 @@ export const Layer = ({className, name, height = 1, colors = {}, onToggleKeyword
             {
                 range(0, 3 * height)
                     .map(i => (
-                        <div
+                        <Tile
                             key={`tile-${i}`}
-                            className="asi-tile"
-                            style={{
-                                backgroundColor: colors.left
-                            }}
+                            color={colors.left}
                             onMouseEnter={onToggleKeyword}
                         />
                     ))

@@ -2,10 +2,10 @@ import React from 'react';
 
 import { Layer } from '../Layer';
 
-const COLOR_RED = '#dc2422';
-const COLOR_ORANGE = '#fbb73a';
-const COLOR_GREEN = '#a7cb50';
-const COLOR_BLUE = '#183765';
+const COLOR_RED = 'red';
+const COLOR_GREEN = 'green';
+const COLOR_BLUE = 'blue';
+const COLOR_ORANGE = 'orange'
 
 export const CubeEx = ({onToggleKeyword}) => {
 
