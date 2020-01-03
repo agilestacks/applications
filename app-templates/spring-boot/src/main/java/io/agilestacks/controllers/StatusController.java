@@ -20,7 +20,7 @@ public class StatusController {
     @Value("${ENVIRONMENT_NAME:}")
     private String environmentName;
 
-    @RequestMapping(value = {"/", "/status"})
+    @RequestMapping(value = {"/status"})
     public StatusBean getStatus() {
         RuntimeMXBean rb = ManagementFactory.getRuntimeMXBean();
 
