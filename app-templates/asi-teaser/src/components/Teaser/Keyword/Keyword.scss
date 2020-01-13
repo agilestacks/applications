@@ -1,0 +1,28 @@
+@import '../../../variables.scss';
+
+$light-color: rgba(255, 255, 255, 0.753);
+@mixin shadows($color-name, $color) {
+
+    &.asi-teaser-keyword-#{$color-name} {
+        text-shadow: 0 0 7em  $light-color, 0 0 3em $light-color, 0 0 1em lighten($color, 20), 0 0 .1em lighten($color, 10);
+        color: lighten($color, 70);
+    }
+}
+
+.asi-teaser-keyword {
+    transition: text-shadow .7s, transform .7s;
+    &-flash {
+        transition: text-shadow .1s, transform .1s;
+        transform: scale(1.1);
+
+        @include shadows(orange, $orange);
+        @include shadows(red, $red);
+        @include shadows(blue, $blue);
+        @include shadows(green, $green);
+    }
+
+    &:after {
+        text-shadow: none;
+        transform: none;
+    }
+}

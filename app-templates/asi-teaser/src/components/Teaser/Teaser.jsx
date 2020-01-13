@@ -1,6 +1,8 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import classNames from 'classnames';
 import { CubeEx } from '../CubeEx';
 import { sampleSize, sample, difference, debounce, random } from 'lodash';
+import { Keyword } from './Keyword';
 
 const tags = [
     'helm', 'kustomize', 'kubernetes', 'aws', 'gcp', 'azure', 'terraform', 'docker', 'shell', 'vault', 'istio'
@@ -9,6 +11,9 @@ const HISTORY_LIMIT = Math.floor(tags.length * .7);
 const KEYWORDS_LENGTH = 3;
 
 export const Teaser = () => {
+    const [mounted, mount] = useState();
+    const [fade, setFade] = useState(true);
+
     const [keywords, setKeywords] = useState(sampleSize(tags, KEYWORDS_LENGTH));
     const [history, setHistory] = useState(keywords);
 
@@ -37,13 +42,31 @@ export const Teaser = () => {
         },
         100
     ), [keywords, history, tags, setKeywords, setHistory, HISTORY_LIMIT, KEYWORDS_LENGTH]);
+
     return (
-        <div className="asi-teaser">
-            <h1>Agile<span className="asi-teaser-stacks">Stacks</span></h1>
+        <div
+            ref={mount}
+            className={
+                classNames(
+                    'asi-teaser',
+                    {   'asi-teaser-fade': fade
+                    }
+                )
+            }
+        >
+            <h1 className="asi-teaser-title">
+                Agile<span className="asi-teaser-stacks">Stacks</span>
+            </h1>
             <div className="asi-teaser-keywords">
                 {
-                    keywords.map((keyword) => (
-                        <h2 key={keyword} className="asi-teaser-keyword">{keyword}</h2>
+                    keywords.map((keyword, index) => (
+                        <>
+                            <Keyword key={keyword} withFlash={mounted}>{keyword}</Keyword>
+                            {
+                                (index < keywords.length-1)
+                                && <h2>+</h2>
+                            }
+                        </>
                     ))
                 }
             </div>
