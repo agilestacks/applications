@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, Fragment } from 'react';
 import classNames from 'classnames';
 import { CubeEx } from '../CubeEx';
 import { sampleSize, sample, difference, debounce, random } from 'lodash';
@@ -60,13 +60,15 @@ export const Teaser = () => {
             <div className="asi-teaser-keywords">
                 {
                     keywords.map((keyword, index) => (
-                        <>
-                            <Keyword key={keyword} withFlash={mounted}>{keyword}</Keyword>
+                        <Fragment
+                            key={keyword}
+                        >
+                            <Keyword withFlash={mounted}>{keyword}</Keyword>
                             {
                                 (index < keywords.length-1)
                                 && <h2>+</h2>
                             }
-                        </>
+                        </Fragment>
                     ))
                 }
             </div>
