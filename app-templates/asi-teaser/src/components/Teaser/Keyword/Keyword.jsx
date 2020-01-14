@@ -15,7 +15,7 @@ export const Keyword = ({children, className, withFlash, ...props}) => {
     }, [children]);
 
     return (
-        <h2
+        <span
             className={
                 useMemo(() => classNames(
                     'asi-teaser-keyword',
@@ -29,6 +29,6 @@ export const Keyword = ({children, className, withFlash, ...props}) => {
             {...props}
         >
             {children}
-        </h2>
+        </span>
     )
 }

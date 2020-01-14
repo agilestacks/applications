@@ -57,7 +57,7 @@ export const Teaser = () => {
             <h1 className="asi-teaser-title">
                 Agile<span className="asi-teaser-stacks">Stacks</span>
             </h1>
-            <div className="asi-teaser-keywords">
+            <h2 className="asi-teaser-keywords">
                 {
                     keywords.map((keyword, index) => (
                         <Fragment
@@ -66,12 +66,12 @@ export const Teaser = () => {
                             <Keyword withFlash={mounted}>{keyword}</Keyword>
                             {
                                 (index < keywords.length-1)
-                                && <h2>+</h2>
+                                && '+'
                             }
                         </Fragment>
                     ))
                 }
-            </div>
+            </h2>
             <div>with no pain</div>
             <CubeEx onToggleKeyword={onToggleKeyword} />
         </div>
