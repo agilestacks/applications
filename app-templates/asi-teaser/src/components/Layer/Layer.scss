@@ -78,6 +78,10 @@ $tile-flash:0 0 $side / 3 $side / 3.5 white, inset 0 0  $side / 2 white;
         transform: translateY(-$side * 1.5) rotateX(90deg) translateY(-$side * 1.5);
     }
 
+    &-face-left {
+        transform: translateZ(0);
+    }
+
     &-face-right {
         position: absolute;
         top: 0;
