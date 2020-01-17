@@ -8,6 +8,10 @@ const KEYWORD_COLOR_CLASSES = [
     'asi-teaser-keyword-green'
 ];
 
+const KEYWORDS_URL = '/gimme/1';
+
+const MAX_HISTORY_LENGTH = 7;
+
 function random(maxValue) {
     return Math.floor(Math.random() * (maxValue + 1));
 }
@@ -16,18 +20,13 @@ function sample(values) {
     return values[random(values.length - 1)];
 }
 
-const tags = [
-    'helm', 'kustomize', 'kubernetes', 'aws', 'gcp', 'azure', 'terraform', 'docker', 'shell',
-    'vault', 'istio'
-];
-
 async function getRandomWord() {
-    await new Promise(resolve => setTimeout(resolve, 100 + random(700)));
-    return tags[random(tags.length - 1)];
+    const response = await fetch(KEYWORDS_URL);
+    const {data: [word]} = await response.json();
+    return word;
 }
 
 const keywordsHistory = [];
-const MAX_HISTORY_LENGTH = 7;
 
 async function nextWord() {
     while (true) {

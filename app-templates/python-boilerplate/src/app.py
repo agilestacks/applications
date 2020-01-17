@@ -8,8 +8,8 @@ application = Flask(__name__)
 application.config.from_pyfile(f"conf/{application.config['ENV']}.py")
 
 WORDS = [
-    'lorem', 'ipsum', 'dolor', 'sit', 'amet',
-    'consectetur', 'adipiscing', 'elit'
+    'helm', 'kustomize', 'kubernetes', 'aws', 'gcp', 'azure', 'terraform', 'docker', 'shell',
+    'vault', 'istio'
 ]
 
 @application.route('/')
