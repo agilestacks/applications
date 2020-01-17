@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from flask import Response, Flask, render_template
+from flask import Response, Flask, render_template, request
 from flask_json import json_response
 from uptime import uptime
 from random import sample
@@ -17,14 +17,23 @@ def index():
     # return the rendered template
     return render_template("index.html")
 
-@application.route("/words")
-@application.route("/words/<int:howmany>")
-def words(howmany=3):
-    resp = sample(WORDS, howmany)
-    return json_response(200, data=resp, size=len(resp))
+@application.route("/gimme")
+@application.route("/gimme/<int:howmany>")
+def gimme(howmany=1):
+    """
+    returns random list of words with the size defined in parameter howmany
+    """
+    resp = sample(WORDS, filtered)
+    return json_response(
+        data=resp,
+        size=len(resp)
+    )
 
 @application.route('/status')
 def status():
+    """
+    returns healthcheck and uptime
+    """
     return json_response(
         200,
         status="ok",
