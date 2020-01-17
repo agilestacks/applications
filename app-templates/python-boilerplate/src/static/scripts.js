@@ -1,5 +1,7 @@
 const LOADING_KEYWORD_CLASS = 'asi-teaser-keyword-loading';
 const FLASH_KEYWORD_CLASS = 'asi-teaser-keyword-flash';
+const TILE_SELECTOR = '.asi-tile';
+const KEYWORD_SELECTOR = '.asi-teaser-keyword';
 
 const KEYWORD_COLOR_CLASSES = [
     'asi-teaser-keyword-orange',
@@ -26,7 +28,17 @@ async function getRandomWord() {
     return word;
 }
 
-const keywordsHistory = [];
+function getNodeText({innerText, textContent = innerText}) {
+  return textContent;
+}
+
+function setNodeText(node, text) {
+  const prop = 'innerText' in node ? 'innerText' : 'textContent';
+  node[prop] = text;
+}
+
+const keywordsHistory = [...document.querySelectorAll(KEYWORD_SELECTOR)]
+  .map(getNodeText);
 
 async function nextWord() {
     while (true) {
@@ -56,7 +68,7 @@ async function updateKeyword(keywordNode) {
     addKeywordClassNames(keywordNode, LOADING_KEYWORD_CLASS);
 
     const word = await nextWord();
-    keywordNode.textContent = word;
+    setNodeText(keywordNode, word);
 
     // stop keyword is loading
     removeKeywordClassNames(keywordNode, LOADING_KEYWORD_CLASS);
@@ -70,7 +82,7 @@ async function updateKeyword(keywordNode) {
 
 function updateKeywords() {
     const keywordCandidates = document.querySelectorAll(
-        `.asi-teaser-keyword:not(.${LOADING_KEYWORD_CLASS}):not(.${FLASH_KEYWORD_CLASS})`);
+        `${KEYWORD_SELECTOR}:not(.${LOADING_KEYWORD_CLASS}):not(.${FLASH_KEYWORD_CLASS})`);
     const {
         length
     } = keywordCandidates;
@@ -81,7 +93,7 @@ function updateKeywords() {
 }
 
 document.body.addEventListener('mouseover', event => {
-    if (event.target.matches('.asi-tile')) {
+    if (event.target.matches(TILE_SELECTOR)) {
         updateKeywords();
     }
 }, false);

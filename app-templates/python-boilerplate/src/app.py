@@ -15,7 +15,8 @@ WORDS = [
 @application.route('/')
 def index():
     # return the rendered template
-    return render_template("index.html")
+    words = sample(WORDS, 3);
+    return render_template("index.html", words = words)
 
 @application.route("/gimme")
 @application.route("/gimme/<int:howmany>")
