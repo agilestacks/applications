@@ -24,21 +24,26 @@ function sample(values) {
 
 async function getRandomWord() {
     const response = await fetch(KEYWORDS_URL);
-    const {data: [word]} = await response.json();
+    const {
+        data: [word]
+    } = await response.json();
     return word;
 }
 
-function getNodeText({innerText, textContent = innerText}) {
-  return textContent;
+function getNodeText({
+    innerText,
+    textContent = innerText
+}) {
+    return textContent;
 }
 
 function setNodeText(node, text) {
-  const prop = 'innerText' in node ? 'innerText' : 'textContent';
-  node[prop] = text;
+    const prop = 'innerText' in node ? 'innerText' : 'textContent';
+    node[prop] = text;
 }
 
 const keywordsHistory = [...document.querySelectorAll(KEYWORD_SELECTOR)]
-  .map(getNodeText);
+    .map(getNodeText);
 
 async function nextWord() {
     while (true) {
@@ -53,10 +58,11 @@ async function nextWord() {
 }
 
 function addKeywordClassNames(keywordNode, ...classNames) {
-  keywordNode.classList.add(...classNames);
+    keywordNode.classList.add(...classNames);
 }
+
 function removeKeywordClassNames(keywordNode, ...classNames) {
-  keywordNode.classList.remove(...classNames);
+    keywordNode.classList.remove(...classNames);
 }
 
 async function updateKeyword(keywordNode) {
@@ -76,7 +82,7 @@ async function updateKeyword(keywordNode) {
     // make keyword flash
     addKeywordClassNames(keywordNode, FLASH_KEYWORD_CLASS);
     setTimeout(() => {
-      removeKeywordClassNames(keywordNode, FLASH_KEYWORD_CLASS);
+        removeKeywordClassNames(keywordNode, FLASH_KEYWORD_CLASS);
     }, 100);
 };
 
