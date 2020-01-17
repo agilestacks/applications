@@ -304,6 +304,6 @@ body {
 
   .asi-teaser-keyword-loading::after {
     animation: loading-spinner 1s linear infinite;
-    transition: opacity 2s;/* .3s;*/
+    transition: opacity 2s .3s;
     opacity: .7;
   }
