@@ -1,0 +1,37 @@
+body {
+    font-family: Arial,Sans-Serif;
+    font-size: 16px;
+    margin: 0;
+}
+
+.as-video {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.as-video .as-video-title {
+    display: flex;
+    align-items: center;
+    background-color: #17baef;
+    color: #fff;
+    width: 100%;
+    padding: 0 15px;
+}
+
+.as-video .as-video-title :first-child {
+    margin: 0 10px;
+}
+
+.as-video .as-video-title img {
+    height: 2em;
+}
+
+.as-video .as-video-feed {
+    box-shadow: 0px 5px 20px 5px rgba(0,0,0,0.75);
+    border-radius: 5px 5px 5px 5px;
+    border: 0px solid #000000;
+    margin-top: 10px;
+    width: 80%;
+}
