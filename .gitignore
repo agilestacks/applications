@@ -100,3 +100,7 @@ app-templates/kubeflow-pipeline/.hub/components/github-repository
 app-templates/kubeflow-pipeline/.hub/components/harbor
 app-templates/kubeflow-pipeline/.hub/components/kaniko
 app-templates/python-video/stream-video-browser/__pycache__
+cloud.sol01-aws.superhub.io
+app-templates/python-boilerplate/.hub/env/demo01.sol01-aws.superhub.io
+app-templates/python-boilerplate/.hub/env/kubeconfig.cloud.sol01-aws.superhub.io.yaml
+app-templates/python-boilerplate/.hub/env/kubeconfig.demo01.sol01-aws.superhub.io.yaml

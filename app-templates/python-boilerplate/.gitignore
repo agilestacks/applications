@@ -1,6 +1,7 @@
 .pytest_cache
 .vscode
 .venv
+!/.hub/env/Makefile
 __pycache__
 *.egg-info
 .DS_STORE

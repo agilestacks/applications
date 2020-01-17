@@ -9,13 +9,8 @@ STATE_REGION := $(shell $(aws) s3api get-bucket-location --bucket $(STATE_BUCKET
 
 hub += --aws_region $(STATE_REGION)
 
-info:
-	@ echo $(STATE_FILE)
-	@ echo $(STATE_BUCKET)
-	@ echo $(STATE_REGION)
 
 kubeconfig:
-	@ echo $(hub)
-	$(hub) kubeconfig -k $(STATE_FILE) 
+	$(hub) kubeconfig -k $(STATE_FILE)
 
 .PHONY: kubeconfig
