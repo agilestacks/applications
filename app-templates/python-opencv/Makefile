@@ -6,21 +6,18 @@ SKAFFOLD   := skaffold
 export SKAFFOLD_PROFILE ?= incluster
 export HUB_APP_NAME     ?= opencvapp
 
-skaffold-%: 
+skaffold-%:
 	$(SKAFFOLD) $(lastword $(subst -, ,$@))
 
-skaffold: gen skaffold-dev
+src/% .hub/%:
+	$(MAKE) -C "$(@D)" $(@F)
 
-gen-% src-% hub-%:
-	$(eval dir    := $(firstword $(subst -, ,$@)))
-	$(eval target := $(word 2,$(subst -, ,$@)))
-	$(MAKE) -C "$(dir)" $(target)
-
-clean: gen-clean src-clean
-gen: gen-all
-hub: hub-deploy
-dev: gen skaffold-dev
-run deploy: gen skaffold-run
+kubeconfig: .hub/env/kubeconfig
+clean: .hub/clean src/clean
+generate: .hub/generate
+reconfigure: clean generate
+dev skaffold: kubeconfig skaffold-dev
+run deploy: kubeconfig skaffold-run
 delete undeploy: skaffold-delete
 
-.PHONY: clean gen hub dev run deploy undeploy
+.PHONY: clean generate hub dev run

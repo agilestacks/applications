@@ -1,6 +1,7 @@
 FROM python:3.7
 
 ENV FLASK_ENV docker
+ENV FLASK_DEBUG 1
 
 WORKDIR /app
 COPY src/ .

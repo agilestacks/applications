@@ -1,35 +1,34 @@
 apiVersion: skaffold/v1
-kind: Config
-metadata:
-  name: cvision-
 build:
   artifacts:
-  - image: opencv
+  - image: detective
     sync:
       manual:
-      - src: 'src/**/*.py'
-        dest: .
+      - dest: /app
+        src: src/**/*.py
         strip: src/
-      - src: 'src/static/**'
-        dest: .
+      - dest: /app
+        src: src/static/**
         strip: src/
+  tagPolicy:
+    dateTime:
+      format: 20060102-150405
 deploy:
   kubectl:
     manifests:
-    - gen/*.yaml
     - k8s/*
-    # kaniko:
-      # image: gcr.io/kaniko-project/executor:debug
-    #   image: agilestacks/sleepy 
-    #   # buildArgs:{}
+kind: Config
+metadata:
+  name: detective-
 profiles:
-- name: local
-  activation:
+- activation:
   - env: KUBECONFIG=!
-- name: incluster
   build:
-    tagPolicy:
-      dateTime: {}
+    local:
+      useDockerCLI: true
+  name: local
+- build:
     cluster:
-      dockerConfig: 
-        secretName: dockerconfig
+      dockerConfig:
+        path: .dockerconfig.json
+  name: incluster
