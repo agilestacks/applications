@@ -23,7 +23,7 @@ def gimme(howmany=1):
     """
     returns random list of words with the size defined in parameter howmany
     """
-    resp = sample(WORDS, filtered)
+    resp = sample(WORDS, howmany)
     return json_response(
         data=resp,
         size=len(resp)
