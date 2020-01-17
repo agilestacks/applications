@@ -40,18 +40,31 @@ async function nextWord() {
     }
 }
 
-async function updateKeyword(keywordNode) {
+function addKeywordClassNames(keywordNode, ...classNames) {
+  keywordNode.classList.add(...classNames);
+}
+function removeKeywordClassNames(keywordNode, ...classNames) {
+  keywordNode.classList.remove(...classNames);
+}
 
-    keywordNode.classList.remove(...KEYWORD_COLOR_CLASSES);
-    keywordNode.classList.add(LOADING_KEYWORD_CLASS, sample(KEYWORD_COLOR_CLASSES));
+async function updateKeyword(keywordNode) {
+    // switch keyword color
+    removeKeywordClassNames(keywordNode, ...KEYWORD_COLOR_CLASSES);
+    addKeywordClassNames(keywordNode, sample(KEYWORD_COLOR_CLASSES));
+
+    // trigger keyword is loading
+    addKeywordClassNames(keywordNode, LOADING_KEYWORD_CLASS);
 
     const word = await nextWord();
     keywordNode.textContent = word;
-    keywordNode.classList.remove(LOADING_KEYWORD_CLASS);
-    keywordNode.classList.add(FLASH_KEYWORD_CLASS);
 
+    // stop keyword is loading
+    removeKeywordClassNames(keywordNode, LOADING_KEYWORD_CLASS);
+
+    // make keyword flash
+    addKeywordClassNames(keywordNode, FLASH_KEYWORD_CLASS);
     setTimeout(() => {
-        keywordNode.classList.remove(FLASH_KEYWORD_CLASS);
+      removeKeywordClassNames(keywordNode, FLASH_KEYWORD_CLASS);
     }, 100);
 };
 
@@ -66,8 +79,9 @@ function updateKeywords() {
         updateKeyword(keywordCandidates[keywordIndex]);
     }
 }
+
 document.body.addEventListener('mouseover', event => {
     if (event.target.matches('.asi-tile')) {
         updateKeywords();
     }
-}, false)
+}, false);
