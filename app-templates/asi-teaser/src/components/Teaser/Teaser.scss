@@ -7,9 +7,16 @@
     width: 70%;
     perspective: 100vmin;
 
-    &-title,
+    &-title-content,
     &-stacks {
         transition: color .3s;
+    }
+    &-title-content {
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
     }
 
     &-keywords {
@@ -24,7 +31,7 @@
 }
 
 @include theme(dark) {
-    .asi-teaser-title {
+    .asi-teaser-title-content {
         color: #ffa538;
     }
     .asi-teaser-stacks {
@@ -34,7 +41,7 @@
 }
 
 @include theme(light) {
-    .asi-teaser-title {
+    .asi-teaser-title-content {
         color:#f7941b;
     }
     .asi-teaser-stacks {

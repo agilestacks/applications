@@ -1,8 +1,9 @@
 import React, { useState, useCallback, Fragment } from 'react';
-import classNames from 'classnames';
 import { CubeEx } from '../CubeEx';
 import { sampleSize, sample, difference, debounce, random } from 'lodash';
 import { Keyword } from './Keyword';
+
+const ASI_URL = 'https://www.agilestacks.com/';
 
 const tags = [
     'helm', 'kustomize', 'kubernetes', 'aws', 'gcp', 'azure', 'terraform', 'docker', 'shell', 'vault', 'istio'
@@ -48,7 +49,14 @@ export const Teaser = () => {
             className="asi-teaser"
         >
             <h1 className="asi-teaser-title">
-                Agile<span className="asi-teaser-stacks">Stacks</span>
+                <a
+                    className="asi-teaser-title-content"
+                    href={ASI_URL}
+                    rel="noopener"
+                    target="_blank"
+                >
+                    Agile<span className="asi-teaser-stacks">Stacks</span>
+                </a>
             </h1>
             <h2 className="asi-teaser-keywords">
                 {
