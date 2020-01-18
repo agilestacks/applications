@@ -20,8 +20,28 @@
 
       <div id="root">
           <div class="App">
+              <script type="text/javascript">
+                  const theme = window.localStorage && window.localStorage.getItem('theme') || 'default';
+                  document.querySelector('.App').classList.add(`asi-theme-${theme}`);
+              </script>
               <header class="App-header">
-                  <div class="asi-teaser asi-teaser-fade">
+                  <div class="asi-theme-switch">
+                    <div
+                      class="asi-theme-toggle asi-theme-toggle-dark"
+                      title="Switch to light theme"
+                      data-theme="light"
+                    >
+                      <img class="asi-theme-toggle-image" src="{{ url_for('static', filename='images/moon.svg') }}">
+                    </div>
+                    <div
+                      class="asi-theme-toggle asi-theme-toggle-light"
+                      title="Switch to dark theme"
+                      data-theme="dark"
+                    >
+                      <img class="asi-theme-toggle-image" src="{{ url_for('static', filename='images/sun.svg') }}">
+                    </div>
+                  </div>
+                  <div class="asi-teaser">
 
                       <h1 class="asi-teaser-title">
                           Agile<span class="asi-teaser-stacks">Stacks</span>
@@ -30,7 +50,7 @@
                       <h2 class="asi-teaser-keywords">
 
                           {% for word in words %}
-                            <span class="asi-teaser-keyword">
+                            <span class="asi-teaser-keyword asi-teaser-keyword-orange">
                                 {{ word }}
                             </span>
 
