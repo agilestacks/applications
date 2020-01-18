@@ -7,8 +7,9 @@
     width: 70%;
     perspective: 100vmin;
 
+    &-title,
     &-stacks {
-        color: burlywood;
+        transition: color .3s;
     }
 
     &-keywords {
@@ -19,5 +20,24 @@
         flex: 1;
         position: relative;
         padding: 0 .7em;
+    }
+}
+
+@include theme(dark) {
+    .asi-teaser-title {
+        color: #ffa538;
+    }
+    .asi-teaser-stacks {
+        color: white;
+    }
+
+}
+
+@include theme(light) {
+    .asi-teaser-title {
+        color:#f7941b;
+    }
+    .asi-teaser-stacks {
+        color: #1a3c6c;
     }
 }

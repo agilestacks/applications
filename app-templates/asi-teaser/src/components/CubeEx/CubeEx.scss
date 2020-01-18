@@ -9,6 +9,7 @@ $cycle-value-small: $cycle-value / 3;
     transform-style: preserve-3d;
     padding: $side;
     flex: 1 1 auto;
+    font-size: 0;
 
     &-part {
         transform-style: preserve-3d;

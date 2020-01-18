@@ -12,7 +12,6 @@ const KEYWORDS_LENGTH = 3;
 
 export const Teaser = () => {
     const [mounted, mount] = useState();
-    const [fade, setFade] = useState(true);
 
     const [keywords, setKeywords] = useState(sampleSize(tags, KEYWORDS_LENGTH));
     const [history, setHistory] = useState(keywords);
@@ -46,13 +45,7 @@ export const Teaser = () => {
     return (
         <div
             ref={mount}
-            className={
-                classNames(
-                    'asi-teaser',
-                    {   'asi-teaser-fade': fade
-                    }
-                )
-            }
+            className="asi-teaser"
         >
             <h1 className="asi-teaser-title">
                 Agile<span className="asi-teaser-stacks">Stacks</span>

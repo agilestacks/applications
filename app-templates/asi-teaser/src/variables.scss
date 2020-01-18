@@ -3,7 +3,30 @@ $border:  $side * .035;
 
 $orange: #fbb73a;
 $red: #dc2422;
-$blue: #183765;
+// $blue: #183765;
+$blue: #214985;
 $green: #a7cb50;
 
-$background: #282c34;
+$background-dark: #282c34;
+$background-light: #eaf8ff;
+
+$default-mode: dark;
+
+@mixin theme($mode) {
+    @if $mode == $default-mode {
+        @media (prefers-color-scheme: $mode) and (prefers-color-scheme: no-preference) {
+            .asi-theme-default {
+                @content;
+            }
+        }
+    } @else {
+        @media (prefers-color-scheme: $mode) {
+            .asi-theme-default {
+                @content;
+            }
+        }
+    }
+    .asi-theme-#{$mode} {
+        @content;
+    }
+}

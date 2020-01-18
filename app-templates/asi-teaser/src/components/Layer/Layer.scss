@@ -60,6 +60,18 @@ $tile-flash:0 0 $side / 3 $side / 3.5 white, inset 0 0  $side / 2 white;
     }
 }
 
+@include theme(dark) {
+    .asi-tile {
+        border-color: white;
+    }
+}
+
+@include theme(light) {
+    .asi-tile {
+        border-color: #222;
+    }
+}
+
 .asi-layer {
     position: relative;
     transform-style: preserve-3d;
