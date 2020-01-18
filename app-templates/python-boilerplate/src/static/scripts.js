@@ -6,15 +6,15 @@ const THEME_TOGGLE_SELECTOR = '.asi-theme-toggle';
 const APP_SELECTOR = '.App';
 
 const KEYWORD_COLOR_CLASSES = [
-  'asi-teaser-keyword-orange',
-  'asi-teaser-keyword-red',
-  'asi-teaser-keyword-blue',
-  'asi-teaser-keyword-green'
+    'asi-teaser-keyword-orange',
+    'asi-teaser-keyword-red',
+    'asi-teaser-keyword-blue',
+    'asi-teaser-keyword-green'
 ];
 const THEME_CLASSES = [
-  'asi-theme-default',
-  'asi-theme-dark',
-  'asi-theme-light'
+    'asi-theme-default',
+    'asi-theme-dark',
+    'asi-theme-light'
 ];
 
 const KEYWORDS_URL = '/gimme/1';
@@ -49,8 +49,9 @@ function setNodeText(node, text) {
     node[prop] = text;
 }
 
-const localStorageGet = (name) => window.localStorage &&  window.localStorage.getItem(name);
-const localStorageSet = (name, value) => window.localStorage &&  window.localStorage.setItem(name, value);
+const localStorageGet = (name) => window.localStorage && window.localStorage.getItem(name);
+const localStorageSet = (name, value) => window.localStorage && window.localStorage.setItem(name,
+    value);
 
 const keywordsHistory = [...document.querySelectorAll(KEYWORD_SELECTOR)]
     .map(getNodeText);
@@ -109,38 +110,40 @@ function updateKeywords() {
 }
 
 function setTheme(theme) {
-  const appNode = document.querySelector(APP_SELECTOR);
+    const appNode = document.querySelector(APP_SELECTOR);
 
-  removeNodeClassNames(appNode, ...THEME_CLASSES);
-  addNodeClassNames(appNode, `asi-theme-${theme}`);
+    removeNodeClassNames(appNode, ...THEME_CLASSES);
+    addNodeClassNames(appNode, `asi-theme-${theme}`);
 }
 
 document.body.addEventListener('mouseover', event => {
-  if (event.target.matches(TILE_SELECTOR)) {
-      updateKeywords();
-  }
+    if (event.target.matches(TILE_SELECTOR)) {
+        updateKeywords();
+    }
 }, false);
 
-document.body.addEventListener('click', ({target}) => {
-  if (target.matches(THEME_TOGGLE_SELECTOR)) {
-    const theme = target.getAttribute('data-theme');
+document.body.addEventListener('click', ({
+    target
+}) => {
+    if (target.matches(THEME_TOGGLE_SELECTOR)) {
+        const theme = target.getAttribute('data-theme');
 
-    setTheme(theme);
+        setTheme(theme);
 
-    localStorageSet('theme', theme);
-  }
+        localStorageSet('theme', theme);
+    }
 });
 
-(function init () {
-  [...document.querySelectorAll(KEYWORD_SELECTOR)]
+(function init() {
+    [...document.querySelectorAll(KEYWORD_SELECTOR)]
     .forEach(keywordNode => {
-      removeNodeClassNames(keywordNode, ...KEYWORD_COLOR_CLASSES);
-      addNodeClassNames(keywordNode, sample(KEYWORD_COLOR_CLASSES));
+        removeNodeClassNames(keywordNode, ...KEYWORD_COLOR_CLASSES);
+        addNodeClassNames(keywordNode, sample(KEYWORD_COLOR_CLASSES));
     });
 
-  const storedTheme = localStorageGet('theme');
+    const storedTheme = localStorageGet('theme');
 
-  if (storedTheme) {
-    setTheme(storedTheme);
-  }
+    if (storedTheme) {
+        setTheme(storedTheme);
+    }
 })();
