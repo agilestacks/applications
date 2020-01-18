@@ -288,9 +288,17 @@ code {
     perspective: 100vmin;
 }
 
-.asi-teaser-title,
+.asi-teaser-title-content,
 .asi-teaser-stacks {
     transition: color .3s;
+}
+
+.asi-teaser-title-content {
+    text-decoration: none;
+}
+
+.asi-teaser-title-content:hover {
+    text-decoration: underline;
 }
 
 .asi-teaser-keywords {
@@ -304,7 +312,7 @@ code {
 }
 
 @media (prefers-color-scheme: dark) and (prefers-color-scheme: no-preference) {
-    .asi-theme-default .asi-teaser-title {
+    .asi-theme-default .asi-teaser-title-content {
         color: #ffa538;
     }
 
@@ -313,7 +321,7 @@ code {
     }
 }
 
-.asi-theme-dark .asi-teaser-title {
+.asi-theme-dark .asi-teaser-title-content {
     color: #ffa538;
 }
 
@@ -322,7 +330,7 @@ code {
 }
 
 @media (prefers-color-scheme: light) {
-    .asi-theme-default .asi-teaser-title {
+    .asi-theme-default .asi-teaser-title-content {
         color: #f7941b;
     }
 
@@ -331,7 +339,7 @@ code {
     }
 }
 
-.asi-theme-light .asi-teaser-title {
+.asi-theme-light .asi-teaser-title-content {
     color: #f7941b;
 }
 
