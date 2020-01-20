@@ -19,12 +19,30 @@
   font-size: calc(10px + 2vmin);
   color: white;
   transition: background-color .2s, color .2s;
+
+  &::after {
+      content: '';
+      width: 120vmin;
+      height: 200vmin;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      z-index: 0;
+      transform: rotateZ(-70deg) translateY(70vmin);
+      transition: transform .5s;
+      background-image: radial-gradient(#fbf4b71c, transparent 70%);
+      pointer-events: none;
+  }
 }
 
 @include theme(dark) {
   .App-header {
     background-color: $background-dark;
     color: white;
+
+    &::after {
+      transform: rotateZ(85deg) translateY(104vmin);
+    }
   }
 }
 

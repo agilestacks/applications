@@ -6,6 +6,7 @@
     flex-direction: column;
     width: 70%;
     perspective: 100vmin;
+    z-index: 100;
 
     &-title-content,
     &-stacks {

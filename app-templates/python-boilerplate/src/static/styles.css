@@ -31,16 +31,38 @@ code {
     transition: background-color .2s, color .2s;
 }
 
+.App-header::after {
+    content: '';
+    width: 120vmin;
+    height: 200vmin;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    z-index: 0;
+    transform: rotateZ(-70deg) translateY(70vmin);
+    transition: transform .5s;
+    background-image: radial-gradient(#fbf4b71c, transparent 70%);
+    pointer-events: none;
+}
+
 @media (prefers-color-scheme: dark) and (prefers-color-scheme: no-preference) {
     .asi-theme-default .App-header {
         background-color: #282c34;
         color: white;
+    }
+
+    .asi-theme-default .App-header::after {
+        transform: rotateZ(85deg) translateY(104vmin);
     }
 }
 
 .asi-theme-dark .App-header {
     background-color: #282c34;
     color: white;
+}
+
+.asi-theme-dark .App-header::after {
+    transform: rotateZ(85deg) translateY(104vmin);
 }
 
 @media (prefers-color-scheme: light) {
@@ -286,6 +308,7 @@ code {
     flex-direction: column;
     width: 70%;
     perspective: 100vmin;
+    z-index: 100;
 }
 
 .asi-teaser-title-content,
