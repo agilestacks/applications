@@ -3,16 +3,17 @@
 $light-color: rgba(255, 255, 255, 0.753);
 
 
-@mixin flash($color-name, $color) {
-    &.asi-teaser-keyword-#{$color-name} {
-        text-shadow: 0 0 3.5em  $light-color, 0 0 2em $light-color, 0 0 1em lighten($color, 20), 0 0 .1em lighten($color, 10);
+@mixin flash($color-name, $color, $lights) {
+    .asi-teaser-keyword-flash.asi-teaser-keyword-#{$color-name} {
+        text-shadow: 0 0 2.7em lighten($color, $lights * 1.5), 0 0 2.5em $light-color, 0 0 .3em lighten($color, $lights);
+        color: white;
     }
 }
 
 @mixin emission($color-name, $color, $radius) {
     .asi-teaser-keyword-#{$color-name} {
-        text-shadow: 0 0 $radius / 4 lighten($color, 10), 0 0 $radius / 2 lighten($color, 15), 0 0 $radius lighten($color, 40), 0 0 $radius * 1.7 rgba(56, 78, 114, 0.555);
-        color: lighten($color, 60);
+        text-shadow: 0 0 $radius / 7 $color, 0 0 $radius lighten($color, 20);
+        color: rgba(white, .99);
     }
 
     .asi-teaser-keyword-#{$color-name}::after {
@@ -20,21 +21,38 @@ $light-color: rgba(255, 255, 255, 0.753);
     }
 }
 
-$light-emission-radius: .45em;
+$light-emission-radius: .5em;
+$light-flash-lights: 30;
 @include theme(light) {
         @include emission(orange, $orange, $light-emission-radius);
         @include emission(red, $red, $light-emission-radius);
         @include emission(blue, $blue, $light-emission-radius);
         @include emission(green, $green, $light-emission-radius);
+
+        @include flash(orange, $orange, $light-flash-lights);
+        @include flash(red, $red, $light-flash-lights);
+        @include flash(blue, $blue, $light-flash-lights);
+        @include flash(green, $green, $light-flash-lights);
 }
 
-$dark-emission-radius: .35em;
+$dark-emission-radius: .55em;
+$dark-flash-lights: 20;
 @include theme(dark) {
         @include emission(orange, $orange, $dark-emission-radius);
         @include emission(red, $red, $dark-emission-radius);
         @include emission(blue, $blue, $dark-emission-radius);
         @include emission(green, $green, $dark-emission-radius);
+
+        @include flash(orange, $orange, $dark-flash-lights);
+        @include flash(red, $red, $dark-flash-lights);
+        @include flash(blue, $blue, $dark-flash-lights);
+        @include flash(green, $green, $dark-flash-lights);
+        .asi-teaser-keyword,
+        .asi-teaser-keyword-flash {
+            color: white;
+        }
 }
+
 
 @keyframes loading-spinner {
     0% {
@@ -69,17 +87,12 @@ $dark-emission-radius: .35em;
 
 
 .asi-teaser-keyword {
-    transition: text-shadow .7s, transform .7s, color .7s;
-    color: white;
+    transition: text-shadow .35s, transform .7s, color .35s;
 
     &-flash {
         transition: text-shadow .1s, transform .1s, color .1s;
         transform: scale(1.1);
 
-        @include flash(orange, $orange);
-        @include flash(red, $red);
-        @include flash(blue, $blue);
-        @include flash(green, $green);
     }
 
     &:after {
