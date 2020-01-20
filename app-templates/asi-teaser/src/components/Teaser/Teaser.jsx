@@ -52,7 +52,7 @@ export const Teaser = () => {
                 <a
                     className="asi-teaser-title-content"
                     href={ASI_URL}
-                    rel="noopener"
+                    rel="noopener noreferrer"
                     target="_blank"
                 >
                     Agile<span className="asi-teaser-stacks">Stacks</span>

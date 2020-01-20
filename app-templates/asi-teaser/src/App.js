@@ -35,10 +35,12 @@ function App() {
             <div
                 className="asi-theme-toggle asi-theme-toggle-dark"
                 onClick={setLightTheme}
-                title="Switch to light theme"
                 data-theme="light"
               >
-                  <img className="asi-theme-toggle-image" src={moon} />
+                  <img
+                      className="asi-theme-toggle-image" src={moon}
+                      alt="moon"
+                />
               </div>
               <div
                 className="asi-theme-toggle asi-theme-toggle-light"
@@ -46,7 +48,10 @@ function App() {
                 title="Switch to dark theme"
                 data-theme="dark"
               >
-                  <img className="asi-theme-toggle-image" src={sun} />
+                  <img
+                      className="asi-theme-toggle-image" src={sun}
+                      alt="sun"
+                  />
               </div>
             </div>
             <Teaser />

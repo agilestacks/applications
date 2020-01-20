@@ -5,7 +5,7 @@ import {sample} from 'lodash';
 const colors = ['red', 'blue', 'orange', 'green']
 export const Keyword = ({children, className, withFlash, ...props}) => {
     const [flash, setFlesh] = useState(withFlash);
-    const color = useMemo(() => sample(colors), [children]);
+    const color = useMemo(() => children && sample(colors), [children]);
 
     useEffect(() => {
         setTimeout(
@@ -19,8 +19,8 @@ export const Keyword = ({children, className, withFlash, ...props}) => {
             className={
                 useMemo(() => classNames(
                     'asi-teaser-keyword',
-                    `asi-teaser-keyword-${color}`,
                     {
+                        [`asi-teaser-keyword-${color}`]: color,
                         'asi-teaser-keyword-flash': flash
                     }
                 ),
