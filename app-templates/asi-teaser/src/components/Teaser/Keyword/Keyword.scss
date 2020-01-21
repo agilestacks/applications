@@ -21,9 +21,9 @@ $light-color: rgba(255, 255, 255, 0.753);
     }
 }
 
-$light-emission-radius: .4em;
+$light-emission-radius: .47em;
 $light-flash-lights: 30;
-$light-emission-ember: 20;
+$light-emission-ember: 7;
 
 @include theme(light) {
         @include emission(orange, $orange, $light-emission-radius, $light-emission-ember);

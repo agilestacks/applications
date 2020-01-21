@@ -41,22 +41,22 @@ $tile-flash:0 0 $side / 3 $side / 3.5 white, inset 0 0  $side / 2 white;
 
     &-orange {
         background-color: $orange;
-        background: linear-gradient(211deg, #f69934 0%, #fdca43 75%)
+        background: linear-gradient(221deg, darken($orange, 8) 0%, lighten($orange, 14) 55%);
     }
 
     &-red {
         background-color: $red;
-        background: linear-gradient(238deg, #be1a20 0%, #eb2c23 57%)
+        background: linear-gradient(230deg, darken($red, 17) 0%, lighten($red, 14) 75%);
     }
 
     &-blue {
         background-color: $blue;
-        background: linear-gradient(323deg, #10213f 0%, #164789 57%)
+        background: linear-gradient(230deg, darken($blue, 30) 0%, lighten($blue, 7) 75%);
     }
 
     &-green {
         background-color: $green;
-        background: linear-gradient(211deg, #84b450 0%, #c9df4f 75%)
+        background: linear-gradient(211deg, darken($green, 8) 0%, lighten($green, 15) 77%)
     }
 }
 

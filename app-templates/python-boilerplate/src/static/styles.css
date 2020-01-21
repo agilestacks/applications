@@ -229,23 +229,23 @@ code {
 }
 
 .asi-tile-orange {
-    background-color: #fbb73a;
-    background: linear-gradient(211deg, #f69934 0%, #fdca43 75%);
+    background-color: #ffb62d;
+    background: linear-gradient(221deg, #ffa804 0%, #ffcf74 55%);
 }
 
 .asi-tile-red {
-    background-color: #dc2422;
-    background: linear-gradient(238deg, #be1a20 0%, #eb2c23 57%);
+    background-color: #ff2e2b;
+    background: linear-gradient(230deg, #d30300 0%, #ff7472 75%);
 }
 
 .asi-tile-blue {
-    background-color: #3562a7;
-    background: linear-gradient(323deg, #10213f 0%, #164789 57%);
+    background-color: #2773e6;
+    background: linear-gradient(230deg, #0c3168 0%, #4788ea 75%);
 }
 
 .asi-tile-green {
-    background-color: #a7cb50;
-    background: linear-gradient(211deg, #84b450 0%, #c9df4f 75%);
+    background-color: #a6da2f;
+    background: linear-gradient(211deg, #8fbe22 0%, #c2e670 77%);
 }
 
 @media (prefers-color-scheme: dark) and (prefers-color-scheme: no-preference) {
@@ -374,172 +374,172 @@ code {
 
 @media (prefers-color-scheme: light) {
     .asi-theme-default .asi-teaser-keyword-orange {
-        text-shadow: 0 0 0.08em #fddc9e, 0 0 0.4em #fddc9e, 0 0 2.8em rgba(183, 231, 255, 0.15);
+        text-shadow: 0 0 0.094em #ffc251, 0 0 0.47em #ffd993, 0 0 3.29em rgba(183, 231, 255, 0.15);
         color: rgba(255, 255, 255, 0.93);
     }
 
     .asi-theme-default .asi-teaser-keyword-orange::after {
-        background: #fcc053;
+        background: #ffbf47;
     }
 
     .asi-theme-default .asi-teaser-keyword-red {
-        text-shadow: 0 0 0.08em #ea7b7a, 0 0 0.4em #ea7b7a, 0 0 2.8em rgba(183, 231, 255, 0.15);
+        text-shadow: 0 0 0.094em #ff514f, 0 0 0.47em #ff9391, 0 0 3.29em rgba(183, 231, 255, 0.15);
         color: rgba(255, 255, 255, 0.93);
     }
 
     .asi-theme-default .asi-teaser-keyword-red::after {
-        background: #e03937;
+        background: #ff4745;
     }
 
     .asi-theme-default .asi-teaser-keyword-blue {
-        text-shadow: 0 0 0.08em #7097d2, 0 0 0.4em #7097d2, 0 0 2.8em rgba(183, 231, 255, 0.15);
+        text-shadow: 0 0 0.094em #4788ea, 0 0 0.47em #82aef1, 0 0 3.29em rgba(183, 231, 255, 0.15);
         color: rgba(255, 255, 255, 0.93);
     }
 
     .asi-theme-default .asi-teaser-keyword-blue::after {
-        background: #3b6dba;
+        background: #3e82e9;
     }
 
     .asi-theme-default .asi-teaser-keyword-green {
-        text-shadow: 0 0 0.08em #cfe29f, 0 0 0.4em #cfe29f, 0 0 2.8em rgba(183, 231, 255, 0.15);
+        text-shadow: 0 0 0.094em #b3df4d, 0 0 0.47em #cbe986, 0 0 3.29em rgba(183, 231, 255, 0.15);
         color: rgba(255, 255, 255, 0.93);
     }
 
     .asi-theme-default .asi-teaser-keyword-green::after {
-        background: #b1d164;
+        background: #afde45;
     }
 
     .asi-theme-default .asi-teaser-keyword-flash.asi-teaser-keyword-orange {
-        text-shadow: 0 0 2.7em white, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #feeed0, 0 0 7em rgba(132, 214, 255, 0.1);
+        text-shadow: 0 0 2.7em white, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #ffebc6, 0 0 7em rgba(132, 214, 255, 0.1);
         color: white;
     }
 
     .asi-theme-default .asi-teaser-keyword-flash.asi-teaser-keyword-red {
-        text-shadow: 0 0 2.7em #fbe8e8, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #f1a7a6, 0 0 7em rgba(132, 214, 255, 0.1);
+        text-shadow: 0 0 2.7em white, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #ffc5c4, 0 0 7em rgba(132, 214, 255, 0.1);
         color: white;
     }
 
     .asi-theme-default .asi-teaser-keyword-flash.asi-teaser-keyword-blue {
-        text-shadow: 0 0 2.7em #d1ddf0, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #97b3de, 0 0 7em rgba(132, 214, 255, 0.1);
+        text-shadow: 0 0 2.7em #f5f8fe, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #b0ccf6, 0 0 7em rgba(132, 214, 255, 0.1);
         color: white;
     }
 
     .asi-theme-default .asi-teaser-keyword-flash.asi-teaser-keyword-green {
-        text-shadow: 0 0 2.7em white, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #e2eec6, 0 0 7em rgba(132, 214, 255, 0.1);
+        text-shadow: 0 0 2.7em #f9fdf2, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #def1b1, 0 0 7em rgba(132, 214, 255, 0.1);
         color: white;
     }
 }
 
 .asi-theme-light .asi-teaser-keyword-orange {
-    text-shadow: 0 0 0.08em #fddc9e, 0 0 0.4em #fddc9e, 0 0 2.8em rgba(183, 231, 255, 0.15);
+    text-shadow: 0 0 0.094em #ffc251, 0 0 0.47em #ffd993, 0 0 3.29em rgba(183, 231, 255, 0.15);
     color: rgba(255, 255, 255, 0.93);
 }
 
 .asi-theme-light .asi-teaser-keyword-orange::after {
-    background: #fcc053;
+    background: #ffbf47;
 }
 
 .asi-theme-light .asi-teaser-keyword-red {
-    text-shadow: 0 0 0.08em #ea7b7a, 0 0 0.4em #ea7b7a, 0 0 2.8em rgba(183, 231, 255, 0.15);
+    text-shadow: 0 0 0.094em #ff514f, 0 0 0.47em #ff9391, 0 0 3.29em rgba(183, 231, 255, 0.15);
     color: rgba(255, 255, 255, 0.93);
 }
 
 .asi-theme-light .asi-teaser-keyword-red::after {
-    background: #e03937;
+    background: #ff4745;
 }
 
 .asi-theme-light .asi-teaser-keyword-blue {
-    text-shadow: 0 0 0.08em #7097d2, 0 0 0.4em #7097d2, 0 0 2.8em rgba(183, 231, 255, 0.15);
+    text-shadow: 0 0 0.094em #4788ea, 0 0 0.47em #82aef1, 0 0 3.29em rgba(183, 231, 255, 0.15);
     color: rgba(255, 255, 255, 0.93);
 }
 
 .asi-theme-light .asi-teaser-keyword-blue::after {
-    background: #3b6dba;
+    background: #3e82e9;
 }
 
 .asi-theme-light .asi-teaser-keyword-green {
-    text-shadow: 0 0 0.08em #cfe29f, 0 0 0.4em #cfe29f, 0 0 2.8em rgba(183, 231, 255, 0.15);
+    text-shadow: 0 0 0.094em #b3df4d, 0 0 0.47em #cbe986, 0 0 3.29em rgba(183, 231, 255, 0.15);
     color: rgba(255, 255, 255, 0.93);
 }
 
 .asi-theme-light .asi-teaser-keyword-green::after {
-    background: #b1d164;
+    background: #afde45;
 }
 
 .asi-theme-light .asi-teaser-keyword-flash.asi-teaser-keyword-orange {
-    text-shadow: 0 0 2.7em white, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #feeed0, 0 0 7em rgba(132, 214, 255, 0.1);
+    text-shadow: 0 0 2.7em white, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #ffebc6, 0 0 7em rgba(132, 214, 255, 0.1);
     color: white;
 }
 
 .asi-theme-light .asi-teaser-keyword-flash.asi-teaser-keyword-red {
-    text-shadow: 0 0 2.7em #fbe8e8, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #f1a7a6, 0 0 7em rgba(132, 214, 255, 0.1);
+    text-shadow: 0 0 2.7em white, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #ffc5c4, 0 0 7em rgba(132, 214, 255, 0.1);
     color: white;
 }
 
 .asi-theme-light .asi-teaser-keyword-flash.asi-teaser-keyword-blue {
-    text-shadow: 0 0 2.7em #d1ddf0, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #97b3de, 0 0 7em rgba(132, 214, 255, 0.1);
+    text-shadow: 0 0 2.7em #f5f8fe, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #b0ccf6, 0 0 7em rgba(132, 214, 255, 0.1);
     color: white;
 }
 
 .asi-theme-light .asi-teaser-keyword-flash.asi-teaser-keyword-green {
-    text-shadow: 0 0 2.7em white, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #e2eec6, 0 0 7em rgba(132, 214, 255, 0.1);
+    text-shadow: 0 0 2.7em #f9fdf2, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #def1b1, 0 0 7em rgba(132, 214, 255, 0.1);
     color: white;
 }
 
 @media (prefers-color-scheme: dark) and (prefers-color-scheme: no-preference) {
     .asi-theme-default .asi-teaser-keyword-orange {
-        text-shadow: 0 0 0.11em #fbb73a, 0 0 0.55em #fddc9e, 0 0 3.85em rgba(183, 231, 255, 0.15);
+        text-shadow: 0 0 0.11em #ffb62d, 0 0 0.55em #ffd993, 0 0 3.85em rgba(183, 231, 255, 0.15);
         color: rgba(255, 255, 255, 0.93);
     }
 
     .asi-theme-default .asi-teaser-keyword-orange::after {
-        background: #fcc053;
+        background: #ffbf47;
     }
 
     .asi-theme-default .asi-teaser-keyword-red {
-        text-shadow: 0 0 0.11em #dc2422, 0 0 0.55em #ea7b7a, 0 0 3.85em rgba(183, 231, 255, 0.15);
+        text-shadow: 0 0 0.11em #ff2e2b, 0 0 0.55em #ff9391, 0 0 3.85em rgba(183, 231, 255, 0.15);
         color: rgba(255, 255, 255, 0.93);
     }
 
     .asi-theme-default .asi-teaser-keyword-red::after {
-        background: #e03937;
+        background: #ff4745;
     }
 
     .asi-theme-default .asi-teaser-keyword-blue {
-        text-shadow: 0 0 0.11em #3562a7, 0 0 0.55em #7097d2, 0 0 3.85em rgba(183, 231, 255, 0.15);
+        text-shadow: 0 0 0.11em #2773e6, 0 0 0.55em #82aef1, 0 0 3.85em rgba(183, 231, 255, 0.15);
         color: rgba(255, 255, 255, 0.93);
     }
 
     .asi-theme-default .asi-teaser-keyword-blue::after {
-        background: #3b6dba;
+        background: #3e82e9;
     }
 
     .asi-theme-default .asi-teaser-keyword-green {
-        text-shadow: 0 0 0.11em #a7cb50, 0 0 0.55em #cfe29f, 0 0 3.85em rgba(183, 231, 255, 0.15);
+        text-shadow: 0 0 0.11em #a6da2f, 0 0 0.55em #cbe986, 0 0 3.85em rgba(183, 231, 255, 0.15);
         color: rgba(255, 255, 255, 0.93);
     }
 
     .asi-theme-default .asi-teaser-keyword-green::after {
-        background: #b1d164;
+        background: #afde45;
     }
 
     .asi-theme-default .asi-teaser-keyword-flash.asi-teaser-keyword-orange {
-        text-shadow: 0 0 2.7em #feeed0, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #fddc9e, 0 0 7em rgba(132, 214, 255, 0.1);
+        text-shadow: 0 0 2.7em #ffebc6, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #ffd993, 0 0 7em rgba(132, 214, 255, 0.1);
         color: white;
     }
 
     .asi-theme-default .asi-teaser-keyword-flash.asi-teaser-keyword-red {
-        text-shadow: 0 0 2.7em #f1a7a6, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #ea7b7a, 0 0 7em rgba(132, 214, 255, 0.1);
+        text-shadow: 0 0 2.7em #ffc5c4, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #ff9391, 0 0 7em rgba(132, 214, 255, 0.1);
         color: white;
     }
 
     .asi-theme-default .asi-teaser-keyword-flash.asi-teaser-keyword-blue {
-        text-shadow: 0 0 2.7em #97b3de, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #7097d2, 0 0 7em rgba(132, 214, 255, 0.1);
+        text-shadow: 0 0 2.7em #b0ccf6, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #82aef1, 0 0 7em rgba(132, 214, 255, 0.1);
         color: white;
     }
 
     .asi-theme-default .asi-teaser-keyword-flash.asi-teaser-keyword-green {
-        text-shadow: 0 0 2.7em #e2eec6, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #cfe29f, 0 0 7em rgba(132, 214, 255, 0.1);
+        text-shadow: 0 0 2.7em #def1b1, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #cbe986, 0 0 7em rgba(132, 214, 255, 0.1);
         color: white;
     }
 
@@ -550,58 +550,58 @@ code {
 }
 
 .asi-theme-dark .asi-teaser-keyword-orange {
-    text-shadow: 0 0 0.11em #fbb73a, 0 0 0.55em #fddc9e, 0 0 3.85em rgba(183, 231, 255, 0.15);
+    text-shadow: 0 0 0.11em #ffb62d, 0 0 0.55em #ffd993, 0 0 3.85em rgba(183, 231, 255, 0.15);
     color: rgba(255, 255, 255, 0.93);
 }
 
 .asi-theme-dark .asi-teaser-keyword-orange::after {
-    background: #fcc053;
+    background: #ffbf47;
 }
 
 .asi-theme-dark .asi-teaser-keyword-red {
-    text-shadow: 0 0 0.11em #dc2422, 0 0 0.55em #ea7b7a, 0 0 3.85em rgba(183, 231, 255, 0.15);
+    text-shadow: 0 0 0.11em #ff2e2b, 0 0 0.55em #ff9391, 0 0 3.85em rgba(183, 231, 255, 0.15);
     color: rgba(255, 255, 255, 0.93);
 }
 
 .asi-theme-dark .asi-teaser-keyword-red::after {
-    background: #e03937;
+    background: #ff4745;
 }
 
 .asi-theme-dark .asi-teaser-keyword-blue {
-    text-shadow: 0 0 0.11em #3562a7, 0 0 0.55em #7097d2, 0 0 3.85em rgba(183, 231, 255, 0.15);
+    text-shadow: 0 0 0.11em #2773e6, 0 0 0.55em #82aef1, 0 0 3.85em rgba(183, 231, 255, 0.15);
     color: rgba(255, 255, 255, 0.93);
 }
 
 .asi-theme-dark .asi-teaser-keyword-blue::after {
-    background: #3b6dba;
+    background: #3e82e9;
 }
 
 .asi-theme-dark .asi-teaser-keyword-green {
-    text-shadow: 0 0 0.11em #a7cb50, 0 0 0.55em #cfe29f, 0 0 3.85em rgba(183, 231, 255, 0.15);
+    text-shadow: 0 0 0.11em #a6da2f, 0 0 0.55em #cbe986, 0 0 3.85em rgba(183, 231, 255, 0.15);
     color: rgba(255, 255, 255, 0.93);
 }
 
 .asi-theme-dark .asi-teaser-keyword-green::after {
-    background: #b1d164;
+    background: #afde45;
 }
 
 .asi-theme-dark .asi-teaser-keyword-flash.asi-teaser-keyword-orange {
-    text-shadow: 0 0 2.7em #feeed0, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #fddc9e, 0 0 7em rgba(132, 214, 255, 0.1);
+    text-shadow: 0 0 2.7em #ffebc6, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #ffd993, 0 0 7em rgba(132, 214, 255, 0.1);
     color: white;
 }
 
 .asi-theme-dark .asi-teaser-keyword-flash.asi-teaser-keyword-red {
-    text-shadow: 0 0 2.7em #f1a7a6, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #ea7b7a, 0 0 7em rgba(132, 214, 255, 0.1);
+    text-shadow: 0 0 2.7em #ffc5c4, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #ff9391, 0 0 7em rgba(132, 214, 255, 0.1);
     color: white;
 }
 
 .asi-theme-dark .asi-teaser-keyword-flash.asi-teaser-keyword-blue {
-    text-shadow: 0 0 2.7em #97b3de, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #7097d2, 0 0 7em rgba(132, 214, 255, 0.1);
+    text-shadow: 0 0 2.7em #b0ccf6, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #82aef1, 0 0 7em rgba(132, 214, 255, 0.1);
     color: white;
 }
 
 .asi-theme-dark .asi-teaser-keyword-flash.asi-teaser-keyword-green {
-    text-shadow: 0 0 2.7em #e2eec6, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #cfe29f, 0 0 7em rgba(132, 214, 255, 0.1);
+    text-shadow: 0 0 2.7em #def1b1, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #cbe986, 0 0 7em rgba(132, 214, 255, 0.1);
     color: white;
 }
 
