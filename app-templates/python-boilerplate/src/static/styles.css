@@ -9,7 +9,6 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-
 .App {
     text-align: center;
 }
@@ -141,7 +140,6 @@ code {
     pointer-events: none;
 }
 
-
 .asi-cube-ex {
     transform: translateY(15%) rotateX(-30deg);
     transform-style: preserve-3d;
@@ -195,7 +193,6 @@ code {
         transform: rotateY(-10deg);
     }
 }
-
 
 @keyframes tile-flash {
     0% {
@@ -301,6 +298,11 @@ code {
     transform: translateZ(-15vmin) rotateY(90deg) translateZ(15vmin);
 }
 
+.asi-styles-extractor {
+    position: absolute;
+    top: 3vmin;
+    left: 3vmin;
+}
 
 .asi-teaser {
     flex: 1 1;
@@ -370,11 +372,10 @@ code {
     color: #1a3c6c;
 }
 
-
 @media (prefers-color-scheme: light) {
     .asi-theme-default .asi-teaser-keyword-orange {
-        text-shadow: 0 0 0.07143em #fbb73a, 0 0 0.5em #fddc9e;
-        color: rgba(255, 255, 255, 0.99);
+        text-shadow: 0 0 0.08em #fddc9e, 0 0 0.4em #fddc9e, 0 0 2.8em rgba(183, 231, 255, 0.15);
+        color: rgba(255, 255, 255, 0.93);
     }
 
     .asi-theme-default .asi-teaser-keyword-orange::after {
@@ -382,8 +383,8 @@ code {
     }
 
     .asi-theme-default .asi-teaser-keyword-red {
-        text-shadow: 0 0 0.07143em #dc2422, 0 0 0.5em #ea7b7a;
-        color: rgba(255, 255, 255, 0.99);
+        text-shadow: 0 0 0.08em #ea7b7a, 0 0 0.4em #ea7b7a, 0 0 2.8em rgba(183, 231, 255, 0.15);
+        color: rgba(255, 255, 255, 0.93);
     }
 
     .asi-theme-default .asi-teaser-keyword-red::after {
@@ -391,8 +392,8 @@ code {
     }
 
     .asi-theme-default .asi-teaser-keyword-blue {
-        text-shadow: 0 0 0.07143em #3562a7, 0 0 0.5em #7097d2;
-        color: rgba(255, 255, 255, 0.99);
+        text-shadow: 0 0 0.08em #7097d2, 0 0 0.4em #7097d2, 0 0 2.8em rgba(183, 231, 255, 0.15);
+        color: rgba(255, 255, 255, 0.93);
     }
 
     .asi-theme-default .asi-teaser-keyword-blue::after {
@@ -400,8 +401,8 @@ code {
     }
 
     .asi-theme-default .asi-teaser-keyword-green {
-        text-shadow: 0 0 0.07143em #a7cb50, 0 0 0.5em #cfe29f;
-        color: rgba(255, 255, 255, 0.99);
+        text-shadow: 0 0 0.08em #cfe29f, 0 0 0.4em #cfe29f, 0 0 2.8em rgba(183, 231, 255, 0.15);
+        color: rgba(255, 255, 255, 0.93);
     }
 
     .asi-theme-default .asi-teaser-keyword-green::after {
@@ -409,29 +410,29 @@ code {
     }
 
     .asi-theme-default .asi-teaser-keyword-flash.asi-teaser-keyword-orange {
-        text-shadow: 0 0 2.7em white, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #feeed0;
+        text-shadow: 0 0 2.7em white, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #feeed0, 0 0 7em rgba(132, 214, 255, 0.1);
         color: white;
     }
 
     .asi-theme-default .asi-teaser-keyword-flash.asi-teaser-keyword-red {
-        text-shadow: 0 0 2.7em #fbe8e8, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #f1a7a6;
+        text-shadow: 0 0 2.7em #fbe8e8, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #f1a7a6, 0 0 7em rgba(132, 214, 255, 0.1);
         color: white;
     }
 
     .asi-theme-default .asi-teaser-keyword-flash.asi-teaser-keyword-blue {
-        text-shadow: 0 0 2.7em #d1ddf0, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #97b3de;
+        text-shadow: 0 0 2.7em #d1ddf0, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #97b3de, 0 0 7em rgba(132, 214, 255, 0.1);
         color: white;
     }
 
     .asi-theme-default .asi-teaser-keyword-flash.asi-teaser-keyword-green {
-        text-shadow: 0 0 2.7em white, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #e2eec6;
+        text-shadow: 0 0 2.7em white, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #e2eec6, 0 0 7em rgba(132, 214, 255, 0.1);
         color: white;
     }
 }
 
 .asi-theme-light .asi-teaser-keyword-orange {
-    text-shadow: 0 0 0.07143em #fbb73a, 0 0 0.5em #fddc9e;
-    color: rgba(255, 255, 255, 0.99);
+    text-shadow: 0 0 0.08em #fddc9e, 0 0 0.4em #fddc9e, 0 0 2.8em rgba(183, 231, 255, 0.15);
+    color: rgba(255, 255, 255, 0.93);
 }
 
 .asi-theme-light .asi-teaser-keyword-orange::after {
@@ -439,8 +440,8 @@ code {
 }
 
 .asi-theme-light .asi-teaser-keyword-red {
-    text-shadow: 0 0 0.07143em #dc2422, 0 0 0.5em #ea7b7a;
-    color: rgba(255, 255, 255, 0.99);
+    text-shadow: 0 0 0.08em #ea7b7a, 0 0 0.4em #ea7b7a, 0 0 2.8em rgba(183, 231, 255, 0.15);
+    color: rgba(255, 255, 255, 0.93);
 }
 
 .asi-theme-light .asi-teaser-keyword-red::after {
@@ -448,8 +449,8 @@ code {
 }
 
 .asi-theme-light .asi-teaser-keyword-blue {
-    text-shadow: 0 0 0.07143em #3562a7, 0 0 0.5em #7097d2;
-    color: rgba(255, 255, 255, 0.99);
+    text-shadow: 0 0 0.08em #7097d2, 0 0 0.4em #7097d2, 0 0 2.8em rgba(183, 231, 255, 0.15);
+    color: rgba(255, 255, 255, 0.93);
 }
 
 .asi-theme-light .asi-teaser-keyword-blue::after {
@@ -457,8 +458,8 @@ code {
 }
 
 .asi-theme-light .asi-teaser-keyword-green {
-    text-shadow: 0 0 0.07143em #a7cb50, 0 0 0.5em #cfe29f;
-    color: rgba(255, 255, 255, 0.99);
+    text-shadow: 0 0 0.08em #cfe29f, 0 0 0.4em #cfe29f, 0 0 2.8em rgba(183, 231, 255, 0.15);
+    color: rgba(255, 255, 255, 0.93);
 }
 
 .asi-theme-light .asi-teaser-keyword-green::after {
@@ -466,29 +467,29 @@ code {
 }
 
 .asi-theme-light .asi-teaser-keyword-flash.asi-teaser-keyword-orange {
-    text-shadow: 0 0 2.7em white, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #feeed0;
+    text-shadow: 0 0 2.7em white, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #feeed0, 0 0 7em rgba(132, 214, 255, 0.1);
     color: white;
 }
 
 .asi-theme-light .asi-teaser-keyword-flash.asi-teaser-keyword-red {
-    text-shadow: 0 0 2.7em #fbe8e8, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #f1a7a6;
+    text-shadow: 0 0 2.7em #fbe8e8, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #f1a7a6, 0 0 7em rgba(132, 214, 255, 0.1);
     color: white;
 }
 
 .asi-theme-light .asi-teaser-keyword-flash.asi-teaser-keyword-blue {
-    text-shadow: 0 0 2.7em #d1ddf0, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #97b3de;
+    text-shadow: 0 0 2.7em #d1ddf0, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #97b3de, 0 0 7em rgba(132, 214, 255, 0.1);
     color: white;
 }
 
 .asi-theme-light .asi-teaser-keyword-flash.asi-teaser-keyword-green {
-    text-shadow: 0 0 2.7em white, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #e2eec6;
+    text-shadow: 0 0 2.7em white, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #e2eec6, 0 0 7em rgba(132, 214, 255, 0.1);
     color: white;
 }
 
 @media (prefers-color-scheme: dark) and (prefers-color-scheme: no-preference) {
     .asi-theme-default .asi-teaser-keyword-orange {
-        text-shadow: 0 0 0.07857em #fbb73a, 0 0 0.55em #fddc9e;
-        color: rgba(255, 255, 255, 0.99);
+        text-shadow: 0 0 0.11em #fbb73a, 0 0 0.55em #fddc9e, 0 0 3.85em rgba(183, 231, 255, 0.15);
+        color: rgba(255, 255, 255, 0.93);
     }
 
     .asi-theme-default .asi-teaser-keyword-orange::after {
@@ -496,8 +497,8 @@ code {
     }
 
     .asi-theme-default .asi-teaser-keyword-red {
-        text-shadow: 0 0 0.07857em #dc2422, 0 0 0.55em #ea7b7a;
-        color: rgba(255, 255, 255, 0.99);
+        text-shadow: 0 0 0.11em #dc2422, 0 0 0.55em #ea7b7a, 0 0 3.85em rgba(183, 231, 255, 0.15);
+        color: rgba(255, 255, 255, 0.93);
     }
 
     .asi-theme-default .asi-teaser-keyword-red::after {
@@ -505,8 +506,8 @@ code {
     }
 
     .asi-theme-default .asi-teaser-keyword-blue {
-        text-shadow: 0 0 0.07857em #3562a7, 0 0 0.55em #7097d2;
-        color: rgba(255, 255, 255, 0.99);
+        text-shadow: 0 0 0.11em #3562a7, 0 0 0.55em #7097d2, 0 0 3.85em rgba(183, 231, 255, 0.15);
+        color: rgba(255, 255, 255, 0.93);
     }
 
     .asi-theme-default .asi-teaser-keyword-blue::after {
@@ -514,8 +515,8 @@ code {
     }
 
     .asi-theme-default .asi-teaser-keyword-green {
-        text-shadow: 0 0 0.07857em #a7cb50, 0 0 0.55em #cfe29f;
-        color: rgba(255, 255, 255, 0.99);
+        text-shadow: 0 0 0.11em #a7cb50, 0 0 0.55em #cfe29f, 0 0 3.85em rgba(183, 231, 255, 0.15);
+        color: rgba(255, 255, 255, 0.93);
     }
 
     .asi-theme-default .asi-teaser-keyword-green::after {
@@ -523,22 +524,22 @@ code {
     }
 
     .asi-theme-default .asi-teaser-keyword-flash.asi-teaser-keyword-orange {
-        text-shadow: 0 0 2.7em #feeed0, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #fddc9e;
+        text-shadow: 0 0 2.7em #feeed0, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #fddc9e, 0 0 7em rgba(132, 214, 255, 0.1);
         color: white;
     }
 
     .asi-theme-default .asi-teaser-keyword-flash.asi-teaser-keyword-red {
-        text-shadow: 0 0 2.7em #f1a7a6, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #ea7b7a;
+        text-shadow: 0 0 2.7em #f1a7a6, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #ea7b7a, 0 0 7em rgba(132, 214, 255, 0.1);
         color: white;
     }
 
     .asi-theme-default .asi-teaser-keyword-flash.asi-teaser-keyword-blue {
-        text-shadow: 0 0 2.7em #97b3de, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #7097d2;
+        text-shadow: 0 0 2.7em #97b3de, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #7097d2, 0 0 7em rgba(132, 214, 255, 0.1);
         color: white;
     }
 
     .asi-theme-default .asi-teaser-keyword-flash.asi-teaser-keyword-green {
-        text-shadow: 0 0 2.7em #e2eec6, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #cfe29f;
+        text-shadow: 0 0 2.7em #e2eec6, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #cfe29f, 0 0 7em rgba(132, 214, 255, 0.1);
         color: white;
     }
 
@@ -549,8 +550,8 @@ code {
 }
 
 .asi-theme-dark .asi-teaser-keyword-orange {
-    text-shadow: 0 0 0.07857em #fbb73a, 0 0 0.55em #fddc9e;
-    color: rgba(255, 255, 255, 0.99);
+    text-shadow: 0 0 0.11em #fbb73a, 0 0 0.55em #fddc9e, 0 0 3.85em rgba(183, 231, 255, 0.15);
+    color: rgba(255, 255, 255, 0.93);
 }
 
 .asi-theme-dark .asi-teaser-keyword-orange::after {
@@ -558,8 +559,8 @@ code {
 }
 
 .asi-theme-dark .asi-teaser-keyword-red {
-    text-shadow: 0 0 0.07857em #dc2422, 0 0 0.55em #ea7b7a;
-    color: rgba(255, 255, 255, 0.99);
+    text-shadow: 0 0 0.11em #dc2422, 0 0 0.55em #ea7b7a, 0 0 3.85em rgba(183, 231, 255, 0.15);
+    color: rgba(255, 255, 255, 0.93);
 }
 
 .asi-theme-dark .asi-teaser-keyword-red::after {
@@ -567,8 +568,8 @@ code {
 }
 
 .asi-theme-dark .asi-teaser-keyword-blue {
-    text-shadow: 0 0 0.07857em #3562a7, 0 0 0.55em #7097d2;
-    color: rgba(255, 255, 255, 0.99);
+    text-shadow: 0 0 0.11em #3562a7, 0 0 0.55em #7097d2, 0 0 3.85em rgba(183, 231, 255, 0.15);
+    color: rgba(255, 255, 255, 0.93);
 }
 
 .asi-theme-dark .asi-teaser-keyword-blue::after {
@@ -576,8 +577,8 @@ code {
 }
 
 .asi-theme-dark .asi-teaser-keyword-green {
-    text-shadow: 0 0 0.07857em #a7cb50, 0 0 0.55em #cfe29f;
-    color: rgba(255, 255, 255, 0.99);
+    text-shadow: 0 0 0.11em #a7cb50, 0 0 0.55em #cfe29f, 0 0 3.85em rgba(183, 231, 255, 0.15);
+    color: rgba(255, 255, 255, 0.93);
 }
 
 .asi-theme-dark .asi-teaser-keyword-green::after {
@@ -585,22 +586,22 @@ code {
 }
 
 .asi-theme-dark .asi-teaser-keyword-flash.asi-teaser-keyword-orange {
-    text-shadow: 0 0 2.7em #feeed0, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #fddc9e;
+    text-shadow: 0 0 2.7em #feeed0, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #fddc9e, 0 0 7em rgba(132, 214, 255, 0.1);
     color: white;
 }
 
 .asi-theme-dark .asi-teaser-keyword-flash.asi-teaser-keyword-red {
-    text-shadow: 0 0 2.7em #f1a7a6, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #ea7b7a;
+    text-shadow: 0 0 2.7em #f1a7a6, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #ea7b7a, 0 0 7em rgba(132, 214, 255, 0.1);
     color: white;
 }
 
 .asi-theme-dark .asi-teaser-keyword-flash.asi-teaser-keyword-blue {
-    text-shadow: 0 0 2.7em #97b3de, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #7097d2;
+    text-shadow: 0 0 2.7em #97b3de, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #7097d2, 0 0 7em rgba(132, 214, 255, 0.1);
     color: white;
 }
 
 .asi-theme-dark .asi-teaser-keyword-flash.asi-teaser-keyword-green {
-    text-shadow: 0 0 2.7em #e2eec6, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #cfe29f;
+    text-shadow: 0 0 2.7em #e2eec6, 0 0 2.5em rgba(255, 255, 255, 0.753), 0 0 0.3em #cfe29f, 0 0 7em rgba(132, 214, 255, 0.1);
     color: white;
 }
 

@@ -5,15 +5,15 @@ $light-color: rgba(255, 255, 255, 0.753);
 
 @mixin flash($color-name, $color, $lights) {
     .asi-teaser-keyword-flash.asi-teaser-keyword-#{$color-name} {
-        text-shadow: 0 0 2.7em lighten($color, $lights * 1.5), 0 0 2.5em $light-color, 0 0 .3em lighten($color, $lights);
+        text-shadow: 0 0 2.7em lighten($color, $lights * 1.5), 0 0 2.5em $light-color, 0 0 .3em lighten($color, $lights), 0 0 7em rgba(darken($background-light, 20), .1);
         color: white;
     }
 }
 
-@mixin emission($color-name, $color, $radius) {
+@mixin emission($color-name, $color, $radius, $ember: 0) {
     .asi-teaser-keyword-#{$color-name} {
-        text-shadow: 0 0 $radius / 7 $color, 0 0 $radius lighten($color, 20);
-        color: rgba(white, .99);
+        text-shadow: 0 0 $radius / 5 lighten($color, $ember), 0 0 $radius lighten($color, 20), 0 0 $radius * 7 rgba(darken($background-light, 10), .15);
+        color: rgba(white, .93);
     }
 
     .asi-teaser-keyword-#{$color-name}::after {
@@ -21,13 +21,15 @@ $light-color: rgba(255, 255, 255, 0.753);
     }
 }
 
-$light-emission-radius: .5em;
+$light-emission-radius: .4em;
 $light-flash-lights: 30;
+$light-emission-ember: 20;
+
 @include theme(light) {
-        @include emission(orange, $orange, $light-emission-radius);
-        @include emission(red, $red, $light-emission-radius);
-        @include emission(blue, $blue, $light-emission-radius);
-        @include emission(green, $green, $light-emission-radius);
+        @include emission(orange, $orange, $light-emission-radius, $light-emission-ember);
+        @include emission(red, $red, $light-emission-radius, $light-emission-ember);
+        @include emission(blue, $blue, $light-emission-radius, $light-emission-ember);
+        @include emission(green, $green, $light-emission-radius, $light-emission-ember);
 
         @include flash(orange, $orange, $light-flash-lights);
         @include flash(red, $red, $light-flash-lights);
