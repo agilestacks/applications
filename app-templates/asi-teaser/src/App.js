@@ -6,7 +6,7 @@ import './App.scss';
 import sun from './images/sun.svg';
 import moon from './images/moon.svg';
 
-import { Teaser } from './components';
+import { Teaser, StylesExtractor } from './components';
 import { localStorageSet, localStorageGet } from './localStorage';
 
 function App() {
@@ -31,6 +31,7 @@ function App() {
   return (
     <div className={className}>
         <header className="App-header">
+            <StylesExtractor />
             <div className="asi-theme-switch">
             <div
                 className="asi-theme-toggle asi-theme-toggle-dark"
