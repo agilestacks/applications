@@ -1,3 +1,0 @@
-#!/bin/bash
-hub api instance get -j | jq -r '.[].domain'
-

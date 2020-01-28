@@ -1,0 +1,69 @@
+#!/bin/bash -e
+usage()
+{
+cat << EOF
+Prints environment configuration for the stack
+
+Usage: $(basename $0) -s STACK_DOMAIN [-o] [-t]
+
+Parameters:
+    -s --stack      domain name of the stack
+    -f --force      overwrite context file
+    -h --help       print current messag
+EOF
+}
+
+if test -z "$1"; then
+    usage;
+    exit 1
+fi
+
+while [ "$1" != "" ]; do
+    case $1 in
+        -f | --force )      FORCE=1
+                            ;;
+        -s | --stack )      shift
+                            STACK=$1
+                            ;;
+        -h | --help )       usage
+                            exit
+                            ;;
+        - )                 STACK=$(cat /dev/stdin | xargs | cut -d " " -f1)
+                            ;;
+        * )                 usage
+                            exit 1
+    esac
+    shift
+done
+
+JQ="jq -rM"
+
+PLATFORM_CLUSTER=`hub-show -c -M -m -s $STACK`
+
+envfile="$(pwd)/.hub/env/$STACK"
+
+test -z "$FORCE" || \
+    rm -f $envfile
+
+export KUBECONFIG=$(dirname "$envfile")/kubeconfig.$(basename "$envfile").yaml
+if test ! -f "$envfile"; then
+    HUB_DOMAIN_NAME=`echo $PLATFORM_CLUSTER | $JQ '.parameters.dns.domain'`
+    HUB_INGRESSHOST=`echo $PLATFORM_CLUSTER | $JQ '.parameters.component.ingress.fqdn'`
+    HUB_DOCKER_HOST=`echo $PLATFORM_CLUSTER | $JQ '.parameters.component.docker.auth.host'`
+    HUB_DOCKER_USER=`echo $PLATFORM_CLUSTER | $JQ '.parameters.component.docker.auth.basic.username'`
+
+    mkdir -p $(dirname "$envfile")
+    echo "export HUB_DOMAIN_NAME=$HUB_DOMAIN_NAME" >> $envfile
+    echo "export HUB_INGRESS_HOST=$HUB_INGRESSHOST" >> $envfile
+    echo "export HUB_DOCKER_HOST=$HUB_DOCKER_HOST" >> $envfile
+    echo "export HUB_DOCKER_USER=$HUB_DOCKER_USER" >> $envfile
+    echo "export HUB_DOCKER_PASS=Harbor12345" >> $envfile
+
+    echo "export SKAFFOLD_DEFAULT_REPO=$HUB_DOCKER_HOST/library" >> $envfile
+    echo "export SKAFFOLD_PROFILE=incluster" >> $envfile
+    echo "export KUBECONFIG=$KUBECONFIG" >> $envfile
+fi
+
+ln -sf "$(pwd)/.hub/env/$STACK" "$(pwd)/.hub/env/current"
+hub-kubeconfig -k -s $HUB_DOMAIN_NAME > /dev/null
+echo "source $envfile"

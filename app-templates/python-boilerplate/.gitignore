@@ -1,7 +1,6 @@
 .pytest_cache
 .vscode
 .venv
-!/.hub/env/Makefile
 __pycache__
 *.egg-info
 .DS_STORE
@@ -9,7 +8,7 @@ __pycache__
 .hub/*.yaml
 .hub/libs/*.libsonnet
 !.hub/libs/skaffold.libsonnet
-!.hub/env
+.hub/env
 .hub/hub.elaborate
 .hub/hub.state
 .hub/manifests

@@ -4,7 +4,7 @@ DOCKER     := docker
 SKAFFOLD   := skaffold
 
 export SKAFFOLD_PROFILE ?= incluster
-export HUB_APP_NAME     ?= opencvapp
+export HUB_APP_NAME     ?= rubik
 
 skaffold-%:
 	$(SKAFFOLD) $(lastword $(subst -, ,$@))

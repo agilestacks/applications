@@ -1,2 +1,0 @@
-#!/bin/bash
-hub api instance get -j | jq -r '.[] | select(.domain=="'$1'") | to_entries | .[] | select(.key=="parameters" or .key=="outputs").value[] | { (.name): .value}' | jq -s add | jq .
