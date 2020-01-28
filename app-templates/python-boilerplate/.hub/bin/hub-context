@@ -45,6 +45,7 @@ envfile="$(pwd)/.hub/env/$STACK"
 test -z "$FORCE" || \
     rm -f $envfile
 
+export HUB_CONTEXT=$(pwd)/.hub-context
 export KUBECONFIG=$(dirname "$envfile")/kubeconfig.$(basename "$envfile").yaml
 if test ! -f "$envfile"; then
     HUB_DOMAIN_NAME=`echo $PLATFORM_CLUSTER | $JQ '.parameters.dns.domain'`
@@ -62,8 +63,9 @@ if test ! -f "$envfile"; then
     echo "export SKAFFOLD_DEFAULT_REPO=$HUB_DOCKER_HOST/library" >> $envfile
     echo "export SKAFFOLD_PROFILE=incluster" >> $envfile
     echo "export KUBECONFIG=$KUBECONFIG" >> $envfile
+    echo "export HUB_CONTEXT=$KUBECONFIG" >> $envfile
 fi
 
-ln -sf "$(pwd)/.hub/env/$STACK" "$(pwd)/.hub/env/current"
+ln -sf "$(pwd)/.hub/env/$STACK" "$HUB_CONTEXT"
 hub-kubeconfig -k -s $HUB_DOMAIN_NAME > /dev/null
-echo "source $envfile"
+echo "source $HUB_CONTEXT"
