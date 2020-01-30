@@ -9,7 +9,7 @@ APP_DIR             := ..
 TEMPLATES_DIR       := templates
 LIBSONNET_DIR       := lib
 
-LIBSONNET           := $(LIBSONNET_DIR)/k8s.libsonnet 
+LIBSONNET           := $(LIBSONNET_DIR)/k8s.libsonnet
 LIBSONNET           += $(LIBSONNET_DIR)/dockerconfig.libsonnet
 
 JSONNET_FILES       := $(wildcard *.jsonnet .*.jsonnet **/*.jsonnet .**/*.jsonnet)
@@ -18,8 +18,10 @@ YAML_JSONNET        := $(patsubst %.jsonnet,$(APP_DIR)/%,$(filter %.yaml.jsonnet
 TEMPLATES           := $(addsuffix .json,$(basename $(wildcard $(TEMPLATES_DIR)/*.yaml)))
 
 export JSONNET_PATH   := $(TEMPLATES_DIR):$(LIBSONNET_DIR):$(APP_DIR)
-export KUBECONFIG     ?= $(APP_DIR)/.kubeconfig
 export AWS_ACCOUNT_ID := $(shell $(aws) sts get-caller-identity --query 'Account' --output text)
+
+export KUBECONFIG     ?= $(APP_DIR)/.kubeconfig
+export HUB_KNOWN_KUBECONFIGS := $(wildcard $(dir $(KUBECONFIG))/kubeconfig.*)
 
 JSONNET_ARGS += $(addprefix -V ,$(filter HUB_%,$(.VARIABLES)))
 JSONNET_ARGS += $(addprefix -V ,$(filter AWS_%,$(.VARIABLES)))
@@ -46,6 +48,6 @@ $(JSON_JSONNET): $(LIBSONNET) $(TEMPLATES)
 generate: $(YAML_JSONNET) $(JSON_JSONNET)
 
 clean:
-	rm -f $(YAML_JSONNET) $(JSON_JSONNET) $(LIBSONNET) $(TEMPLATES) 
+	rm -f $(YAML_JSONNET) $(JSON_JSONNET) $(LIBSONNET) $(TEMPLATES)
 
 .PHONY: generate clean

@@ -1,27 +1,6 @@
 {
   "python.envFile": "${workspaceFolder}/.vscode/env",
-  "cloudcode.kubeconfigs": [
-    {
-      "name": "current-kubeconfig",
-      "configPath": "CHANGEMEPLEASE"
-    }
-  ],
-  "cloudcode.active-kubeconfig": "current-kubeconfig",
-  "cloudcode.profile-cluster-map": {
-    "incluster": {
-      "context": "CHANGEMEPLEASE",
-      "configPath": "CHANGEMEPLEASE"
-    },
-    "local": {
-      "context": "CHANGEMEPLEASE",
-      "configPath": "CHANGEMEPLEASE"
-    }
-  },
-  "vsdocker.imageUser": "CHANGEMEPLEASE",
-  "cloudcode.enableExperimentalDeploymentWizard": true,
-  "cloudcode.yaml.yamlFileMatcher": "k8s/*.yaml",
-  "cloudcode.profile-registry-map": {
-    "incluster": "CHANGEMEPLEASE",
-    "local": "CHANGEMEPLEASE"
-  }
+  "cloudcode.profile-registry-map": {},
+  "cloudcode.debug-kubernetes": {},
+  "cloudcode.enableDeployDebugV2": true
 }

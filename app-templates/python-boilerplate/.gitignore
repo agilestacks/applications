@@ -23,4 +23,4 @@ skaffold.json
 deployment.json
 .dockerconfig.json
 skaffold.yaml
-.hub-context
+.hub/current-context
