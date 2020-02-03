@@ -28,17 +28,35 @@
             </script>
             <header class="App-header">
                 <div class="asi-theme-switch">
-                    <div class="asi-theme-toggle asi-theme-toggle-dark"
-                        title="Switch to light theme" data-theme="light">
-                        <img class="asi-theme-toggle-image"
-                            src="{{ url_for('static', filename='images/moon.svg') }}">
+                    <div
+                        class="asi-theme-toggle asi-theme-toggle-dark"
+                        title="Switch to light theme"
+                        data-theme="light"
+                    >
+                        <span
+                            role="img"
+                            aria-label="moon"
+                            class="asi-theme-toggle-icon"
+                        >
+                            🌙
+                        </span>
                     </div>
-                    <div class="asi-theme-toggle asi-theme-toggle-light"
-                        title="Switch to dark theme" data-theme="dark">
-                        <img class="asi-theme-toggle-image"
-                            src="{{ url_for('static', filename='images/sun.svg') }}">
+                    <div
+                        class="asi-theme-toggle asi-theme-toggle-light"
+                        title="Switch to dark theme"
+                        data-theme="dark"
+                    >
+                        <span
+                            role="img"
+                            aria-label="sun"
+                            class="asi-theme-toggle-icon"
+                        >
+                            ☀️
+                        </span>
                     </div>
+                    <div class="asi-theme-switch-button"></div>
                 </div>
+
                 <div class="asi-teaser">
 
                     <h1 class="asi-teaser-title">

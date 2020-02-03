@@ -9,6 +9,8 @@ $green: #a6da2f;
 $background-dark: #282c34;
 $background-light: #eaf8ff;
 
+$theme-transition: .2s;
+
 $default-mode: dark;
 
 @mixin theme($mode) {

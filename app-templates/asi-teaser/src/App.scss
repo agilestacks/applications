@@ -18,7 +18,7 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-  transition: background-color .2s, color .2s;
+  transition: background-color $theme-transition, color $theme-transition;
 
   &::after {
       content: '';
@@ -68,39 +68,3 @@
   }
 }
 
-.asi-theme-switch {
-  position: absolute;
-  right: 3vmin;
-  top: 3vmin;
-  width: 3.5vmin;
-  height: 3.5vmin;
-}
-
-.asi-theme-toggle {
-  cursor: pointer;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  transition: transform .7s, opacity .7s;
-
-  &-image {
-    pointer-events: none;
-  }
-}
-
-@include theme(dark) {
-  .asi-theme-toggle-light {
-    transform: rotateZ(25deg);
-    opacity: 0;
-    pointer-events: none;
-  }
-}
-@include theme(light) {
-  .asi-theme-toggle-dark {
-    transform:  rotateZ(-25deg);;
-    opacity: 0;
-    pointer-events: none;
-  }
-}
