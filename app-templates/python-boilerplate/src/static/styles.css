@@ -636,6 +636,8 @@ code {
     border-width: .13vmin;
     border-radius: 1.75vmin;
     transition: border-color 0.2s;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .asi-theme-switch-button {

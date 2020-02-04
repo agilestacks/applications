@@ -17,6 +17,7 @@ $dark-color: $background-dark;
     border-width: .13vmin;
     border-radius: $size / 2;
     transition: border-color $theme-transition;
+    user-select: none;
 
     &-button {
         position: absolute;
