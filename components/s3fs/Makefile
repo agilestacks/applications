@@ -1,7 +1,6 @@
 .DEFAULT_GOAL := compile
 IMAGE         := "agilestacks/s3fs"
 VERSION       := $(shell git rev-parse --short HEAD)
-NAMESPACE     ?= kube-system
 
 kubectl       := kubectl --context="$(DOMAIN_NAME)" --namespace="$(NAMESPACE)"
 
@@ -15,11 +14,15 @@ push:
 	docker push $(IMAGE)
 
 namespace:
-	- $(kubectl) create namespace $(NAMESPACE)
+	$(kubectl) get namespace $(NAMESPACE) || \
+		$(kubectl) create namespace $(NAMESPACE)
 
 deploy: namespace
-	- $(kubectl) create -f install.yaml
+	$(kubectl) get -f k8s/install.yaml || \
+		$(kubectl) create -f k8s/install.yaml
 
 undeploy:
-	- $(kubectl) delete -f install.yaml
+	$(kubectl) delete -f k8s/install.yaml
 
+.IGNORE: namespace deploy undeploy
+.SILENT: namespace
