@@ -1,0 +1,39 @@
+---
+version: 1
+kind: component
+meta:
+  name: s3-flexvolume-pvc
+  brief: Creates a PVC for goofysflex driver
+requires: [kubernetes]
+
+parameters:
+- name: dns.domain
+  env: DOMAIN_NAME
+- name: component.s3flex.pvc
+  parameters: 
+  - name: name
+    value: bucket-${component.bucket.name}
+  - name: namespace
+    value: kube-system
+  - name: size
+    value: 40Gi
+  - name: accessMode
+    value: ReadWriteOnce
+- name: component.storage-class.name
+  value: default
+- name: component.bucket
+  parameters:
+  - name: name
+  - name: endpoint
+  - name: accessKey
+    empty: allow
+  - name: secretKey
+    empty: allow
+
+outputs:
+- name: component.s3flex.pvc.name
+  brief: PVC name to mount
+
+templates:
+  files:
+  - "*.template"

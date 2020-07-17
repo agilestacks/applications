@@ -1,2 +1,3 @@
-install.yaml
+/k8s/install.yaml
+/pvc/install.yaml
 
