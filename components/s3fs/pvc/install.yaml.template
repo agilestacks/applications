@@ -1,0 +1,48 @@
+---
+apiVersion: v1
+kind: Secret
+type: goofysflex
+metadata:
+  name: ${component.s3flex.pvc.name}
+stringData:
+  accesskey: ${component.bucket.accessKey}
+  secretkey: ${component.bucket.secretKey}
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: ${component.s3flex.pvc.name}
+  labels:
+    type: fuse
+    bucket: ${component.bucket.name}
+spec:
+  accessModes:
+  - ${component.s3flex.pvc.accessMode}
+  capacity:
+    storage: ${component.s3flex.pvc.size}
+  volumeMode: Filesystem
+  storageClassName: ${component.storage-class.name}
+  flexVolume:
+    driver: "goofysflex"
+    secretRef:
+      name: ${component.s3flex.pvc.name}-bucket
+    options:
+      # Required
+      bucket: ${component.s3flex.pvc.name}-bucket
+      endpoint: "${component.s3flex.pvc.endpoint}"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name:  ${component.s3flex.pvc.name}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: ${component.s3flex.pvc.size}
+  selector:
+    matchLabels:
+      type: fuse
+      bucket: ${component.bucket.name}
