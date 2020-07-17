@@ -40,8 +40,8 @@ ADD https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-stat
 COPY --from=go1 /goofysflex /usr/bin/goofysflex
 COPY --from=go2 /go/bin/goofys /usr/bin/goofys
 COPY --from=fusermount /usr/local/bin/fusermount /usr/bin/fusermount
-COPY  dummy.sh /usr/bin/dummy
-COPY  export.sh /usr/bin/export
+COPY  etc/dummy.sh /usr/bin/dummy
+COPY  etc/export.sh /usr/bin/export
 RUN chmod +x /usr/bin/*
 
 ENTRYPOINT ["tini", "--"]

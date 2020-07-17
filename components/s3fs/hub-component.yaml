@@ -8,13 +8,13 @@ requires: [kubernetes]
 parameters:
 - name: dns.domain
   env: DOMAIN_NAME
-- name: component.s3fuse
+- name: component.s3flex.driver
   parameters:
   - name: name
-    value: s3fuse
+    value: ${hub.componentName}
     env: COMPONENT_NAME
   - name: namespace
-    value: default
+    value: kube-system
     env: NAMESPACE
   - name: image
     value: docker.io/agilestacks/s3fs:latest
@@ -23,4 +23,4 @@ outputs: []
 
 templates:
   files:
-  - "*.template"
+  - "k8s/*.template"
