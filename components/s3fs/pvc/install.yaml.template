@@ -4,9 +4,12 @@ kind: Secret
 type: goofysflex
 metadata:
   name: ${component.s3flex.pvc.name}
+  labels:
+    type: fuse
+    bucket: ${component.bucket.name}
 stringData:
-  accesskey: ${component.bucket.accessKey}
-  secretkey: ${component.bucket.secretKey}
+  accesskey: ${component.minio.accessKey}
+  secretkey: ${component.minio.secretKey}
 ---
 kind: PersistentVolume
 apiVersion: v1
@@ -25,11 +28,11 @@ spec:
   flexVolume:
     driver: "goofysflex"
     secretRef:
-      name: ${component.s3flex.pvc.name}-bucket
+      name: ${component.s3flex.pvc.name}
     options:
       # Required
-      bucket: ${component.s3flex.pvc.name}-bucket
-      endpoint: "${component.s3flex.pvc.endpoint}"
+      bucket: ${component.bucket.name}
+      endpoint: "${component.bucket.endpoint}"
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -39,6 +42,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   volumeMode: Filesystem
+  storageClassName: ${component.storage-class.name}
   resources:
     requests:
       storage: ${component.s3flex.pvc.size}

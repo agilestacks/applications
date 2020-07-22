@@ -14,7 +14,8 @@ parameters:
   - name: name
     value: bucket-${component.bucket.name}
   - name: namespace
-    value: kube-system
+    value: workspace
+    env: NAMESPACE
   - name: size
     value: 40Gi
   - name: accessMode
@@ -25,6 +26,8 @@ parameters:
   parameters:
   - name: name
   - name: endpoint
+- name: component.minio
+  parameters:
   - name: accessKey
     empty: allow
   - name: secretKey

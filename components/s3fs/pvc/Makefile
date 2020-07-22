@@ -5,11 +5,10 @@ namespace:
 		$(kubectl) create namespace $(NAMESPACE)
 
 deploy: namespace
-	$(kubectl) get -f k8s/install.yaml || \
-		$(kubectl) create -f k8s/install.yaml
+	$(kubectl) apply -f install.yaml
 
 undeploy:
-	$(kubectl) delete -f k8s/install.yaml
+	$(kubectl) delete -f install.yaml
 
 .DEFAULT: deploy
 .SILENT:  namespace
