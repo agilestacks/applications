@@ -3,7 +3,8 @@ version: 1
 kind: component
 meta:
   name: s3-fuse
-  brief: Provides storage driver for to mount persistent volumes for s3
+  title: S3 volumes
+  brief: Storage driver to mount S3 as persistent volume
 requires: [kubernetes]
 parameters:
 - name: dns.domain
@@ -18,9 +19,6 @@ parameters:
     env: NAMESPACE
   - name: image
     value: docker.io/agilestacks/s3fs:latest
-
-outputs: []
-
 templates:
   files:
   - "k8s/*.template"
